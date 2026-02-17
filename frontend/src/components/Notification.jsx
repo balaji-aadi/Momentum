@@ -7,54 +7,57 @@ import { useSocket } from "../SocketProvider";
 
 const Notification = () => {
   const [activeTab, setActiveTab] = useState("unread");
-  const [unreadNotifications, setUnreadNotifications] = useState([]);
+  // const [unreadNotifications, setUnreadNotifications] = useState([]); // Removed, use context
   const [readNotifications, setReadNotifications] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { getAllNotification } = useSocket();
+  const { getAllNotification, notificationData } = useSocket();
 
   const router = useNavigate();
 
   const handleUpdateNotify = async (data) => {
     const id = data?._id;
 
-    if (data?.title.includes("Task")) {
-      router(`/task/dashboard?projectId=${data?.projectId?._id}`);
-    } else if (data?.title.includes("Test")) {
-      router(`/testing/my-task?type=Test Case&projectId=${data?.projectId?._id}`);
-    } else if (data?.title.includes("Bug")) {
-      router(`/testing/my-task?type=Bug Reporting&projectId=${data?.projectId?._id}`);
+    if (data?.title?.includes("Task")) {
+      router(`/task/dashboard?projectId=${data?.projectId?._id || data?.projectId}`);
+    } else if (data?.title?.includes("Test")) {
+      router(`/testing/my-task?type=Test Case&projectId=${data?.projectId?._id || data?.projectId}`);
+    } else if (data?.title?.includes("Bug")) {
+      router(`/testing/my-task?type=Bug Reporting&projectId=${data?.projectId?._id || data?.projectId}`);
     }
 
     try {
       await NotificationApi.updateStatus(id);
-      setTimeout(() => {
-        getAllNotification();
-      }, 500);
+      
+      // Move to local read list for immediate feedback (optimistic update)
+      setReadNotifications(prev => [data, ...prev]);
+      
+      // Refresh unread list in context
+      if (getAllNotification) getAllNotification();
+      
     } catch (err) {
       console.error("Error updating notification:", err);
     }
   };
 
-  const getAllNotifications = async () => {
+  const getReadNotifications = async () => {
     setIsLoading(true);
     try {
-      const [unreadRes, readRes] = await Promise.all([
-        NotificationApi.getAllNotify({ filter: { notificationStatus: false } }),
-        NotificationApi.getAllNotify({ filter: { notificationStatus: true } })
-      ]);
-
-      setUnreadNotifications(unreadRes.data?.data || []);
+      const readRes = await NotificationApi.getAllNotify({ filter: { notificationStatus: true } });
       setReadNotifications(readRes?.data?.data || []);
     } catch (err) {
-      console.error("Error fetching notifications:", err);
+      console.error("Error fetching read notifications:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    getAllNotification();
-    getAllNotifications();
+    // Initial fetch of unread (via socket context) if empty/undefined
+    if (getAllNotification) {
+        getAllNotification();
+    }
+    // Fetch read notifications
+    getReadNotifications();
   }, []);
 
   const getInitials = (firstName, lastName) => {
@@ -64,6 +67,8 @@ const Notification = () => {
   const NotificationItem = ({ notification, isUnread }) => {
     const formattedDate = moment(notification.createdAt).format("MMM D, h:mm A");
     const timeAgo = moment(notification.createdAt).fromNow();
+    const projectName = notification.projectId?.name || "Unknown Project";
+    const priority = notification.projectId?.priority;
 
     return (
       <div
@@ -96,26 +101,26 @@ const Notification = () => {
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm font-medium text-gray-900 dark:text-white">
-                {notification.senderId?.firstName} {notification.senderId?.lastName}
+                {notification.senderId?.firstName || 'Unknown'} {notification.senderId?.lastName || ''}
               </p>
               <p className="text-sm text-gray-600 dark:text-gray-300">
                 {notification.title}{' '}
                 <span className="font-semibold text-blue-600 dark:text-blue-400">
-                  @ {notification.projectId?.name}
+                  @ {projectName}
                 </span>
               </p>
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
+            <div className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap ml-2">
               {timeAgo}
             </div>
           </div>
 
-          {notification.projectId?.priority && (
-            <span className={`inline-block mt-1 px-2 py-0.5 text-xs rounded-full ${notification.projectId.priority === 'high' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
-              notification.projectId.priority === 'medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+          {priority && (
+            <span className={`inline-block mt-1 px-2 py-0.5 text-xs rounded-full ${priority === 'high' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
+              priority === 'medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
                 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
               }`}>
-              {notification.projectId.priority}
+              {priority}
             </span>
           )}
 
@@ -140,7 +145,10 @@ const Notification = () => {
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Notifications</h2>
           <button
-            onClick={getAllNotifications}
+            onClick={() => {
+                if(getAllNotification) getAllNotification();
+                getReadNotifications();
+            }}
             className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
             disabled={isLoading}
           >
@@ -158,9 +166,9 @@ const Notification = () => {
               onClick={() => setActiveTab("unread")}
             >
               Unread
-              {unreadNotifications.length > 0 && (
+              {(notificationData || []).length > 0 && (
                 <span className="ml-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
-                  {unreadNotifications.length}
+                  {(notificationData || []).length}
                 </span>
               )}
             </button>
@@ -186,8 +194,8 @@ const Notification = () => {
         ) : (
           <div className="h-full overflow-y-auto pr-2 space-y-3">
             {activeTab === "unread" ? (
-              unreadNotifications.length > 0 ? (
-                unreadNotifications.map((notification) => (
+              (notificationData || []).length > 0 ? (
+                (notificationData || []).map((notification) => (
                   <NotificationItem
                     key={notification._id}
                     notification={notification}

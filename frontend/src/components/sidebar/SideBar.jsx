@@ -185,13 +185,14 @@ const SideBar = ({ children }) => {
                 exit="hidden"
                 className="logo"
               >
-                <div className="bg-transparent flex items-center justify-center h-auto">
-                  <Link to={"/"} className="text-center">
-                    <h1 className="text-white font-bold text-4xl md:text-5xl uppercase">
-                      Achievr
+                <div className="bg-transparent flex flex-col items-center justify-center p-4">
+                  <Link to={"/"} className="text-center flex flex-col items-center">
+                    <img src="/momentum_logo.svg" alt="Momentum Logo" className="w-14 h-14 mb-2 drop-shadow-md" />
+                    <h1 className="text-white font-bold text-2xl tracking-wider uppercase bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+                      Momentum
                     </h1>
-                    <p className="text-gray-300 text-lg md:text-xs mt-2 uppercase">
-                      Simplify Tasks, Amplify Success.
+                    <p className="text-gray-400 text-[10px] uppercase tracking-widest mt-1">
+                      Simplify Tasks
                     </p>
                   </Link>
                 </div>

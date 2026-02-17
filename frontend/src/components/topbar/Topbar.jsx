@@ -21,6 +21,7 @@ import "./topbar.style.css";
 
 const Topbar = () => {
   const [isProfile, setIsProfile] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
   const {
     isNotification,
     setIsNotification,
@@ -49,6 +50,7 @@ const Topbar = () => {
 
   const handleNavigateToNotification = () => {
     router("/notification");
+    setShowDropdown(false);
   };
 
   const handleLogout = async () => {
@@ -89,6 +91,7 @@ const Topbar = () => {
       setTimeout(() => {
         getAllNotification();
       }, 1000);
+      setShowDropdown(false);
     } catch (err) {
       console.log(err);
     }
@@ -228,7 +231,7 @@ const Topbar = () => {
         notificationRef.current &&
         !notificationRef.current.contains(event.target)
       ) {
-        setIsNotification(false);
+        setShowDropdown(false);
       }
     };
 
@@ -265,7 +268,10 @@ const Topbar = () => {
         <div className="relative" ref={notificationRef}>
           <div
             className={`relative cursor-pointer p-2 rounded-full hover:bg-gray-100 hover:dark:text-black ${notificationIconClass}`}
-            onMouseEnter={() => setIsNotification(true)}
+            onClick={() => {
+              setShowDropdown(!showDropdown);
+              if(isNotification) setIsNotification(false); // Stop shaking when clicked
+            }}
           >
             <BiBell className="text-xl" />
             <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">
@@ -273,11 +279,9 @@ const Topbar = () => {
             </span>
           </div>
 
-          {isNotification && (
+          {showDropdown && (
             <div
               className="absolute top-14 right-0 w-96 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50"
-              onMouseEnter={() => setIsNotification(true)}
-              onMouseLeave={() => setIsNotification(false)}
             >
 
               <div className="flex justify-between items-center px-4 py-3 border-b border-gray-200 dark:border-gray-700">

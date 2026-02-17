@@ -45,7 +45,7 @@ const SocketProvider = ({ children }) => {
   useEffect(() => {
     socket.on("notification", (data, assign) => {
       if (assign === userId) {
-        setNotificationData();
+        // setNotificationData(); // Removed to prevent setting undefined
         setIsNotification(true);
         getAllNotification();
       }

@@ -246,39 +246,30 @@ const Task = ({ key, task, index, handleClick }) => {
   }, []);
 
   const renderAssigneeImage = () => {
-    if (task.assignee.profileImage) {
+    if (task.assignee?.profileImage) {
       return (
         <img
           src={task.assignee.profileImage}
           alt={task.assignee.firstName}
-          className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
+          className="w-8 h-8 rounded-full object-cover border border-white ring-1 ring-white shadow-sm"
         />
       );
     } else {
-      const firstLetter = task.assignee.firstName.charAt(0).toUpperCase();
-      const colors = [
-        "bg-red-500",
-        "bg-blue-500",
-        "bg-green-500",
-        "bg-yellow-500",
-        "bg-purple-500",
-      ];
-      const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
+      const name = `${task.assignee?.firstName || ''} ${task.assignee?.lastName || ''}`;
       return (
-        <div
-          className={`w-10 h-10 rounded-full flex items-center justify-center text-white ${randomColor} border-2 border-white shadow-sm`}
-        >
-          {firstLetter}
-        </div>
+        <img 
+            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(name.trim() || 'U')}&background=random`} 
+            className="w-8 h-8 rounded-full border border-white ring-1 ring-white shadow-sm" 
+            alt="Assignee" 
+        />
       );
     }
   };
 
   const priorityColors = {
-    high: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-    medium: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
-    low: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+    high: "bg-red-50 text-red-600 border-red-200",
+    medium: "bg-amber-50 text-amber-600 border-amber-200",
+    low: "bg-emerald-50 text-emerald-600 border-emerald-200"
   };
 
   return (
@@ -289,31 +280,30 @@ const Task = ({ key, task, index, handleClick }) => {
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            className={`bg-white dark:bg-gray-800 rounded-lg shadow transition-all relative w-full border-l-4 ${task.taskPriority === "high" ? "border-red-500" : task.taskPriority === "medium" ? "border-yellow-500" : "border-green-500"}`}
+            className={`bg-surface rounded-xl shadow-sm border border-borderLight transition-all relative w-full hover:shadow-md hover:border-primary/30 group`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
             <div className="p-4">
               <main onClick={() => handleClick(task)} className="cursor-pointer">
                 <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-3">
+                  <div className="flex items-start space-x-3 w-full">
                     {renderAssigneeImage()}
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between w-full gap-4">
-                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                          {task.assignee.firstName} {task.assignee.lastName}
-                        </h3>
-                        <span className={`text-xs px-2  py-1 rounded-full ${priorityColors[task.taskPriority]}`}>
-                          {task.taskPriority.charAt(0).toUpperCase() + task.taskPriority.slice(1)}
-                        </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between w-full gap-2">
+                         <h4 className="text-sm font-semibold text-textMain capitalize truncate pr-2">
+                           {task.taskName}
+                         </h4>
+                         {/* Priority Pill */}
+                         <span className={`text-[10px] px-2 py-0.5 rounded-full border font-medium whitespace-nowrap ${priorityColors[task.taskPriority] || 'bg-slate-100 text-slate-600 border-slate-200'}`}>
+                           {task.taskPriority}
+                         </span>
                       </div>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{task.projectName.name}</p>
+                      
+                      <p className="text-xs text-textSub mt-0.5 truncate">{task.projectName?.name || 'No Project'}</p>
 
-                      <h4 className="text-md font-semibold text-gray-900 dark:text-white mt-1 capitalize">
-                        {task.taskName}
-                      </h4>
                       {task.taskDescription && (
-                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-1 line-clamp-2">
+                        <p className="text-xs text-textSub mt-2 line-clamp-2 leading-relaxed">
                           {task.taskDescription}
                         </p>
                       )}

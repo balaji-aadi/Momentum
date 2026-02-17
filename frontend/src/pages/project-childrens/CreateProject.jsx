@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import InputField from "../../components/InputField";
-import { LuArrowRight } from "react-icons/lu";
+import { LuArrowRight, LuArrowLeft } from "react-icons/lu";
 import TeamAssignment from "./TeamAssignment";
 import { useLoading } from "../../components/loader/LoaderContext";
 import { ProjectApi } from "../../services/api/Project.api";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const CreateProject = ({
   data,
@@ -24,6 +24,7 @@ const CreateProject = ({
 
   const { handleLoading } = useLoading();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const initialValues = {
     name: "",
@@ -48,30 +49,40 @@ const CreateProject = ({
       const { milestoneName, deliverables, commenceDate, expectedDate, summary, ...payload } = values;
       handleLoading(true);
       try {
-        const res = isUpdating
-          ? await ProjectApi.updateProject(id, payload)
+        // Prepare ID: either from prop 'id', or from location state if available
+        const projectId = id || location.state?.project?._id;
+        // Determine mode: isUpdating prop OR presence of projectId implies update
+        const isUpdateMode = isUpdating || !!projectId;
+
+        const res = isUpdateMode
+          ? await ProjectApi.updateProject(projectId, payload)
           : await ProjectApi.createProject(payload);
         console.log(res.data);
         toast.success(
-          isUpdating
+          isUpdateMode
             ? "Project updated successfully"
             : "Project created successfully"
         );
         navigate("/project/status");
         setMilestones([...milestones, values]);
         setIsTeamAssign(false);
-        setIsUpdating(false);
-        setProjectData();
+        if(setIsUpdating) setIsUpdating(false);
+        if(setProjectData) setProjectData();
         formik.resetForm();
       } catch (err) {
         console.log(err);
+        toast.error("An error occurred");
       }
       handleLoading(false);
     },
   });
 
   useEffect(() => {
-    if (data) {
+    const projectData = data || location.state?.project;
+    
+    if (projectData) {
+      if(setIsUpdating) setIsUpdating(true); // If prop function exists
+
       const formatDate = (dateString) => {
         if (!dateString) return "";
         const date = new Date(dateString);
@@ -79,33 +90,33 @@ const CreateProject = ({
       };
 
       formik.setValues({
-        name: data.name || "",
-        projectId: data._id || "",
-        access: data.access || "",
-        key: data.key || "",
-        description: data.description || "",
-        startDate: formatDate(data.startDate),
-        endDate: formatDate(data.endDate),
-        priority: data.priority || "",
-        clientName: data.clientName || "",
-        budget: data.budget || "",
-        status: data.status || "",
-        projectManager: data.projectManager?._id,
-        teamMembers: data.teamMembers.map((member) => member._id),
+        name: projectData.name || "",
+        projectId: projectData._id || "",
+        access: projectData.access || "",
+        key: projectData.key || "",
+        description: projectData.description || "",
+        startDate: formatDate(projectData.startDate),
+        endDate: formatDate(projectData.endDate),
+        priority: projectData.priority || "",
+        clientName: projectData.clientName || "",
+        budget: projectData.budget || "",
+        status: projectData.status || "",
+        projectManager: projectData.projectManager?._id,
+        teamMembers: projectData.teamMembers?.map((member) => member._id) || [],
         rolesAndResponsibilities: setRolesAndResponsibilities(
-          data.rolesAndResponsibilities
+          projectData.rolesAndResponsibilities || []
         ),
-        milestones: data.milestones.map((milestone) => ({
+        milestones: projectData.milestones?.map((milestone) => ({
           _id: milestone?._id,
           milestoneName: milestone.milestoneName,
           summary: milestone.summary,
           commenceDate: milestone.commenceDate,
           expectedDate: milestone.expectedDate,
           deliverables: milestone.deliverables,
-        })),
+        })) || [],
       });
     }
-  }, [data]);
+  }, [data, location.state]);
 
   useEffect(() => {
     const requiredFields = [
@@ -150,14 +161,22 @@ const CreateProject = ({
       {!isTeamAssign ? (
         <div className=" flex justify-center items-start p-2  relative pt-5 dark:bg-themeBG dark:text-themeText">
           <div className="w-full p-8 ">
-            <div className="sticky top-0">
-              <h1 className="text-3xl font-bold text-gray-800 dark:text-themeText mb-1 uppercase">
-                {data ? "Update" : "Add"} project details
-              </h1>
-              <p className="text-gray-600 dark:text-themeText text-sm mb-6">
-                Explore what's possible when you collaborate with your team.
-                Edit project details anytime in project settings.
-              </p>
+            <div className="sticky top-0 flex items-center gap-4 mb-6">
+              <button 
+                onClick={() => navigate('/project')}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+                title="Back to Projects"
+              >
+                <LuArrowLeft className="text-2xl text-gray-600 dark:text-gray-300" />
+              </button>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-800 dark:text-themeText mb-1 uppercase">
+                    {data ? "Update" : "Add"} project details
+                </h1>
+                <p className="text-gray-600 dark:text-themeText text-sm">
+                    Explore what's possible when you collaborate with your team.
+                </p>
+              </div>
             </div>
 
             <form onSubmit={formik.handleSubmit}>

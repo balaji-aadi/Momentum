@@ -7,7 +7,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import Layout from "./Layout/Layout";
+import MainLayout from "./components/layout/MainLayout";
 import { Toaster } from "react-hot-toast";
 import CreateProject from "./pages/project-childrens/CreateProject";
 import Project from "./pages/Project";
@@ -38,6 +38,9 @@ import TaskBugs from "./pages/task-childrens/TaskBugs";
 import MilestoneLists from "./pages/project-childrens/MilestoneLists";
 import UserTypeMaster from "./pages/UserTypeMaster";
 
+import ProjectList from "./pages/project-childrens/ProjectList";
+import TeamList from "./pages/user-childrens/TeamList";
+
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -57,7 +60,7 @@ function App() {
         <Route path="/login" element={<PublicRoute element={<Login />} />} />
         {/* Athentication routes end here */}
 
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<MainLayout />}>
           <Route
             path="/"
             element={<ProtectedRoute element={<Dashboard />} />}
@@ -68,6 +71,7 @@ function App() {
             path="project"
             element={<ProtectedRoute element={<Project />} />}
           >
+            <Route index element={<ProtectedRoute element={<ProjectList />} />} />
             <Route
               path="create-project"
               element={<ProtectedRoute element={<CreateProject />} />}
@@ -114,6 +118,7 @@ function App() {
 
           {/* user routes start here */}
           <Route path="user" element={<ProtectedRoute element={<User />} />}>
+             <Route index element={<ProtectedRoute element={<TeamList />} />} />
             <Route
               path="create"
               element={<ProtectedRoute element={<CreateUser />} />}

@@ -10,6 +10,8 @@ import { useLoading } from "../../components/loader/LoaderContext";
 import toast from "react-hot-toast";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { useNavigate, useLocation } from "react-router-dom";
+import { LuArrowLeft } from "react-icons/lu";
 
 const CreateUser = ({ type }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,6 +20,7 @@ const CreateUser = ({ type }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [userTypeOptions, setUserTypeOptions] = useState([]);
   const { handleLoading } = useLoading();
+  const location = useLocation();
 
   const openModal = () => setIsModalOpen(true);
   
@@ -27,6 +30,9 @@ const CreateUser = ({ type }) => {
     setId(null);
     setImagePreview(null);
     formik.resetForm();
+    // Clear location state to prevent reopening on generic re-renders if needed, 
+    // though navigating away or closing modal doesn't clear history state automatically.
+    // It's fine for now as useEffect dependency is [] or [location.state].
   };
 
   const getAllUsers = async () => {
@@ -55,6 +61,16 @@ const CreateUser = ({ type }) => {
 
   useEffect(() => {
     fetchUserRoles();
+    
+    // Check for user data in navigation state (from TeamList edit)
+    if (location.state?.user) {
+        getSinglUser(location.state.user);
+        // Clean up state prevents re-triggering if we were to add location.state to dependecy array, 
+        // but with empty array it runs once on mount. 
+        // However, react-router history state persists. 
+        // We can replace history to clear it, but let's see if it's needed.
+        window.history.replaceState({}, document.title);
+    }
   }, []);
 
   const formik = useFormik({
@@ -194,12 +210,23 @@ const CreateUser = ({ type }) => {
     },
   ];
 
+   const navigate = useNavigate();
+
   return (
     <div className="relative">
       <div className="flex items-center justify-between ">
-        <h1 className="text-3xl font-semibold text-gray-800  dark:text-themeText">
-          User
-        </h1>
+        <div className="flex items-center gap-4">
+            <button 
+                onClick={() => navigate('/user')}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+                title="Back to Team Cards"
+            >
+                <LuArrowLeft className="text-2xl text-gray-600 dark:text-themeText" />
+            </button>
+            <h1 className="text-3xl font-semibold text-gray-800  dark:text-themeText">
+            User Management
+            </h1>
+        </div>
 
         <button
           onClick={openModal}

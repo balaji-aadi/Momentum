@@ -6,12 +6,9 @@ import { useFormik } from "formik";
 import { useLoading } from "../../components/loader/LoaderContext";
 import { ProjectApi } from "../../services/api/Project.api";
 import { TaskApi } from "../../services/api/Task.api";
-import { FaPlus } from "react-icons/fa6";
 import CreateTask from "./CreateTask";
 import { UserApi } from "../../services/api/user.api";
 import { useSelector } from "react-redux";
-import { CiViewList } from "react-icons/ci";
-import Breadcrumbs from "../../components/Breadcrumbs";
 import toast from "react-hot-toast";
 import { TestApi } from "../../services/api/Test.api";
 import TBoard from "../testing-childrens/Board";
@@ -19,10 +16,11 @@ import TestCaseManagement from "../testing-childrens/TestCaseManagement";
 import BugReporting from "../testing-childrens/BugReportingPage";
 import { MdFilterAltOff } from "react-icons/md";
 
-const MyTask = () => {
+const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, externalSearch }) => {
   const navigate = useNavigate();
-  const [selectedProject, setSelectedProject] = useState("");
-  const [selectedMember, setSelectedMember] = useState("");
+  // State from original file
+  const [selectedProject, setSelectedProject] = useState(externalProjectId || "");
+  const [selectedMember, setSelectedMember] = useState(externalMemberId || "");
   const [selectedTaskType, setSelectedTaskType] = useState("");
   const [teamMember, setTeamMember] = useState([]);
   const [projectTasks, setProjectTasks] = useState(null);
@@ -32,16 +30,66 @@ const MyTask = () => {
   const [tasks, setTasks] = useState([]);
   const { currentUser } = useSelector((state) => state.store);
   const isManager = currentUser?.userRole?.name === "projectmanager";
-  console.log("isManager>>>>", isManager)
+  
   const [isTesting, setIsTesting] = useState(false);
   const location = useLocation();
   const [updated, setUpdated] = useState(false);
-  const [milestones, setMilestones] = useState([])
+  const [milestones, setMilestones] = useState([]);
   const page = location.pathname.split("/")[1];
   const [searchParams] = useSearchParams();
-  const projectId = searchParams.get("projectId");
-  const type = searchParams.get("type");
-  const [milestoneId, setMilestoneId] = useState("")
+  const urlProjectId = searchParams.get("projectId");
+  const urlType = searchParams.get("type");
+  const [milestoneId, setMilestoneId] = useState("");
+
+  // Formik for internal state if needed (kept from original)
+  const initialValues = {
+    projectName: "",
+    memberId: "",
+  };
+
+  const formik = useFormik({
+    initialValues,
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
+
+  // Sync external props
+  useEffect(() => {
+      setSelectedProject(externalProjectId || "");
+      formik.setFieldValue("projectName", externalProjectId || "");
+      
+      // If project changes externally, fetch its tasks
+      if (externalProjectId) {
+         fetchProjectTasks(externalProjectId, selectedMember, milestoneId)
+            .then(res => setProjectTasks(res.data?.data))
+            .catch(err => console.error(err));
+         
+         // Also fetch milestones
+          ProjectApi.getAllmileStones(externalProjectId).then(res => {
+             setMilestones(res?.data?.data?.milestones || []);
+          }).catch(err => console.error(err));
+      } else if (!externalProjectId && !isTesting) {
+          // If cleared, fetch all? Or let dashboard handle?
+          // Dashboard handles "All Projects" by passing empty string.
+          // We can fetch all tasks.
+          fetchAllTasks();
+      }
+
+  }, [externalProjectId]);
+
+  useEffect(() => {
+      setSelectedMember(externalMemberId || "");
+      formik.setFieldValue("memberId", externalMemberId || "");
+      // Trigger fetch logic based on new member
+      if (externalProjectId && externalMemberId) {
+          fetchProjectTasks(externalProjectId, externalMemberId, milestoneId)
+            .then(res => setProjectTasks(res.data?.data));
+      } else if (externalMemberId) {
+          fetchTasksByMember(externalMemberId, selectedProject)
+            .then(res => setProjectTasks(res.data?.data));
+      }
+  }, [externalMemberId]);
 
 
   const config = {
@@ -59,7 +107,7 @@ const MyTask = () => {
     try {
       const res = await TaskApi.getAllTasks();
       setTasks(res.data?.data);
-      setProjectTasks(res.data?.data);
+      if (!externalProjectId) setProjectTasks(res.data?.data);
     }
     catch (err) {
       console.log(err)
@@ -67,29 +115,26 @@ const MyTask = () => {
   }
 
   useEffect(() => {
-      fetchAllTasks()
-  }, [])
+      if(!externalProjectId) fetchAllTasks();
+  }, []);
 
   const { breadcrumbs, toastMessage } = config[page] || config["task"];
 
   useEffect(() => {
     setIsTesting(page === "testing");
-    if (isManager) toast.success(toastMessage);
+    // if (isManager) toast.success(toastMessage); // Commenting out toast to reduce noise
   }, [page, isManager]);
-
-  const handleNavigate = () => {
-    navigate("/task/update-task");
-  };
 
   const handleReset = async () => {
     setSelectedMember("");
     setMilestoneId("");
-    setSelectedProject("")
-    fetchAllTasks()
+    setSelectedProject("");
+    setSelectedTaskType("");
+    setMilestones([]);
+    fetchAllTasks();
   }
 
   const fetchTasks = async () => {
-
     if (selectedProject && !milestoneId) {
       const filter = {
         projectId: selectedProject,
@@ -97,7 +142,6 @@ const MyTask = () => {
       };
       try {
         const res = await TestApi.getAllTesting(filter);
-        console.log(res.data);
         setTasks(res.data?.data);
         setProjectTasks(res.data?.data);
       } catch (err) {
@@ -118,7 +162,6 @@ const MyTask = () => {
     setId(task?._id);
     try {
       const res = await TaskApi.task(task?._id);
-      console.log(res.data);
       setTasks(res.data?.data);
     } catch (err) {
       console.log(err);
@@ -134,50 +177,12 @@ const MyTask = () => {
         selectedTaskType === "Test Case"
           ? await TestApi.testing(task?._id)
           : await TestApi.bugs(task?._id);
-      console.log(res.data);
       setTasks(res.data?.data);
     } catch (err) {
       console.log(err);
     }
     handleLoading(false);
   };
-
-  const handleProjectOption = async () => {
-    handleLoading(true);
-    try {
-      const res = await ProjectApi.getAllProjects();
-      setProjects(res.data?.data);
-    } catch (err) {
-      console.log(err);
-    }
-    handleLoading(false);
-  };
-
-  const handleTeamMemberOption = async () => {
-    handleLoading(true);
-    try {
-      const res = await UserApi.users();
-      setTeamMember(res.data?.data);
-    } catch (err) {
-      console.log(err);
-    }
-    handleLoading(false);
-  };
-
-  const projectOptions = projects.map((item) => {
-    return { value: item._id, label: item.name };
-  });
-
-  const taskTypeOptions = [
-    {
-      value: "Test Case",
-      label: "Test Case",
-    },
-    {
-      value: "Bug Reporting",
-      label: "Bug Reporting",
-    },
-  ];
 
   const handleTaskTypeChange = (e) => {
     const type = e.target.value;
@@ -187,47 +192,20 @@ const MyTask = () => {
     setMilestones([])
   };
 
-  const teamMemberOptions = [
-    { value: "all", label: "All" },
-    ...teamMember.map((item) => ({
-      value: item._id,
-      label: `${item.firstName} ${item.lastName}`,
-    })),
+  const taskTypeOptions = [
+    { value: "Test Case", label: "Test Case" },
+    { value: "Bug Reporting", label: "Bug Reporting" },
   ];
 
   const milestoneOptions = milestones.map((item) => {
     return { value: item._id, label: item.milestoneName };
   });
 
-  useEffect(() => {
-    handleProjectOption();
-    handleTeamMemberOption();
-  }, []);
-
-  const initialValues = {
-    projectName: "",
-    memberId: "",
-  };
-
-  const formik = useFormik({
-    initialValues,
-    onSubmit: (values) => {
-      console.log(values);
-    },
-  });
-
-  const handleCreateTask = () => {
-    if (isTesting) {
-      navigate("/testing/test-case-management");
-    } else {
-      navigate("/task/create-task");
-    }
-  };
-
+  // Initial Data Load (URL Params)
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const res = await fetchProjectTasks(projectId, selectedMember, milestoneId);
+        const res = await fetchProjectTasks(urlProjectId, selectedMember, milestoneId);
         setProjectTasks(res.data?.data);
       } catch (err) {
         console.error("Error fetching project tasks:", err);
@@ -235,56 +213,39 @@ const MyTask = () => {
         handleLoading(false);
       }
     };
-    if (type && projectId) {
-      setSelectedTaskType(type);
-      setSelectedProject(projectId);
+
+    if (urlType && urlProjectId) {
+      setSelectedTaskType(urlType);
+      setSelectedProject(urlProjectId);
 
       const fetchTesting = async () => {
-        const filter = { projectId };
-
+        const filter = { projectId: urlProjectId };
         if (selectedMember && selectedMember !== "all") {
           filter.assignee = selectedMember;
         }
-
         let res;
-        if (type === "Test Case") {
+        if (urlType === "Test Case") {
           res = await TestApi.getAllTesting({ filter: { ...filter } });
         } else {
           res = await TestApi.getAllBugs({ filter });
         }
-
         setProjectTasks(res.data?.data);
       };
 
       fetchTesting();
-    } else if (projectId) {
-      setSelectedProject(projectId);
-      formik.setFieldValue("projectName", projectId);
+    } else if (urlProjectId) {
+      setSelectedProject(urlProjectId);
+      formik.setFieldValue("projectName", urlProjectId);
       fetchProject();
     }
   }, []);
 
+
   const handleProjectChange = async (e) => {
-    const projectId = e.target.value;
-    setSelectedProject(projectId);
-    formik.setFieldValue("projectName", projectId);
-
-    if (!projectId) return;
-
-    handleLoading(true);
-
-    try {
-      const res = await fetchProjectTasks(projectId, selectedMember, milestoneId);
-      setProjectTasks(res.data?.data);
-      const milestones = await ProjectApi.getAllmileStones(projectId);
-      console.log(milestones?.data)
-      setMilestones(milestones?.data?.data?.milestones)
-    } catch (err) {
-      console.error("Error fetching project tasks:", err);
-    } finally {
-      handleLoading(false);
-    }
-  };
+      // Logic handled via props now, but if used internally:
+      const pid = e.target.value;
+      setSelectedProject(pid);
+  }
 
   const fetchProjectTasks = (projectId, assignee, milestoneId) => {
     const filter = { projectId, ...(assignee && { assignee }) };
@@ -305,39 +266,15 @@ const MyTask = () => {
     return selectedTaskType === "Test Case"
       ? TestApi.getAllTesting({
         filter: milestoneId ? filter2 : filter
-        // filter: {
-        //   projectId,
-        //   ...(selectedMember !== "all" && assignee && { assignee: assignee }),
-        // },
       })
       : TestApi.getAllBugs({ filter: milestoneId ? filter2 : filter });
   };
 
-  const handleTeamMemberChange = async (e) => {
-    const memberId = e.target.value;
-
-    setSelectedMember(memberId);
-    formik.setFieldValue("memberId", memberId);
-
-    if (!memberId) return;
-
-    handleLoading(true);
-
-    try {
-      const res = await fetchTasksByMember(memberId, selectedProject);
-      setProjectTasks(res.data?.data);
-    } catch (err) {
-      console.error("Error fetching tasks:", err);
-    } finally {
-      handleLoading(false);
-    }
-  };
-
   const handleMilestoneChange = async (e) => {
-    const milestoneId = e.target.value
-    setMilestoneId(milestoneId)
+    const mId = e.target.value
+    setMilestoneId(mId)
     try {
-      const res = await fetchProjectTasks(selectedProject, selectedMember !== "all" ? selectedMember : null, milestoneId)
+      const res = await fetchProjectTasks(selectedProject, selectedMember !== "all" ? selectedMember : null, mId)
       setProjectTasks(res.data?.data);
     }
     catch (err) {
@@ -354,7 +291,6 @@ const MyTask = () => {
           : milestoneId
             ? { projectName, assignee: memberId, "milestone": milestoneId }
             : { projectName, assignee: memberId };
-
 
     if (!isTesting) {
       return TaskApi.getAllTasks({ filter });
@@ -408,140 +344,77 @@ const MyTask = () => {
           />
         )
       ) : (
-        <div className="dark:bg-themeBG dark:text-themeText min-h-screen p-6">
-          <Breadcrumbs breadcrumbs={breadcrumbs} />
-          <header className="flex justify-between items-center mb-5 border-b-2 pb-4 dark:bg-themeBG dark:text-themeText">
-            <h1 className="text-2xl font-bold uppercase">
-              {selectedProject
-                ? projects.find((project) => project.value === selectedProject)
-                  ?.label
-                : "All Projects"}
-            </h1>
-            <div className="flex items-center space-x-4 gap-3">
-
-              <div className="flex items-center mt-4 cursor-pointer" onClick={handleReset}>
-                <MdFilterAltOff title="Remove filter" className="text-2xl text-gray-800 dark:text-themeText" />
-              </div>
-
-              {!isTesting && (
-                <button className="flex items-center mt-4" title="list view">
-                  <CiViewList
-                    className="text-4xl text-gray-800 dark:text-themeText"
-                    onClick={handleNavigate}
-                  />
-                </button>
-              )}
-              {isTesting && (
-                <InputField
-                  label="Task Type"
-                  name="taskType"
-                  type="select"
-                  value={selectedTaskType}
-                  onChange={handleTaskTypeChange}
-                  options={taskTypeOptions}
-                  isRequired
-                />
-              )}
-
-              {selectedTaskType !== "Bug Reporting" && milestones.length > 0 &&
-                <InputField
-                  label="Select Milestone"
-                  name="milestone"
-                  type="select"
-                  value={milestoneId}
-                  onChange={handleMilestoneChange}
-                  style={"min-w-72"}
-                  options={milestoneOptions}
-
-                />}
-
-              {isTesting ? (
-                selectedTaskType ? (
-                  <>
-                    {isManager && selectedProject && (
-                      <InputField
-                        label="Team member"
-                        name="teamMember"
+        <div className="h-full flex flex-col bg-bgLight">
+          {/* Sub-Toolbar for Testing/Milestones Only */}
+          {(isTesting || milestones.length > 0) && (
+              <div className="px-6 py-2 flex items-center gap-3 bg-surface border-b border-borderLight">
+                  {isTesting && (
+                    <div className="w-48">
+                        <InputField
+                        label=""
+                        name="taskType"
                         type="select"
-                        value={selectedMember}
-                        onChange={handleTeamMemberChange}
-                        options={teamMemberOptions}
-                        style={"min-w-72"}
-                        isRequired
-                      />
-                    )}
-                    <InputField
-                      label="Project"
-                      name="projectName"
-                      type="select"
-                      value={selectedProject}
-                      onChange={handleProjectChange}
-                      options={projectOptions}
-                      style={"min-w-72"}
-                    />
-                  </>
-                ) : null
-              ) : (
-                <>
-                  {isManager && selectedProject && (
-                    <InputField
-                      label="Select Team member"
-                      name="teamMember"
-                      type="select"
-                      value={selectedMember}
-                      onChange={handleTeamMemberChange}
-                      options={teamMemberOptions}
-                      style={"min-w-72"}
-                      isRequired
-                    />
+                        value={selectedTaskType}
+                        onChange={handleTaskTypeChange}
+                        options={taskTypeOptions}
+                        placeholder="Task Type"
+                        />
+                    </div>
                   )}
-                  <InputField
-                    label="Select Project"
-                    name="projectName"
-                    type="select"
-                    value={selectedProject}
-                    onChange={handleProjectChange}
-                    options={projectOptions}
-                    style={"min-w-72"}
-                  />
-                </>
-              )}
-              <button
-                className={`${isManager ? 'bg-blue-500' : 'bg-blue-300'}  text-white px-4 py-2 rounded-lg font-semibold -mb-4 flex items-center gap-2`}
-                onClick={handleCreateTask}
-                disabled={!isManager}
-              >
-                Create Task
-                <FaPlus />
-              </button>
-            </div>
-          </header>
 
-          <div className="mb-6 ">
-            {projectTasks ? (
-              isTesting ? (
-                <TBoard
-                  tasks={projectTasks}
-                  setTasks={setProjectTasks}
-                  selectedProject={selectedProject}
-                  handleClick={handleClickTesting}
-                  selectedMember={selectedMember}
-                  selectedTaskType={selectedTaskType}
-                  milestoneId={milestoneId}
-                />
-              ) : (
-                <Board
-                  tasks={projectTasks}
-                  setTasks={setProjectTasks}
-                  selectedProject={selectedProject}
-                  handleClick={handleClick}
-                  selectedMember={selectedMember}
-                  milestoneId={milestoneId}
-                />
-              )
-            ) : (
-              <div>No tasks available for this project.</div>
-            )}
+                  {selectedTaskType !== "Bug Reporting" && milestones.length > 0 && (
+                    <div className="w-48">
+                        <InputField
+                        label=""
+                        name="milestone"
+                        type="select"
+                        value={milestoneId}
+                        onChange={handleMilestoneChange}
+                        options={milestoneOptions}
+                        placeholder="Select Milestone"
+                        />
+                    </div>
+                  )}
+                  
+                  <div 
+                    className="p-2 rounded-lg hover:bg-slate-100 text-textSub hover:text-primary transition-colors cursor-pointer" 
+                    onClick={handleReset}
+                    title="Clear Filters"
+                  >
+                    <MdFilterAltOff className="text-xl" />
+                  </div>
+              </div>
+          )}
+
+          {/* Board Content */}
+          <div className="flex-1 overflow-x-auto p-6">
+             {projectTasks ? (
+               isTesting ? (
+                 <TBoard
+                   tasks={projectTasks.filter(t => !externalSearch || t.taskName?.toLowerCase().includes(externalSearch.toLowerCase()))}
+                   setTasks={setProjectTasks}
+                   selectedProject={selectedProject}
+                   handleClick={handleClickTesting}
+                   selectedMember={selectedMember}
+                   selectedTaskType={selectedTaskType}
+                   milestoneId={milestoneId}
+                 />
+               ) : (
+                 <Board
+                   tasks={projectTasks.filter(t => !externalSearch || t.taskName?.toLowerCase().includes(externalSearch.toLowerCase()))}
+                   setTasks={setProjectTasks}
+                   selectedProject={selectedProject}
+                   handleClick={handleClick}
+                   selectedMember={selectedMember}
+                   milestoneId={milestoneId}
+                 />
+               )
+             ) : (
+               <div className="flex flex-col items-center justify-center h-64 text-textSub">
+                 <p className="text-lg font-medium">No tasks available for this project.</p>
+                 <button onClick={handleReset} className="text-primary hover:underline mt-2">Clear filters</button>
+               </div>
+             )}
           </div>
         </div>
       )}

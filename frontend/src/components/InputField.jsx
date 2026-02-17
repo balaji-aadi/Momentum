@@ -15,6 +15,7 @@ const InputField = ({
   options,
   isMulti = false,
   style,
+  labelClass,
   ...props
 }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -112,7 +113,7 @@ const InputField = ({
     <div className="mb-4">
       <label
         htmlFor={name}
-        className="block text-gray-700 dark:bg-themeBG dark:text-themeText font-medium mb-2"
+        className={`block text-gray-700 dark:text-white font-medium mb-2 ${labelClass || ""}`}
       >
         {label} {isRequired && <span className="text-red-500">*</span>}
       </label>

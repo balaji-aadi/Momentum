@@ -25,6 +25,32 @@ export const logout = createAsyncThunk("logout", async () => {
   }
 });
 
+export const googleLogin = createAsyncThunk(
+  "auth/googleLogin",
+  async (user, { rejectWithValue }) => {
+    try {
+      // In a real app, you'd send the firebase token to your backend here.
+      // For now, we'll return the firebase user as the payload.
+      // const response = await AuthApi.googleLogin(user.accessToken);
+      // return response.data;
+      return {
+        data: {
+          user: {
+            firstName: user.displayName.split(" ")[0],
+            lastName: user.displayName.split(" ")[1] || "",
+            email: user.email,
+            userRole: { name: "User" }, // Default role
+          },
+          accessToken: user.accessToken,
+          refreshToken: "mock-refresh-token",
+        },
+      };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const storeSlice = createSlice({
   name: "store",
   initialState: {
@@ -59,6 +85,28 @@ const storeSlice = createSlice({
         state.loading = false;
         state.error = true;
         state.success = false;
+      })
+      .addCase(googleLogin.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+        state.success = false;
+      })
+      .addCase(googleLogin.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = false;
+        state.success = true;
+        state.token = true;
+        state.isAuthenticated = true;
+        state.currentUser = action.payload.data.user || null;
+        localStorage.setItem("accessToken", action.payload.data.accessToken);
+        localStorage.setItem("refreshToken", action.payload.data.refreshToken);
+        toast.success(`Welcome ${action.payload.data?.user?.firstName}`);
+      })
+      .addCase(googleLogin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = true;
+        state.success = false;
+        toast.error("Google Login Failed");
       })
 
       .addCase(logout.pending, (state) => {

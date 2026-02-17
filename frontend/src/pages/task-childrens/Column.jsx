@@ -45,34 +45,29 @@ import { Droppable } from "react-beautiful-dnd";
 import Task from "./Task";
 
 const Column = ({ column, handleClick }) => {
-  const getColumnHeaderColor = () => {
+  const getColumnPillColor = () => {
     switch (column.name.toLowerCase()) {
-      case "todo":
-        return "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700";
-      case "in progress":
-        return "bg-yellow-50 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-700";
-      case "review":
-        return "bg-purple-50 dark:bg-purple-900/30 border-purple-200 dark:border-purple-700";
-      case "done":
-        return "bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700";
-      default:
-        return "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700";
+      case "todo": return "bg-slate-500";
+      case "in progress": return "bg-amber-500";
+      case "review": return "bg-purple-500";
+      case "done": return "bg-emerald-500";
+      default: return "bg-gray-500";
     }
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className={`p-4 rounded-lg shadow-sm ${getColumnHeaderColor()} border-l-4 mb-4 transition-all duration-200 hover:shadow-md`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <h2 className="font-semibold text-gray-800 dark:text-gray-200 text-sm uppercase tracking-wider">
+    <div className="flex flex-col h-full bg-slate-50/50 rounded-2xl p-2 md:p-3 shadow-sm border border-transparent">
+        {/* Column Header */}
+      <div className="px-2 py-3 mb-2 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+             <span className={`w-2 h-2 rounded-full ${getColumnPillColor()}`}></span>
+             <h2 className="font-bold text-textMain text-sm uppercase tracking-wide">
               {column.name}
             </h2>
           </div>
-          <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow-sm">
+          <span className="bg-white border border-borderLight text-textSub px-2 py-0.5 rounded text-xs font-bold shadow-sm">
             {column.tasks.length}
           </span>
-        </div>
       </div>
 
       <Droppable droppableId={column.id}>
