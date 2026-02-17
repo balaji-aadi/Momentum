@@ -1,0 +1,6 @@
+{
+    "watch": ["server", "routes", "controllers", "models"],
+    "ext": "js,json",
+    "ignore": ["node_modules/", "public/"],
+    "delay": "1000"
+  }

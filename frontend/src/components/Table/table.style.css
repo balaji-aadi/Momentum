@@ -1,0 +1,76 @@
+.action__details {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: normal;
+  transition: all 0.5s;
+  color: #b8b8b8;
+  cursor: pointer;
+  height: 100%;
+}
+
+.action__details > i:hover {
+  border-radius: 50%;
+  box-shadow: -2px 5px 6px rgba(0, 0, 0, 0.5);
+  background-color: #fff;
+}
+
+.action__details > i {
+  color: #28a745;
+  line-height: 24px !important;
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+}
+
+.ag-ltr .ag-cell {
+  font-size: 13px;
+}
+
+.no-outline:focus-within {
+  border: none !important;
+}
+
+.my-custom-grid .ag-root {
+  background-color: #1f2633 !important;
+  color: white !important;
+}
+
+.my-custom-grid .ag-row {
+  background-color: #1f2633 !important;
+  color: white !important;
+}
+
+.my-custom-grid .ag-cell {
+  background-color: #1f2633 !important;
+  color: white !important;
+}
+
+
+.ag-theme-quartz .ag-skeleton {
+  display: none !important;
+}
+
+.custom-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  font-size: 1rem;
+}
+
+.dark .custom-loading-overlay {
+  background: rgba(0, 0, 0, 0.9);
+  opacity: 0.5,
+}

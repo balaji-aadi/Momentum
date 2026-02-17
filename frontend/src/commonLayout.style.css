@@ -1,0 +1,227 @@
+.common__layout__section {
+  margin: 2rem auto;
+  margin-left: 0rem;
+  width: 98.5%;
+  height: auto;
+  border: 1px solid rgb(226, 226, 226);
+  position: relative;
+  border-radius: 4px;
+  /* min-height: 250px; */
+  margin-bottom: 1rem;
+}
+
+/* .common__layout__wrapper {
+  height: 100%;
+  padding-bottom: 0.6rem;
+  margin-bottom: 2rem;
+} */
+
+.common__layout__btn {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  background-color: #fdfdfd;
+  border-top: 1px solid #f0f0f0;
+}
+
+.common__layout__btn1 {
+  display: flex;
+  padding: 6px 12px;
+  line-height: 1.425;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid rgb(175, 170, 170);
+  background-color: white;
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-family: Arial;
+  border-radius: 3px;
+  color: black;
+}
+.common__layout__btn2 {
+  display: flex;
+  padding: 6px 12px;
+  line-height: 1.425;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid rgb(175, 170, 170);
+  background-color: var(--primary-btnColor);
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-family: Arial;
+  border-radius: 3px;
+  opacity: 0.65;
+  color: white;
+}
+
+.common__layout__btn__section {
+  padding: 1rem 5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.common__layout__btn1:hover {
+  background-color: rgb(201, 198, 198);
+  transition: all 0.3s ease-in;
+}
+
+.address:hover {
+  background-color: #0162e8;
+  transition: all 0.3s ease-in;
+}
+
+.search__section {
+  margin: 0;
+  padding: 8px;
+  /* position: relative; */
+  background: #f8f8f8;
+  border: 1px solid #f3f3f3;
+}
+
+.search__filter {
+  margin: 0;
+  padding: 5px 0;
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+
+.search__icon {
+  position: absolute;
+  z-index: 1;
+  color: #b7babd;
+  left: 7px;
+  top: 10px;
+}
+
+.search__input__section {
+  position: relative;
+}
+
+.search__filter > label {
+  margin: 0;
+  padding: 0 10px 0 0;
+  font-weight: 400;
+  line-height: normal;
+  font-size: 13.5px;
+  display: inline-flex;
+  text-transform: capitalize;
+  color: #5b5b5b;
+}
+
+.search__input__section > input {
+  padding-left: 30px;
+  font-size: 10pt;
+  color: #63717f;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 3px;
+  transition: background 0.55s ease;
+  border: 1px solid #d4d4d4;
+  outline: none;
+}
+
+.common__layout__header > ul {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #a7a9ae;
+}
+
+.common__layout__header > ul > li {
+  padding: 12px;
+  margin: 0;
+  background-color: transparent;
+  color: #666;
+  border-radius: 0;
+  border: 0;
+  -moz-transition-duration: 0.15s;
+  -o-transition-duration: 0.15s;
+  -webkit-transition-duration: 0.15s;
+  transition-duration: 0.15s;
+  position: relative;
+  cursor: pointer;
+}
+.common__layout__header > ul > .active {
+  background: #576583;
+  padding: 12px 12px;
+  border-top: 0 solid #3f51b5;
+  color: #fff;
+  margin: 0;
+  font-size: 14px;
+  border: 0 solid #fff;
+  box-shadow: inset 0 0 0 0 rgba(0, 0, 0, 0.4),
+    -1px -1px 3px -1px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.ag-header-cell-text {
+  font-size: 12px;
+  font-weight: 500;
+}
+/* .ag-header-allow-overflow {
+  min-height: 15px !important;
+  height: 30px !important;
+}
+
+.ag-header-cell,
+.ag-header-group-cell {
+  height: 33px !important;
+} */
+
+.withCancel {
+  animation: blink-animation 0.2s linear;
+}
+
+.common_sub__container {
+  padding: 15px;
+}
+
+.common_sub__header {
+  margin-bottom: 5px;
+  clear: both;
+  display: block;
+  overflow: hidden;
+}
+.common_sub__header > h1 {
+  margin: 0;
+  padding: 0 0 8px 0;
+  font-family: Roboto, sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #000;
+  border-bottom: 1px solid #ccc;
+  position: relative;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.common_sub__header h1::before {
+  content: "";
+  width: 30px;
+  height: 3px;
+  background: rgb(131, 110, 255);
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+}
+
+.common_sub__inputsSection {
+  padding-top: 1rem;
+  margin-bottom: 5rem;
+}
+
+@keyframes blink-animation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

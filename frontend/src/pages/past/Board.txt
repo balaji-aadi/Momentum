@@ -1,0 +1,242 @@
+// import React, { useState, useEffect } from "react";
+// import { DragDropContext, Droppable } from "react-beautiful-dnd";
+// import Column from "./Column";
+// import { TaskApi } from "../../services/api/Task.api";
+// import { useSelector } from "react-redux";
+
+// const Board = ({
+//   tasks,
+//   setTasks,
+//   selectedProject,
+//   handleClick,
+//   selectedMember,
+//   milestoneId
+// }) => {
+//   const [showToast, setShowToast] = useState(false);
+//   const [taskToMove, setTaskToMove] = useState(null);
+//   const [taskInProgress, setTaskInProgress] = useState(null);
+//   const [dontShowAgain, setDontShowAgain] = useState(false);
+
+//   const { currentUser } = useSelector((state) => state.store);
+//   const [manager, setManager] = useState(
+//     currentUser?.userRole?.name === "projectmanager" ? true : false
+//   );
+
+//   const columns = [
+//     { id: "todo", name: "To Do" },
+//     { id: "inprogress", name: "In Progress" },
+//     { id: "done", name: "Done" },
+//     { id: "hold", name: "Hold" },
+//   ];
+
+//   const groupedTasks = columns.map((column) => ({
+//     ...column,
+//     tasks: tasks.filter((task) => task.status === column.id),
+//   }));
+
+
+//   const fetchTasks = async () => {
+//     if (selectedProject) {
+//       try {
+//         const res = await TaskApi.getAllTasks({
+//           filter: {
+//             projectName: selectedProject,
+//             ...(selectedMember && { assignee: selectedMember }),
+//             ...(milestoneId && { "milestone": milestoneId })
+//             // "milestone": milestoneId
+//           },
+//         });
+//         setTasks(res.data?.data);
+//       } catch (err) {
+//         console.log(err);
+//       }
+//     }
+//   };
+
+//   const handleToastClose = () => {
+//     setShowToast(false);
+//     if (dontShowAgain) {
+//       localStorage.setItem("dontShowInProgressToast", "true");
+//     }
+//   };
+
+//   const handleDragEnd = async (result) => {
+//     const { source, destination } = result;
+//     if (!destination) return;
+
+//     if (
+//       !manager &&
+//       source.droppableId === "done" &&
+//       !manager &&
+//       destination.droppableId !== "done"
+//     ) {
+//       return;
+//     }
+
+//     const sourceColumn = groupedTasks.find(
+//       (col) => col.id === source.droppableId
+//     );
+//     const destinationColumn = groupedTasks.find(
+//       (col) => col.id === destination.droppableId
+//     );
+
+//     // Only show the toast if moving a task into "In Progress" and there is already a task there
+//     if (!manager && destinationColumn.id === "inprogress") {
+//       const inProgressTasks = groupedTasks.find(
+//         (col) => col.id === "inprogress"
+//       )?.tasks;
+
+//       if (inProgressTasks && inProgressTasks.length >= 1) {
+
+//         const currentTaskInProgress = inProgressTasks[0];
+
+//         const taskToMove = tasks.find(
+//           (task) => task?._id === result.draggableId
+//         );
+
+//         // Check if the task is already in the "In Progress" column
+
+//         if (taskToMove.status !== "inprogress") {
+
+//           setTaskInProgress(currentTaskInProgress);
+//           setTaskToMove(taskToMove);
+//           setShowToast(true);
+//           return;
+//         }
+//       }
+//     }
+
+//     if (sourceColumn === destinationColumn) {
+//       const updatedTasks = [...sourceColumn.tasks];
+//       const [movedTask] = updatedTasks.splice(source.index, 1);
+//       updatedTasks.splice(destination.index, 0, movedTask);
+
+//       setTasks((prevTasks) =>
+//         prevTasks.map((task) =>
+//           task === movedTask
+//             ? { ...task, status: sourceColumn.id }
+//             : task
+//         )
+//       );
+//     } else {
+//       const sourceTasks = [...sourceColumn.tasks];
+//       const destinationTasks = [...destinationColumn.tasks];
+
+//       const [movedTask] = sourceTasks.splice(source.index, 1);
+
+//       destinationTasks.splice(destination.index, 0, movedTask);
+
+//       try {
+//         await TaskApi.taskLogs(movedTask?._id, {
+//           status: destinationColumn.id,
+//         });
+//         setTasks((prevTasks) =>
+//           prevTasks.map((task) =>
+//             task === movedTask
+//               ? { ...task, status: destinationColumn.id }
+//               : task
+//           )
+//         );
+//       } catch (error) {
+//         console.error("Failed to update task status:", error);
+//       }
+//     }
+
+//     fetchTasks();
+//   };
+
+//   useEffect(() => {
+//     if (localStorage.getItem("dontShowInProgressToast") === "true") {
+//       setDontShowAgain(true);
+//     }
+//   }, []);
+
+//   const handleYesClick = async () => {
+//     if (taskToMove && taskInProgress) {
+
+//       await TaskApi.taskLogs(taskInProgress?._id, { status: "hold" });
+//       await TaskApi.taskLogs(taskToMove?._id, { status: "inprogress" });
+
+//       setTasks((prevTasks) =>
+//         prevTasks.map((task) =>
+//           task === taskInProgress
+//             ? { ...task, status: "hold" }
+//             : task === taskToMove
+//               ? { ...task, status: "inprogress" }
+//               : task
+//         )
+//       );
+//     }
+
+//     setShowToast(false);
+//   };
+
+//   const handleNoClick = () => {
+//     setShowToast(false);
+//   };
+
+//   return (
+//     <div>
+//       <DragDropContext onDragEnd={handleDragEnd}>
+//         <div className="grid grid-cols-4 gap-2">
+//           {groupedTasks.map((column) => (
+//             <Droppable
+//               key={column.id}
+//               droppableId={column.id}
+//               direction="vertical"
+//             >
+//               {(provided) => (
+//                 <div
+//                   ref={provided.innerRef}
+//                   {...provided.droppableProps}
+//                   className="column"
+//                 >
+//                   <Column column={column} handleClick={handleClick} />
+//                   {provided.placeholder}
+//                 </div>
+//               )}
+//             </Droppable>
+//           ))}
+//         </div>
+//       </DragDropContext>
+
+//       {showToast && (
+//         <div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-yellow-100 text-black p-4 rounded-md shadow-lg flex items-center space-x-4 z-50">
+//           <div>
+//             <p className="font-semibold">
+//               The existing task in 'In Progress' has been moved to 'Hold'.
+//             </p>
+//             <p>You can now move this task to 'In Progress'.</p>
+//           </div>
+//           <div className="ml-4 space-y-2">
+//             <div className="flex items-center space-x-2">
+//               <button
+//                 onClick={handleYesClick}
+//                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+//               >
+//                 Yes
+//               </button>
+//               <button
+//                 onClick={handleNoClick}
+//                 className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+//               >
+//                 No
+//               </button>
+//             </div>
+//             <div className="flex items-center space-x-2">
+//               <input
+//                 type="checkbox"
+//                 checked={dontShowAgain}
+//                 onChange={() => setDontShowAgain(!dontShowAgain)}
+//                 className="rounded"
+//               />
+//               <label className="text-sm">Don't show me again</label>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default Board;

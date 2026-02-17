@@ -1,0 +1,170 @@
+// Bug task page
+
+import { FiActivity } from "react-icons/fi";
+import Activity from "../task-childrens/Activity";
+import { IoFlagSharp } from "react-icons/io5";
+import { Draggable } from "react-beautiful-dnd";
+import { useEffect, useRef, useState } from "react";
+
+const BugTasks = ({ key, task, index, handleClick }) => {
+  const [, setMenuOpen] = useState(false);
+  const [openActivity, setOpenActivity] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const renderAssigneeImage = (item, image) => {
+    const { email, firstName } = item;
+    if (email) {
+      return (
+        <div className="w-12 h-12 rounded-full flex items-center justify-center text-white bg-blue-500">
+          {firstName.charAt(0).toUpperCase()}
+        </div>
+      );
+    } else {
+      const firstLetter = item.firstName.charAt(0).toUpperCase();
+      const colors = [
+        "bg-red-500",
+        "bg-blue-500",
+        "bg-green-500",
+        "bg-yellow-500",
+        "bg-purple-500",
+      ];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+      return (
+        <div
+          className={`w-12 h-12 rounded-full flex items-center justify-center text-white ${randomColor}`}
+        >
+          {firstLetter}
+        </div>
+      );
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
+
+  return (
+    <>
+      <Draggable key={key} draggableId={task._id} index={index}>
+        {(provided) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            className="dark:bg-[#1E293B] bg-white dark:text-themeText text-black p-5 rounded-lg shadow-lg hover:shadow-2xl transition-all relative w-full"
+          >
+            <main onClick={() => handleClick(task)}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3 pb-3">
+                  {renderAssigneeImage(
+                    task.createdBy,
+                    task.createdBy.profileImage
+                  )}
+                  <div>
+                    <h3 className="text-lg font-bold">
+                      {task.createdBy.firstName} {task.createdBy.lastName}
+                    </h3>
+                    <p className="text-xs">{task.projectId.name}</p>
+                    <p
+                      className={`${
+                        task.severity === "Critical"
+                          ? "text-red-500"
+                          : "text-yellow-500"
+                      } font-semibold text-xs mt-1 flex items-center gap-1`}
+                    >
+                      <IoFlagSharp />
+                      {task.severity}
+                    </p>
+                    <p>
+                      <span className="text-sm font-semibold">Assign To</span> :
+                      <span className="text-xs">
+                        {" "}
+                        {task.assignee.firstName} {task.assignee.lastName}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center space-x-3 border-t-2 pt-3">
+                <div>
+                  <h3 className="text-lg font-bold">{task.bugTitle}</h3>
+                  <p className="text-sm text-gray-500">{task.projectId.name}</p>
+                </div>
+              </div>
+
+              <div className="mt-2">
+                <p className="text-sm">{task.bugDescription}</p>
+              </div>
+
+              {/* Bug Status and Reproducibility */}
+              <div className="mt-4 flex justify-between flex-col items-start text-sm">
+                <p
+                  className={`font-semibold ${
+                    task.bugStatus === "Open"
+                      ? "text-blue-500"
+                      : task.bugStatus === "Inprogress"
+                      ? "text-yellow-500"
+                      : "text-green-500"
+                  }`}
+                >
+                  Status: {task.bugStatus}
+                </p>
+                <p className="font-semibold text-sm">
+                  Reproducibility : {task.reproducibility}
+                </p>
+              </div>
+
+              <div className="mt-2">
+                <p className="text-xs text-gray-500">
+                  Created On: {formatDate(task.createdAt)}
+                </p>
+              </div>
+
+              <div className="mt-4 space-y-2 h-16 overflow-auto">
+                <h4 className="font-bold text-sm">Steps to Reproduce:</h4>
+                {task.stepsToReproduce ? (
+                  <p className="text-sm">{task.stepsToReproduce}</p>
+                ) : (
+                  <p className="text-sm text-gray-500">No steps provided</p>
+                )}
+              </div>
+            </main>
+
+            <div className="mt-2 flex justify-end items-center">
+              <div
+                className="border-2 dark:border-white border-gray-600 rounded-full p-2 cursor-pointer"
+                onClick={() => setOpenActivity(true)}
+              >
+                <FiActivity title="Activity" />
+              </div>
+            </div>
+          </div>
+        )}
+      </Draggable>
+
+      {openActivity && (
+        <Activity
+          isOpen={openActivity}
+          onClose={() => setOpenActivity(false)}
+          task={task}
+          type={"Bug"}
+        />
+      )}
+    </>
+  );
+};
+
+export default BugTasks;

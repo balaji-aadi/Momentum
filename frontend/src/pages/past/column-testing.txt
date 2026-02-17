@@ -1,0 +1,52 @@
+// Testing column section
+
+import React from "react";
+import { Droppable } from "react-beautiful-dnd";
+import TestingTask from "./TestingTask";
+import BugTasks from "./BugTasks";
+
+const Column = ({ column, handleClick, isBug }) => {
+  return (
+    <div className=" bg-transparent p-3">
+      <h2 className=" bg-white dark:bg-primaryBg p-4 dark:text-themeText text-black mb-4 border-b-2 border-[#7095c2] pb-2 flex items-center justify-between rounded-md">
+        <span className="flex items-center dark:text-themeText ">
+          {column.name}
+        </span>
+        <span className="dark:text-black text-gray-500 text-sm shadow-lg rounded-full bg-gray-200 px-2 py-0">
+          {column.tasks.length}
+        </span>
+      </h2>
+
+      <Droppable droppableId={column.id}>
+        {(provided) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            className="space-y-4 min-h-[60vh] -mr-4 pr-2 max-h-[100vh] overflow-y-auto overflow-x-hidden"
+          >
+            {column.tasks.map((task, index) =>
+              isBug ? (
+                <BugTasks
+                  key={task._id}
+                  task={task}
+                  index={index}
+                  handleClick={handleClick}
+                />
+              ) : (
+                <TestingTask
+                  key={task._id}
+                  task={task}
+                  index={index}
+                  handleClick={handleClick}
+                />
+              )
+            )}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </div>
+  );
+};
+
+export default Column;

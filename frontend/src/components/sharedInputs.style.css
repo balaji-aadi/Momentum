@@ -1,0 +1,345 @@
+.shared__inputs__container {
+    width: 100%;
+    display: flex;
+    /* padding: 2rem 1.5rem;
+  margin-bottom: 2rem; */
+    flex-wrap: wrap;
+    height: auto;
+    /* padding-top: 1rem; */
+}
+
+.basic__input__container {
+    padding: 1rem;
+    position: relative;
+    /* margin-bottom: 1rem; */
+}
+
+.shared__inputs__gridCol3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.shared__inputs__gridCol4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.basic__input__description {
+    padding: 1rem;
+    position: relative;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.input__text {
+    border: none;
+    border-bottom: 1px solid grey;
+    outline: none;
+    margin-top: -1.2rem;
+    /* width: 16rem; */
+    width: 16vw;
+    padding: 2px 10px;
+    height: 25px;
+    font-size: 15.5px;
+}
+
+.value__active {
+    border-bottom-color: green;
+}
+
+.input__select {
+    border: none;
+    border-bottom: 1px solid grey;
+    outline: none;
+    /* width: 16rem; */
+    width: 16vw;
+    margin-top: -1.2rem;
+    font-size: 15px;
+    padding: 4px;
+}
+
+.custom__width {
+    /* width: 23rem; */
+    width: 18.5vw;
+}
+
+.custom__width__classic {
+    /* width: 23rem !important; */
+    width: 18.5vw !important;
+}
+
+.static__width {
+    width: 18.5vw !important;
+}
+
+.not__float {
+    top: 0rem !important;
+}
+
+.inside__input {
+    top: 0.6rem !important;
+    background-color: white;
+    padding: 0rem 0.4rem;
+}
+
+.amount {
+    text-align: right;
+}
+
+.floating__label {
+    text-transform: capitalize;
+    font-size: 14px;
+    position: absolute;
+    top: -0.5rem;
+    transition: all 0.5s ease;
+}
+
+.floating__select {
+    text-transform: capitalize;
+    font-size: 12px;
+    position: absolute;
+    top: -0.8rem;
+    transition: all 0.3s ease;
+    scale: 0.9;
+    z-index: 999999;
+}
+
+.label {
+    top: 0.8rem;
+    left: 1.3rem;
+    text-transform: capitalize;
+    font-size: 14px;
+    position: absolute;
+    transition: all 0.3s ease;
+    z-index: 99999999;
+}
+
+.label_checkbox {
+    float: right;
+    color: #031b4e;
+    font-weight: 400;
+    line-height: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+.input__checkbox {
+    width: 2rem;
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+.required__field {
+    color: red;
+    font-size: 15px;
+    margin-left: 0.4rem;
+}
+
+input[type="date"]:required:invalid::-webkit-datetime-edit {
+    color: transparent;
+}
+
+input[type="date"]:focus::-webkit-datetime-edit {
+    color: black !important;
+}
+
+.select__search {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.search__input__label {
+    position: absolute;
+    /* right: 20px; */
+}
+
+/* .css-tlfecz-indicatorContainer {
+  display: none !important;
+} */
+
+.css-1okebmr-indicatorSeparator {
+    display: none !important;
+}
+
+.css-319lph-ValueContainer {
+    padding-left: 0.4rem !important;
+}
+
+.css-tlfecz-indicatorContainer {
+    padding: 6px !important;
+}
+
+.css-1gtu0rj-indicatorContainer {
+    padding: 6px !important;
+}
+
+.input__description {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid grey;
+    outline: none;
+    font-size: 13px;
+    padding-bottom: 1rem;
+}
+
+.classic__input {
+    /* padding: 0px 10px; */
+    box-shadow: inset 0 1px 1px transparent;
+    background-color: #fff;
+    /* width: 16rem; */
+    width: 16vw;
+    border: 1px solid #d2d6de;
+    outline: none;
+    display: block;
+    font-size: 14px;
+    min-height: 34px;
+    line-height: 1.42857143;
+    color: black;
+    margin-bottom: 1rem;
+}
+
+.classic__input:focus {
+    background-color: #f6f6f7;
+}
+
+.selectActive {
+    border-bottom: 1px solid green;
+}
+
+.multi__checkbox__section {
+    position: absolute;
+    min-height: 230px;
+    /* width: 356px; */
+    width: 18.50vw;
+    top: 2.3rem;
+    left: 1rem;
+    z-index: 999999999999;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background-color: #ffffff;
+}
+
+.multi__checkbox__topSection {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    background-color: #efefef;
+    position: relative;
+}
+
+.multi__checkbox__topSection>button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 13px;
+    overflow: hidden !important;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    padding: 10px 50px;
+}
+
+.multi__checkbox__searchBar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 13px;
+    overflow: hidden !important;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    padding: 5px 0px 0px 0px;
+    width: 100%;
+    position: relative;
+}
+
+.multi__checkbox__searchBar>input {
+    width: 100%;
+    padding: 10px 8px;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+.multi__checkbox__searchBar>input:hover {
+    background-color: #e1e3e9;
+}
+
+.multi__checkbox__topSection::before {
+    content: "";
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    background-color: #ccc;
+    bottom: -5px;
+}
+
+.multi__checkbox__searchBar::after {
+    content: "";
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    background-color: #ccc;
+    bottom: 0;
+}
+
+.multi__checkbox__topSection>button:hover {
+    background-color: #e1e3e9;
+}
+
+.multi__checkbox__contentContainer {
+    height: 200px;
+    margin-bottom: 0.5rem;
+    overflow: hidden !important;
+    overflow-y: auto !important;
+}
+
+.multi__checkbox__content {
+    display: flex;
+    padding: 10px 0px 2px 15px;
+    gap: 0.5rem;
+
+}
+
+.multi__checkbox__content>label {
+    font-size: 15px;
+}
+
+.multi__checkbox__content>input {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+@media (max-width: 1600px) {
+    .custom__width {
+        width: 17vw;
+        /* Adjust width for smaller screens */
+    }
+
+    .custom__width__classic {
+        width: 17vw;
+        /* Adjust width for smaller screens */
+    }
+
+    .static__width {
+        width: 17vw !important;
+    }
+}
+
+@media (max-width: 1500px) {
+    .custom__width {
+        width: 16vw;
+        /* Adjust width for smaller screens */
+    }
+
+    .custom__width__classic {
+        width: 16vw;
+        /* Adjust width for smaller screens */
+    }
+
+    .static__width {
+        width: 16vw !important;
+    }
+}

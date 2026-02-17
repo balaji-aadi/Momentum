@@ -1,0 +1,182 @@
+// Testin task section
+
+import { FiActivity } from "react-icons/fi";
+import Activity from "../task-childrens/Activity";
+import { IoFlagSharp } from "react-icons/io5";
+import { Draggable } from "react-beautiful-dnd";
+import { useEffect, useRef, useState } from "react";
+import { CiCircleMore } from "react-icons/ci";
+import AssigneModal from "./AssigneModal";
+
+const TestingTask = ({ key, task, index, handleClick }) => {
+  const [, setMenuOpen] = useState(false);
+  const [openActivity, setOpenActivity] = useState(false);
+  const menuRef = useRef(null);
+  const [openAssigne, setOpenAssigne] = useState(false);
+
+  const closeModal = () => {
+    setOpenAssigne(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const renderAssigneeImage = () => {
+    if (task.createdBy.profileImage) {
+      return (
+        <img
+          src={task.createdBy.profileImage}
+          alt={task.createdBy.firstName}
+          className="w-12 h-12 rounded-full object-cover"
+        />
+      );
+    } else {
+      const firstLetter = task.createdBy.firstName.charAt(0).toUpperCase();
+      const colors = [
+        "bg-red-500",
+        "bg-blue-500",
+        "bg-green-500",
+        "bg-yellow-500",
+        "bg-purple-500",
+      ];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+      return (
+        <div
+          className={`w-12 h-12 rounded-full flex items-center justify-center text-white ${randomColor}`}
+        >
+          {firstLetter}
+        </div>
+      );
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
+
+  return (
+    <>
+      <Draggable key={key} draggableId={task._id} index={index}>
+        {(provided) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            className="dark:bg-[#1E293B] bg-white dark:text-themeText text-black p-5 rounded-lg shadow-lg hover:shadow-2xl transition-all relative w-full"
+          >
+            <main onClick={() => handleClick(task)}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  {renderAssigneeImage()}
+                  <div>
+                    <h3 className="text-lg font-bold">
+                      {task.createdBy.firstName} {task.createdBy.lastName}
+                    </h3>
+                    <p className="text-xs">{task.projectId.name}</p>
+                    <p
+                      className={`${
+                        task.testStatus === "Not Executed"
+                          ? "text-yellow-500"
+                          : task.testStatus === "Pass"
+                          ? "text-green-500"
+                          : task.testStatus === "Fail"
+                          ? "text-red-500"
+                          : ""
+                      } font-semibold text-xs mt-1 flex items-center gap-1`}
+                    >
+                      <IoFlagSharp />
+                      {task.testStatus.charAt(0).toUpperCase() +
+                        task.testStatus.slice(1)}
+                    </p>
+                    <p>
+                      <span className="text-sm font-semibold">Assign To</span> :
+                      <span className="text-xs">
+                        {" "}
+                        {task?.assignee?.firstName} {task?.assignee?.lastName}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <p className="text-md uppercase font-bold text-gray-900 leading-snug dark:text-themeText pb-1">
+                  {task.testCaseName}
+                </p>
+                <p className="text-sm pt-1">{task.testScenarioDescription}</p>
+              </div>
+
+              <div className="mt-4">
+                <p className="text-xs text-gray-500">
+                  Test Case Created On: {formatDate(task?.createdAt)}
+                </p>
+              </div>
+
+              {/* Test Steps */}
+              <div className="mt-4 space-y-2 h-20 overflow-auto pr-1">
+                <h4 className="font-bold text-sm pl-2 dark:bg-primaryBg dark:text-themeText text-white bg-primaryBg  sticky top-0">
+                  Test Steps:
+                </h4>
+                {task.testSteps.map((step, index) => (
+                  <div key={step._id} className="border-b pb-2">
+                    <p className="text-sm font-medium">{`Step ${index + 1}: ${
+                      step.description
+                    }`}</p>
+                    <p className="text-xs text-gray-500">
+                      Expected Outcome: {step.expectedOutcome}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </main>
+
+            <div className="mt-2 flex justify-between flex-row-reverse items-center">
+              <div
+                className="border-2 dark:border-white border-gray-600 rounded-full p-2 cursor-pointer "
+                onClick={() => setOpenActivity(true)}
+              >
+                <FiActivity title="Activity" />
+              </div>
+              {/* <p>
+                {task.testStatus === "Fail" ? (
+                  <CiCircleMore
+                    className="text-4xl cursor-pointer"
+                    title="Assign Developer"
+                    onClick={() => setOpenAssigne(true)}
+                  />
+                ) : null}
+              </p> */}
+            </div>
+          </div>
+        )}
+      </Draggable>
+
+      {openActivity && (
+        <Activity
+          isOpen={openActivity}
+          onClose={() => setOpenActivity(false)}
+          task={task}
+          type={"Testcase"}
+        />
+      )}
+      {openAssigne && (
+        <AssigneModal
+          isOpen={openAssigne}
+          onClose={closeModal}
+          taskDetails={task}
+        />
+      )}
+    </>
+  );
+};
+
+export default TestingTask;

@@ -1,0 +1,89 @@
+import mongoose, { Schema } from "mongoose";
+
+const projectSchema = new mongoose.Schema({
+    name: { 
+      type: String, 
+      required: true 
+    },
+    access: { 
+      type: String, 
+      enum: ["public", "private"], 
+      required: true 
+    },
+    key: { 
+      type: String, 
+      required: true, 
+      unique: true 
+    },
+    description: { 
+      type: String 
+    },
+    startDate: { 
+      type: Date, 
+      required: true 
+    },
+    endDate: { 
+      type: Date, 
+      required: true 
+    },
+    priority: { 
+      type: String, 
+      enum: ["low", "medium", "high"], 
+      required: true 
+    },
+    clientName: { 
+      type: String, 
+      default : ''
+    },
+    budget: { 
+      type: Number, 
+      default : ''
+    },
+    projectManager: { 
+      type: Schema.Types.ObjectId, 
+      ref: "User", 
+      required: true 
+    },
+    teamMembers: [{ 
+      type: Schema.Types.ObjectId, 
+      ref: "User" 
+    }],
+    rolesAndResponsibilities: [
+      {
+        teamMember: { 
+          type: Schema.Types.ObjectId, 
+          ref: "User", 
+          required: true 
+        },
+        role: { 
+          type: String, 
+          required: true 
+        },
+        responsibility: { 
+          type: String, 
+          required: true 
+        },
+      },
+    ],
+    status: { 
+      type: String, 
+      enum: ["active", "inactive", "completed", "hold", "closed"], 
+      required: true,
+      default: "active",
+    },
+    createdBy : {
+      type : Schema.Types.ObjectId, 
+      ref: "User", 
+    },
+    updatedBy : {
+      type : Schema.Types.ObjectId, 
+      ref: "User", 
+    }
+  }, 
+  { 
+    timestamps: true,
+    versionKey: false, 
+});
+  
+
+export const Project = mongoose.model("Project", projectSchema);
