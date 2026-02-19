@@ -205,10 +205,11 @@ import Activity from "./Activity";
 import { IoFileTrayFull } from "react-icons/io5";
 import { CommonApi } from "../../services/api/Common.api";
 import { server } from "../../services/config";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { FiLink2, FiX } from 'react-icons/fi';
 import Modal from 'react-modal';
+import { IoGitNetworkSharp } from "react-icons/io5";
 
 const Task = ({ key, task, index, handleClick }) => {
   const [, setMenuOpen] = useState(false);
@@ -216,7 +217,8 @@ const Task = ({ key, task, index, handleClick }) => {
   const [file, setFile] = useState(null);
   const [showMilestone, setShowMilestone] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [openDependentTasksModal, setOpenDependentTasksModal] = useState(false)
+  const [openDependentTasksModal, setOpenDependentTasksModal] = useState(false);
+  const navigate = useNavigate();
 
   const menuRef = useRef(null);
 
@@ -280,36 +282,87 @@ const Task = ({ key, task, index, handleClick }) => {
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            className={`bg-surface rounded-xl shadow-sm border border-borderLight transition-all relative w-full hover:shadow-md hover:border-primary/30 group`}
+            className={`bg-surface rounded-xl shadow-sm border border-borderLight transition-all relative w-full hover:shadow-md hover:border-primary/30 group ${task.parentTask ? 'border-l-4 border-l-blue-400 dark:border-l-blue-500' : ''}`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            <div className="p-4">
+            <div className={`p-4 ${task.parentTask ? 'bg-blue-50/30 dark:bg-blue-900/10' : ''}`}> {/* Subtle blue tint for subtasks */}
               <main onClick={() => handleClick(task)} className="cursor-pointer">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-3 w-full">
-                    {renderAssigneeImage()}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between w-full gap-2">
-                         <h4 className="text-sm font-semibold text-textMain capitalize truncate pr-2">
-                           {task.taskName}
-                         </h4>
-                         {/* Priority Pill */}
-                         <span className={`text-[10px] px-2 py-0.5 rounded-full border font-medium whitespace-nowrap ${priorityColors[task.taskPriority] || 'bg-slate-100 text-slate-600 border-slate-200'}`}>
-                           {task.taskPriority}
+                {/* Subtask Indicator - Prominent Header */}
+                {task.parentTask && (
+                   <div className="flex items-center gap-2 mb-3 pb-2 border-b border-blue-100 dark:border-blue-900/30">
+                      <div className="bg-blue-100 dark:bg-blue-900/50 p-1 rounded">
+                        <IoGitNetworkSharp className="text-blue-600 dark:text-blue-400 transform rotate-180" size={12} />
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                         <span className="text-[10px] text-blue-600 dark:text-blue-400 font-bold uppercase tracking-wider leading-none">Subtask of</span>
+                         <span className="text-xs font-semibold text-textMain truncate" title={task.parentTask.taskName}>
+                            {task.parentTask.taskId ? `${task.parentTask.taskId} ` : ''}{task.parentTask.taskName}
                          </span>
                       </div>
+                   </div>
+                )}
+
+                {/* Parent Indicator - If it has children */}
+                {task.subtaskStats && task.subtaskStats.total > 0 && !task.parentTask && (
+                    <div className="mb-2">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                             <IoGitNetworkSharp /> PARENT TASK
+                        </span>
+                    </div>
+                )}
+
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start space-x-3 w-full">
+                    <div className="flex-shrink-0">
+                        {renderAssigneeImage()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                       <div className="flex flex-wrap items-center justify-between mb-1 gap-2">
+                          <span className="text-[10px] sm:text-xs font-mono font-bold text-textSub bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded flex-shrink-0">
+                            {task.taskId || `#${task._id.slice(-4)}`}
+                          </span>
+                           {/* Priority Pill */}
+                         <span className={`text-[10px] sm:text-xs px-2 py-0.5 rounded-full border font-medium whitespace-nowrap flex-shrink-0 ${priorityColors[task.taskPriority] || 'bg-slate-100 text-slate-600 border-slate-200'}`}>
+                           {task.taskPriority}
+                         </span>
+                       </div>
+                       
+                       <div className="w-full">
+                         <h4 className={`text-sm sm:text-base font-semibold text-textMain capitalize leading-tight mb-0.5 flex flex-wrap items-center gap-1 ${task.parentTask ? 'italic text-blue-700 dark:text-blue-300' : ''}`}>
+                           {task.parentTask && <span className="text-blue-500 text-lg leading-none inline-block">↳</span>}
+                           <span className="break-words line-clamp-2">{task.taskName}</span>
+                         </h4>
+                      </div>
                       
-                      <p className="text-xs text-textSub mt-0.5 truncate">{task.projectName?.name || 'No Project'}</p>
+                      <p className="text-[10px] sm:text-xs text-textSub truncate">{task.projectName?.name || 'No Project'}</p>
 
                       {task.taskDescription && (
-                        <p className="text-xs text-textSub mt-2 line-clamp-2 leading-relaxed">
+                        <p className="text-[10px] sm:text-xs text-textSub mt-2 line-clamp-2 leading-relaxed break-words">
                           {task.taskDescription}
                         </p>
                       )}
                     </div>
                   </div>
                 </div>
+
+                {/* Progress Bar for Parent Tasks */}
+                {task.subtaskStats && task.subtaskStats.total > 0 && (
+                  <div className="mt-3 mb-1 p-2 bg-purple-50 dark:bg-purple-900/10 rounded-lg border border-purple-100 dark:border-purple-800/20">
+                    <div className="flex justify-between items-end mb-1">
+                      <span className="text-[10px] sm:text-xs text-purple-700 dark:text-purple-300 font-bold uppercase tracking-wide">Subtasks</span>
+                      <span className="text-[10px] sm:text-xs text-textMain font-bold">
+                        {Math.round((task.subtaskStats.completed / task.subtaskStats.total) * 100) || 0}% <span className="text-textSub font-normal">({task.subtaskStats.completed}/{task.subtaskStats.total})</span>
+                      </span>
+                    </div>
+                    <div className="w-full bg-white dark:bg-gray-700 rounded-full h-1.5 overflow-hidden border border-purple-100">
+                      <div 
+                        className="bg-purple-500 h-full rounded-full transition-all duration-300 ease-out" 
+                        style={{ width: `${Math.round((task.subtaskStats.completed / task.subtaskStats.total) * 100) || 0}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                )}
 
                 {task?.dependentTasks?.length > 0 && (
                   <div className="mt-3">
@@ -318,63 +371,74 @@ const Task = ({ key, task, index, handleClick }) => {
                         e.stopPropagation();
                         setOpenDependentTasksModal(true);
                       }}
-                      className="flex items-center text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+                      className="flex items-center text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
                     >
                       <FiLink2 className="mr-1.5" />
-                      {task.dependentTasks.length} dependent task{task.dependentTasks.length !== 1 ? 's' : ''}
+                      {task.dependentTasks.length} dependent
                     </button>
                   </div>
                 )}
 
-                <div className="mt-3 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                <div className="mt-3 flex flex-wrap items-center justify-between text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 gap-y-2">
                   <div className="flex items-center space-x-3">
-                    <span className="flex items-center">
+                    <span className="flex items-center whitespace-nowrap" title="Estimated Hours">
                       <IoMdTime className="mr-1" /> {task.estimatedHours}h
                     </span>
-                    <span className="flex items-center">
+                    <span className="flex items-center whitespace-nowrap" title="Due Date">
                       <FaCalendar className="mr-1" />
-                      {new Date(task.taskStartDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - {new Date(task.taskDueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      {new Date(task.taskDueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </span>
                   </div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setOpenActivity(true);
-                    }}
-                    className="p-1.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                    title="View activity"
-                  >
-                    <FiActivity size={14} />
-                  </button>
+                  
+                  <div className="flex items-center gap-1.5">
+                    <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log("Navigating to create subtask with:", task);
+                          navigate('/task/create-task', { state: { parentTask: task, project: task.projectName } });
+                        }}
+                        className="flex items-center gap-1 px-2 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors border border-blue-100 dark:border-blue-800"
+                        title="Add Multi-level Subtask"
+                      >
+                        <IoGitNetworkSharp size={12} />
+                        <span className="font-medium">Subtask</span>
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenActivity(true);
+                        }}
+                      className="p-1 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                      title="View activity"
+                    >
+                      <FiActivity size={14} />
+                    </button>
+                  </div>
                 </div>
               </main>
 
               {(task?.milestone || task?.additionalNotes || task?.attachments?.length > 0) && (
-                <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center justify-between flex-row-reverse">
-                    <div className="flex space-x-2">
+                <div className="mt-3 pt-2 border-t border-gray-100 dark:border-gray-800">
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={() => setShowMilestone(!showMilestone)}
+                      className="flex items-center text-left text-[10px] sm:text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400"
+                    >
+                       <span className="mr-1">{showMilestone ? <FiChevronUp /> : <FiChevronDown />}</span>
+                       {task.milestone ? "Milestone Details" : "More Details"}
+                    </button>
+                     <div className="flex space-x-2">
                       {task?.attachments?.length > 0 && (
                         <Link
                           to={file}
                           target="_blank"
-                          className="p-1.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                          className="text-gray-400 hover:text-primary transition-colors"
                           title="View attachment"
                         >
                           <IoFileTrayFull size={14} />
                         </Link>
                       )}
                     </div>
-                    <button
-                      onClick={() => setShowMilestone(!showMilestone)}
-                      className="flex items-center w-full text-left"
-                    >
-                      <h4 className="text-sm font-semibold text-blue-600 dark:text-blue-400 flex items-center">
-
-                        Show Milestone
-                      </h4>
-                      {showMilestone ? <FiChevronUp /> : <FiChevronDown />}
-                    </button>
-
                   </div>
                 </div>
               )}

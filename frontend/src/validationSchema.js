@@ -85,6 +85,8 @@ export const taskValidationSchema = Yup.object({
     .required("Due date is required"),
   dependentTasks: Yup.array().of(Yup.string()),
   dependencyType: Yup.string(),
+  sprint: Yup.string().nullable(),
+  parentTask: Yup.string().nullable(),
 });
 
 export const userValidationSchema = (isUpdating) =>

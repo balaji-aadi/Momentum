@@ -22,19 +22,33 @@ const Board = ({
   const { currentUser } = useSelector((state) => state.store);
   const isManager = currentUser?.userRole?.name === "projectmanager";
 
+
+
+  const [boardTasks, setBoardTasks] = useState([]);
+
+  useEffect(() => {
+    if (tasks) {
+      setBoardTasks(tasks);
+    } else {
+        fetchTasks();
+    }
+  }, [tasks, selectedProject, selectedMember, milestoneId]);
+
   const columns = [
+    { id: "backlog", name: "Backlog" },
     { id: "todo", name: "To Do" },
     { id: "inprogress", name: "In Progress" },
+    { id: "review", name: "Review" },
     { id: "done", name: "Done" },
-    { id: "hold", name: "Hold" },
   ];
 
   const groupedTasks = columns.map((column) => ({
     ...column,
-    tasks: tasks.filter((task) => task.status === column.id),
+    tasks: boardTasks.filter((task) => task.status === column.id),
   }));
 
   const fetchTasks = async () => {
+    if (tasks) return; // Don't fetch if tasks are provided via props
     if (!selectedProject) return;
 
     try {
@@ -45,7 +59,7 @@ const Board = ({
           ...(milestoneId && { milestone: milestoneId })
         },
       });
-      setTasks(res.data?.data || []);
+      setBoardTasks(res.data?.data || []);
     } catch (err) {
       console.error("Failed to fetch tasks:", err);
     }
@@ -139,7 +153,7 @@ const Board = ({
   return (
     <div>
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 h-full items-start">
+        <div className="flex flex-row overflow-x-auto overflow-y-hidden h-full items-start gap-6 pb-4 px-2">
           {groupedTasks.map((column) => (
             <Droppable
               key={column.id}
@@ -150,7 +164,7 @@ const Board = ({
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className="column"
+                  className="column min-w-[300px] w-[350px] shrink-0"
                 >
                   <Column column={column} handleClick={handleClick} />
                   {provided.placeholder}

@@ -110,11 +110,11 @@ const ProjectList = () => {
             cellRenderer: (params) => (
                 <div className="flex items-center gap-2">
                     <button 
-                        onClick={() => navigate(`/task/dashboard?projectId=${params.data._id}`)}
+                        onClick={() => navigate(`/project/${params.data._id}/overview`)}
                         className="text-primary hover:underline text-sm font-medium"
                         title="View Board"
                     >
-                        View Board
+                        View Project
                     </button>
                     <button 
                         onClick={() => handleEditProject(params.data)}
@@ -216,7 +216,7 @@ const ProjectList = () => {
                                         key={project._id} 
                                         className="bg-surface rounded-2xl p-5 shadow-sm border border-borderLight hover:shadow-md hover:border-primary/30 transition-all cursor-pointer group flex flex-col justify-between relative"
                                     >
-                                        <div onClick={() => navigate(`/task/dashboard?projectId=${project._id}`)}>
+                                        <div onClick={() => navigate(`/project/${project._id}/overview`)}>
                                             <div className="flex items-center gap-3 mb-3">
                                                 <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold text-lg flex-shrink-0">
                                                     {project.name.charAt(0).toUpperCase()}

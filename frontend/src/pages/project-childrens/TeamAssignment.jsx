@@ -80,16 +80,19 @@ const TeamAssignment = ({
   };
 
   const handleAddRow = () => {
-    setRolesAndResponsibilities([
+    const newRoles = [
       ...rolesAndResponsibilities,
       { teamMember: "", role: "", responsibility: "" },
-    ]);
+    ];
+    setRolesAndResponsibilities(newRoles);
+    formik.setFieldValue("rolesAndResponsibilities", newRoles);
   };
 
   const handleRemoveRow = (index) => {
     const updatedRoles = [...rolesAndResponsibilities];
     updatedRoles.splice(index, 1);
     setRolesAndResponsibilities(updatedRoles);
+    formik.setFieldValue("rolesAndResponsibilities", updatedRoles);
   };
 
   const handleRoleChange = (selectedOption, index, field) => {
@@ -102,7 +105,7 @@ const TeamAssignment = ({
       updatedRoles[index][field] = selectedOption.target.value;
     }
     setRolesAndResponsibilities(updatedRoles);
-    formik.setFieldValue("rolesAndResponsibilities", rolesAndResponsibilities);
+    formik.setFieldValue("rolesAndResponsibilities", updatedRoles);
   };
 
   const handleCancel = () => {
@@ -146,7 +149,30 @@ const TeamAssignment = ({
                 isMulti
                 options={teamOptions}
                 value={formik.values.teamMembers}
-                onChange={formik.handleChange}
+                onChange={(selectedOptions) => {
+                    const newMembers = selectedOptions ? selectedOptions.map(opt => opt.value) : [];
+                    formik.setFieldValue("teamMembers", newMembers);
+
+                    // Sync Roles Table
+                    // 1. Filter out rows for members that were removed
+                    const filteredRoles = rolesAndResponsibilities.filter(row => 
+                        !row.teamMember || newMembers.includes(row.teamMember)
+                    );
+
+                    // 2. Add new rows for members that were added (and don't have a row yet)
+                    const existingMemberIds = filteredRoles.map(r => r.teamMember);
+                    const membersToAdd = newMembers.filter(mId => !existingMemberIds.includes(mId));
+                    
+                    const newRoles = membersToAdd.map(mId => ({
+                        teamMember: mId,
+                        role: "",
+                        responsibility: ""
+                    }));
+
+                    const finalRoles = [...filteredRoles, ...newRoles];
+                    setRolesAndResponsibilities(finalRoles);
+                    formik.setFieldValue("rolesAndResponsibilities", finalRoles);
+                }}
                 onBlur={formik.handleBlur}
                 placeholder="Select Team Members"
                 error={formik.touched.teamMembers && formik.errors.teamMembers}

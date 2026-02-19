@@ -2,11 +2,13 @@ import { asyncHandler } from "../../utils/asyncHandler.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
 import { Task } from "../../models/task.model.js";
+import { Project } from "../../models/project.model.js";
 import mongoose from "mongoose";
 import { calculateStatusDuration } from "../../utils/calculateStatusDuration.js";
 import { Notification } from "../../models/notification.model.js";
 import notificationService from "../notification-service/notification.service.js";
 import { socketService } from "../../socket-instance.js";
+import { ProgressService } from "../progress-service/progress.service.js";
 
 const tc = {};
 
@@ -32,6 +34,7 @@ tc.createTask = asyncHandler(async (req, res) => {
       attachments,
       additionalNotes,
       status,
+      progress,
     } = req.body;
 
     const requiredFields = {
@@ -59,9 +62,43 @@ tc.createTask = asyncHandler(async (req, res) => {
           )
         );
     }
+
+    // Data Integrity: Check Parent Task Project
+    if (req.body.parentTask) {
+        const parent = await Task.findById(req.body.parentTask);
+        if (!parent) {
+             return res.status(400).json(new ApiError(400, "Parent Task not found"));
+        }
+        // Ensure subtask belongs to same project (handling ObjectId comparison)
+        if (projectName && parent.projectName && parent.projectName.toString() !== projectName.toString()) {
+            return res.status(400).json(new ApiError(400, "Subtask must belong to the same project as Parent Task"));
+        }
+    }
+
+    // Generate Readable Task ID (e.g., MOM-101)
+    let taskId = null;
+    if (projectName) {
+      const project = await Project.findById(projectName);
+      if (project && project.key) {
+        const lastTask = await Task.findOne({ projectName }).sort({ createdAt: -1 });
+        let nextNum = 1;
+        if (lastTask && lastTask.taskId) {
+           const parts = lastTask.taskId.split('-');
+           const lastNum = parseInt(parts[parts.length - 1]);
+           if (!isNaN(lastNum)) nextNum = lastNum + 1;
+        } else {
+           // Fallback/Init: Count existing tasks to be safe or start at 1
+           const count = await Task.countDocuments({ projectName });
+           nextNum = count + 1;
+        }
+        taskId = `${project.key}-${nextNum}`;
+      }
+    }
+
     const createdTask = await Task.create({
       projectName: projectName || undefined,
       taskName,
+      taskId,
       taskPriority,
       taskType,
       taskStartDate,
@@ -77,6 +114,7 @@ tc.createTask = asyncHandler(async (req, res) => {
       attachments,
       milestone,
       status,
+      progress: progress || 0,
       createdBy: req.user?._id,
       activityLogs: [
         {
@@ -101,6 +139,11 @@ tc.createTask = asyncHandler(async (req, res) => {
 
     socketService._io.emit("notification", message, assignee);
     await notificationService(new mongoose.Types.ObjectId(assignee), message);
+
+    if (createdTask.parentTask) await ProgressService.updateParentTaskProgress(createdTask.parentTask);
+    if (createdTask.milestone) await ProgressService.updateMilestoneProgress(createdTask.milestone);
+    if (createdTask.projectName) await ProgressService.updateProjectProgress(createdTask.projectName);
+    if (createdTask.sprint) await ProgressService.updateSprintProgress(createdTask.sprint);
 
     return res
       .status(201)
@@ -138,6 +181,7 @@ tc.updateTask = asyncHandler(async (req, res) => {
       epic,
       sprint,
       additionalNotes,
+      progress,
     } = req.body;
 
     const existingTask = await Task.findById(req.params.taskId);
@@ -176,6 +220,7 @@ tc.updateTask = asyncHandler(async (req, res) => {
         milestone,
         additionalNotes,
         status,
+        progress,
         updatedBy: req.user?._id,
         ...(activityLogEntry && {
           $push: {
@@ -204,6 +249,15 @@ tc.updateTask = asyncHandler(async (req, res) => {
     const message = { title: "Task updated for you", body: taskName };
     socketService._io.emit("notification", message, assignee);
     await notificationService(new mongoose.Types.ObjectId(assignee), message);
+
+    // Cascading Progress Updates
+    if (updatedTask.parentTask) await ProgressService.updateParentTaskProgress(updatedTask.parentTask);
+    if (updatedTask.milestone) await ProgressService.updateMilestoneProgress(updatedTask.milestone);
+    if (updatedTask.projectName) await ProgressService.updateProjectProgress(updatedTask.projectName);
+    if (updatedTask.sprint) await ProgressService.updateSprintProgress(updatedTask.sprint);
+
+    // If parent changed, we should technically update the OLD parent too, but let's keep it simple for now or strictly follow requirements.
+    // Ideally: if (existingTask.parentTask && existingTask.parentTask !== updatedTask.parentTask) ...
 
     return res
       .status(200)
@@ -303,7 +357,7 @@ tc.getallTasks = asyncHandler(async (req, res) => {
     delete filter.type;
 
     const tasks = await Task.find({ ...searchCondition, ...filter })
-    .populate("projectName assignee milestone epic sprint activityLogs.user")
+    .populate("projectName assignee milestone epic sprint activityLogs.user parentTask")
     .populate({
       path: "dependentTasks",
       populate: [
@@ -394,6 +448,12 @@ tc.updatetaskLog = asyncHandler(async (req, res) => {
     task.status = status;
     task.updatedBy = req.user?._id;
     await task.save();
+
+    // Cascading Progress Updates
+    await ProgressService.updateParentTaskProgress(task.parentTask);
+    if (task.milestone) await ProgressService.updateMilestoneProgress(task.milestone);
+    if (task.projectName) await ProgressService.updateProjectProgress(task.projectName);
+    if (task.sprint) await ProgressService.updateSprintProgress(task.sprint);
 
     return res
       .status(200)

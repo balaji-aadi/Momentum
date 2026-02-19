@@ -9,6 +9,7 @@ import { UserApi } from '../services/api/user.api';
 import { TaskApi } from '../services/api/Task.api';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import Sprints from './project-childrens/Sprints';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -129,6 +130,10 @@ const Dashboard = () => {
 
            {viewMode === 'calendar' && (
                <CalendarBoard tasks={filteredTasks} isLoading={loading} />
+           )}
+
+           {viewMode === 'sprints' && (
+               <Sprints projectId={projectId} />
            )}
        </div>
     </div>

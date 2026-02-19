@@ -1,7 +1,7 @@
 import React from "react";
 import { useFormik } from "formik";
 import InputField from "../../components/InputField";
-import { authValidationSchema } from "../../validationSchema";
+// import { authValidationSchema } from "../../validationSchema";
 import { AuthApi } from "../../services/api/Auth.api";
 import { useNavigate } from "react-router-dom";
 import { useLoading } from "../../components/loader/LoaderContext";

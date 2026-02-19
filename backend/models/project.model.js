@@ -35,9 +35,19 @@ const projectSchema = new mongoose.Schema({
       type: String, 
       default : ''
     },
+    githubRepository: {
+      type: String,
+      default: '' // e.g. https://github.com/my-org/my-repo
+    },
     budget: { 
       type: Number, 
       default : ''
+    },
+    progress: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 100
     },
     projectManager: { 
       type: Schema.Types.ObjectId, 
@@ -70,6 +80,10 @@ const projectSchema = new mongoose.Schema({
       enum: ["active", "inactive", "completed", "hold", "closed"], 
       required: true,
       default: "active",
+    },
+    settings: {
+      sprintDuration: { type: Number, default: 2 }, // weeks
+      enableSprints: { type: Boolean, default: false }
     },
     createdBy : {
       type : Schema.Types.ObjectId, 

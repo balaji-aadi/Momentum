@@ -40,6 +40,13 @@ import UserTypeMaster from "./pages/UserTypeMaster";
 
 import ProjectList from "./pages/project-childrens/ProjectList";
 import TeamList from "./pages/user-childrens/TeamList";
+import ProjectLayout from "./components/layout/ProjectLayout";
+import ProjectOverview from "./pages/project-childrens/ProjectOverview";
+import Milestones from "./pages/project-childrens/Milestones";
+import ProjectBoard from "./pages/project-childrens/ProjectBoard";
+import Backlog from "./pages/project-childrens/Backlog";
+import Sprints from "./pages/project-childrens/Sprints";
+import Settings from "./pages/project-childrens/Settings";
 
 function App() {
   const router = createBrowserRouter(
@@ -76,6 +83,7 @@ function App() {
               path="create-project"
               element={<ProtectedRoute element={<CreateProject />} />}
             />
+
             <Route
               path="milestones"
               element={<ProtectedRoute element={<MilestoneLists />} />}
@@ -167,6 +175,16 @@ function App() {
             path="notification"
             element={<ProtectedRoute element={<Notification />} />}
           />
+        </Route>
+
+        {/* Project Specific Routes (Separate Layout) */}
+        <Route path="project/:projectId" element={<ProtectedRoute element={<ProjectLayout />} />}>
+            <Route path="overview" element={<ProtectedRoute element={<ProjectOverview />} />} />
+            <Route path="milestones" element={<ProtectedRoute element={<Milestones />} />} />
+            <Route path="board" element={<ProtectedRoute element={<ProjectBoard />} />} />
+            <Route path="backlog" element={<ProtectedRoute element={<Backlog />} />} />
+            <Route path="sprints" element={<ProtectedRoute element={<Sprints />} />} />
+            <Route path="settings" element={<ProtectedRoute element={<Settings />} />} />
         </Route>
       </>
     )

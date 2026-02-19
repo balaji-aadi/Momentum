@@ -255,7 +255,7 @@ const Logs = ({ task, type }) => {
           ))}
 
         </div>
-        <div className="mt-4  h-[50vh] overflow-auto relative">
+        <div className="mt-4  h-[60vh] overflow-auto relative">
           {type === "Testcase" ? null : (
             <div className="sticky top-0 bg-white shadow-md p-3 z-10 flex flex-col gap-2 border-b">
               <h3 className="text-gray-700 font-bold text-lg">📌 Task Duration</h3>
@@ -282,15 +282,22 @@ const Logs = ({ task, type }) => {
           {task.activityLogs &&
             task.activityLogs.length > 0 &&
             task.activityLogs.map((log, index) => {
-              const statusChange = log.message
-                .replace("Status had been changed from", "Status changed from")
-                .replace("Status changed from", "")
-                .replace(">>>", "➝")
-                .trim();
-
-              const statuses = statusChange
-                .split("➝")
-                .map((status) => statusMapping[status.trim()] || status.trim());
+              const isStatusChange = log.message.includes(">>>") || log.message.includes("Status had been changed from");
+              
+              let displayMessage = log.message;
+              if (isStatusChange) {
+                  const rawMessage = log.message
+                    .replace("Status had been changed from", "")
+                    .replace(">>>", "➝")
+                    .trim();
+                  
+                  const parts = rawMessage.split("➝");
+                  if (parts.length === 2) {
+                      const oldStatus = statusMapping[parts[0].trim()] || parts[0].trim();
+                      const newStatus = statusMapping[parts[1].trim()] || parts[1].trim();
+                      displayMessage = `${oldStatus} ➝ ${newStatus}`;
+                  }
+              }
 
               return (
                 <div
@@ -308,22 +315,18 @@ const Logs = ({ task, type }) => {
                       className={`w-10 h-10 flex items-center justify-center rounded-full ${backgroundColors[index % backgroundColors.length]
                         } text-white font-bold`}
                     >
-                      {log?.user?.firstName?.charAt(0)}
+                      {log?.user?.firstName ? log.user.firstName.charAt(0) : "S"}
                     </div>
                   )}
 
                   <div className="flex-1">
                     <p className="font-medium">
-                      {log.user?.firstName} {log.user?.lastName}
+                      {log.user ? `${log.user.firstName} ${log.user.lastName}` : "System / GitHub"}
                     </p>
                     <p className="text-gray-500 text-sm">
                       {new Date(log.date).toLocaleString()}
                     </p>
-                    {log.message !== "Task created with status Todo" ? (
-                      <p className="text-sm font-semibold">{`${statuses[0]} ➝ ${statuses[1]}`}</p>
-                    ) : (
-                      <p className="text-sm font-semibold">Task Created</p>
-                    )}
+                    <p className="text-sm font-semibold">{displayMessage}</p>
                   </div>
 
                   <div className="w-3 h-3 bg-green-500 rounded-full mt-2"></div>

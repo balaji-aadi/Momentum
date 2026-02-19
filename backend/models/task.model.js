@@ -11,6 +11,11 @@ const taskSchema = new mongoose.Schema(
       type: String, 
       required: true 
     },
+    taskId: {
+      type: String,
+      unique: true,
+      sparse: true
+    },
     taskPriority: { 
       type: String, 
       enum: ["low", "medium", "high"], 
@@ -24,6 +29,10 @@ const taskSchema = new mongoose.Schema(
       type: Number 
     },
     storyPoints: {
+      type: Number,
+      default: 0
+    },
+    progress: {
       type: Number,
       default: 0
     },
@@ -46,47 +55,45 @@ const taskSchema = new mongoose.Schema(
       ref: "Milestone",
       default: null
     },
-    assignee: { 
-      type: Schema.Types.ObjectId, 
-      ref: "User", 
-      default: null
-    },
-    reporter: {
+    // Hierarchy
+    parentTask: {
       type: Schema.Types.ObjectId,
-      ref: "User"
+      ref: "Task",
+      default: null,
+      index: true
     },
-    taskStartDate: { 
-      type: Date, 
-      required: false // Can be optional if it's just a backlog item
-    },
-    taskDueDate: { 
-      type: Date, 
-      required: false // Can be optional if it's just a backlog item
-    },
-    additionalNotes: { 
-      type: String 
-    },
-    dependentTasks: [{
+    dependentTasks: [{ 
       type: Schema.Types.ObjectId, 
       ref: "Task" 
     }],
-    dependencyType: { 
-      type: String, 
-      enum: ["start-to-start", "start-to-finish", "finish-to-start", "finish-to-finish"],
-      default: "start-to-start"
+    
+    // Performance Indexes (defined below, but fields here)
+    assignee: { 
+      type: Schema.Types.ObjectId, 
+      ref: "User", 
+      default: null,
+      index: true 
     },
     status: { 
       type: String, 
-      enum: ["todo", "inprogress", "done", "hold"],
-      default: "todo"
+      enum: ["todo", "inprogress", "review", "done", "hold", "backlog"],
+      default: "todo",
+      index: true
     },
-    createdBy: { 
-      type: Schema.Types.ObjectId, 
-      ref: "User" 
+    
+    // Computed Subs Stats (for optimization)
+    subtaskStats: {
+        total: { type: Number, default: 0 },
+        completed: { type: Number, default: 0 }
     },
+
     updatedBy: { 
       type: Schema.Types.ObjectId, 
       ref: "User" 
+    },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User"
     },
     activityLogs: [
       {
@@ -107,5 +114,9 @@ const taskSchema = new mongoose.Schema(
     versionKey: false 
   }
 );
+
+// Compound Indexes for Common Queries
+taskSchema.index({ projectName: 1, status: 1 }); // Dashboard filtering
+taskSchema.index({ assignee: 1, status: 1 });    // "My Tasks" filtering
 
 export const Task = mongoose.model("Task", taskSchema);

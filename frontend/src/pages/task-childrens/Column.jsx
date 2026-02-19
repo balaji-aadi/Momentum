@@ -56,7 +56,7 @@ const Column = ({ column, handleClick }) => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-50/50 rounded-2xl p-2 md:p-3 shadow-sm border border-transparent">
+    <div className="flex flex-col h-full bg-slate-50/50 rounded-2xl p-2 md:p-3 shadow-sm border border-transparent min-w-[300px]">
         {/* Column Header */}
       <div className="px-2 py-3 mb-2 flex items-center justify-between">
           <div className="flex items-center gap-2">

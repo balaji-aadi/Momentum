@@ -112,7 +112,7 @@ const Sidebar = () => {
                 <button 
                     onClick={() => {
                         localStorage.clear();
-                        navigate('/login');
+                        window.location.href = "/login";
                     }}
                     className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-rose-500 hover:bg-rose-50 w-full transition-all mt-1"
                 >

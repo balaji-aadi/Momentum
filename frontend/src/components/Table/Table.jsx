@@ -402,10 +402,10 @@ export const Table = memo(
   }
 );
 
-const root = createRoot(document.getElementById("root"));
-root.render(
-  <StrictMode>
-    <Table />
-  </StrictMode>
-);
-window.tearDownExample = () => root.unmount();
+// const root = createRoot(document.getElementById("root"));
+// root.render(
+//   <StrictMode>
+//     <Table />
+//   </StrictMode>
+// );
+// window.tearDownExample = () => root.unmount();

@@ -59,7 +59,8 @@ const TaskTable = ({ tasks = [], isLoading, onProjectChange, onMemberChange, pro
             
             {/* Table Header */}
             <div className="grid grid-cols-12 gap-4 px-6 py-3 bg-bgLight border-b border-borderLight text-xs font-semibold text-textSub uppercase tracking-wider">
-                <div className="col-span-12 md:col-span-4 flex items-center gap-1">Task</div>
+                <div className="hidden md:block md:col-span-1">ID</div>
+                <div className="col-span-12 md:col-span-3 flex items-center gap-1">Task</div>
                 <div className="hidden md:block md:col-span-2">Description</div>
                 <div className="hidden md:block md:col-span-1">Assignee</div>
                 <div className="hidden md:block md:col-span-2">Due Date</div>
@@ -87,7 +88,10 @@ const TaskTable = ({ tasks = [], isLoading, onProjectChange, onMemberChange, pro
 
                             {expandedGroups[group.id] && group.tasks.map(task => (
                                 <div key={task._id} className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-borderLight hover:bg-slate-50 transition-colors items-center group">
-                                    <div className="col-span-12 md:col-span-4 flex items-center gap-3">
+                                    <div className="hidden md:block md:col-span-1">
+                                        <span className="font-mono text-xs font-bold text-textSub bg-slate-100 px-1.5 py-0.5 rounded">{task.taskId || '-'}</span>
+                                    </div>
+                                    <div className="col-span-12 md:col-span-3 flex items-center gap-3">
                                         <input type="checkbox" className="w-4 h-4 rounded border-borderLight text-primary focus:ring-primary/20" />
                                         <span className="font-semibold text-textMain truncate cursor-pointer hover:text-primary" onClick={() => navigate(`/task/update-task?id=${task._id}`)}>
                                             {task.taskName}

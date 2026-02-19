@@ -24,7 +24,13 @@ const milestoneSchema = new Schema({
   deliverables: {
     type: String,
     trim: true,
-  }
+  },
+  progress: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 100
+  },
 }, {
   timestamps: true,
   versionKey: false

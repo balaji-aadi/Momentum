@@ -7,6 +7,7 @@ export const ProjectApi = {
   updateProject: (id, payload) =>
     Api.put(`project/update-project/${id}`, payload),
   getAllProjects: (payload) => Api.post("project/get-all-projects", payload),
+  getProjectById: (id) => Api.get(`/project/get-projects/${id}`),
   project: (id) => Api.get(`/project/get-projects/${id}`),
 
   // Milestone apis

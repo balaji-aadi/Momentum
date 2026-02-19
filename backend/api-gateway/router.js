@@ -12,7 +12,8 @@ import fileRouter from "../services/file-service/file.router.js";
 import notifyRouter from "../services/notification-service/notification.router.js"
 import milestoneRouter from "../services/milestone-service/milestone.router.js"
 import epicRouter from "../services/epic-service/epic.router.js";
-import sprintRouter from "../services/sprint-service/sprint.router.js";
+import sprintRouter from "../routes/sprint.routes.js";
+import webhookRouter from "../routes/webhook.routes.js";
 
 
 const router = Router();
@@ -31,5 +32,6 @@ router.use("/file", fileRouter)
 router.use("/milestone", milestoneRouter)
 router.use("/epic", epicRouter);
 router.use("/sprint", sprintRouter);
+router.use("/webhook", webhookRouter);
 
 export default router;

@@ -3,6 +3,7 @@ import { ApiError } from "../../utils/ApiError.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
 import { Project } from "../../models/project.model.js";
 import { Milestone } from "../../models/milestone.model.js"
+import { Task } from "../../models/task.model.js"
 
 const pc = {}
 
@@ -12,7 +13,7 @@ pc.createProject = asyncHandler(async (req, res) => {
 
   try {
     const { name, access, key, description, startDate, endDate, priority, clientName, budget, projectManager,
-      teamMembers, rolesAndResponsibilities, milestones, status
+      teamMembers, rolesAndResponsibilities, milestones, status, githubRepository
     } = req.body;
 
     const requiredFields = { name, access, key, startDate, endDate, priority, projectManager, rolesAndResponsibilities, status };
@@ -32,6 +33,7 @@ pc.createProject = asyncHandler(async (req, res) => {
       endDate,
       priority,
       clientName,
+      githubRepository,
       budget,
       projectManager,
       teamMembers,
@@ -59,7 +61,9 @@ pc.createProject = asyncHandler(async (req, res) => {
 
 //update Project
 pc.updateProject = asyncHandler(async (req, res) => {
-  console.log("Req.body", req.body);
+  console.log("!!! SUPER DISTINCT LOG - Update Project !!!");
+  console.log("Req.body keys:", Object.keys(req.body));
+  console.log("Github Repo in body:", req.body.githubRepository);
 
   try {
     if (req.params.projectId == "undefined" || !req.params.projectId) {
@@ -71,7 +75,7 @@ pc.updateProject = asyncHandler(async (req, res) => {
     }
 
     const { name, access, key, description, startDate, endDate, priority, clientName, budget, projectManager,
-      teamMembers, rolesAndResponsibilities, milestones, status
+      teamMembers, rolesAndResponsibilities, milestones, status, githubRepository
     } = req.body;
 
     const updatedProject = await Project.findByIdAndUpdate(
@@ -85,6 +89,7 @@ pc.updateProject = asyncHandler(async (req, res) => {
         endDate,
         priority,
         clientName,
+        githubRepository,
         budget,
         projectManager,
         teamMembers,
@@ -142,6 +147,10 @@ pc.getProjectById = asyncHandler(async (req, res) => {
 });
 
 
+
+
+// ... existing imports ...
+
 // Get all active project
 pc.getAllProject = asyncHandler(async (req, res) => {
   console.log("req.body...", req.body);
@@ -193,6 +202,26 @@ pc.getAllProject = asyncHandler(async (req, res) => {
     const projectIds = projects.map(p => p._id);
     const allMilestones = await Milestone.find({ project: { $in: projectIds } });
 
+    // Aggregating task stats
+    const taskStats = await Task.aggregate([
+      { $match: { projectName: { $in: projectIds } } },
+      {
+        $group: {
+          _id: "$projectName",
+          totalTasks: { $sum: 1 },
+          completedTasks: {
+            $sum: { $cond: [{ $eq: ["$status", "done"] }, 1, 0] }
+          }
+        }
+      }
+    ]);
+
+    const taskStatsMap = taskStats.reduce((acc, stat) => {
+      acc[stat._id.toString()] = stat;
+      return acc;
+    }, {});
+
+
     const formattedProjects = projects.map((project) => {
       const teamMembers = project.teamMembers.map((member) => {
         const rolesAndResponsibilities = project.rolesAndResponsibilities
@@ -209,11 +238,18 @@ pc.getAllProject = asyncHandler(async (req, res) => {
         .filter(m => m.project.toString() === project._id.toString())
         .map(m => m.toObject());
 
-      return {
-        ...project.toObject(),
-        teamMembers,
-        milestones: projectMilestones
-      };
+      const stats = taskStatsMap[project._id.toString()] || { totalTasks: 0, completedTasks: 0 };
+
+        return {
+          ...project.toObject(),
+          teamMembers,
+          milestones: projectMilestones,
+          taskStats: {
+            total: stats.totalTasks,
+            completed: stats.completedTasks,
+            percentage: project.progress !== undefined ? project.progress : (stats.totalTasks > 0 ? Math.round((stats.completedTasks / stats.totalTasks) * 100) : 0)
+          }
+        };
     });
 
     return res.status(200).json(new ApiResponse(200, formattedProjects, "Projects fetched successfully"));
@@ -224,27 +260,43 @@ pc.getAllProject = asyncHandler(async (req, res) => {
 });
 
 
+import { Sprint } from "../../models/sprint.model.js";
+
+// ... [existing imports]
+
 //delete Project
 pc.deleteProject = asyncHandler(async (req, res) => {
   console.log("Req.params", req.params);
 
   try {
-    if (req.params.projectId == "undefined" || !req.params.projectId) {
+    const { projectId } = req.params;
+
+    if (!projectId || projectId === "undefined") {
       return res.status(400).json(new ApiError(400, "Project ID not provided"));
     }
 
-    const deletedProject = await Project.findByIdAndDelete(
-      req.params.projectId);
+    // 1. Delete all Tasks associated with the project
+    await Task.deleteMany({ projectName: projectId });
+
+    // 2. Delete all Milestones associated with the project
+    await Milestone.deleteMany({ project: projectId });
+
+    // 3. Delete all Sprints associated with the project
+    await Sprint.deleteMany({ project: projectId });
+
+    // 4. Finally, delete the Project itself
+    const deletedProject = await Project.findByIdAndDelete(projectId);
+
     if (!deletedProject) {
       return res.status(404).json(new ApiError(404, "Project not found"));
     }
 
     return res
       .status(200)
-      .json(new ApiResponse(200, deletedProject, "Project deleted successfully"));
+      .json(new ApiResponse(200, deletedProject, "Project and all associated data deleted successfully"));
   } catch (error) {
     console.log("Error------", error);
-    return res.status(400).json(new ApiError(404, "Error"));
+    return res.status(400).json(new ApiError(400, error.message || "Error deleting project"));
   }
 });
 

@@ -1,348 +1,303 @@
-import React, { useCallback, useEffect, useState } from "react";
-import InputField from "../../components/InputField";
-import { Table } from "../../components/Table/Table";
-import { MdDelete } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
-import moment from "moment/moment";
-import { ProjectApi } from "../../services/api/Project.api";
-import toast from "react-hot-toast";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { ProjectApi } from '../../services/api/Project.api';
+import { TaskApi } from '../../services/api/Task.api';
+import moment from 'moment';
+import { IoAdd, IoChevronDown, IoChevronUp, IoCalendarOutline, IoCheckmarkCircleOutline } from 'react-icons/io5';
 
-const MilestoneTable = React.memo(({ milestones, onDelete, onEdit }) => {
+const Milestones = ({ projectId: propsProjectId }) => {
+    const { projectId: paramProjectId } = useParams();
+    const projectId = propsProjectId || paramProjectId;
+    const [milestones, setMilestones] = useState([]);
+    const [tasks, setTasks] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [expandedMilestones, setExpandedMilestones] = useState({});
+    
+    // Modal State
+    const [showModal, setShowModal] = useState(false);
+    const [newMilestone, setNewMilestone] = useState({
+        milestoneName: '',
+        commenceDate: '',
+        expectedDate: '',
+        deliverables: '',
+        summary: ''
+    });
 
-  const handleDelete = async (params, isSavedInDB) => {
-    const id = params.data?._id;
-    try {
-      if (isSavedInDB) {
-        const res = await ProjectApi.deletemileStone(id)
-        if (res.status === 200) {
-          onDelete(params.node.rowIndex);
-        } else if (res.status === 203) {
-          toast.error('Cannot delete milestone because it has associated tasks.');
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                // Fetch Project Data (includes milestones)
+                const projectRes = await ProjectApi.getAllmileStones(projectId);
+                const projectData = projectRes.data?.data;
+                const fetchedMilestones = projectData?.milestones || [];
+
+                // Fetch All Tasks for the Project
+                const taskRes = await TaskApi.getAllTasks({ filter: { projectName: projectId } });
+                const fetchedTasks = taskRes.data?.data || [];
+
+                setMilestones(fetchedMilestones);
+                setTasks(fetchedTasks);
+
+                // Default expand the first active milestone
+                if (fetchedMilestones.length > 0) {
+                    setExpandedMilestones({ [fetchedMilestones[0]._id]: true });
+                }
+
+            } catch (error) {
+                console.error("Failed to fetch milestone data", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (projectId) {
+            fetchData();
         }
-      } else {
-        onDelete(params.node.rowIndex);
-      }
+    }, [projectId]);
+
+    if (!projectId || projectId === 'undefined') {
+        return <div className="p-10 text-center text-red-500">Error: Project ID is missing. Please navigate from the Project List.</div>;
     }
-    catch (err) {
-      console.error('Error during milestone delete:', err);
-    }
-  }
 
-  const columns = [
-    {
-      headerName: "S.No.",
-      field: "sno",
-      minWidth: 100,
-      cellRenderer: (params) => params.node.rowIndex + 1,
-    },
-    {
-      headerName: "Milestone Name",
-      field: "milestoneName",
-      sortable: true,
-      filter: true,
-    },
-    {
-      headerName: "Summary",
-      field: "summary",
-      sortable: true,
-      filter: true,
-    },
-    {
-      headerName: "Start Date",
-      field: "commenceDate",
-      sortable: true,
-      filter: true,
-      cellRenderer: (params) => {
-        return moment(params.value).format("YYYY-MM-DD");
-      },
-    },
-    {
-      headerName: "Expected Date",
-      field: "expectedDate",
-      sortable: true,
-      filter: true,
-      cellRenderer: (params) => {
-        return moment(params.value).format("YYYY-MM-DD");
-      },
-    },
-    {
-      headerName: "Deliverables ",
-      field: "deliverables",
-      sortable: true,
-      filter: true,
-    },
-    {
-      headerName: "Actions",
-      field: "actions",
-      cellRenderer: (params) => (
-        <div className="flex p-2">
-          <button
-            className="px-4 rounded cursor-pointer"
-            onClick={() => onEdit(params.node.rowIndex)}
-          >
-            <FaEdit />
-          </button>
-          <button
-            className="px-4 text-red-500 hover:text-red-700 rounded cursor-pointer"
-            onClick={() => {
-              const isSavedInDB = !!params.data?._id;
-              handleDelete(params, isSavedInDB);
-            }}
-          >
-            <MdDelete />
-          </button>
-        </div>
-      ),
-    },
-  ];
-
-  return (
-    <Table
-      column={columns}
-      internalRowData={milestones}
-      searchLabel="Search Milestones"
-      isExport={false}
-      sheetName="Milestones List"
-    />
-  );
-});
-
-const MilestonePage = ({
-  formik,
-  setIsMileStone,
-  setRolesAndResponsibilities,
-}) => {
-  const [editingIndex, setEditingIndex] = useState(null);
-
-  const handleAddMilestone = useCallback(async () => {
-    const { projectId, milestoneName, summary, commenceDate, expectedDate, deliverables } = formik.values;
-
-    console.log("projectId>>>", projectId)
-
-    const newMilestone = {
-      milestoneName,
-      summary,
-      commenceDate,
-      expectedDate,
-      deliverables,
+    const handleCreateMilestone = async (e) => {
+        e.preventDefault();
+        try {
+            await ProjectApi.createMileStone(projectId, newMilestone);
+            setShowModal(false);
+            setNewMilestone({ milestoneName: '', commenceDate: '', expectedDate: '', deliverables: '', summary: '' });
+            
+            // Refresh
+            const projectRes = await ProjectApi.getAllmileStones(projectId);
+            const projectData = projectRes.data?.data;
+            setMilestones(projectData?.milestones || []);
+            
+        } catch (error) {
+            console.error("Failed to create milestone", error);
+        }
     };
-    if (milestoneName && commenceDate && expectedDate) {
 
-      const updatedMilestones = [...formik.values.milestones, newMilestone];
-      formik.setFieldValue("milestones", updatedMilestones);
-      formik.setFieldValue("milestoneName", "");
-      formik.setFieldValue("summary", "");
-      formik.setFieldValue("commenceDate", "");
-      formik.setFieldValue("expectedDate", "");
-      formik.setFieldValue("deliverables", "");
-    }
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewMilestone(prev => ({ ...prev, [name]: value }));
+    };
 
+    const toggleMilestone = (id) => {
+        setExpandedMilestones(prev => ({ ...prev, [id]: !prev[id] }));
+    };
 
-    if (projectId) {
-      try {
-        const res = await ProjectApi.createMileStone(projectId, newMilestone);
-        console.log(res.data?.data)
-      }
-      catch (err) {
-        console.log(err)
-      }
-    }
-  }, [formik]);
+    // Group tasks by milestone
+    const getTasksForMilestone = (milestoneId) => {
+        return tasks.filter(t => t.milestone?._id === milestoneId || t.milestone === milestoneId);
+    };
 
-  const handleDeleteMilestone = useCallback(
-    (index) => {
-      const updatedMilestones = formik.values.milestones.filter(
-        (_, i) => i !== index
-      );
-      formik.setFieldValue("milestones", updatedMilestones);
-    },
-    [formik]
-  );
+    const calculateProgress = (milestoneId) => {
+        const mTasks = getTasksForMilestone(milestoneId);
+        if (mTasks.length === 0) return 0;
+        const completed = mTasks.filter(t => t.status === 'done').length;
+        return Math.round((completed / mTasks.length) * 100);
+    };
 
-  const handleFinalSubmit = (event) => {
-    event.preventDefault();
-
-    const filteredMilestones = formik.values.milestones.filter(
-      (milestone) =>
-        milestone.milestoneName && milestone.commenceDate && milestone.expectedDate
-    );
-
-    formik.setFieldValue("milestones", filteredMilestones);
-    setRolesAndResponsibilities([]);
-    formik.handleSubmit();
-  };
-
-  const handleEditMilestone = (index) => {
-    setEditingIndex(index);
-    const milestoneToEdit = formik.values.milestones[index];
-    const formattedDate = milestoneToEdit?.commenceDate?.split('T')?.[0];
-    const formattedDueDate = milestoneToEdit?.expectedDate.split?.('T')?.[0];
-
-    formik.setFieldValue("_id", milestoneToEdit._id)
-    formik.setFieldValue("milestoneName", milestoneToEdit.milestoneName);
-    formik.setFieldValue("summary", milestoneToEdit.summary);
-    formik.setFieldValue("commenceDate", formattedDate);
-    formik.setFieldValue("expectedDate", formattedDueDate);
-    formik.setFieldValue("deliverables", milestoneToEdit.deliverables);
-  };
-
-  const handleUpdateMilestone = async () => {
-    if (editingIndex !== null) {
-      const { _id, milestoneName, summary, commenceDate, expectedDate, deliverables, projectId } = formik.values;
-      const updatedMilestone = { milestoneName, summary, commenceDate, expectedDate, deliverables };
-      const payload = {
-        projectId,
-        milestoneName,
-        summary,
-        commenceDate,
-        expectedDate,
-        deliverables
-      }
-
-      const updatedMilestones = [...formik.values.milestones];
-      updatedMilestones[editingIndex] = updatedMilestone;
-
-      formik.setFieldValue("milestones", updatedMilestones);
-      setEditingIndex(null);
-      formik.setFieldValue("milestoneName", "");
-      formik.setFieldValue("summary", "");
-      formik.setFieldValue("commenceDate", "");
-      formik.setFieldValue("expectedDate", "");
-      formik.setFieldValue("deliverables", "");
-
-
-      try {
-        const res = await ProjectApi.updateMileStones(_id, payload)
-        console.log(res.data?.data)
-      }
-      catch (err) {
-        console.log(err)
-      }
-    }
-  };
-
-  return (
-    <main className="w-full relative pt-5 ">
-      <div className="w-full p-6 mb-10 dark:bg-themeBG dark:text-themeText shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold text-gray-800 dark:text-themeText mb-6">
-          Create Milestones
-        </h2>
-
-        <form onSubmit={handleFinalSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-1 gap-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              <div>
-                <InputField
-                  label="Milestone Name"
-                  name="milestoneName"
-                  type="text"
-                  placeholder="Enter milestone name..."
-                  value={formik.values.milestoneName}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.milestoneName && formik.errors.milestoneName}
-                  isRequired
-                />
-              </div>
-              <div>
-                <InputField
-                  label="Start Date"
-                  name="commenceDate"
-                  type="date"
-                  value={formik.values.commenceDate}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.commenceDate && formik.errors.commenceDate}
-                  isRequired
-                />
-
-              </div>
-              <div>
-                <InputField
-                  label="End Date"
-                  name="expectedDate"
-                  type="date"
-                  value={formik.values.expectedDate}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.expectedDate && formik.errors.expectedDate}
-                  isRequired
-                />
-
-              </div>
+    return (
+        <div className="space-y-6 relative">
+            <div className="flex justify-between items-center">
+                <h1 className="text-2xl font-bold text-textMain">Milestones</h1>
+                <button 
+                    onClick={() => setShowModal(true)}
+                    className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                >
+                    <IoAdd size={20} />
+                    <span>Create Milestone</span>
+                </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <InputField
-                  label="Summary"
-                  name="summary"
-                  type="textarea"
-                  placeholder="Describe the milestone..."
-                  value={formik.values.summary}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.summary && formik.errors.summary}
-                />
-              </div>
+            {loading ? (
+                <div className="text-center py-10">Loading milestones...</div>
+            ) : milestones.length === 0 ? (
+                <div className="text-center py-10 text-textSub">No milestones found for this project.</div>
+            ) : (
+                <div className="space-y-4">
+                    {milestones.map((milestone) => {
+                        const mTasks = getTasksForMilestone(milestone._id);
+                        const progress = calculateProgress(milestone._id);
+                        const isExpanded = expandedMilestones[milestone._id];
 
-              <div>
-                <InputField
-                  label="List of deliverables (separate each with a comma)"
-                  name="deliverables"
-                  type="textarea"
-                  placeholder="List deliverables for this milestone..."
-                  value={formik.values.deliverables}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.deliverables && formik.errors.deliverables}
-                />
-              </div>
-            </div>
-          </div>
+                        return (
+                            <div key={milestone._id} className="bg-white border border-borderLight rounded-xl overflow-hidden shadow-sm">
+                                {/* Header */}
+                                <div 
+                                    className="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition-colors"
+                                    onClick={() => toggleMilestone(milestone._id)}
+                                >
+                                    <div className="flex items-center gap-4 flex-1">
+                                        <div className="relative w-12 h-12 flex items-center justify-center">
+                                             <svg className="w-full h-full transform -rotate-90">
+                                                <circle
+                                                    cx="24"
+                                                    cy="24"
+                                                    r="20"
+                                                    stroke="currentColor"
+                                                    strokeWidth="4"
+                                                    fill="transparent"
+                                                    className="text-slate-100"
+                                                />
+                                                <circle
+                                                    cx="24"
+                                                    cy="24"
+                                                    r="20"
+                                                    stroke="currentColor"
+                                                    strokeWidth="4"
+                                                    fill="transparent"
+                                                    strokeDasharray={126}
+                                                    strokeDashoffset={126 - (126 * progress) / 100}
+                                                    className="text-primary transition-all duration-500 ease-out"
+                                                />
+                                            </svg>
+                                            <span className="absolute text-xs font-bold text-primary">{progress}%</span>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-textMain">{milestone.milestoneName}</h3>
+                                            <div className="flex items-center gap-4 mt-1 text-xs text-textSub">
+                                                <span className="flex items-center gap-1">
+                                                    <IoCalendarOutline />
+                                                    {moment(milestone.commenceDate).format('MMM D')} - {moment(milestone.expectedDate).format('MMM D, YYYY')}
+                                                </span>
+                                                <span>{mTasks.length} Tasks</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-4">
+                                        <button className="text-primary text-sm font-medium hover:underline flex items-center gap-1" onClick={(e) => { e.stopPropagation(); /* Logic to add task */ }}>
+                                            <IoAdd /> Add Task
+                                        </button>
+                                        {isExpanded ? <IoChevronUp className="text-textSub" /> : <IoChevronDown className="text-textSub" />}
+                                    </div>
+                                </div>
 
-          <div className="flex flex-col sm:flex-row justify-between items-center mt-8 space-y-4 sm:space-y-0 sm:space-x-4">
-            <button
-              type="button"
-              className="px-6 py-3 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none transition duration-300 ease-in-out"
-              onClick={editingIndex === null ? handleAddMilestone : handleUpdateMilestone}
-            >
-              {editingIndex === null ? "Add Milestone" : "Update Milestone"}
-            </button>
+                                {/* Body (Tasks) */}
+                                {isExpanded && (
+                                    <div className="border-t border-borderLight bg-slate-50/50 p-4">
+                                        {mTasks.length > 0 ? (
+                                            <div className="space-y-2">
+                                                {mTasks.map(task => (
+                                                    <div key={task._id} className="flex items-center justify-between p-3 bg-white border border-borderLight rounded-lg hover:shadow-sm transition-shadow">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className={`w-2 h-2 rounded-full ${task.status === 'done' ? 'bg-green-500' : 'bg-slate-300'}`}></div>
+                                                            <span className={`text-sm font-medium ${task.status === 'done' ? 'text-textSub line-through' : 'text-textMain'}`}>
+                                                                {task.taskName}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center gap-4">
+                                                            <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider ${
+                                                                task.taskPriority === 'high' ? 'bg-red-100 text-red-600' : 
+                                                                task.taskPriority === 'medium' ? 'bg-orange-100 text-orange-600' : 
+                                                                'bg-blue-100 text-blue-600'
+                                                            }`}>
+                                                                {task.taskPriority}
+                                                            </span>
+                                                            <div className="flex -space-x-2">
+                                                                {/* Assignee Avatar Placeholder */}
+                                                                <div className="w-6 h-6 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-[10px] text-textSub font-bold">
+                                                                    {task.assignee?.[0]?.toUpperCase() || 'U'}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <p className="text-sm text-textSub italic text-center py-4">No tasks linked to this milestone yet.</p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
 
-            <div className="flex space-x-4">
-              <button
-                type="button"
-                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out"
-                onClick={() => setIsMileStone(false)}
-              >
-                Back
-              </button>
-              <button
-                type="submit"
-                className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </form>
-
-        <div className="mt-8">
-          <h3 className="text-xl font-semibold text-gray-800 dark:text-themeText ">
-            Milestones List
-          </h3>
-          <div className="mt-4">
-            <MilestoneTable
-              milestones={formik.values.milestones}
-              onDelete={handleDeleteMilestone}
-              onEdit={handleEditMilestone}
-            />
-          </div>
+             {/* Modal */}
+             {showModal && (
+                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6">
+                        <h2 className="text-xl font-bold text-textMain mb-4">Create New Milestone</h2>
+                        <form onSubmit={handleCreateMilestone} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-textMain mb-1">Milestone Name</label>
+                                <input 
+                                    type="text" 
+                                    name="milestoneName"
+                                    value={newMilestone.milestoneName}
+                                    onChange={handleInputChange}
+                                    required
+                                    className="w-full p-2 border border-borderLight rounded-lg focus:ring-2 focus:ring-primary outline-none"
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-textMain mb-1">Start Date</label>
+                                    <input 
+                                        type="date" 
+                                        name="commenceDate"
+                                        value={newMilestone.commenceDate}
+                                        onChange={handleInputChange}
+                                        required
+                                        className="w-full p-2 border border-borderLight rounded-lg focus:ring-2 focus:ring-primary outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-textMain mb-1">Due Date</label>
+                                    <input 
+                                        type="date" 
+                                        name="expectedDate"
+                                        value={newMilestone.expectedDate}
+                                        onChange={handleInputChange}
+                                        required
+                                        className="w-full p-2 border border-borderLight rounded-lg focus:ring-2 focus:ring-primary outline-none"
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-textMain mb-1">Deliverables</label>
+                                <textarea 
+                                    name="deliverables"
+                                    value={newMilestone.deliverables}
+                                    onChange={handleInputChange}
+                                    className="w-full p-2 border border-borderLight rounded-lg focus:ring-2 focus:ring-primary outline-none h-20"
+                                    placeholder="Key deliverables..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-textMain mb-1">Summary</label>
+                                <textarea 
+                                    name="summary"
+                                    value={newMilestone.summary}
+                                    onChange={handleInputChange}
+                                    className="w-full p-2 border border-borderLight rounded-lg focus:ring-2 focus:ring-primary outline-none h-20"
+                                    placeholder="Brief summary..."
+                                />
+                            </div>
+                            <div className="flex justify-end gap-3 pt-4">
+                                <button 
+                                    type="button" 
+                                    onClick={() => setShowModal(false)}
+                                    className="px-4 py-2 text-textSub hover:bg-slate-50 rounded-lg transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    type="submit" 
+                                    className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                                >
+                                    Create Milestone
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
-      </div>
-    </main>
-  );
+    );
 };
 
-export default MilestonePage;
+export default Milestones;

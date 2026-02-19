@@ -70,7 +70,8 @@ fc.uploadFiles = asyncHandler (async (req, res) => {
             }
         }));
 
-        return res.status(201).json(new ApiResponse(201, null, "File(s) uploaded successfully!"));
+        const uploadedFiles = files.map(f => f.name);
+        return res.status(201).json(new ApiResponse(201, { filenames: uploadedFiles }, "File(s) uploaded successfully!"));
 
     } catch (error) {
         console.error("Handler error:", error);

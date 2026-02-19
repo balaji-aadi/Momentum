@@ -39,6 +39,14 @@ const UpdateTask = () => {
       },
     },
     {
+      headerName: "Task ID",
+      field: "taskId",
+      minWidth: 100,
+      cellRenderer: (params) => {
+        return <span className="font-mono text-xs font-semibold bg-gray-100 px-2 py-1 rounded dark:bg-gray-700 dark:text-gray-300">{params.data.taskId || "N/A"}</span>;
+      },
+    },
+    {
       headerName: "Assignee",
       field: "assignee",
       cellRenderer: (params) => {
