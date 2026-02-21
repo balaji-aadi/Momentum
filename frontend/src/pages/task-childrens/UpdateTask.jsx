@@ -87,6 +87,38 @@ const UpdateTask = () => {
     {
       headerName: "Time spend",
       field: "estimatedHours",
+      cellRenderer: (params) => {
+        let totalInProgressTime = 0;
+        if (params.data.activityLogs && params.data.activityLogs.length > 0) {
+            const sortedLogs = [...params.data.activityLogs].sort((a, b) => new Date(a.date) - new Date(b.date));
+            let lastTimestamp = null;
+            let lastStatus = null;
+            
+            sortedLogs.forEach((log) => {
+                if (lastStatus === "inprogress" && lastTimestamp) {
+                    totalInProgressTime += (new Date(log.date) - new Date(lastTimestamp));
+                }
+                lastTimestamp = log.date;
+                lastStatus = log.currentStatus;
+            });
+
+            if (params.data.status === "inprogress" && lastTimestamp) {
+                totalInProgressTime += (new Date() - new Date(lastTimestamp));
+            }
+        }
+        
+        if (totalInProgressTime === 0 && params.data.estimatedHours) {
+            // Fallback for older tasks with only estimatedHours (if they have no inprogress tracking)
+            return `${params.data.estimatedHours}h 0m`;
+        } else if (totalInProgressTime === 0) {
+            return "-";
+        }
+
+        const totalMinutes = Math.round(totalInProgressTime / 60000);
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        return `${hours}h ${minutes}m`;
+      }
     },
     {
       headerName: "Start Date",

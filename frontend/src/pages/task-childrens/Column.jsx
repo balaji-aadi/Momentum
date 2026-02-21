@@ -57,7 +57,7 @@ const Column = ({ column, handleClick }) => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-50 dark:bg-slate-900/40 rounded-2xl p-2 md:p-3 shadow-inner border border-slate-200/50 dark:border-slate-800/50 min-w-[280px] sm:min-w-[320px]">
+    <div className="flex flex-col h-full bg-slate-50 dark:bg-slate-900/40 rounded-2xl p-2 md:p-3 shadow-inner border border-slate-200/50 dark:border-slate-800/50 w-full">
         {/* Column Header */}
       <div className="px-3 py-4 mb-2 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -76,7 +76,7 @@ const Column = ({ column, handleClick }) => {
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`max-h-[calc(100vh-280px)] overflow-auto flex-1 pb-4 pr-1 transition-all duration-300 rounded-xl ${snapshot.isDraggingOver
+            className={`flex-1 min-h-0 overflow-auto pb-4 pr-1 transition-all duration-300 rounded-xl ${snapshot.isDraggingOver
               ? "bg-indigo-50/50 dark:bg-indigo-900/10 ring-2 ring-indigo-200/50 dark:ring-indigo-800/20"
               : ""
               }`}

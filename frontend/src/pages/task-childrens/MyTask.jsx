@@ -349,7 +349,7 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
           />
         )
       ) : (
-        <div className="h-full flex flex-col bg-bgLight">
+        <div className="h-full flex flex-col bg-bgLight overflow-hidden">
           {/* Sub-Toolbar for Testing/Milestones Only */}
           {(isTesting || milestones.length > 0) && (
               <div className="px-6 py-2 flex items-center gap-3 bg-surface border-b border-borderLight">
@@ -405,7 +405,7 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
           )}
 
           {/* Board Content */}
-          <div className="flex-1 overflow-x-auto p-6" data-rbd-scroll-container>
+          <div className={`flex-1 p-6 ${currentViewMode === 'spreadsheet' ? 'overflow-x-auto' : 'flex flex-col min-h-0'}`}>
              {currentViewMode === 'spreadsheet' ? (
                 <TaskTable 
                     tasks={(projectTasks || []).filter(t => !externalSearch || t.taskName?.toLowerCase().includes(externalSearch.toLowerCase()))}

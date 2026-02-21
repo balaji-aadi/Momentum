@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import React, { useState, useEffect, useRef } from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Column from "./Column";
 import { TaskApi } from "../../services/api/Task.api";
 import { useSelector } from "react-redux";
@@ -24,6 +24,52 @@ const Board = ({
   
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedTaskForDrawer, setSelectedTaskForDrawer] = useState(null);
+
+  const [isDragging, setIsDragging] = useState(false);
+  const scrollContainerRef = useRef(null);
+
+  useEffect(() => {
+    let animationFrameId;
+    let scrollSpeed = 0;
+
+    const handleMouseMove = (e) => {
+      if (!isDragging || !scrollContainerRef.current) return;
+
+      const rect = scrollContainerRef.current.getBoundingClientRect();
+      const { clientX } = e;
+      const edgeThreshold = 150; 
+      const maxSpeed = 20;
+
+      if (clientX > rect.right - edgeThreshold) {
+        const distance = Math.max(0, edgeThreshold - (rect.right - clientX));
+        scrollSpeed = (distance / edgeThreshold) * maxSpeed;
+      } else if (clientX < rect.left + edgeThreshold) {
+        const distance = Math.max(0, edgeThreshold - (clientX - rect.left));
+        scrollSpeed = -((distance / edgeThreshold) * maxSpeed);
+      } else {
+        scrollSpeed = 0;
+      }
+    };
+
+    const scrollLoop = () => {
+      if (isDragging && scrollSpeed !== 0 && scrollContainerRef.current) {
+        scrollContainerRef.current.scrollLeft += scrollSpeed;
+      }
+      if (isDragging) {
+        animationFrameId = requestAnimationFrame(scrollLoop);
+      }
+    };
+
+    if (isDragging) {
+      document.addEventListener("mousemove", handleMouseMove);
+      animationFrameId = requestAnimationFrame(scrollLoop);
+    }
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [isDragging]);
 
   const { currentUser } = useSelector((state) => state.store);
   const isManager = currentUser?.userRole?.name === "projectmanager";
@@ -91,7 +137,9 @@ const Board = ({
   };
 
   const handleDragEnd = async (result) => {
-    const { source, destination } = result;
+    setIsDragging(false);
+    const { source, destination, type } = result;
+    if (type === "column") return;
     if (!destination || source.droppableId === destination.droppableId) return;
 
     if (!sprintStarted && !isManager && !isAdmin) {
@@ -230,17 +278,23 @@ const Board = ({
   };
 
   return (
-    <div className="board-container h-full overflow-hidden flex flex-col">
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="flex-1 overflow-x-auto overflow-y-hidden flex flex-row items-start gap-6 sm:gap-8 pb-12 px-4 sm:px-6 custom-scrollbar min-h-0" data-rbd-scroll-container>
-          {groupedTasks.map((column) => (
-            <div
-              key={column.id}
-              className="column min-w-[280px] sm:min-w-[320px] w-[350px] shrink-0 h-full max-h-[calc(100vh-180px)]"
-            >
-              <Column column={column} handleClick={handleCardClick} />
-            </div>
-          ))}
+    <div className="board-container flex-1 min-h-0 flex flex-col w-full relative">
+      <DragDropContext onDragEnd={handleDragEnd} onDragStart={() => setIsDragging(true)}>
+        <div 
+          className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-2" 
+          data-rbd-scroll-container
+          ref={scrollContainerRef}
+        >
+          <div className="flex flex-row items-start gap-4 sm:gap-6 lg:gap-8 h-full px-2 w-max min-w-full">
+            {groupedTasks.map((column) => (
+              <div
+                key={column.id}
+                className="column shrink-0 w-[85vw] sm:w-[300px] md:w-[320px] lg:w-[350px] h-full flex flex-col min-h-0"
+              >
+                <Column column={column} handleClick={handleCardClick} />
+              </div>
+            ))}
+          </div>
         </div>
       </DragDropContext>
 

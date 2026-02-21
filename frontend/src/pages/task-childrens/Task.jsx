@@ -330,7 +330,7 @@ const Task = ({ key, task, index, handleClick }) => {
                     {renderAssigneeImage()}
                     </div>
                     <div className="min-w-0 flex-1">
-                    <h4 className={`text-sm sm:text-[15px] font-bold text-slate-800 dark:text-slate-100 leading-snug mb-0.5 line-clamp-2 ${task.parentTask ? 'text-blue-700 dark:text-blue-300' : ''}`}>
+                    <h4 className={`text-sm sm:text-[15px] font-bold leading-snug mb-0.5 line-clamp-2 ${task.status === 'done' ? 'text-slate-400 line-through opacity-70' : task.parentTask ? 'text-blue-700 dark:text-blue-300' : 'text-slate-800 dark:text-slate-100'}`}>
                         {task.taskName}
                     </h4>
                     <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">
@@ -427,11 +427,12 @@ const Task = ({ key, task, index, handleClick }) => {
                             {task.milestone ? "Milestone" : "Details"}
                         </button>
                             <div className="flex items-center gap-1.5 flex-wrap">
-                                {files.map((f, i) => {
-                                    const filename = f.split('/').pop() || `File ${i + 1}`;
-                                    const displayName = filename.split('-').slice(1).join('-') || filename;
+                                {task.attachments.filter(f => f && f.trim() !== "").map((file, i) => {
+                                    const fileUrl = file.startsWith('http') ? file : `${server}file/get-file/${file}`;
+                                    const filename = file.split('/').pop() || `File ${i + 1}`;
+                                    const displayName = filename.includes('-') ? filename.split('-').slice(1).join('-') : filename;
                                     return (
-                                        <a key={i} href={f} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-blue-500 transition-all p-1.5 hover:bg-blue-50 dark:hover:bg-blue-900/40 rounded-lg group/attachment" title={`Download ${displayName}`}>
+                                        <a key={i} href={fileUrl} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-blue-500 transition-all p-1.5 hover:bg-blue-50 dark:hover:bg-blue-900/40 rounded-lg group/attachment" title={`Download ${displayName}`}>
                                             <IoFileTrayFull size={14} className="group-hover/attachment:scale-110 transition-transform" />
                                         </a>
                                     );

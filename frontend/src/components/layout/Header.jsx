@@ -7,8 +7,9 @@ import { NotificationApi } from '../../services/api/notification.api';
 import { UserApi } from '../../services/api/user.api';
 import { messaging } from '../../firebaseConfig';
 import { getToken } from 'firebase/messaging';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useLoading } from '../loader/LoaderContext';
+import { setShowConsistencyModal } from '../../store/slices/storeSlice';
 import moment from 'moment';
 
 const Header = () => {
@@ -16,9 +17,9 @@ const Header = () => {
   const projectId = searchParams.get("projectId");
   const [projectName, setProjectName] = useState("");
   const location = useLocation();
-  const navigate = useNavigate();
-  
   const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const notificationRef = useRef();
   
   const {
@@ -239,7 +240,10 @@ const Header = () => {
                  />
             </div>
             
-            <button className="w-10 h-10 rounded-full border border-borderLight flex items-center justify-center text-textSub hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all">
+            <button 
+                onClick={() => dispatch(setShowConsistencyModal(true))}
+                className="w-10 h-10 rounded-full border border-borderLight flex items-center justify-center text-textSub hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all"
+            >
                 <IoCalendarOutline size={20} />
             </button>
             

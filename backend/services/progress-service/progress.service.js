@@ -14,19 +14,10 @@ export const ProgressService = {
     // 1. Get all subtasks of this parent
     const subtasks = await Task.find({ parentTask: parentId });
     
-    if (subtasks.length === 0) return;
-
     // 2. Calculate Stats
     const totalSubtasks = subtasks.length;
-    const completedSubtasks = subtasks.filter(t => t.status === 'done').length;
-    
-    // Calculate average progress if we want more granularity, 
-    // BUT user spec says: "If task has subtasks: Progress = (Completed Subtasks / Total Subtasks) * 100"
-    // We can also consider the 'progress' field of subtasks if they are partially done, 
-    // but "Completed Subtasks" implies binary status for the calculation.
-    // Let's stick to the specific formula: (Completed / Total) * 100
-    
-    const progress = Math.round((completedSubtasks / totalSubtasks) * 100);
+    const completedSubtasks = totalSubtasks > 0 ? subtasks.filter(t => t.status === 'done').length : 0;
+    const progress = totalSubtasks > 0 ? Math.round((completedSubtasks / totalSubtasks) * 100) : 0;
 
     // 3. Update Parent Task
     const parent = await Task.findByIdAndUpdate(

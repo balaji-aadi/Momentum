@@ -166,7 +166,7 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                                             <div className="flex items-center gap-3 min-w-0">
                                                                 <div className={`w-2 h-2 rounded-full shrink-0 ${sub.status === 'done' ? 'bg-green-500' : 'bg-blue-400'}`} />
                                                                 <div className="min-w-0">
-                                                                    <p className="text-sm font-bold text-textMain truncate leading-none mb-1">{sub.taskName}</p>
+                                                                    <p className={`text-sm font-bold truncate leading-none mb-1 ${sub.status === 'done' ? 'text-textSub/60 line-through' : 'text-textMain'}`}>{sub.taskName}</p>
                                                                     <div className="flex items-center gap-2">
                                                                         <span className="text-[10px] font-mono font-bold text-textSub bg-slate-100 px-1.5 py-0.5 rounded">{sub.taskId || 'N/A'}</span>
                                                                         <span className={`text-[10px] font-bold uppercase ${statusColors[sub.status]} px-1.5 py-0.5 rounded`}>{sub.status}</span>
@@ -214,8 +214,9 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
 
                                     {activeTab === 'attachments' && (
                                         <div className="grid grid-cols-2 gap-4">
-                                    {task?.attachments?.map((filename, i) => {
-                                        const fileUrl = `${server}file/get-file/${filename}`;
+                                    {task?.attachments?.filter(f => f && f.trim() !== "").map((filename, i) => {
+                                        const fileUrl = filename.startsWith('http') ? filename : `${server}file/get-file/${filename}`;
+                                        const displayName = filename.split('/').pop().includes('-') ? filename.split('/').pop().split('-').slice(1).join('-') : filename.split('/').pop();
                                         return (
                                             <div key={i} className="p-3 bg-white border border-borderLight rounded-lg shadow-sm hover:border-primary/30 transition-all flex items-center gap-3">
                                                 <div className="p-2 bg-primary/5 rounded">

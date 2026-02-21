@@ -37,6 +37,7 @@ import ResetPasswaord from "./pages/auth/ResetPassword";
 import TaskBugs from "./pages/task-childrens/TaskBugs";
 import MilestoneLists from "./pages/project-childrens/MilestoneLists";
 import UserTypeMaster from "./pages/UserTypeMaster";
+import PerformanceDashboard from "./pages/Analytics/PerformanceDashboard";
 
 import ProjectList from "./pages/project-childrens/ProjectList";
 import TeamList from "./pages/user-childrens/TeamList";
@@ -174,6 +175,10 @@ function App() {
           <Route
             path="notification"
             element={<ProtectedRoute element={<Notification />} />}
+          />
+          <Route
+            path="performance"
+            element={<ProtectedRoute element={<PerformanceDashboard />} />}
           />
         </Route>
 

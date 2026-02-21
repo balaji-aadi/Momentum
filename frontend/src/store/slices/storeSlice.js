@@ -60,8 +60,13 @@ const storeSlice = createSlice({
     error: false,
     success: false,
     isAuthenticated: false,
+    showConsistencyModal: false,
   },
-  reducers: {},
+  reducers: {
+    setShowConsistencyModal: (state, action) => {
+      state.showConsistencyModal = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
@@ -134,4 +139,5 @@ const storeSlice = createSlice({
   },
 });
 
+export const { setShowConsistencyModal } = storeSlice.actions;
 export default storeSlice.reducer;

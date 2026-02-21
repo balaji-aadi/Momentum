@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
+import GlobalConsistencyModal from '../analytics/GlobalConsistencyModal';
 
 const MainLayout = () => {
     return (
@@ -18,6 +19,9 @@ const MainLayout = () => {
                     <Outlet />
                 </main>
             </div>
+
+            {/* Global Modals */}
+            <GlobalConsistencyModal />
         </div>
     );
 };

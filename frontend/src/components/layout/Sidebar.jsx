@@ -7,7 +7,8 @@ import {
   IoSettingsOutline, 
   IoLogOutOutline,
   IoAdd,
-  IoChevronDown
+  IoChevronDown,
+  IoAnalyticsOutline
 } from 'react-icons/io5';
 import { ProjectApi } from '../../services/api/Project.api';
 import { useSelector } from 'react-redux';
@@ -40,6 +41,7 @@ const Sidebar = () => {
         { icon: <IoGridOutline />, label: 'Dashboard', path: '/' },
         { icon: <IoBriefcaseOutline />, label: 'Projects', path: '/project' },
         { icon: <IoPeopleOutline />, label: 'Teams', path: '/user' }, 
+        { icon: <IoAnalyticsOutline />, label: 'Performance', path: '/performance' },
     ];
 
     if (hiddenRoles.includes(currentUser?.userRole?.name?.toLowerCase())) {

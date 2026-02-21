@@ -13,6 +13,7 @@ import notifyRouter from "../services/notification-service/notification.router.j
 import milestoneRouter from "../services/milestone-service/milestone.router.js"
 import epicRouter from "../services/epic-service/epic.router.js";
 import sprintRouter from "../routes/sprint.routes.js";
+import analyticsRouter from "../services/analytics-service/analytics.router.js";
 import webhookRouter from "../routes/webhook.routes.js";
 
 
@@ -32,6 +33,7 @@ router.use("/file", fileRouter)
 router.use("/milestone", milestoneRouter)
 router.use("/epic", epicRouter);
 router.use("/sprint", sprintRouter);
+router.use("/analytics", analyticsRouter);
 router.use("/webhook", webhookRouter);
 
 export default router;

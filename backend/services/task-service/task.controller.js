@@ -10,6 +10,7 @@ import { Notification } from "../../models/notification.model.js";
 import notificationService from "../notification-service/notification.service.js";
 import { socketService } from "../../socket-instance.js";
 import { ProgressService } from "../progress-service/progress.service.js";
+import AnalyticsService from "../analytics-service/analytics.service.js";
 
 const tc = {};
 
@@ -166,6 +167,9 @@ tc.createTask = asyncHandler(async (req, res) => {
     if (createdTask.projectName) await ProgressService.updateProjectProgress(createdTask.projectName);
     if (createdTask.sprint) await ProgressService.updateSprintProgress(createdTask.sprint);
 
+    // Update Analytics
+    AnalyticsService.handleTaskUpdate(createdTask.assignee, createdTask.projectName, createdTask._id, null, createdTask.status).catch(err => console.error("Analytics Error:", err));
+
     return res
       .status(201)
       .json(new ApiResponse(201, createdTask, "Task created successfully"));
@@ -211,14 +215,14 @@ tc.updateTask = asyncHandler(async (req, res) => {
       return res.status(400).json(new ApiError(400, "Task not found"));
     }
 
-    // Status Restriction: Parent cannot be 'done' if subtasks are not 'done'
-    if (status === 'done' && !existingTask.parentTask) {
+    // Status Restriction: Any task cannot be 'done' if it has pending subtasks
+    if (status === 'done') {
         const pendingSubtasks = await Task.countDocuments({
-            parentTask: existingTask._id,
+            parentTask: new mongoose.Types.ObjectId(existingTask._id),
             status: { $ne: 'done' }
         });
         if (pendingSubtasks > 0) {
-            return res.status(400).json(new ApiError(400, "Cannot complete parent task while subtasks are still pending."));
+            return res.status(400).json(new ApiError(400, "Cannot complete task while subtasks are still pending."));
         }
     }
 
@@ -305,12 +309,20 @@ tc.updateTask = asyncHandler(async (req, res) => {
 
     // Cascading Progress Updates
     if (updatedTask.parentTask) await ProgressService.updateParentTaskProgress(updatedTask.parentTask);
+    
+    // If parent changed, update the OLD parent's progress as well
+    if (existingTask.parentTask && existingTask.parentTask.toString() !== (updatedTask.parentTask?.toString() || "")) {
+        await ProgressService.updateParentTaskProgress(existingTask.parentTask);
+    }
+
     if (updatedTask.milestone) await ProgressService.updateMilestoneProgress(updatedTask.milestone);
     if (updatedTask.projectName) await ProgressService.updateProjectProgress(updatedTask.projectName);
     if (updatedTask.sprint) await ProgressService.updateSprintProgress(updatedTask.sprint);
 
-    // If parent changed, we should technically update the OLD parent too, but let's keep it simple for now or strictly follow requirements.
-    // Ideally: if (existingTask.parentTask && existingTask.parentTask !== updatedTask.parentTask) ...
+    // Update Analytics
+    if (status && existingTask.status !== status) {
+        AnalyticsService.handleTaskUpdate(updatedTask.assignee, updatedTask.projectName, updatedTask._id, existingTask.status, status).catch(err => console.error("Analytics Error:", err));
+    }
 
     return res
       .status(200)
@@ -537,18 +549,20 @@ tc.updatetaskLog = asyncHandler(async (req, res) => {
         }
     }
 
-    // Status Restriction: Parent cannot be 'done' if subtasks are not 'done'
-    if (status === 'done' && !task.parentTask) {
+    // Status Restriction: Any task cannot be 'done' if it has pending subtasks
+    if (status === 'done') {
         const pendingSubtasks = await Task.countDocuments({
-            parentTask: task._id,
+            parentTask: new mongoose.Types.ObjectId(task._id),
             status: { $ne: 'done' }
         });
         if (pendingSubtasks > 0) {
-            return res.status(400).json(new ApiError(400, "Cannot complete parent task while subtasks are still pending."));
+            return res.status(400).json(new ApiError(400, "Cannot complete task while subtasks are still pending."));
         }
     }
 
-    task.activityLogs.push({
+    const oldStatus = task.status; // Store old status before updating
+
+    task.activityLogs.unshift({
       oldStatus: task.status,
       currentStatus: status,
       user: req.user?._id, // Ensure this is stored as an ObjectId
@@ -565,6 +579,11 @@ tc.updatetaskLog = asyncHandler(async (req, res) => {
     if (task.milestone) await ProgressService.updateMilestoneProgress(task.milestone);
     if (task.projectName) await ProgressService.updateProjectProgress(task.projectName);
     if (task.sprint) await ProgressService.updateSprintProgress(task.sprint);
+
+    // Update Analytics
+    if (status && oldStatus !== status) {
+        AnalyticsService.handleTaskUpdate(task.assignee, task.projectName, task._id, oldStatus, status).catch(err => console.error("Analytics Error:", err));
+    }
 
     return res
       .status(200)
