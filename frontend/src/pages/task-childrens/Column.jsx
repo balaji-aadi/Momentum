@@ -41,7 +41,7 @@
 
 
 import React from "react";
-import { Droppable } from "react-beautiful-dnd";
+import { Droppable } from "@hello-pangea/dnd";
 import Task from "./Task";
 
 const Column = ({ column, handleClick }) => {
@@ -76,21 +76,24 @@ const Column = ({ column, handleClick }) => {
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`flex-1 min-h-0 overflow-auto pb-4 pr-1 transition-all duration-300 rounded-xl ${snapshot.isDraggingOver
+            className={`flex-1 min-h-0 transition-colors duration-300 rounded-xl ${snapshot.isDraggingOver
               ? "bg-indigo-50/50 dark:bg-indigo-900/10 ring-2 ring-indigo-200/50 dark:ring-indigo-800/20"
               : ""
               }`}
           >
-            <div className="space-y-4 overflow-x-hidden custom-scrollbar px-1 py-1 pb-10">
-              {column.tasks.map((task, index) => (
-                <Task
-                  key={task._id}
-                  task={task}
-                  index={index}
-                  handleClick={handleClick}
-                />
-              ))}
-              {provided.placeholder}
+            {/* vertical scroll lives in this child so the droppable itself isn’t scrollable */}
+            <div className="flex-1 min-h-0 max-h-[70vh] overflow-auto pb-4 pr-2">
+              <div className="space-y-4 overflow-x-hidden custom-scrollbar px-1 py-1 pb-10">
+                {column.tasks.map((task, index) => (
+                  <Task
+                    key={task._id}
+                    task={task}
+                    index={index}
+                    handleClick={handleClick}
+                  />
+                ))}
+                {provided.placeholder}
+              </div>
             </div>
           </div>
         )}

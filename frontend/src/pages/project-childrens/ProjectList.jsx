@@ -182,13 +182,15 @@ const ProjectList = () => {
                         </div>
                      )}
                      
-                     <button 
-                        onClick={() => navigate('/project/create-project')}
-                        className="bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded-xl font-semibold shadow-lg shadow-primary/30 flex items-center gap-2 transition-transform active:scale-95"
-                     >
-                        <IoAdd size={18} />
-                        <span>New Project</span>
-                     </button>
+                     {viewMode === 'grid' && (
+                        <button 
+                            onClick={() => navigate('/project/create-project')}
+                            className="bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded-xl font-semibold shadow-lg shadow-primary/30 flex items-center gap-2 transition-transform active:scale-95"
+                        >
+                            <IoAdd size={18} />
+                            <span>New Project</span>
+                        </button>
+                     )}
                 </div>
             </div>
 
@@ -201,6 +203,8 @@ const ProjectList = () => {
                             getTableFunction={ProjectApi.getAllProjects}
                             searchLabel={"Project"}
                             totalCount={true}
+                            onCreate={() => navigate('/project/create-project')}
+                            createLabel="New Project"
                         />
                     </div>
                 ) : (
@@ -280,7 +284,7 @@ const ProjectList = () => {
                                                      </div>
                                                  )}
                                             </div>
-                                            <span>{moment(project.createdAt).format("MMM D, YYYY")}</span>
+                                            <span>{moment(project.startDate).format("MMM D, YYYY")} - {moment(project.endDate).format("MMM D, YYYY")}</span>
                                         </div>
                                     </div>
                                 ))

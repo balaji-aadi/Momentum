@@ -3,7 +3,6 @@ import { useFormik } from "formik";
 import InputField from "../../components/InputField";
 import { taskValidationSchema } from "../../validationSchema";
 import moment from "moment";
-window.moment = moment; // Polyfill for any loose scripts/components
 import { MdLooksOne } from "react-icons/md";
 import { PiNumberThreeFill, PiNumberTwoFill } from "react-icons/pi";
 import { ProjectApi } from "../../services/api/Project.api";
@@ -18,6 +17,9 @@ import Breadcrumbs from "../../components/Breadcrumbs";
 import { CommonApi } from "../../services/api/Common.api";
 import { useNavigate, useLocation } from "react-router-dom";
 import ConfirmationModal from "../../components/ConfirmationModal";
+
+// expose moment globally for legacy scripts/components that expect it
+window.moment = moment; // Polyfill for any loose scripts/components
 
 const dependencyTypes = [
   { value: "Finish-to-Start", label: "Finish-to-Start" },
@@ -34,7 +36,8 @@ const CreateTask = ({
   setProjectTasks,
   selectedMember,
   milestoneId,
-  setTaskProject
+  setTaskProject,
+  modalMode = false,
 }) => {
   const [selectedProject, setSelectedProject] = useState("");
   const [validProjectMembers, setValidProjectMembers] = useState([]); // Array of User IDs
@@ -263,6 +266,18 @@ const CreateTask = ({
                 errors.taskDueDate = `Cannot be after parent due date (${moment(pDue).format("ll")})`;
             }
         }
+        
+        if (values.sprint) {
+            const selectedSprint = sprints.find(s => s._id === values.sprint);
+            if (selectedSprint) {
+                const sEnd = selectedSprint.endDate ? new Date(selectedSprint.endDate) : null;
+                const due = values.taskDueDate ? new Date(values.taskDueDate) : null;
+                if (sEnd && due && due > sEnd) {
+                    errors.taskDueDate = `Cannot be after sprint end date (${moment(sEnd).format("ll")})`;
+                }
+            }
+        }
+
         return errors;
     },
     onSubmit: async (values) => {
@@ -330,11 +345,7 @@ const CreateTask = ({
         );
 
         if (!id) {
-             if (values.projectName) {
-                navigate(`/task/dashboard?projectId=${values.projectName}`);
-            } else {
-                navigate(`/task/dashboard`);
-            }
+            navigate(`/`);
         }
         formik.resetForm();
         setSelectedFile(null); 
@@ -489,8 +500,55 @@ const CreateTask = ({
             parentTask: prefillParent,
             sprint: prefillSprint,
         });
+    } else if (!id) {
+        // Autofill from last created task
+        const fetchLastTask = async () => {
+            try {
+                const res = await TaskApi.getLastCreatedTask();
+                const lastTask = res.data?.data;
+                if (lastTask) {
+                    const formatDate = (dateString) => {
+                        if (!dateString) return "";
+                        const date = new Date(dateString);
+                        return date.toISOString().split("T")[0];
+                    }
+
+                    const pId = lastTask.projectName?._id || lastTask.projectName || "";
+                    setSelectedProject(pId);
+                    
+                    formik.setValues({
+                        ...formik.initialValues,
+                        projectName: pId,
+                        milestone: lastTask.milestone?._id || lastTask.milestone || "",
+                        sprint: lastTask.sprint?._id || lastTask.sprint || "",
+                        parentTask: lastTask.parentTask?._id || lastTask.parentTask || "",
+                        estimatedHours: lastTask.estimatedHours || "",
+                        assignee: lastTask.assignee?._id || lastTask.assignee || "",
+                        taskStartDate: formatDate(lastTask.taskStartDate),
+                        taskDueDate: formatDate(lastTask.taskDueDate),
+                        taskPriority: lastTask.taskPriority || "",
+                        taskType: lastTask.taskType || "",
+                    });
+
+                    if (pId) {
+                        handleMilestone(pId);
+                        fetchSprints(pId);
+                        // Fetch Tasks for Parent Options
+                        const resTasks = await TaskApi.getAllTasks({ filter: { projectName: pId } });
+                        const potentialParents = resTasks.data?.data.map(t => ({
+                            value: t._id,
+                            label: t.taskName
+                        }));
+                        setParentTaskOptions(potentialParents);
+                    }
+                }
+            } catch (err) {
+                console.log("Error fetching last task for autofill", err);
+            }
+        };
+        fetchLastTask();
     }
-  }, [task, location.state, location.search]);
+  }, [task, location.state, location.search, id]);
   
   const handleProjectChange = async (e) => {
     const projectId = e.target.value;
@@ -563,32 +621,31 @@ const CreateTask = ({
   };
 
   return (
-    <main className="flex h-screen overflow-hidden">
-      {" "}
+    <main className="flex flex-col min-h-screen">
       {/* update logic here */}
-      <div
-        className={`flex-1 p-6 dark:text-themeText overflow-y-auto pb-40 ${
-          !selectedProject ? "h-[80vh]" : "h-[80vh]"
-        }`}
-      >
+  <div className={`flex-1 p-6 dark:text-themeText overflow-y-auto pb-72 w-full`}>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-themeText mb-8">
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-themeText mb-6 text-center md:text-left">
           {id ? "Update New Task" : "Create New Task"}
         </h2>
 
-        <div className="mb-6">
-          <InputField
-            label="Project"
-            name="projectName"
-            type="select"
-            value={selectedProject}
-            onChange={handleProjectChange}
-            options={projectOptions}
-            error={formik.touched.projectName && formik.errors.projectName}
-          />
-        </div>
+        <div className={`max-w-7xl mx-auto w-full flex flex-col md:flex-row gap-6 items-start ${id ? 'h-[calc(100vh-40vh)] overflow-auto pr-[2rem]' : ''} `}>
+          {/* Left: Form */}
+          <div className="w-full md:flex-1">
+            <div className="bg-white dark:bg-themeBG rounded-2xl shadow-md p-6">
+              <div className="mb-6 w-full">
+              <InputField
+                label="Project"
+                name="projectName"
+                type="select"
+                value={selectedProject}
+                onChange={handleProjectChange}
+                options={projectOptions}
+                error={formik.touched.projectName && formik.errors.projectName}
+              />
+            </div>
 
-        <form onSubmit={formik.handleSubmit}>
+            <form id="create-task-form" onSubmit={formik.handleSubmit} className="w-full">
             {/* Task Details Section */}
             <div className="space-y-6">
               <div>
@@ -600,7 +657,7 @@ const CreateTask = ({
                     <MdLooksOne className="text-3xl text-red-500" />
                   </i>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <InputField
                     label="Task Name"
                     name="taskName"
@@ -654,18 +711,36 @@ const CreateTask = ({
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     {/* Show Existing Attachment */}
-                    {task?.attachments && typeof task.attachments === 'string' && !selectedFile && (
-                        <div className="mt-2 text-sm">
-                            <span className="font-semibold text-gray-600 dark:text-gray-400">Current: </span>
-                            <a 
-                                href={task.attachments} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline break-all"
-                            >
-                                {task.attachments.split('/').pop() || "View Attachment"}
-                            </a>
+                    {task?.attachments && Array.isArray(task.attachments) ? (
+                        <div className="mt-2 text-sm flex flex-col gap-1">
+                            {task.attachments.filter(f => f).map((fileUrl, i) => (
+                                <div key={i} className="flex items-center gap-2">
+                                     <span className="font-semibold text-gray-600 dark:text-gray-400">Current {i + 1}: </span>
+                                     <a 
+                                        href={fileUrl.startsWith('http') ? fileUrl : `${server}file/get-file/${fileUrl}`} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:underline break-all"
+                                     >
+                                        {fileUrl.split('/').pop() || `Attachment ${i + 1}`}
+                                     </a>
+                                </div>
+                            ))}
                         </div>
+                    ) : (
+                        task?.attachments && typeof task.attachments === 'string' && !selectedFile && (
+                            <div className="mt-2 text-sm">
+                                <span className="font-semibold text-gray-600 dark:text-gray-400">Current: </span>
+                                <a 
+                                    href={task.attachments} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:underline break-all"
+                                >
+                                    {task.attachments.split('/').pop() || "View Attachment"}
+                                </a>
+                            </div>
+                        )
                     )}
                      {selectedFile && (
                         <div className="mt-2 text-sm text-green-600">
@@ -676,7 +751,7 @@ const CreateTask = ({
 
 
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <InputField
                     label="Priority"
                     name="taskPriority"
@@ -707,6 +782,7 @@ const CreateTask = ({
                       { value: "Testing", label: "Testing" },
                       { value: "Design", label: "Design" },
                       { value: "Documentation", label: "Documentation" },
+                      { value: "Preparation", label: "Preparation" },
                       { value: "Other", label: "Other" },
                     ]}
                     error={formik.touched.taskType && formik.errors.taskType}
@@ -797,7 +873,7 @@ const CreateTask = ({
                     <PiNumberTwoFill className="text-3xl text-red-500" />
                   </i>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <InputField
                     label="Assignee"
                     name="assignee"
@@ -852,7 +928,7 @@ const CreateTask = ({
             </div>
 
             {/* Buttons */}
-            <div className="flex justify-end space-x-4 mt-6">
+            <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 mt-6">
               {id && (
                 <button
                   type="submit"
@@ -862,25 +938,102 @@ const CreateTask = ({
                   Close
                 </button>
               )}
-              <button
-                type="button"
-                onClick={() => formik.resetForm()}
-                className="bg-gray-400 text-white px-6 py-2 rounded-lg hover:bg-gray-500 focus:outline-none"
-              >
-                Cancel
-              </button>
-               <button
-                type="submit"
-                disabled={formik.isSubmitting}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50"
-              >
-                {id ? "Update" : "Create"} Task
-              </button>
+              <div className="flex items-center space-x-2">
+                <button
+                  type="button"
+                  onClick={() => formik.resetForm()}
+                  className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 focus:outline-none"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={formik.isSubmitting}
+                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 focus:outline-none disabled:opacity-50"
+                >
+                  {id ? "Update" : "Create"} Task
+                </button>
+              </div>
             </div>
-          </form>
-      </div>
+            </form>
+            </div>
+          </div>
 
-      {id && <Logs task={task} type={"Task"} />}
+          {/* Right: Logs / Activity (sticky on desktop) */}
+          <div className="w-full md:w-[36%] flex flex-col gap-4">
+            <div className="bg-white dark:bg-themeBG rounded-2xl shadow-md p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h4 className="font-bold text-sm text-slate-700">Summary</h4>
+                  <p className="text-[11px] text-slate-500">Quick task info</p>
+                </div>
+                <div className="text-sm font-black px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full">{formik.values.progress}%</div>
+              </div>
+
+              <div className="space-y-3 text-sm text-slate-700">
+                <div>
+                  <div className="text-[11px] text-slate-500 font-bold">Parent Task</div>
+                  <div className="mt-1">{parentTaskData?.taskName || (formik.values.parentTask ? parentTaskOptions.find(p => p.value === formik.values.parentTask)?.label : '—')}</div>
+                </div>
+
+                <div>
+                  <div className="text-[11px] text-slate-500 font-bold">Milestone</div>
+                  <div className="mt-1">{milestoneOptions.find(m => m.value === formik.values.milestone)?.label || '—'}</div>
+                </div>
+
+                <div>
+                  <div className="text-[11px] text-slate-500 font-bold">Sprint</div>
+                  <div className="mt-1">{sprintOptions.find(s => s.value === formik.values.sprint)?.label || '—'}</div>
+                </div>
+
+                <div>
+                  <div className="text-[11px] text-slate-500 font-bold">Attachments</div>
+                  <div className="mt-1 break-words">{selectedFile ? selectedFile.name : (
+                      Array.isArray(task?.attachments) 
+                          ? `${task.attachments.length} attachment(s)` 
+                          : (task?.attachments && typeof task.attachments === 'string' ? task.attachments.split('/').pop() : 'No attachments')
+                  )}</div>
+                </div>
+              </div>
+            </div>
+
+            {id && (
+              <div
+                className="sticky"
+                style={{
+                  top: modalMode ? '3.5rem' : '5rem',
+                  maxHeight: modalMode ? 'calc(90vh - 10rem)' : 'calc(100vh - 12rem)',
+                  overflow: 'auto',
+                }}
+              >
+                <Logs task={task} type={"Task"} />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      {/* Mobile fixed action bar */}
+      {!modalMode && (
+        <div className="fixed bottom-0 left-0 right-0 p-3 bg-white border-t shadow md:hidden">
+        <div className="max-w-7xl mx-auto w-full flex justify-between">
+          <button
+            type="button"
+            onClick={() => formik.resetForm()}
+            className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => document.getElementById('create-task-form')?.requestSubmit()}
+            disabled={formik.isSubmitting}
+            className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+          >
+            {id ? "Update" : "Create"} Task
+          </button>
+        </div>
+        </div>
+      )}
 
       <ConfirmationModal
         isOpen={isConfirmModalOpen}

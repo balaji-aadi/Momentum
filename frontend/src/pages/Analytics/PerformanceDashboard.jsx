@@ -34,6 +34,8 @@ const PerformanceDashboard = () => {
     const [selectedMember, setSelectedMember] = useState(null);
     const [memberStats, setMemberStats] = useState([]);
     const [memberLoading, setMemberLoading] = useState(false);
+    const [dailyStats, setDailyStats] = useState([]);
+    const [dailyLoading, setDailyLoading] = useState(false);
 
     const userRole = (currentUser?.userRole?.name || currentUser?.userRoles?.[0]?.name || "").toLowerCase();
     const isAdminOrManager = ["admin", "project manager", "manager", "projectmanager"].includes(userRole);
@@ -59,6 +61,11 @@ const PerformanceDashboard = () => {
         fetchStats();
     }, [period, activeTab]);
 
+    useEffect(() => {
+        // Always fetch daily stats for the consistency calendar (matches topbar modal)
+        fetchDailyStats();
+    }, []);
+
     const fetchMemberStats = async (userId) => {
         setMemberLoading(true);
         try {
@@ -68,6 +75,18 @@ const PerformanceDashboard = () => {
             console.error("Failed to fetch member stats", error);
         } finally {
             setMemberLoading(false);
+        }
+    };
+
+    const fetchDailyStats = async () => {
+        setDailyLoading(true);
+        try {
+            const res = await AnalyticsApi.getPersonalStats({ period: 'daily' });
+            setDailyStats(res.data?.data || []);
+        } catch (error) {
+            console.error('Failed to fetch daily stats for consistency calendar', error);
+        } finally {
+            setDailyLoading(false);
         }
     };
 
@@ -115,6 +134,7 @@ const PerformanceDashboard = () => {
                                     try {
                                         await AnalyticsApi.syncData();
                                         await fetchStats();
+                                        await fetchDailyStats();
                                     } catch (e) {
                                         alert("Sync failed: " + e.message);
                                     } finally {
@@ -290,7 +310,7 @@ const PerformanceDashboard = () => {
                     {/* New Consistency & Detail Section */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                          <div className="lg:col-span-1">
-                             <ConsistencyCalendar stats={stats} />
+                             <ConsistencyCalendar stats={dailyStats.length ? dailyStats : stats} />
                          </div>
                          <div className="lg:col-span-2 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-100/50">
                              <h3 className="text-xl font-black text-slate-800 mb-6 uppercase tracking-tight">Recent Milestone Impact</h3>

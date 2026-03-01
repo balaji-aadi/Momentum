@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 
-const CalendarBoard = ({ tasks = [], isLoading }) => {
+const CalendarBoard = ({ tasks = [], isLoading, onTaskClick }) => {
     const [currentDate, setCurrentDate] = useState(moment());
 
     const startOfMonth = currentDate.clone().startOf('month');
@@ -66,7 +66,11 @@ const CalendarBoard = ({ tasks = [], isLoading }) => {
                             
                             <div className="flex flex-col gap-1 overflow-y-auto max-h-[100px] hide-scrollbar">
                                 {dayTasks.map(task => (
-                                    <div key={task._id} className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded truncate border-l-2 border-primary cursor-pointer hover:bg-primary/20">
+                                    <div 
+                                        key={task._id} 
+                                        onClick={() => onTaskClick?.(task)}
+                                        className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded truncate border-l-2 border-primary cursor-pointer hover:bg-primary/20"
+                                    >
                                         {task.taskName}
                                     </div>
                                 ))}

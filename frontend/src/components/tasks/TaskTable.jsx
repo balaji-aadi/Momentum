@@ -12,6 +12,49 @@ const TaskTable = ({ tasks = [], isLoading, onProjectChange, onMemberChange, pro
         done: true,
         hold: true
     });
+    const [selectedTaskIds, setSelectedTaskIds] = useState([]);
+    const [bulkStatus, setBulkStatus] = useState("");
+    const [isUpdatingBulk, setIsUpdatingBulk] = useState(false);
+
+    const toggleTaskSelection = (taskId) => {
+        setSelectedTaskIds(prev => 
+            prev.includes(taskId) 
+            ? prev.filter(id => id !== taskId) 
+            : [...prev, taskId]
+        );
+    };
+
+    const toggleAllSelection = () => {
+        if (selectedTaskIds.length === tasks.length) {
+            setSelectedTaskIds([]);
+        } else {
+            setSelectedTaskIds(tasks.map(t => t._id));
+        }
+    };
+
+    const handleBulkStatusUpdate = async () => {
+        if (!bulkStatus || selectedTaskIds.length === 0) return;
+        
+        setIsUpdatingBulk(true);
+        try {
+            const updatePromises = selectedTaskIds.map(id => 
+                TaskApi.taskLogs(id, { status: bulkStatus })
+            );
+            await Promise.all(updatePromises);
+            toast.success(`Successfully updated ${selectedTaskIds.length} tasks to ${bulkStatus}`);
+            setSelectedTaskIds([]);
+            // In a real app we'd need to trigger a refresh. 
+            // Since setTasks isn't passed, we rely on the parent or window reload for now if necessary, 
+            // but let's assume the user wants the functional UI first.
+            window.location.reload(); 
+        } catch (error) {
+            console.error("Bulk update failed:", error);
+            toast.error("Failed to update some tasks");
+        } finally {
+            setIsUpdatingBulk(false);
+            setBulkStatus("");
+        }
+    };
 
     const toggleGroup = (groupId) => {
         setExpandedGroups(prev => ({ ...prev, [groupId]: !prev[groupId] }));
@@ -56,12 +99,74 @@ const TaskTable = ({ tasks = [], isLoading, onProjectChange, onMemberChange, pro
     };
 
     return (
-        <div className="bg-surface rounded-2xl shadow-sm border border-borderLight overflow-hidden flex flex-col h-full">
-            {/* Toolbar Removed - Handled by DashboardHeader */}
+        <div className="bg-surface rounded-2xl shadow-sm border border-borderLight overflow-hidden flex flex-col h-full relative">
+            {/* Table Action Header */}
+            <div className="px-6 py-4 flex items-center justify-between border-b border-borderLight bg-white dark:bg-slate-900 z-20">
+                <h2 className="text-sm font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">Project Tasks</h2>
+                <button 
+                    onClick={() => navigate('/task/create-task')}
+                    className="flex items-center gap-2 px-4 py-2 bg-primary text-white font-bold rounded-lg shadow-lg shadow-primary/20 hover:bg-primaryHover transition-all active:scale-95 text-sm"
+                >
+                    <IoAdd size={18} />
+                    <span>New Task</span>
+                </button>
+            </div>
+
+            {/* Bulk Actions Bar */}
+            {selectedTaskIds.length > 0 && (
+                <div className="bg-primary/5 border-b border-primary/20 p-3 px-6 flex items-center justify-between animate-in slide-in-from-top duration-300 z-30">
+                    <div className="flex items-center gap-4">
+                        <span className="text-sm font-bold text-primary">
+                            {selectedTaskIds.length} tasks selected
+                        </span>
+                        <div className="h-4 w-px bg-primary/20"></div>
+                        <div className="flex items-center gap-2">
+                            <label className="text-xs font-semibold text-textSub uppercase tracking-wider">Change Status:</label>
+                            <select 
+                                value={bulkStatus}
+                                onChange={(e) => setBulkStatus(e.target.value)}
+                                disabled={isUpdatingBulk}
+                                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                            >
+                                <option value="">Select status...</option>
+                                <option value="todo">To Do</option>
+                                <option value="inprogress">In Progress</option>
+                                <option value="hold">Hold</option>
+                                <option value="done">Done</option>
+                            </select>
+                            <button 
+                                onClick={handleBulkStatusUpdate}
+                                disabled={!bulkStatus || isUpdatingBulk}
+                                className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${
+                                    !bulkStatus || isUpdatingBulk 
+                                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed' 
+                                    : 'bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primaryHover'
+                                }`}
+                            >
+                                {isUpdatingBulk ? 'Updating...' : 'Apply to all'}
+                            </button>
+                        </div>
+                    </div>
+                    <button 
+                        onClick={() => setSelectedTaskIds([])}
+                        className="text-textSub hover:text-textMain text-sm underline font-medium"
+                    >
+                        Clear Selection
+                    </button>
+                </div>
+            )}
+
             
             {/* Table Header */}
             <div className="grid grid-cols-12 gap-4 px-6 py-3 bg-bgLight border-b border-borderLight text-xs font-semibold text-textSub uppercase tracking-wider">
-                <div className="hidden md:block md:col-span-1">ID</div>
+                <div className="hidden md:block md:col-span-1">
+                    <input 
+                        type="checkbox" 
+                        checked={selectedTaskIds.length === tasks.length && tasks.length > 0}
+                        onChange={toggleAllSelection}
+                        className="w-4 h-4 rounded border-borderLight text-primary focus:ring-primary/20 cursor-pointer" 
+                    />
+                </div>
                 <div className="col-span-12 md:col-span-3 flex items-center gap-1">Task</div>
                 <div className="hidden md:block md:col-span-1">Assignee</div>
                 <div className="hidden md:block md:col-span-2">Timeline</div>
@@ -118,11 +223,16 @@ const TaskTable = ({ tasks = [], isLoading, onProjectChange, onMemberChange, pro
 
                                         return (
                                             <div key={task._id} className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-borderLight hover:bg-slate-50 transition-colors items-center group">
-                                                <div className="hidden md:block md:col-span-1">
-                                                    <span className="font-mono text-xs font-bold text-textSub bg-slate-100 px-1.5 py-0.5 rounded">{task.taskId || '-'}</span>
+                                                <div className="hidden md:block md:col-span-1 flex items-center gap-2">
+                                                    <input 
+                                                        type="checkbox" 
+                                                        checked={selectedTaskIds.includes(task._id)}
+                                                        onChange={() => toggleTaskSelection(task._id)}
+                                                        className="w-4 h-4 rounded border-borderLight text-primary focus:ring-primary/20 cursor-pointer" 
+                                                    />
+                                                    <span className="font-mono text-[10px] font-bold text-textSub bg-slate-100 px-1 py-0.5 rounded">{task.taskId || '-'}</span>
                                                 </div>
                                                 <div className="col-span-12 md:col-span-3 flex items-center gap-3">
-                                                    <input type="checkbox" className="w-4 h-4 rounded border-borderLight text-primary focus:ring-primary/20" />
                                                     <div className="min-w-0">
                                                         <span 
                                                             className="font-bold text-textMain truncate cursor-pointer hover:text-primary block leading-tight mb-0.5" 

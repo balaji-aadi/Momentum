@@ -196,7 +196,7 @@
 
 
 import React, { useState, useEffect, useRef } from "react";
-import { Draggable } from "react-beautiful-dnd";
+import { Draggable } from "@hello-pangea/dnd";
 import { IoFlagSharp } from "react-icons/io5";
 import { IoMdTime } from "react-icons/io";
 import { FaCalendar } from "react-icons/fa";
@@ -292,7 +292,7 @@ const Task = ({ key, task, index, handleClick }) => {
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            className={`group relative bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition-all duration-200 hover:shadow-md hover:border-primary/40 overflow-hidden ${
+            className={`group relative bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition-colors duration-200 hover:shadow-md hover:border-primary/40 overflow-hidden ${
                 task.parentTask 
                 ? "ml-4 w-[calc(100%-1rem)]" 
                 : "w-full"
@@ -351,7 +351,24 @@ const Task = ({ key, task, index, handleClick }) => {
                 {/* Description Snippet */}
                 {task.taskDescription && (
                     <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 line-clamp-2 leading-relaxed">
-                    {task.taskDescription}
+                        {task.taskDescription.split(/(https?:\/\/[^\s]+)/g).map((part, index) => {
+                            if (part.match(/https?:\/\/[^\s]+/)) {
+                                return (
+                                    <a 
+                                        key={index} 
+                                        href={part} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer" 
+                                        className="text-blue-500 hover:text-blue-700 hover:underline inline-flex items-center gap-1"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <FiLink2 size={10} className="inline" />
+                                        {part}
+                                    </a>
+                                );
+                            }
+                            return part;
+                        })}
                     </p>
                 )}
 
@@ -427,7 +444,7 @@ const Task = ({ key, task, index, handleClick }) => {
                             {task.milestone ? "Milestone" : "Details"}
                         </button>
                             <div className="flex items-center gap-1.5 flex-wrap">
-                                {task.attachments.filter(f => f && f.trim() !== "").map((file, i) => {
+                                {(task.attachments || []).filter(f => f && f.trim() !== "").map((file, i) => {
                                     const fileUrl = file.startsWith('http') ? file : `${server}file/get-file/${file}`;
                                     const filename = file.split('/').pop() || `File ${i + 1}`;
                                     const displayName = filename.includes('-') ? filename.split('-').slice(1).join('-') : filename;

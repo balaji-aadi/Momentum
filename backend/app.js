@@ -12,6 +12,7 @@ import { whiteListCors } from "./config/cors.js";
 import fileUpload from "express-fileupload";
 import { socketService } from "./socket-instance.js";
 import "./models/permission.model.js";
+import { initSprintActivationJob } from "./services/sprint-service/sprintActivation.job.js";
 
 const app = express();
 // export const socketService = new SocketService(); // Moved to socket-instance.js
@@ -43,6 +44,9 @@ function init() {
   socketService._io.attach(httpServer);
 
   socketService.initListeners();
+
+  // Initialize background jobs
+  initSprintActivationJob();
 }
 
 init();

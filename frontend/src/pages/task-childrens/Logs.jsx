@@ -112,12 +112,12 @@ const Logs = ({ task, type }) => {
 
   return (
     <>
-      <div className="w-full md:w-[40%] my-10 mr-3 bg-white shadow-lg rounded-xl h-[70vh] overflow-y-auto pb-10 p-4">
+  <div className="w-full my-4 bg-white shadow-lg rounded-xl overflow-y-auto pb-6 p-4">
         <div className="flex items-center justify-between pb-3 border-b">
           <h2 className="text-lg font-semibold">Recent Logs</h2>
           <span className="text-gray-500 text-xl">⏳</span>
         </div>
-        <div className="max-h-[60vh] overflow-auto">
+  <div className="max-h-[48vh] sm:max-h-[60vh] overflow-auto">
           {logs.map((log, index) => (
             <div
               key={log.id}
@@ -255,7 +255,7 @@ const Logs = ({ task, type }) => {
           ))}
 
         </div>
-        <div className="mt-4  h-[60vh] overflow-auto relative">
+  <div className="mt-4 overflow-auto relative">
           {type === "Testcase" ? null : (
             <div className="sticky top-0 bg-white shadow-md p-3 z-10 flex flex-col gap-2 border-b">
               <h3 className="text-gray-700 font-bold text-lg">📌 Task Duration</h3>

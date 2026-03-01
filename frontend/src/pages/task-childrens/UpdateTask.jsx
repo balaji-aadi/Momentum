@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Table } from "../../components/Table/Table";
 import { FaRegEdit } from "react-icons/fa";
 import { TaskApi } from "../../services/api/Task.api";
@@ -7,7 +7,6 @@ import { useLoading } from "../../components/loader/LoaderContext";
 import CreateTask from "./CreateTask";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import { useSearchParams } from "react-router-dom";
-
 import { useSelector } from "react-redux";
 
 const UpdateTask = () => {
@@ -17,7 +16,7 @@ const UpdateTask = () => {
   const [task, setTask] = useState([]);
 
   const breadcrumbs = [
-    { label: "My Task", path: "/task/dashboard" },
+    { label: "My Task", path: "/" },
     { label: "List View", path: "/task/update-task" },
   ];
 
@@ -55,7 +54,6 @@ const UpdateTask = () => {
       cellRenderer: (params) => {
         const assignee = params?.data?.assignee;
         const fullName = `${assignee?.firstName || ""} ${assignee?.lastName || ""}`;
-        console.log(fullName)
 
         return (
           <div className="flex items-center space-x-2">
@@ -108,7 +106,6 @@ const UpdateTask = () => {
         }
         
         if (totalInProgressTime === 0 && params.data.estimatedHours) {
-            // Fallback for older tasks with only estimatedHours (if they have no inprogress tracking)
             return `${params.data.estimatedHours}h 0m`;
         } else if (totalInProgressTime === 0) {
             return "-";
@@ -174,13 +171,6 @@ const UpdateTask = () => {
       headerName: "Actions",
       field: "actions",
       cellRenderer: (params) => {
-        // Redux state cannot be accessed easily inside AG Grid cell renderer if context not passed.
-        // But we can use context property of AgGrid or just use a simple check if we pass props.
-        // However, this component UpdateTask is functional.
-        // We can define the cellRenderer outside or use `frameworkComponents`? No, simpler:
-        // Move columns definition inside the component body (it is already there).
-        // Access state.
-        
         if (currentUser?.userRole?.name === 'employee') {
             return null;
         }
@@ -202,7 +192,6 @@ const UpdateTask = () => {
     setId(params?._id);
     try {
       const res = await TaskApi.task(params?._id);
-      console.log(res.data);
       setTask(res.data?.data);
     } catch (err) {
       console.log(err);
@@ -210,30 +199,69 @@ const UpdateTask = () => {
     handleLoading(false);
   };
 
+  // lock body scroll when modal is open and allow ESC to close
+  useEffect(() => {
+    if (id) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setId();
+        setTask([]);
+      }
+    };
+
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [id]);
+
   return (
-    <>
-      {id ? (
-        <CreateTask task={task} id={id} setId={setId} setTask={setTask} />
-      ) : (
-        <div className="p-10 w-full">
-          <Breadcrumbs breadcrumbs={breadcrumbs} />
-          <h3 className="text-gray-700  dark:text-themeText text-2xl font-semibold">
-            Task Logs / Update Tasks
-          </h3>
-          <div className="mt-4">
-            <Table
-              column={columns}
-              getTableFunction={type ? getAllTasksByType : getAllTasks}
-              searchLabel={"Tasks"}
-              totalCount={true}
-              isExport={true}
-              sheetName={"Task"}
-            />
+    <div className="p-6 w-full">
+      <Breadcrumbs breadcrumbs={breadcrumbs} />
+      <h3 className="text-gray-700 dark:text-themeText text-2xl font-semibold mb-4">
+        Task Logs / Update Tasks
+      </h3>
+
+      <div className="mt-4">
+        <Table
+          column={columns}
+          getTableFunction={type ? getAllTasksByType : getAllTasks}
+          searchLabel={"Tasks"}
+          totalCount={true}
+          isExport={true}
+          sheetName={"Task"}
+        />
+      </div>
+
+      {/* Modal for editing task */}
+      {id && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center p-6">
+          <div className="absolute inset-0 bg-black/50" onClick={() => { setId(); setTask([]); }} />
+          <div className="relative w-full max-w-4xl h-[90vh] overflow-auto bg-white dark:bg-themeBG rounded-2xl shadow-2xl z-10">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h4 className="text-lg font-bold">Update Task</h4>
+              <button
+                className="text-gray-500 hover:text-gray-800"
+                onClick={() => { setId(); setTask([]); }}
+              >
+                Close
+              </button>
+            </div>
+            <div className="p-4">
+              <CreateTask modalMode={true} task={task} id={id} setId={setId} setTask={setTask} setProjectTasks={setTask} />
+            </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
 export default UpdateTask;
+

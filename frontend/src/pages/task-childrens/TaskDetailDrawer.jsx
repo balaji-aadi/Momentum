@@ -111,7 +111,23 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                             <section>
                                 <h3 className="text-sm font-bold text-textSub uppercase tracking-wider mb-3">Description</h3>
                                 <div className="text-textMain text-sm leading-relaxed whitespace-pre-wrap bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                    {task?.taskDescription || "No description provided."}
+                                    {task?.taskDescription ? task.taskDescription.split(/(https?:\/\/[^\s]+)/g).map((part, index) => {
+                                        if (part.match(/https?:\/\/[^\s]+/)) {
+                                            return (
+                                                <a 
+                                                    key={index} 
+                                                    href={part} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer" 
+                                                    className="text-primary hover:text-primaryDark hover:underline inline-flex items-center gap-1"
+                                                    onClick={(e) => e.stopPropagation()}
+                                                >
+                                                    {part}
+                                                </a>
+                                            );
+                                        }
+                                        return part;
+                                    }) : "No description provided."}
                                 </div>
                             </section>
 

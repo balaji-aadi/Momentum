@@ -179,6 +179,24 @@ tc.createTask = asyncHandler(async (req, res) => {
   }
 });
 
+// get last created Task
+tc.getLastCreatedTask = asyncHandler(async (req, res) => {
+  try {
+    const lastTask = await Task.findOne({ createdBy: req.user?._id })
+      .sort({ createdAt: -1 })
+      .populate("projectName milestone sprint parentTask assignee");
+
+    if (!lastTask) {
+      return res.status(200).json(new ApiResponse(200, null, "No previous tasks found"));
+    }
+
+    return res.status(200).json(new ApiResponse(200, lastTask, "Last created task fetched successfully"));
+  } catch (error) {
+    console.log("Error------", error);
+    return res.status(400).json(new ApiError(400, "Error fetching last created task"));
+  }
+});
+
 
 //update Task
 tc.updateTask = asyncHandler(async (req, res) => {
@@ -501,6 +519,16 @@ tc.deleteTask = asyncHandler(async (req, res) => {
     if (!task) {
       return res.status(404).json(new ApiError(404, "Task not found"));
     }
+
+    // Update Analytics
+    AnalyticsService.handleTaskDeletion(task).catch(err => console.error("Analytics Deletion Error:", err));
+
+    // Update Cascading Progress
+    if (task.parentTask) await ProgressService.updateParentTaskProgress(task.parentTask);
+    if (task.milestone) await ProgressService.updateMilestoneProgress(task.milestone);
+    if (task.projectName) await ProgressService.updateProjectProgress(task.projectName);
+    if (task.sprint) await ProgressService.updateSprintProgress(task.sprint);
+
     return res
       .status(200)
       .json(new ApiResponse(200, task, "Task deleted successfully"));

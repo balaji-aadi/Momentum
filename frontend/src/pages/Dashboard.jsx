@@ -10,9 +10,12 @@ import { TaskApi } from '../services/api/Task.api';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Sprints from './project-childrens/Sprints';
+import TaskDetailDrawer from '../components/tasks/TaskDetailDrawer';
+import { useSearchParams } from 'react-router-dom';
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { currentUser } = useSelector((state) => state.store);
   const isManager = currentUser?.userRole?.name === "projectmanager";
   const isAdmin = currentUser?.userRole?.name === "admin";
@@ -24,6 +27,7 @@ const Dashboard = () => {
   const [projectId, setProjectId] = useState('');
   const [memberId, setMemberId] = useState('');
   const [search, setSearch] = useState('');
+  const [dateFilter, setDateFilter] = useState('');
   
   // Data State
   const [projects, setProjects] = useState([]);
@@ -87,6 +91,12 @@ const Dashboard = () => {
       navigate('/task/create-task');
   };
 
+  const handleTaskClick = (task) => {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set('taskId', task._id);
+      setSearchParams(newParams);
+  };
+
   return (
     <div className="h-full flex flex-col bg-bgLight">
         <DashboardHeader 
@@ -104,14 +114,17 @@ const Dashboard = () => {
                 setProjectId('');
                 setMemberId('');
                 setSearch('');
+                setDateFilter('');
             }}
             onCreateTask={handleCreateTask}
             isManager={isManager}
             isAdmin={isAdmin}
             canCreate={canCreate}
+            dateFilter={dateFilter}
+            onDateChange={setDateFilter}
         />
 
-       <div className="flex-1 overflow-hidden p-6">
+       <div className={`flex-1 overflow-hidden ${viewMode === 'board' ? 'p-0' : 'p-6'}`}>
            {viewMode === 'board' && (
                <MyTask 
                     viewMode={viewMode} 
@@ -120,6 +133,7 @@ const Dashboard = () => {
                     externalProjectId={projectId}
                     externalMemberId={memberId}
                     externalSearch={search}
+                    externalDateFilter={dateFilter}
                />
            )}
            
@@ -138,17 +152,18 @@ const Dashboard = () => {
            )}
 
            {viewMode === 'timeline' && (
-               <TimelineBoard tasks={filteredTasks} isLoading={loading} />
+               <TimelineBoard tasks={filteredTasks} isLoading={loading} onTaskClick={handleTaskClick} />
            )}
 
            {viewMode === 'calendar' && (
-               <CalendarBoard tasks={filteredTasks} isLoading={loading} />
+               <CalendarBoard tasks={filteredTasks} isLoading={loading} onTaskClick={handleTaskClick} />
            )}
 
            {viewMode === 'sprints' && (
                <Sprints projectId={projectId} />
            )}
        </div>
+       <TaskDetailDrawer />
     </div>
   );
 };

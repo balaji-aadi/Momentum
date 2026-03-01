@@ -92,6 +92,7 @@ const CreateProject = ({
             await Promise.all(milestones.map(async (m) => {
                 // Format payload for milestone
                 const milestonePayload = {
+                    projectId: activeProjectId,
                     milestoneName: m.milestoneName,
                     summary: m.summary,
                     deliverables: m.deliverables,
@@ -115,6 +116,9 @@ const CreateProject = ({
             : "Project and milestones created successfully"
         );
         
+        // Dispatch event for Sidebar to refresh
+        window.dispatchEvent(new Event('projectCreated'));
+
         if (setIsUpdating) {
             setIsUpdating(false);
             if (setProjectData) setProjectData();

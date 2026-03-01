@@ -16,8 +16,9 @@ import TestCaseManagement from "../testing-childrens/TestCaseManagement";
 import BugReporting from "../testing-childrens/BugReportingPage";
 import { MdFilterAltOff } from "react-icons/md";
 import TaskTable from "../../components/tasks/TaskTable";
+import moment from "moment";
 
-const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, externalSearch }) => {
+const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, externalSearch, externalDateFilter }) => {
   const navigate = useNavigate();
   // State from original file
   const [selectedProject, setSelectedProject] = useState(externalProjectId || "");
@@ -103,7 +104,7 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
       toastMessage: "You are watching testers task section",
     },
     task: {
-      breadcrumbs: [{ label: "My Task", path: "/task/dashboard" }],
+      breadcrumbs: [{ label: "My Task", path: "/" }],
       toastMessage: "You are watching developers task section",
     },
   };
@@ -405,10 +406,37 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
           )}
 
           {/* Board Content */}
-          <div className={`flex-1 p-6 ${currentViewMode === 'spreadsheet' ? 'overflow-x-auto' : 'flex flex-col min-h-0'}`}>
+          <div className={`flex-1 ${currentViewMode === 'board' ? 'p-2 sm:p-4' : 'p-6'} ${currentViewMode === 'spreadsheet' ? 'overflow-x-auto' : 'flex flex-col min-h-0'}`}>
              {currentViewMode === 'spreadsheet' ? (
                 <TaskTable 
-                    tasks={(projectTasks || []).filter(t => !externalSearch || t.taskName?.toLowerCase().includes(externalSearch.toLowerCase()))}
+                    tasks={(() => {
+                        let filtered = projectTasks || [];
+                        if (externalSearch) filtered = filtered.filter(t => t.taskName?.toLowerCase().includes(externalSearch.toLowerCase()));
+                        if (externalDateFilter) {
+                            const now = moment().startOf('day');
+                            filtered = filtered.filter(t => {
+                                // Task might have startDate, endDate, or createdAt. We'll check if the current date filter overlaps with the task's active period.
+                                // Or simply check if the task's startDate falls within the filter. Let's use startDate as primary.
+                                const taskDateStr = t.startDate || t.taskStartDate || t.createdAt;
+                                if (!taskDateStr) return true;
+                                
+                                const taskDate = moment(taskDateStr);
+                                if (!taskDate.isValid()) return true;
+
+                                if (externalDateFilter === 'today') {
+                                    return taskDate.isSame(now, 'day');
+                                }
+                                if (externalDateFilter === 'week') {
+                                    return taskDate.isSame(now, 'week');
+                                }
+                                if (externalDateFilter === 'month') {
+                                    return taskDate.isSame(now, 'month');
+                                }
+                                return true;
+                            });
+                        }
+                        return filtered;
+                    })()}
                     isLoading={false}
                     projects={projects}
                     members={teamMember}
@@ -420,7 +448,32 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
              ) : projectTasks ? (
                isTesting ? (
                  <TBoard
-                   tasks={projectTasks.filter(t => !externalSearch || t.taskName?.toLowerCase().includes(externalSearch.toLowerCase()))}
+                   tasks={(() => {
+                        let filtered = projectTasks || [];
+                        if (externalSearch) filtered = filtered.filter(t => t.taskName?.toLowerCase().includes(externalSearch.toLowerCase()));
+                        if (externalDateFilter) {
+                            const now = moment().startOf('day');
+                            filtered = filtered.filter(t => {
+                                const taskDateStr = t.startDate || t.taskStartDate || t.createdAt;
+                                if (!taskDateStr) return true;
+                                
+                                const taskDate = moment(taskDateStr);
+                                if (!taskDate.isValid()) return true;
+
+                                if (externalDateFilter === 'today') {
+                                    return taskDate.isSame(now, 'day');
+                                }
+                                if (externalDateFilter === 'week') {
+                                    return taskDate.isSame(now, 'week');
+                                }
+                                if (externalDateFilter === 'month') {
+                                    return taskDate.isSame(now, 'month');
+                                }
+                                return true;
+                            });
+                        }
+                        return filtered;
+                   })()}
                    setTasks={setProjectTasks}
                    selectedProject={selectedProject}
                    handleClick={handleClickTesting}
@@ -430,7 +483,32 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
                  />
                ) : (
                  <Board
-                   tasks={projectTasks.filter(t => !externalSearch || t.taskName?.toLowerCase().includes(externalSearch.toLowerCase()))}
+                   tasks={(() => {
+                        let filtered = projectTasks || [];
+                        if (externalSearch) filtered = filtered.filter(t => t.taskName?.toLowerCase().includes(externalSearch.toLowerCase()));
+                        if (externalDateFilter) {
+                            const now = moment().startOf('day');
+                            filtered = filtered.filter(t => {
+                                const taskDateStr = t.startDate || t.taskStartDate || t.createdAt;
+                                if (!taskDateStr) return true;
+                                
+                                const taskDate = moment(taskDateStr);
+                                if (!taskDate.isValid()) return true;
+
+                                if (externalDateFilter === 'today') {
+                                    return taskDate.isSame(now, 'day');
+                                }
+                                if (externalDateFilter === 'week') {
+                                    return taskDate.isSame(now, 'week');
+                                }
+                                if (externalDateFilter === 'month') {
+                                    return taskDate.isSame(now, 'month');
+                                }
+                                return true;
+                            });
+                        }
+                        return filtered;
+                   })()}
                    setTasks={setProjectTasks}
                    selectedProject={selectedProject}
                    handleClick={handleClick}

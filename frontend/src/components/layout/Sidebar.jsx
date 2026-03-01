@@ -32,6 +32,16 @@ const Sidebar = () => {
             }
         };
         fetchProjects();
+
+        // Listen for project creation events to trigger a refresh
+        const handleProjectUpdate = () => {
+            fetchProjects();
+        };
+        window.addEventListener('projectCreated', handleProjectUpdate);
+
+        return () => {
+            window.removeEventListener('projectCreated', handleProjectUpdate);
+        };
     }, []);
 
     const hiddenRoles = ["developer", "tester", "employee"];

@@ -255,11 +255,25 @@ const TaskDetailDrawer = () => {
                         <label className="text-sm font-semibold text-textMain flex items-center gap-2">
                             <IoDocumentTextOutline /> Description
                         </label>
-                        <textarea 
-                            className="w-full min-h-[100px] p-3 text-sm text-textMain bg-slate-50 border border-borderLight rounded-lg focus:ring-1 focus:ring-primary focus:border-primary transition-all resize-y"
-                            placeholder="Add a description..."
-                            defaultValue={task.description}
-                        ></textarea>
+                        <div className="w-full min-h-[100px] p-3 text-sm text-textMain bg-slate-50 border border-borderLight rounded-lg whitespace-pre-wrap leading-relaxed">
+                            {task?.taskDescription ? task.taskDescription.split(/(https?:\/\/[^\s]+)/g).map((part, index) => {
+                                if (part.match(/https?:\/\/[^\s]+/)) {
+                                    return (
+                                        <a 
+                                            key={index} 
+                                            href={part} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer" 
+                                            className="text-primary hover:text-primaryDark hover:underline inline-flex items-center gap-1"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            {part}
+                                        </a>
+                                    );
+                                }
+                                return part;
+                            }) : task?.description || "No description provided."}
+                        </div>
                     </div>
 
                     {/* Subtasks Section */}
@@ -352,27 +366,38 @@ const TaskDetailDrawer = () => {
                             <IoDocumentTextOutline /> Attachments
                         </label>
                         
-                        {task.attachments && typeof task.attachments === 'string' ? (
-                            <div className="flex items-center gap-2 p-2 bg-slate-50 border border-borderLight rounded-lg group">
-                                <div className="p-2 bg-white rounded border border-borderLight text-primary">
-                                    <IoDocumentTextOutline size={16} />
-                                </div>
-                                <a 
-                                    href={task.attachments} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="flex-1 text-sm text-blue-600 hover:underline truncate"
-                                    title={task.attachments}
-                                >
-                                    {task.attachments.split('/').pop() || "View Attachment"}
-                                </a>
-                                <button 
-                                    onClick={() => handleUpdateTask({ attachments: "" })}
-                                    className="p-1 hover:bg-slate-200 rounded text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                                    title="Remove attachment"
-                                >
-                                    <IoClose />
-                                </button>
+                        {task.attachments && (typeof task.attachments === 'string' || (Array.isArray(task.attachments) && task.attachments.length > 0)) ? (
+                            <div className="space-y-2">
+                                {(Array.isArray(task.attachments) ? task.attachments : [task.attachments]).map((attachment, i) => (
+                                    <div key={i} className="flex items-center gap-2 p-2 bg-slate-50 border border-borderLight rounded-lg group">
+                                        <div className="p-2 bg-white rounded border border-borderLight text-primary">
+                                            <IoDocumentTextOutline size={16} />
+                                        </div>
+                                        <a 
+                                            href={attachment} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            className="flex-1 text-sm text-blue-600 hover:underline truncate"
+                                            title={attachment}
+                                        >
+                                            {attachment.split('/').pop() || `Attachment ${i + 1}`}
+                                        </a>
+                                        <button 
+                                            onClick={() => {
+                                                if (Array.isArray(task.attachments)) {
+                                                    const newAttachments = task.attachments.filter((_, idx) => idx !== i);
+                                                    handleUpdateTask({ attachments: newAttachments });
+                                                } else {
+                                                    handleUpdateTask({ attachments: "" });
+                                                }
+                                            }}
+                                            className="p-1 hover:bg-slate-200 rounded text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            title="Remove attachment"
+                                        >
+                                            <IoClose />
+                                        </button>
+                                    </div>
+                                ))}
                             </div>
                         ) : (
                             <div className="relative border border-dashed border-borderLight rounded-lg p-4 hover:bg-slate-50 transition-colors text-center cursor-pointer">

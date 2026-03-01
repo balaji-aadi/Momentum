@@ -2,7 +2,7 @@
 import { FiActivity, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import Activity from "../task-childrens/Activity";
 import { IoFlagSharp } from "react-icons/io5";
-import { Draggable } from "react-beautiful-dnd";
+import { Draggable } from "@hello-pangea/dnd";
 import { useEffect, useRef, useState } from "react";
 import { CiCircleMore } from "react-icons/ci";
 import AssigneModal from "./AssigneModal";

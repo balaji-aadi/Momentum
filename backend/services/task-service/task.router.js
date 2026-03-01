@@ -9,6 +9,7 @@ import upload from "../../middlewares/multer.middleware.js";
 const router = Router();
 
 router.route("/create-task").post(verifyJWT, checkPermission("CREATE_TASK"), taskController.createTask);
+router.route("/get-last-created").get(verifyJWT, taskController.getLastCreatedTask);
 router.route("/update-task/:taskId").put(verifyJWT, canUpdateTask, taskController.updateTask);
 router.route("/get-tasks/:taskId").get(verifyJWT, checkPermission(["VIEW_TASK", "VIEW_ASSIGNED_TASK"]), taskController.getTaskById);
 router.route("/get-all-tasks").post(verifyJWT, taskController.getallTasks);

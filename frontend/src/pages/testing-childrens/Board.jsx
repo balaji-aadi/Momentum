@@ -1,7 +1,7 @@
 // Testing board section
 
 import React, { useState, useEffect } from "react";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 
 import { useSelector } from "react-redux";
 import { TestApi } from "../../services/api/Test.api";

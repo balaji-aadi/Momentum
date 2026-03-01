@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { TaskApi } from '../../services/api/Task.api';
 import { SprintApi } from '../../services/api/Sprint.api';
 import { IoAdd, IoChevronDown, IoChevronUp, IoCalendarOutline, IoEllipsisHorizontal, IoInformationCircleOutline, IoAlertCircleOutline } from 'react-icons/io5';

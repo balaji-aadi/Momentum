@@ -18,6 +18,7 @@ import "jspdf-autotable";
 import * as XLSX from "xlsx";
 import "../../commonLayout.style.css";
 import { VscCloudDownload } from "react-icons/vsc";
+import { IoAdd } from "react-icons/io5";
 import { TaskApi } from "../../services/api/Task.api";
 import toast from "react-hot-toast";
 
@@ -62,9 +63,11 @@ export const Table = memo(
     getTableFunction,
     searchLabel,
     internalRowData,
-    totalCount,
     isExport,
     sheetName,
+    onCreate,
+    createLabel,
+    totalCount = false, // allow callers to toggle count display
   }) => {
     const exportToExcel = (data, columns) => {
       const ws = XLSX.utils.json_to_sheet(data);
@@ -104,6 +107,9 @@ export const Table = memo(
     const [errorMessage, setErrorMessage] = useState("");
     const [errorDetails, setErrorDetails] = useState([]);
     const [triggerTableUpdate, setTriggerTableUpdate] = useState(false);
+    const [selectedRows, setSelectedRows] = useState([]);
+    const [bulkStatus, setBulkStatus] = useState("");
+    const [isUpdatingBulk, setIsUpdatingBulk] = useState(false);
 
     const gridRef = useRef();
     const containerStyle = useMemo(
@@ -127,7 +133,22 @@ export const Table = memo(
     }, []);
 
     const modifiedColumns = useMemo(() => {
-      return column.map((col) => {
+      const checkboxCol = {
+         headerCheckboxSelection: true,
+         checkboxSelection: true,
+         width: 50,
+         minWidth: 50,
+         maxWidth: 50,
+         pinned: 'left',
+         filter: false,
+         sortable: false,
+         headerName: "",
+         field: "selection-row"
+      };
+
+      const columnsWithSelection = [checkboxCol, ...column];
+
+      return columnsWithSelection.map((col) => {
         if (col.headerName === "Actions") {
           return {
             ...col,
@@ -264,6 +285,34 @@ export const Table = memo(
       exportToPDF(rowData, column);
     };
 
+    const onSelectionChanged = () => {
+        const selectedNodes = gridRef.current.api.getSelectedNodes();
+        const selectedData = selectedNodes.map(node => node.data);
+        setSelectedRows(selectedData);
+    };
+
+    const handleBulkStatusUpdate = async () => {
+        if (!bulkStatus || selectedRows.length === 0) return;
+        
+        setIsUpdatingBulk(true);
+        try {
+            const updatePromises = selectedRows.map(row => 
+                TaskApi.taskLogs(row._id, { status: bulkStatus })
+            );
+            await Promise.all(updatePromises);
+            toast.success(`Successfully updated ${selectedRows.length} tasks to ${bulkStatus}`);
+            setSelectedRows([]);
+            gridRef.current.api.deselectAll();
+            setTriggerTableUpdate(prev => !prev);
+        } catch (error) {
+            console.error("Bulk update failed:", error);
+            toast.error("Failed to update some tasks");
+        } finally {
+            setIsUpdatingBulk(false);
+            setBulkStatus("");
+        }
+    };
+
     return (
       <main className="common__layout__wrapper">
         <section className="common__layout__section">
@@ -303,91 +352,127 @@ export const Table = memo(
                       }}
                       className="dark:text-themeText"
                     >
-                      {rowData && rowData?.length}
+                      {typeof totalCount === 'number' ? totalCount : rowData?.length}
                     </span>
                   </span>
                 )}
               </div>
-              {isExport && (
-                <div className="flex items-center space-x-4 float-right">
-                  {/* Download Button */}
+
+              <div className="flex items-center gap-3">
+                {onCreate && (
                   <button
-                    onClick={downloadTemplate}
-                    className="flex items-center gap-2 px-2 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-lg transition-transform transform hover:bg-blue-600 hover:scale-105"
+                    onClick={onCreate}
+                    className="flex items-center gap-2 px-4 py-2 bg-primary text-white font-bold rounded-lg shadow-lg shadow-primary/20 transition-all hover:bg-primaryHover active:scale-95 text-sm"
                   >
-                    <span>Download Template</span>
-                    <i>
-                      <VscCloudDownload />
-                    </i>
+                    <IoAdd size={18} />
+                    <span>{createLabel || "Create New"}</span>
                   </button>
+                )}
 
-                  {/* Download PDF Button */}
-                  {/* <button
-                    onClick={downloadPDF}
-                    className="flex items-center gap-2 px-2 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-lg transition-transform transform hover:bg-green-600 hover:scale-105"
-                  >
-                    <span>Download PDF</span>
-                    <i>
-                      <VscCloudDownload />
-                    </i>
-                  </button> */}
-
-                  {/* Import Button */}
-                  <label
-                    htmlFor="file-upload"
-                    className="flex items-center gap-2 px-2 py-2 bg-orange-500 text-white font-semibold rounded-lg shadow-lg cursor-pointer"
-                  >
-                    <span>Import</span>
-                    <i>
-                      <VscCloudDownload />
-                    </i>
-                  </label>
-                  <input
-                    id="file-upload"
-                    type="file"
-                    accept=".xlsx,.xls,.csv"
-                    onChange={handleFileUpload}
-                    style={{ display: "none" }}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-          <div style={containerStyle}>
-            <div style={{ marginBottom: "5px" }}></div>
-            <div style={{ height: "60vh", margin: "1rem" }}>
-              <div style={gridStyle} className={`ag-theme-quartz`}>
-                {loading ? <CustomLoadingOverlay /> : <AgGridReact
-                  ref={gridRef}
-                  // rowData={getTableFunction ? rowData : internalRowData}
-                  rowData={loading ? [] : getTableFunction ? rowData : internalRowData}
-                  columnDefs={modifiedColumns}
-                  defaultColDef={defaultColDef}
-                  autoGroupColumnDef={autoGroupColumnDef}
-                  pagination={true}
-                  sideBar={{
-                    toolPanels: [
-                      {
-                        id: "columns",
-                        labelDefault: "Columns",
-                        labelKey: "columns",
-                        iconKey: "columns",
-                        toolPanel: "agColumnsToolPanel",
-                      },
-                      {
-                        id: "filters",
-                        labelDefault: "Filters",
-                        labelKey: "filters",
-                        iconKey: "filter",
-                        toolPanel: "agFiltersToolPanel",
-                      },
-                    ],
-                    defaultToolPanel: null,
-                  }}
-                  className={isDarkMode ? "my-custom-grid" : ""}
-                />}
+                {isExport && (
+                  <div className="flex items-center space-x-4">
+                    {/* Download Button */}
+                    <button
+                      onClick={downloadTemplate}
+                      className="flex items-center gap-2 px-2 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-lg transition-transform transform hover:bg-blue-600 hover:scale-105"
+                    >
+                      <span>Download Template</span>
+                      <i>
+                        <VscCloudDownload />
+                      </i>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
+          </div>
+
+          {/* Bulk Actions Bar */}
+          {selectedRows.length > 0 && searchLabel === "Tasks" && (
+            <div className="bg-primary/5 border-y border-primary/20 p-3 px-6 flex items-center justify-between animate-in slide-in-from-top duration-300">
+                <div className="flex items-center gap-4">
+                    <span className="text-sm font-bold text-primary">
+                        {selectedRows.length} tasks selected
+                    </span>
+                    <div className="h-4 w-px bg-primary/20"></div>
+                    <div className="flex items-center gap-2">
+                        <label className="text-xs font-semibold text-textSub uppercase tracking-wider">Change Status:</label>
+                        <select 
+                            value={bulkStatus}
+                            onChange={(e) => setBulkStatus(e.target.value)}
+                            disabled={isUpdatingBulk}
+                            className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                        >
+                            <option value="">Select status...</option>
+                            <option value="todo">To Do</option>
+                            <option value="inprogress">In Progress</option>
+                            <option value="hold">Hold</option>
+                            <option value="done">Done</option>
+                        </select>
+                        <button 
+                            onClick={handleBulkStatusUpdate}
+                            disabled={!bulkStatus || isUpdatingBulk}
+                            className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${
+                                !bulkStatus || isUpdatingBulk 
+                                ? 'bg-slate-200 text-slate-400 cursor-not-allowed' 
+                                : 'bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primaryHover'
+                            }`}
+                        >
+                            {isUpdatingBulk ? 'Updating...' : 'Apply to all'}
+                        </button>
+                    </div>
+                </div>
+                <button 
+                    onClick={() => {
+                        gridRef.current.api.deselectAll();
+                        setSelectedRows([]);
+                    }}
+                    className="text-textSub hover:text-textMain text-sm underline font-medium"
+                >
+                    Clear Selection
+                </button>
+            </div>
+          )}
+
+          <div style={containerStyle}>
+            <div style={{ marginBottom: "5px" }}></div>
+              {/* Responsive table container: height adapts on small screens */}
+              <div className="my-4 mx-4">
+                <div className={`ag-theme-quartz ${isDarkMode ? 'my-custom-grid' : ''}`} style={{ width: '100%', height: '60vh' }}>
+                  {loading ? <CustomLoadingOverlay /> : <AgGridReact
+                    ref={gridRef}
+                    // rowData={getTableFunction ? rowData : internalRowData}
+                    rowData={loading ? [] : getTableFunction ? rowData : internalRowData}
+                    columnDefs={modifiedColumns}
+                    defaultColDef={defaultColDef}
+                    autoGroupColumnDef={autoGroupColumnDef}
+                    pagination={true}
+                    rowSelection="multiple"
+                    onSelectionChanged={onSelectionChanged}
+                    suppressRowClickSelection={true}
+                    sideBar={{
+                      toolPanels: [
+                        {
+                          id: "columns",
+                          labelDefault: "Columns",
+                          labelKey: "columns",
+                          iconKey: "columns",
+                          toolPanel: "agColumnsToolPanel",
+                        },
+                        {
+                          id: "filters",
+                          labelDefault: "Filters",
+                          labelKey: "filters",
+                          iconKey: "filter",
+                          toolPanel: "agFiltersToolPanel",
+                        },
+                      ],
+                      defaultToolPanel: null,
+                    }}
+                    className="w-full h-full"
+                  />}
+                </div>
+              </div>
           </div>
         </section>
         {showModal && (
