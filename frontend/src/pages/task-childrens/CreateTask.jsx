@@ -849,11 +849,11 @@ const CreateTask = ({
                 <InputField
                   label="Task Description"
                   name="taskDescription"
-                  type="textarea"
+                  type="quill"
                   value={formik.values.taskDescription}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  placeholder="Provide a brief description of the task..."
+                  placeholder="Provide a detailed description of the task..."
                   error={
                     formik.touched.taskDescription &&
                     formik.errors.taskDescription
@@ -916,7 +916,7 @@ const CreateTask = ({
                 <InputField
                   label="Additional Notes for Assignee"
                   name="additionalNotes"
-                  type="textarea"
+                  type="quill"
                   value={formik.values.additionalNotes}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}

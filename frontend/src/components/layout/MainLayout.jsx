@@ -6,12 +6,12 @@ import GlobalConsistencyModal from '../analytics/GlobalConsistencyModal';
 
 const MainLayout = () => {
     return (
-        <div className="flex h-screen bg-bgLight font-sans text-textMain overflow-hidden">
+        <div className="flex h-full w-full bg-bgLight font-sans text-textMain overflow-hidden">
             {/* Sidebar */}
             <Sidebar />
 
             {/* Main Content Area */}
-            <div className="flex-1 ml-64 flex flex-col h-screen overflow-hidden relative">
+            <div className="flex-1 ml-64 flex flex-col h-full overflow-hidden relative">
                 <Header />
                 
                 {/* Page Content */}

@@ -40,11 +40,28 @@
 // export default Column;
 
 
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { Droppable } from "@hello-pangea/dnd";
+import { FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
 import Task from "./Task";
 
 const Column = ({ column, handleClick }) => {
+  const [sortOrder, setSortOrder] = useState('none'); // 'none', 'desc', 'asc'
+
+  const toggleSort = () => {
+    if (sortOrder === 'none') setSortOrder('desc');
+    else if (sortOrder === 'desc') setSortOrder('asc');
+    else setSortOrder('none');
+  };
+
+  const sortedTasks = useMemo(() => {
+    if (sortOrder === 'none') return column.tasks;
+    return [...column.tasks].sort((a, b) => {
+      const dateA = new Date(a.createdAt || a.taskDueDate || 0).getTime();
+      const dateB = new Date(b.createdAt || b.taskDueDate || 0).getTime();
+      return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+    });
+  }, [column.tasks, sortOrder]);
   const getColumnPillColor = () => {
     switch (column.name.toLowerCase()) {
       case "todo": return "bg-slate-500";
@@ -66,9 +83,20 @@ const Column = ({ column, handleClick }) => {
               {column.name}
             </h2>
           </div>
-          <span className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 px-2.5 py-0.5 rounded-lg text-[10px] font-bold shadow-sm">
-            {column.tasks.length}
-          </span>
+          <div className="flex items-center gap-2">
+            <button 
+                onClick={toggleSort}
+                className="text-slate-400 hover:text-primary transition-colors focus:outline-none flex items-center justify-center w-6 h-6 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700"
+                title={`Sort: ${sortOrder === 'none' ? 'Default' : sortOrder === 'desc' ? 'Newest First' : 'Oldest First'}`}
+            >
+                {sortOrder === 'none' && <FaSort size={12} />}
+                {sortOrder === 'desc' && <FaSortDown size={14} className="text-primary" />}
+                {sortOrder === 'asc' && <FaSortUp size={14} className="text-primary mb-1" />}
+            </button>
+            <span className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 px-2.5 py-0.5 rounded-lg text-[10px] font-bold shadow-sm">
+              {column.tasks.length}
+            </span>
+          </div>
       </div>
 
       <Droppable droppableId={column.id}>
@@ -76,15 +104,15 @@ const Column = ({ column, handleClick }) => {
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`flex-1 min-h-0 transition-colors duration-300 rounded-xl ${snapshot.isDraggingOver
+            className={`flex-1 min-h-0 flex flex-col transition-colors duration-300 rounded-xl ${snapshot.isDraggingOver
               ? "bg-indigo-50/50 dark:bg-indigo-900/10 ring-2 ring-indigo-200/50 dark:ring-indigo-800/20"
               : ""
               }`}
           >
             {/* vertical scroll lives in this child so the droppable itself isn’t scrollable */}
-            <div className="flex-1 min-h-0 max-h-[70vh] overflow-auto pb-4 pr-2">
-              <div className="space-y-4 overflow-x-hidden custom-scrollbar px-1 py-1 pb-10">
-                {column.tasks.map((task, index) => (
+            <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden pb-20 pr-1 lg:pr-2 custom-scrollbar">
+              <div className="space-y-4 px-1 py-1">
+                {sortedTasks.map((task, index) => (
                   <Task
                     key={task._id}
                     task={task}

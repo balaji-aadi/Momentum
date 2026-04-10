@@ -26,7 +26,7 @@ const ProjectSidebar = ({ project }) => {
     ];
 
     return (
-        <aside className="w-64 bg-surface border-r border-borderLight h-screen flex flex-col fixed left-0 top-0 overflow-y-auto z-20">
+        <aside className="w-64 bg-surface border-r border-borderLight h-full flex flex-col absolute left-0 top-0 overflow-y-auto z-20">
             {/* Header / Back to Main Dashboard */}
             <div className="p-6">
                 <button 

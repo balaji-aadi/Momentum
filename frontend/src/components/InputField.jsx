@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
+import ReactQuill from "react-quill";
 
 const InputField = ({
   label,
@@ -110,6 +111,35 @@ const InputField = ({
     });
   };
 
+  const handleQuillChange = (content) => {
+    onChange({
+      target: {
+        name,
+        value: content,
+      },
+    });
+  };
+
+  const quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "clean"],
+    ],
+  };
+
+  const quillFormats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "list",
+    "bullet",
+    "link",
+  ];
+
   return (
     <div className="mb-4">
       <label
@@ -146,9 +176,22 @@ const InputField = ({
           onChange={onChange}
           onBlur={onBlur}
           placeholder={placeholder}
-          className="w-full px-4 py-2 border rounded-lg outline-none dark:bg-themeBG dark:text-themeText"
+          className="w-full px-4 py-2 border rounded-lg outline-none dark:bg-themeBG dark:text-themeText min-h-[100px]"
           {...props}
         />
+      ) : type === "quill" ? (
+        <div className={`quill-container ${isDarkMode ? "dark-quill" : ""}`}>
+          <ReactQuill
+            id={name}
+            theme="snow"
+            value={value || ""}
+            onChange={handleQuillChange}
+            modules={quillModules}
+            formats={quillFormats}
+            placeholder={placeholder}
+            className="bg-white dark:bg-themeBG dark:text-themeText"
+          />
+        </div>
       ) : type === "checkbox" ? (
         <div className="flex items-center">
           <input

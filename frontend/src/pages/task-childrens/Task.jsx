@@ -279,9 +279,21 @@ const Task = ({ key, task, index, handleClick }) => {
   };
 
   const priorityColors = {
-    high: "bg-red-50 text-red-600 border-red-100 dark:bg-red-900/10 dark:text-red-400 dark:border-red-800/20",
-    medium: "bg-amber-50 text-amber-600 border-amber-100 dark:bg-amber-900/10 dark:text-amber-400 dark:border-amber-800/20",
     low: "bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-900/10 dark:text-emerald-400 dark:border-emerald-800/20"
+  };
+
+  const stripHtml = (html) => {
+    if (!html) return "";
+    // Basic HTML stripping
+    const tmp = html.replace(/<[^>]*>?/gm, '');
+    // Unescape common entities just in case they are already escaped
+    return tmp
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .trim();
   };
 
   return (
@@ -350,25 +362,8 @@ const Task = ({ key, task, index, handleClick }) => {
 
                 {/* Description Snippet */}
                 {task.taskDescription && (
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 line-clamp-2 leading-relaxed">
-                        {task.taskDescription.split(/(https?:\/\/[^\s]+)/g).map((part, index) => {
-                            if (part.match(/https?:\/\/[^\s]+/)) {
-                                return (
-                                    <a 
-                                        key={index} 
-                                        href={part} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer" 
-                                        className="text-blue-500 hover:text-blue-700 hover:underline inline-flex items-center gap-1"
-                                        onClick={(e) => e.stopPropagation()}
-                                    >
-                                        <FiLink2 size={10} className="inline" />
-                                        {part}
-                                    </a>
-                                );
-                            }
-                            return part;
-                        })}
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 line-clamp-2 leading-relaxed break-words overflow-hidden w-full max-w-full">
+                        {stripHtml(task.taskDescription)}
                     </p>
                 )}
 

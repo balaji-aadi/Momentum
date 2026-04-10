@@ -73,7 +73,7 @@ dailyAccountabilityController.saveBoard = asyncHandler(async (req, res) => {
             date: logicalDate
         },
         {
-            $set: { tasksCompleted: totalLogsForLogicalDay } 
+            $set: { "metrics.accountabilityLogs": totalLogsForLogicalDay } 
         },
         { upsert: true, new: true, setDefaultsOnInsert: true }
     );

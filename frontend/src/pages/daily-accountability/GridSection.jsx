@@ -25,8 +25,7 @@ const GridSection = ({ section, updateSection, removeSection, searchQuery }) => 
     const newRow = { 
         id: `row_${Date.now()}`, 
         date: new Date().toISOString().split('T')[0],
-        content: '',
-        isDone: false
+        content: ''
     };
     updateSection({ ...section, rows: [newRow, ...section.rows] });
     setEditingRowId(newRow.id); // Auto-focus new row
@@ -110,7 +109,6 @@ const GridSection = ({ section, updateSection, removeSection, searchQuery }) => 
                 {/* Fixed Headers for this table */}
                 <div className="flex sticky top-0 bg-slate-50 border-b border-borderLight z-20 text-xs font-bold text-slate-500 uppercase tracking-wider shadow-sm">
                     <div className="p-4 border-r border-borderLight w-[70px] flex-shrink-0 text-center">S.No</div>
-                    <div className="p-4 border-r border-borderLight w-[80px] flex-shrink-0 text-center">Done</div>
                     <div className="p-4 border-r border-borderLight w-[150px] flex-shrink-0">Log Date</div>
                     <div className="p-4 border-r border-borderLight flex-1 min-w-[300px]">Content & Notes</div>
                     <div className="p-4 w-[80px] flex-shrink-0 bg-slate-50/90 text-center">Del</div>
@@ -132,21 +130,6 @@ const GridSection = ({ section, updateSection, removeSection, searchQuery }) => 
                                     {/* S.No */}
                                     <div className="p-4 border-r border-borderLight/50 w-[70px] flex-shrink-0 flex items-start justify-center">
                                         <span className="text-textSub font-bold text-sm bg-slate-100 w-8 h-8 flex items-center justify-center rounded-full mt-1.5">{globalIndex}</span>
-                                    </div>
-                                    
-                                    {/* Done Checkbox */}
-                                    <div className="p-4 border-r border-borderLight/50 w-[80px] flex-shrink-0 flex items-start justify-center">
-                                        <div className="relative flex items-center justify-center mt-2">
-                                            <input 
-                                                type="checkbox" 
-                                                checked={row.isDone || false}
-                                                onChange={(e) => updateRow(row.id, 'isDone', e.target.checked)}
-                                                className="peer w-6 h-6 cursor-pointer appearance-none rounded-md border-2 border-slate-300 bg-slate-50 checked:bg-emerald-500 checked:border-emerald-500 transition-all shadow-sm"
-                                            />
-                                            <svg className="absolute w-4 h-4 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </div>
                                     </div>
                                     
                                     {/* Date */}
@@ -180,12 +163,12 @@ const GridSection = ({ section, updateSection, removeSection, searchQuery }) => 
                                             </div>
                                         ) : (
                                             <div 
-                                                className={`cursor-text h-full min-h-[50px] p-3 rounded-lg border border-transparent hover:border-borderLight hover:bg-slate-50 transition-colors ${row.isDone ? 'opacity-70' : ''}`}
+                                                className={`cursor-text h-full min-h-[50px] p-3 rounded-lg border border-transparent hover:border-borderLight hover:bg-slate-50 transition-colors`}
                                                 onClick={() => setEditingRowId(row.id)}
                                             >
                                                 {row.content && row.content.trim() !== '' && row.content !== '<p><br></p>' ? (
                                                      <div 
-                                                        className={`prose prose-sm max-w-none text-slate-700 leading-relaxed ${row.isDone ? 'line-through text-slate-400 marker:text-slate-400' : ''}`}
+                                                        className={`prose prose-sm max-w-none text-slate-700 leading-relaxed`}
                                                         dangerouslySetInnerHTML={{ __html: unescapeHTML(row.content) }}
                                                     />
                                                 ) : (

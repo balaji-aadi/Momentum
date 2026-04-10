@@ -44,10 +44,7 @@ const ProjectBoard = () => {
         }
     }, [projectId, selectedMilestone]);
 
-    const handleTaskClick = (task) => {
-        // Update URL to open Task Drawer
-        setSearchParams({ taskId: task._id });
-    };
+
 
     return (
         <div className="h-full flex flex-col">
@@ -91,7 +88,6 @@ const ProjectBoard = () => {
                         tasks={tasks} 
                         setTasks={setTasks} 
                         selectedProject={projectId} 
-                        handleClick={handleTaskClick}
                         milestoneId={selectedMilestone}
                     />
                 )}

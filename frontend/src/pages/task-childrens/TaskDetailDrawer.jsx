@@ -56,18 +56,18 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
     if (!isOpen) return null;
 
     const priorityColors = {
-        high: "bg-red-100 text-red-700 border-red-200",
-        medium: "bg-amber-100 text-amber-700 border-amber-200",
-        low: "bg-emerald-100 text-emerald-700 border-emerald-200"
+        high: "bg-red-500/10 text-red-600 border-red-200/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]",
+        medium: "bg-amber-500/10 text-amber-600 border-amber-200/50 shadow-[0_0_15px_rgba(245,158,11,0.1)]",
+        low: "bg-emerald-500/10 text-emerald-600 border-emerald-200/50 shadow-[0_0_15px_rgba(16,185,129,0.1)]"
     };
 
     const statusColors = {
-        todo: "bg-slate-100 text-slate-700",
-        inprogress: "bg-blue-100 text-blue-700",
-        review: "bg-purple-100 text-purple-700",
-        done: "bg-green-100 text-green-700",
-        hold: "bg-orange-100 text-orange-700",
-        backlog: "bg-gray-100 text-gray-700"
+        todo: "bg-slate-500/10 text-slate-600 border-slate-200/50",
+        inprogress: "bg-blue-500/10 text-blue-600 border-blue-200/50",
+        review: "bg-purple-500/10 text-purple-600 border-purple-200/50",
+        done: "bg-green-500/10 text-green-600 border-green-200/50",
+        hold: "bg-orange-500/10 text-orange-600 border-orange-200/50",
+        backlog: "bg-gray-500/10 text-gray-600 border-gray-200/50"
     };
 
     return (
@@ -79,24 +79,29 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
             <div className={`relative w-full max-w-2xl bg-white shadow-2xl h-full flex flex-col transform transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                 
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b border-borderLight bg-slate-50">
-                    <div className="flex items-center gap-3">
-                        <span className="text-sm font-mono font-bold text-textSub bg-white px-2 py-1 rounded border border-borderLight shadow-sm">
+                <div className="flex items-center justify-between p-5 border-b border-slate-100 bg-white sticky top-0 z-[70] shadow-sm">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <span className="text-sm font-mono font-bold text-textSub bg-slate-50 px-2 py-1 rounded border border-borderLight shadow-sm shrink-0">
                             {task?.taskId || `#${task?._id?.slice(-4)}`}
                         </span>
-                        <h2 className="text-lg font-bold text-textMain truncate max-w-md">{task?.taskName}</h2>
+                        <h2 className="text-lg font-bold text-textMain truncate tracking-tight">{task?.taskName}</h2>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 shrink-0 ml-4">
                         {canEdit && (
                             <button 
                                 onClick={() => onTaskUpdate(task)} 
-                                className="flex items-center gap-1 text-sm font-semibold text-primary hover:text-primaryDark transition-colors"
+                                className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-all flex items-center gap-1 text-sm font-bold"
                             >
-                                <MdEdit size={18} /> Edit
+                                <MdEdit size={20} />
+                                <span className="hidden sm:inline">Edit</span>
                             </button>
                         )}
-                        <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-full transition-colors">
-                            <IoClose size={24} className="text-textSub" />
+                        <button 
+                            onClick={onClose} 
+                            className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-red-500 rounded-lg transition-all shadow-sm"
+                            title="Close"
+                        >
+                            <IoClose size={24} />
                         </button>
                     </div>
                 </div>
@@ -109,26 +114,49 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                         <div className="md:col-span-2 space-y-8">
                             {/* Description */}
                             <section>
-                                <h3 className="text-sm font-bold text-textSub uppercase tracking-wider mb-3">Description</h3>
-                                <div className="text-textMain text-sm leading-relaxed whitespace-pre-wrap bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                    {task?.taskDescription ? task.taskDescription.split(/(https?:\/\/[^\s]+)/g).map((part, index) => {
-                                        if (part.match(/https?:\/\/[^\s]+/)) {
-                                            return (
-                                                <a 
-                                                    key={index} 
-                                                    href={part} 
-                                                    target="_blank" 
-                                                    rel="noopener noreferrer" 
-                                                    className="text-primary hover:text-primaryDark hover:underline inline-flex items-center gap-1"
-                                                    onClick={(e) => e.stopPropagation()}
-                                                >
-                                                    {part}
-                                                </a>
-                                            );
-                                        }
-                                        return part;
-                                    }) : "No description provided."}
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-[11px] font-black text-textSub uppercase tracking-[0.2em]">Description</h3>
+                                    <div className="h-px flex-1 bg-gradient-to-r from-slate-200 to-transparent ml-4" />
                                 </div>
+                                <div 
+                                   className="text-textMain text-sm leading-relaxed bg-white dark:bg-slate-900/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm quill-content w-full max-w-full break-words overflow-hidden"
+                                   dangerouslySetInnerHTML={{ 
+                                       __html: (() => {
+                                           let html = task?.taskDescription || "<p class='italic text-slate-400'>No description provided.</p>";
+                                           // Robust unescaping for double/triple escaped content
+                                           for(let i=0; i<3; i++) {
+                                               html = html.replace(/&lt;/g, '<')
+                                                          .replace(/&gt;/g, '>')
+                                                          .replace(/&amp;/g, '&')
+                                                          .replace(/&quot;/g, '"')
+                                                          .replace(/&#39;/g, "'");
+                                               if (!html.includes('&')) break;
+                                           }
+                                           // Auto-link
+                                           return html.replace(/(?<!href=")(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+                                       })()
+                                   }}
+                               />
+                                
+                                {task?.additionalNotes && (
+                                    <div className="mt-6">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h3 className="text-[11px] font-black text-textSub uppercase tracking-[0.2em]">Assignee Notes</h3>
+                                            <div className="h-px flex-1 bg-gradient-to-r from-blue-200/50 to-transparent ml-4" />
+                                        </div>
+                                        <div 
+                                            className="text-textMain text-xs leading-relaxed bg-blue-50/30 dark:bg-blue-900/10 p-4 rounded-xl border border-blue-100/50 dark:border-blue-800/30"
+                                            dangerouslySetInnerHTML={{ 
+                                                __html: task.additionalNotes
+                                                    .replace(/&lt;/g, '<')
+                                                    .replace(/&gt;/g, '>')
+                                                    .replace(/&amp;/g, '&')
+                                                    .replace(/&quot;/g, '"')
+                                                    .replace(/&#39;/g, "'")
+                                            }}
+                                        />
+                                    </div>
+                                )}
                             </section>
 
                             {/* Subtasks / Tabs Section */}
@@ -136,24 +164,24 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                 <div className="border-b border-borderLight mb-4 flex gap-6">
                                     <button 
                                         onClick={() => setActiveTab('subtasks')}
-                                        className={`pb-2 px-1 text-sm font-bold transition-colors relative ${activeTab === 'subtasks' ? 'text-primary' : 'text-textSub hover:text-textMain'}`}
+                                        className={`pb-3 px-1 text-xs font-black uppercase tracking-widest transition-all relative ${activeTab === 'subtasks' ? 'text-primary' : 'text-textSub hover:text-textMain'}`}
                                     >
                                         Subtasks
-                                        {activeTab === 'subtasks' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary" />}
+                                        {activeTab === 'subtasks' && <div className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-full shadow-[0_-2px_10px_rgba(59,130,246,0.3)]" />}
                                     </button>
                                     <button 
                                         onClick={() => setActiveTab('activity')}
-                                        className={`pb-2 px-1 text-sm font-bold transition-colors relative ${activeTab === 'activity' ? 'text-primary' : 'text-textSub hover:text-textMain'}`}
+                                        className={`pb-3 px-1 text-xs font-black uppercase tracking-widest transition-all relative ${activeTab === 'activity' ? 'text-primary' : 'text-textSub hover:text-textMain'}`}
                                     >
                                         Activity
-                                        {activeTab === 'activity' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary" />}
+                                        {activeTab === 'activity' && <div className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-full shadow-[0_-2px_10px_rgba(59,130,246,0.3)]" />}
                                     </button>
                                     <button 
                                         onClick={() => setActiveTab('attachments')}
-                                        className={`pb-2 px-1 text-sm font-bold transition-colors relative ${activeTab === 'attachments' ? 'text-primary' : 'text-textSub hover:text-textMain'}`}
+                                        className={`pb-3 px-1 text-xs font-black uppercase tracking-widest transition-all relative ${activeTab === 'attachments' ? 'text-primary' : 'text-textSub hover:text-textMain'}`}
                                     >
                                         Attachments
-                                        {activeTab === 'attachments' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary" />}
+                                        {activeTab === 'attachments' && <div className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-full shadow-[0_-2px_10px_rgba(59,130,246,0.3)]" />}
                                     </button>
                                 </div>
 
@@ -264,61 +292,74 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                         <div className="space-y-6">
                             {/* Status */}
                             <div>
-                                <label className="text-[10px] font-bold text-textSub uppercase mb-2 block tracking-wider">Status</label>
-                                <span className={`px-3 py-1.5 rounded-lg font-bold text-xs uppercase tracking-wide inline-block ${statusColors[task?.status] || 'bg-slate-100'}`}>
+                                <label className="text-[10px] font-black text-textSub uppercase mb-3 block tracking-[0.1em]">Status</label>
+                                <span className={`px-4 py-2 rounded-xl font-black text-[11px] uppercase tracking-widest border transition-all hover:scale-105 duration-300 inline-block ${statusColors[task?.status] || 'bg-slate-100'}`}>
                                     {task?.status}
                                 </span>
                             </div>
 
                             {/* Priority */}
                             <div>
-                                <label className="text-[10px] font-bold text-textSub uppercase mb-2 block tracking-wider">Priority</label>
-                                <span className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide uppercase border ${priorityColors[task?.taskPriority] || 'bg-slate-100'}`}>
-                                    <IoFlagSharp /> {task?.taskPriority}
+                                <label className="text-[10px] font-black text-textSub uppercase mb-3 block tracking-[0.1em]">Priority</label>
+                                <span className={`flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-black tracking-widest uppercase border transition-all hover:scale-105 duration-300 ${priorityColors[task?.taskPriority] || 'bg-slate-100'}`}>
+                                    <IoFlagSharp className="text-sm" /> {task?.taskPriority}
                                 </span>
                             </div>
 
                             {/* Dates */}
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="text-[10px] font-bold text-textSub uppercase mb-1 block tracking-wider">Start Date</label>
-                                    <div className="flex items-center gap-2 text-textMain font-semibold">
-                                        <IoCalendarOutline className="text-textSub" />
-                                        <span className="text-sm">{task?.taskStartDate ? moment(task.taskStartDate).format("MMM DD, YYYY") : "N/A"}</span>
+                            <div className="bg-slate-50/50 dark:bg-slate-900/30 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-5">
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-white dark:bg-slate-800 rounded-lg shadow-sm">
+                                            <IoCalendarOutline size={16} className="text-primary" />
+                                        </div>
+                                        <div>
+                                            <label className="text-[9px] font-black text-textSub uppercase block tracking-widest">Start Date</label>
+                                            <span className="text-xs font-bold text-textMain">{task?.taskStartDate ? moment(task.taskStartDate).format("MMM DD, YYYY") : "N/A"}</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-white dark:bg-slate-800 rounded-lg shadow-sm">
+                                            <IoCalendarOutline size={16} className="text-orange-500" />
+                                        </div>
+                                        <div>
+                                            <label className="text-[9px] font-black text-textSub uppercase block tracking-widest">Due Date</label>
+                                            <span className="text-xs font-bold text-textMain">{task?.taskDueDate ? moment(task.taskDueDate).format("MMM DD, YYYY") : "N/A"}</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <label className="text-[10px] font-bold text-textSub uppercase mb-1 block tracking-wider">Due Date</label>
-                                    <div className="flex items-center gap-2 text-textMain font-semibold">
-                                        <IoCalendarOutline className="text-textSub" />
-                                        <span className="text-sm">{task?.taskDueDate ? moment(task.taskDueDate).format("MMM DD, YYYY") : "N/A"}</span>
+                                <div className="pt-4 border-t border-slate-200/50 dark:border-slate-700/50 flex items-center gap-3">
+                                    <div className="p-2 bg-white dark:bg-slate-800 rounded-lg shadow-sm">
+                                        <IoTimeOutline size={16} className="text-emerald-500" />
                                     </div>
-                                </div>
-                                <div>
-                                    <label className="text-[10px] font-bold text-textSub uppercase mb-1 block tracking-wider">Estimation</label>
-                                    <div className="flex items-center gap-2 text-textMain font-semibold">
-                                        <IoTimeOutline className="text-textSub" />
-                                        <span className="text-sm">{task?.estimatedHours || 0} Hours</span>
+                                    <div>
+                                        <label className="text-[9px] font-black text-textSub uppercase block tracking-widest">Estimation</label>
+                                        <span className="text-xs font-bold text-textMain">{task?.estimatedHours || 0} Hours</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Assignee */}
                             <div>
-                                <label className="text-[10px] font-bold text-textSub uppercase mb-2 block tracking-wider">Assignee</label>
-                                <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                                    {task?.assignee?.profileImage ? (
-                                        <img src={task.assignee.profileImage} alt="User" className="w-10 h-10 rounded-full border-2 border-white shadow-sm" />
-                                    ) : (
-                                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border-2 border-white shadow-sm">
-                                            <IoPersonOutline className="text-primary" size={20} />
-                                        </div>
-                                    )}
+                                <label className="text-[10px] font-black text-textSub uppercase mb-3 block tracking-[0.1em]">Assignee</label>
+                                <div className="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300">
+                                    <div className="relative">
+                                        {task?.assignee?.profileImage ? (
+                                            <img src={task.assignee.profileImage} alt="User" className="w-12 h-12 rounded-2xl border-2 border-white dark:border-slate-700 shadow-md object-cover" />
+                                        ) : (
+                                            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center border-2 border-white dark:border-slate-700 shadow-md">
+                                                <IoPersonOutline className="text-primary text-2xl" />
+                                            </div>
+                                        )}
+                                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-slate-900 rounded-full shadow-sm" />
+                                    </div>
                                     <div className="min-w-0">
-                                        <p className="text-sm font-bold text-textMain truncate leading-tight">
+                                        <p className="text-sm font-black text-textMain truncate tracking-tight">
                                             {task?.assignee?.firstName} {task?.assignee?.lastName}
                                         </p>
-                                        <p className="text-[10px] text-textSub truncate">{task?.assignee?.email}</p>
+                                        <p className="text-[10px] font-bold text-textSub truncate opacity-70">
+                                            {task?.assignee?.email}
+                                        </p>
                                     </div>
                                 </div>
                             </div>

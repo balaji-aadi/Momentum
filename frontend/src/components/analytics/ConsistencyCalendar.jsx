@@ -77,14 +77,15 @@ const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false }) 
                 {calendarDays.map((item, idx) => {
                     const tasks = item.metrics?.tasksCompleted || 0;
                     const hours = item.metrics?.hoursLogged || 0;
-                    const hasWork = tasks > 0 || hours > 0;
+                    const accLogs = item.metrics?.accountabilityLogs || 0;
+                    const hasWork = tasks > 0 || hours > 0 || accLogs > 0;
                     
                     // Intensity scale for Github-style heatmap:
                     let bgClass = 'bg-white/5 text-slate-500'; // Idle
                     if (hasWork) {
-                        if (tasks >= 10 || hours >= 8) bgClass = 'bg-emerald-400 text-white shadow-lg shadow-emerald-400/30'; // High
-                        else if (tasks >= 5 || hours >= 4) bgClass = 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'; // Mid
-                        else if (tasks >= 2 || hours >= 2) bgClass = 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'; // Low-Mid
+                        if (tasks >= 10 || hours >= 8 || accLogs >= 5) bgClass = 'bg-emerald-400 text-white shadow-lg shadow-emerald-400/30'; // High
+                        else if (tasks >= 5 || hours >= 4 || accLogs >= 3) bgClass = 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'; // Mid
+                        else if (tasks >= 2 || hours >= 2 || accLogs >= 2) bgClass = 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'; // Low-Mid
                         else bgClass = 'bg-emerald-800 text-slate-200'; // Dip (1 log)
                     }
 

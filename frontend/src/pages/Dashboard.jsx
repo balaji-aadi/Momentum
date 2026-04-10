@@ -34,6 +34,13 @@ const Dashboard = () => {
   const [members, setMembers] = useState([]);
   const [tasks, setTasks] = useState([]); // For views that need raw tasks (Timeline, Calendar, Table)
   const [loading, setLoading] = useState(false);
+  
+  // Sync filters from URL
+  useEffect(() => {
+    const pId = searchParams.get('projectId');
+    // If projectId is in URL, set it. If missing, clear it.
+    setProjectId(pId || '');
+  }, [searchParams]);
 
   // Fetch Options (Projects, Members)
   useEffect(() => {
@@ -105,7 +112,13 @@ const Dashboard = () => {
             projects={projects}
             members={members}
             selectedProject={projectId}
-            onProjectChange={setProjectId}
+            onProjectChange={(id) => {
+                setProjectId(id);
+                const params = new URLSearchParams(searchParams);
+                if (id) params.set('projectId', id);
+                else params.delete('projectId');
+                setSearchParams(params);
+            }}
             selectedMember={memberId}
             onMemberChange={setMemberId}
             search={search}
@@ -115,6 +128,7 @@ const Dashboard = () => {
                 setMemberId('');
                 setSearch('');
                 setDateFilter('');
+                setSearchParams({});
             }}
             onCreateTask={handleCreateTask}
             isManager={isManager}

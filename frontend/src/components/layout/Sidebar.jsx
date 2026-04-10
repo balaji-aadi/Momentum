@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useSearchParams } from 'react-router-dom';
 import { 
   IoGridOutline, 
   IoBriefcaseOutline, 
@@ -16,9 +16,12 @@ import { useSelector } from 'react-redux';
 
 const Sidebar = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(false);
     const { currentUser } = useSelector((state) => state.store);
+
+    const currentProjectId = searchParams.get('projectId');
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -61,7 +64,7 @@ const Sidebar = () => {
     }
 
     return (
-        <aside className="w-64 bg-surface border-r border-borderLight h-screen flex flex-col fixed left-0 top-0 overflow-y-auto">
+        <aside className="w-64 bg-surface border-r border-borderLight h-full flex flex-col absolute left-0 top-0 overflow-y-auto z-20">
             {/* Logo Area */}
             <div className="p-6 flex items-center gap-3">
                  <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-primary/30">
@@ -77,6 +80,11 @@ const Sidebar = () => {
                     <NavLink 
                         key={idx} 
                         to={item.path}
+                        onClick={() => {
+                            if (item.label === 'Dashboard') {
+                                navigate('/');
+                            }
+                        }}
                         className={({ isActive }) => `flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${isActive ? 'bg-primary/10 text-primary' : 'text-textSub hover:bg-slate-50 hover:text-textMain'}`}
                     >
                         <span className="text-lg">{item.icon}</span>
@@ -106,10 +114,10 @@ const Sidebar = () => {
                             projects.slice(0, 5).map((project, idx) => (
                                 <button 
                                     key={project._id || idx} 
-                                    onClick={() => navigate(`/task/dashboard?projectId=${project._id}`)}
-                                    className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-textSub hover:bg-slate-50 hover:text-textMain transition-all text-left"
+                                    onClick={() => navigate(`/?projectId=${project._id}`)}
+                                    className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all text-left group ${currentProjectId === project._id ? 'bg-primary/10 text-primary border border-primary/20 shadow-sm' : 'text-textSub border border-transparent hover:bg-slate-50 hover:text-textMain'}`}
                                 >
-                                    <span className={`w-2 h-2 rounded-full bg-primary`}></span>
+                                    <span className={`w-2 h-2 rounded-full transition-all ${currentProjectId === project._id ? 'bg-primary scale-125' : 'bg-slate-300 group-hover:bg-primary/50'}`}></span>
                                     <span className="truncate">{project.name}</span>
                                 </button>
                             ))

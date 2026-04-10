@@ -40,3 +40,89 @@
 .dark * {
   scrollbar-color: #475569 transparent;
 }
+
+/* Quill Dark Mode */
+.dark-quill .ql-toolbar {
+  background-color: #1f2633 !important;
+  border-color: #374151 !important;
+}
+
+.dark-quill .ql-container {
+  background-color: #1f2633 !important;
+  border-color: #374151 !important;
+  color: #f3f4f6 !important;
+}
+
+.dark-quill .ql-stroke {
+  stroke: #9ca3af !important;
+}
+
+.dark-quill .ql-fill {
+  fill: #9ca3af !important;
+}
+
+.dark-quill .ql-picker {
+  color: #9ca3af !important;
+}
+
+.dark-quill .ql-picker-options {
+  background-color: #1f2633 !important;
+  border-color: #374151 !important;
+}
+
+/* Premium Styles */
+.premium-shadow {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+}
+
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.dark .glass-morphism {
+  background: rgba(17, 24, 39, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Custom Scrollbar for Drawer/Modals */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+/* Quill Content Rendering Fixes */
+.quill-content {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.quill-content a {
+  color: #3b82f6 !important;
+  text-decoration: underline !important;
+  font-weight: 600;
+}
+
+.quill-content a:hover {
+  color: #2563eb !important;
+  text-decoration: none !important;
+}
+
+/* Ensure images don't overflow */
+.quill-content img {
+  max-width: 100%;
+  height: auto;
+}
+

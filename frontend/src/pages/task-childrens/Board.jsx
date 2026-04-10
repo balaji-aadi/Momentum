@@ -6,6 +6,7 @@ import { TaskApi } from "../../services/api/Task.api";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import TaskDetailDrawer from "./TaskDetailDrawer";
+import CreateTask from "./CreateTask";
 
 const Board = ({
   tasks,
@@ -25,6 +26,9 @@ const Board = ({
   
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedTaskForDrawer, setSelectedTaskForDrawer] = useState(null);
+
+  const [editTaskId, setEditTaskId] = useState(null);
+  const [editTaskData, setEditTaskData] = useState([]);
 
   const [isDragging, setIsDragging] = useState(false);
   const scrollContainerRef = useRef(null);
@@ -356,7 +360,12 @@ const Board = ({
 
   const handleEditFromDrawer = (task) => {
     setIsDrawerOpen(false);
-    handleClick(task); // Trigger original handleClick (UpdateTask form)
+    if (handleClick) {
+      handleClick(task); // Trigger original handleClick (Backward compatibility for MyTask form)
+    } else {
+      setEditTaskId(task._id);
+      setEditTaskData(task);
+    }
   };
 
   return (
@@ -393,7 +402,7 @@ const Board = ({
                 <div
                 key={column.id}
                 data-column-id={column.id}
-                className="column shrink-0 px-3 w-[360px] sm:w-[380px] md:w-[420px] lg:w-[460px] h-[100vh] flex flex-col min-h-0"
+                className="column shrink-0 px-3 w-[360px] sm:w-[380px] md:w-[420px] lg:w-[460px] h-full flex flex-col min-h-0"
                 >
                 <Column column={column} handleClick={handleCardClick} />
                 </div>            ))}
@@ -419,7 +428,7 @@ const Board = ({
           </div>
           <div className="ml-4 space-y-2">
             <div className="flex items-center space-x-2">
-              <button
+               <button
                 onClick={() => handleToastAction(true)}
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
               >
@@ -446,6 +455,34 @@ const Board = ({
               <label htmlFor="dontShowAgain" className="text-sm">
                 Don't show me again
               </label>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for editing task automatically handled directly inside Board.jsx */}
+      {editTaskId && (
+        <div className="fixed inset-0 z-[100] flex items-start justify-center p-6">
+          <div className="absolute inset-0 bg-black/50" onClick={() => { setEditTaskId(null); setEditTaskData([]); }} />
+          <div className="relative w-full max-w-4xl h-[90vh] overflow-auto bg-white dark:bg-themeBG rounded-2xl shadow-2xl z-10">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h4 className="text-lg font-bold">Update Task</h4>
+              <button
+                className="text-gray-500 hover:text-gray-800"
+                onClick={() => { setEditTaskId(null); setEditTaskData([]); }}
+              >
+                Close
+              </button>
+            </div>
+            <div className="p-4">
+              <CreateTask 
+                modalMode={true} 
+                task={editTaskData} 
+                id={editTaskId} 
+                setId={setEditTaskId} 
+                setTask={setEditTaskData} 
+                setProjectTasks={setTasks} 
+              />
             </div>
           </div>
         </div>

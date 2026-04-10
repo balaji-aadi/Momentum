@@ -8,6 +8,7 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import MainLayout from "./components/layout/MainLayout";
+import GlobalTopBar from "./components/layout/GlobalTopBar";
 import { Toaster } from "react-hot-toast";
 import CreateProject from "./pages/project-childrens/CreateProject";
 import Project from "./pages/Project";
@@ -200,14 +201,17 @@ function App() {
     )
   );
   return (
-    <div>
-      <Toaster
-        containerStyle={{
-          top: "4rem",
-          zIndex: "9999999999999",
-        }}
-      />
-      <RouterProvider router={router} />
+    <div className="flex flex-col h-screen w-full overflow-hidden bg-bgLight">
+      <GlobalTopBar />
+      <div className="flex-1 relative overflow-hidden">
+        <Toaster
+          containerStyle={{
+            top: "4rem",
+            zIndex: "9999999999999",
+          }}
+        />
+        <RouterProvider router={router} />
+      </div>
     </div>
   );
 }

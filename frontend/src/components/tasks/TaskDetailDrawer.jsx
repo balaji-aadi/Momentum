@@ -16,7 +16,8 @@ import {
     IoPersonOutline,
     IoDocumentTextOutline,
     IoChatbubbleEllipsesOutline,
-    IoListOutline
+    IoListOutline,
+    IoTimeOutline
 } from 'react-icons/io5';
 
 const TaskDetailDrawer = () => {
@@ -141,139 +142,126 @@ const TaskDetailDrawer = () => {
     return (
         <div className="fixed inset-y-0 right-0 w-[450px] bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out border-l border-borderLight flex flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-borderLight bg-slate-50">
-                <div className="flex items-center gap-2">
-                    <span className={`px-2 py-1 rounded text-xs font-bold uppercase tracking-wider ${
-                        task?.status === 'done' ? 'bg-green-100 text-green-700' : 
-                        task?.status === 'review' ? 'bg-purple-100 text-purple-700' :
-                        task?.status === 'inprogress' ? 'bg-amber-100 text-amber-700' :
-                        task?.status === 'todo' ? 'bg-blue-100 text-blue-700' :
-                        'bg-slate-100 text-slate-700'
+            <div className="flex items-center justify-between pt-[3rem] pb-4 px-2 border-b border-slate-100 bg-white sticky top-0 z-[70] shadow-sm">
+                <div className="flex items-center gap-3 min-w-0">
+                    <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest border ${
+                        task?.status === 'done' ? 'bg-green-500/10 text-green-600 border-green-200' : 
+                        task?.status === 'inprogress' ? 'bg-blue-500/10 text-blue-600 border-blue-200' :
+                        'bg-slate-50 text-slate-500 border-slate-200'
                     }`}>
                         {task?.status || 'Loading...'}
                     </span>
-                    <span className="text-xs text-textSub font-mono">{task?.taskId}</span>
+                    <span className="text-xs text-textSub font-mono font-bold bg-slate-50 px-2 py-0.5 rounded border border-borderLight">{task?.taskId}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                    <button onClick={closeDrawer} className="p-2 hover:bg-slate-200 rounded-lg text-textSub transition-colors">
-                        <IoClose size={20} />
+                <div className="flex items-center gap-3 shrink-0">
+                    <button 
+                        onClick={closeDrawer} 
+                        className="p-2.5 bg-slate-100 hover:bg-red-50 text-slate-500 hover:text-red-500 rounded-xl transition-all shadow-sm flex items-center justify-center border border-slate-200 hover:border-red-200 group"
+                        title="Close Drawer"
+                    >
+                        <IoClose size={24} className="group-hover:rotate-90 transition-transform duration-300" />
                     </button>
                 </div>
             </div>
 
             {loading ? (
-                <div className="flex-1 flex items-center justify-center text-textSub">
-                    Loading task details...
+                <div className="flex-1 flex items-center justify-center text-textSub p-10">
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                        <p className="text-sm font-bold animate-pulse">Loading task details...</p>
+                    </div>
                 </div>
             ) : task ? (
-                <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8">
                     {/* Title */}
                     <div>
-                        <input 
-                            type="text" 
-                            defaultValue={task.taskName}
-                            className="w-full text-xl font-bold text-textMain bg-transparent border-none focus:ring-0 p-0 placeholder-textSub/50"
-                            placeholder="Task Name"
-                        />
+                        <h2 className="text-2xl font-black text-textMain tracking-tight mb-1">{task.taskName}</h2>
+                        <div className="h-1 w-20 bg-primary/20 rounded-full"></div>
                     </div>
 
                     {/* Meta Data Grid */}
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div className="space-y-1">
-                            <label className="text-xs text-textSub font-medium flex items-center gap-1">
+                    <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-textSub uppercase tracking-widest flex items-center gap-1">
                                 <IoPersonOutline /> Assignee
                             </label>
-                            <div className="flex items-center gap-2 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors border border-transparent hover:border-borderLight">
-                                <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
+                            <div className="flex items-center gap-3 p-3 bg-slate-50/50 rounded-2xl border border-slate-100">
+                                <div className="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-sm font-black shadow-lg shadow-primary/20">
                                     {task.assignee?.firstName?.[0] || 'U'}
                                 </div>
-                                <span className="text-textMain font-medium">{task.assignee?.firstName || 'Unassigned'}</span>
+                                <div className="min-w-0">
+                                    <p className="text-sm font-bold text-textMain truncate leading-none">{task.assignee?.firstName || 'Unassigned'}</p>
+                                    <p className="text-[10px] text-textSub mt-1">Primary Owner</p>
+                                </div>
                             </div>
                         </div>
 
-                        <div className="space-y-1">
-                            <label className="text-xs text-textSub font-medium flex items-center gap-1">
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-textSub uppercase tracking-widest flex items-center gap-1">
                                 <IoFlagOutline /> Priority
                             </label>
-                            <div className="flex items-center gap-2 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors border border-transparent hover:border-borderLight">
+                            <div className={`flex items-center gap-2 p-3 bg-slate-50/50 rounded-2xl border ${
+                                task.taskPriority === 'high' ? 'border-red-100 text-red-600' : 
+                                task.taskPriority === 'medium' ? 'border-amber-100 text-amber-600' : 
+                                'border-blue-100 text-blue-600'
+                            }`}>
                                 <span className={`w-2 h-2 rounded-full ${
-                                    task.taskPriority === 'high' ? 'bg-red-500' : 
-                                    task.taskPriority === 'medium' ? 'bg-orange-500' : 
-                                    'bg-blue-500'
+                                    task.taskPriority === 'high' ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 
+                                    task.taskPriority === 'medium' ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 
+                                    'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]'
                                 }`}></span>
-                                <span className="text-textMain font-medium capitalize">{task.taskPriority}</span>
+                                <span className="text-sm font-black truncate capitalize">{task.taskPriority}</span>
                             </div>
                         </div>
 
-                        <div className="space-y-1">
-                            <label className="text-xs text-textSub font-medium flex items-center gap-1">
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-textSub uppercase tracking-widest flex items-center gap-1">
                                 <IoCalendarOutline /> Due Date
                             </label>
-                            <div className="p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors border border-transparent hover:border-borderLight">
-                                <span className="text-textMain font-medium">
-                                    {task.dueDate ? moment(task.dueDate).format('MMM D, YYYY') : 'No Date'}
+                            <div className="p-3 bg-slate-50/50 rounded-2xl border border-slate-100">
+                                <span className="text-sm font-bold text-textMain">
+                                    {task.dueDate ? moment(task.dueDate).format('MMM DD, YYYY') : 'No Date Set'}
                                 </span>
                             </div>
                         </div>
 
-                         <div className="space-y-1">
-                            <label className="text-xs text-textSub font-medium flex items-center gap-1">
-                                <IoRepeatOutline /> Sprint
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-textSub uppercase tracking-widest flex items-center gap-1">
+                                <IoTimeOutline /> Estimation
                             </label>
-                            <select 
-                                className="w-full p-2 bg-transparent hover:bg-slate-50 border border-transparent hover:border-borderLight rounded-lg text-textMain font-medium focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all cursor-pointer"
-                                value={typeof task.sprint === 'object' ? task.sprint?._id : task.sprint || ''}
-                                onChange={(e) => handleUpdateTask({ sprint: e.target.value })}
-                            >
-                                <option value="">No Sprint</option>
-                                {sprints.map(s => (
-                                    <option key={s._id} value={s._id}>{s.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="space-y-1">
-                            <label className="text-xs text-textSub font-medium flex items-center gap-1">
-                                <IoTrophyOutline /> Milestone
-                            </label>
-                            <select 
-                                className="w-full p-2 bg-transparent hover:bg-slate-50 border border-transparent hover:border-borderLight rounded-lg text-textMain font-medium focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all cursor-pointer"
-                                value={typeof task.milestone === 'object' ? task.milestone?._id : task.milestone || ''}
-                                onChange={(e) => handleUpdateTask({ milestone: e.target.value })}
-                            >
-                                <option value="">No Milestone</option>
-                                {milestones.map(m => (
-                                    <option key={m._id} value={m._id}>{m.milestoneName}</option>
-                                ))}
-                            </select>
+                            <div className="p-3 bg-slate-50/50 rounded-2xl border border-slate-100">
+                                <span className="text-sm font-bold text-textMain">{task.estimatedHours || 0} Hours</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="h-px bg-borderLight w-full my-4"></div>
-
                     {/* Description */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-textMain flex items-center gap-2">
-                            <IoDocumentTextOutline /> Description
-                        </label>
-                        <div className="w-full min-h-[100px] p-3 text-sm text-textMain bg-slate-50 border border-borderLight rounded-lg whitespace-pre-wrap leading-relaxed">
-                            {task?.taskDescription ? task.taskDescription.split(/(https?:\/\/[^\s]+)/g).map((part, index) => {
-                                if (part.match(/https?:\/\/[^\s]+/)) {
-                                    return (
-                                        <a 
-                                            key={index} 
-                                            href={part} 
-                                            target="_blank" 
-                                            rel="noopener noreferrer" 
-                                            className="text-primary hover:text-primaryDark hover:underline inline-flex items-center gap-1"
-                                            onClick={(e) => e.stopPropagation()}
-                                        >
-                                            {part}
-                                        </a>
-                                    );
-                                }
-                                return part;
-                            }) : task?.description || "No description provided."}
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                            <label className="text-[10px] font-black text-textSub uppercase tracking-widest flex items-center gap-1">
+                                <IoDocumentTextOutline /> Description
+                            </label>
+                            <div className="h-px flex-1 bg-gradient-to-r from-slate-200 to-transparent ml-4" />
                         </div>
+                        <div 
+                            className="w-full min-h-[120px] p-5 text-sm text-textMain bg-white border border-slate-100 rounded-3xl shadow-sm leading-relaxed quill-content break-words overflow-hidden"
+                            dangerouslySetInnerHTML={{ 
+                                __html: (() => {
+                                    let html = task?.taskDescription || "<p class='italic text-slate-400'>No description provided.</p>";
+                                    // Robust unescaping
+                                    for(let i=0; i<3; i++) {
+                                        html = html.replace(/&lt;/g, '<')
+                                                   .replace(/&gt;/g, '>')
+                                                   .replace(/&amp;/g, '&')
+                                                   .replace(/&quot;/g, '"')
+                                                   .replace(/&#39;/g, "'");
+                                        if (!html.includes('&')) break;
+                                    }
+                                    // Auto-link URLs
+                                    return html.replace(/(?<!href=")(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">$1</a>');
+                                })()
+                            }}
+                        />
                     </div>
 
                     {/* Subtasks Section */}
