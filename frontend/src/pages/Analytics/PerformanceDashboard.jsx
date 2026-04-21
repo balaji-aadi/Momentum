@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { AnalyticsApi } from '../../services/api/Analytics.api';
 import { FocusApi } from '../../services/api/Focus.api';
 import { 
@@ -24,9 +25,12 @@ import {
     BarChart,
     Bar
 } from 'recharts';
+import TrollingEmptyState from '../../components/analytics/TrollingEmptyState';
+import { IoCalendarOutline, IoChevronDownOutline, IoFlaskOutline } from 'react-icons/io5';
 
 const PerformanceDashboard = () => {
     const { currentUser } = useSelector((state) => state.store);
+    const navigate = useNavigate();
     const [period, setPeriod] = useState('weekly');
     const [activeTab, setActiveTab] = useState('personal');
     const [stats, setStats] = useState([]);
@@ -38,6 +42,14 @@ const PerformanceDashboard = () => {
     const [dailyStats, setDailyStats] = useState([]);
     const [dailyLoading, setDailyLoading] = useState(false);
     const [focusSessions, setFocusSessions] = useState([]);
+    const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
+    const [selectedMonth, setSelectedMonth] = useState(moment().format('YYYY-MM'));
+    const [selectedWeekIndex, setSelectedWeekIndex] = useState(0);
+    const [selectedYear, setSelectedYear] = useState(moment().format('YYYY'));
+    const [customStart, setCustomStart] = useState(moment().subtract(30, 'days').format('YYYY-MM-DD'));
+    const [customEnd, setCustomEnd] = useState(moment().format('YYYY-MM-DD'));
+    const [customRange, setCustomRange] = useState(null);
+    const [chartView, setChartView] = useState('trend'); // 'trend' or 'weekly'
 
     const userRole = (currentUser?.userRole?.name || currentUser?.userRoles?.[0]?.name || "").toLowerCase();
     const isAdminOrManager = ["admin", "project manager", "manager", "projectmanager"].includes(userRole);
@@ -45,11 +57,38 @@ const PerformanceDashboard = () => {
     const fetchStats = async () => {
         setLoading(true);
         try {
+            let params = { period };
+            
+            // Advance Performance Calculator logic:
+            if (period === 'daily') {
+                params.period = 'daily';
+                params.startDate = moment(selectedDate).subtract(6, 'days').startOf('day').toISOString();
+                params.endDate = moment(selectedDate).endOf('day').toISOString();
+            } else if (period === 'weekly') {
+                params.period = 'daily';
+                const weeks = getWeeksInMonth(selectedMonth);
+                const targetWeek = weeks[selectedWeekIndex] || weeks[0];
+                params.startDate = targetWeek.start.toISOString();
+                params.endDate = targetWeek.end.toISOString();
+            } else if (period === 'monthly') {
+                params.period = 'daily';
+                params.startDate = moment(selectedMonth).startOf('month').toISOString();
+                params.endDate = moment(selectedMonth).endOf('month').toISOString();
+            } else if (period === 'yearly') {
+                params.period = 'monthly';
+                params.startDate = moment(selectedYear, 'YYYY').startOf('year').toISOString();
+                params.endDate = moment(selectedYear, 'YYYY').endOf('year').toISOString();
+            } else if (period === 'custom') {
+                params.period = 'daily';
+                params.startDate = moment(customStart).startOf('day').toISOString();
+                params.endDate = moment(customEnd).endOf('day').toISOString();
+            }
+
             if (activeTab === 'personal') {
-                const res = await AnalyticsApi.getPersonalStats({ period });
+                const res = await AnalyticsApi.getPersonalStats(params);
                 setStats(res.data?.data || []);
             } else {
-                const res = await AnalyticsApi.getTeamStats({ period });
+                const res = await AnalyticsApi.getTeamStats(params);
                 setTeamStats(res.data?.data || []);
             }
         } catch (error) {
@@ -71,7 +110,7 @@ const PerformanceDashboard = () => {
             }
         };
         fetchFocusLogs();
-    }, [period, activeTab]);
+    }, [period, activeTab, selectedDate, selectedMonth, selectedWeekIndex, selectedYear, customStart, customEnd]);
 
     useEffect(() => {
         // Always fetch daily stats for the consistency calendar (matches topbar modal)
@@ -102,86 +141,277 @@ const PerformanceDashboard = () => {
         }
     };
 
+    const getWeeksInMonth = (monthStr) => {
+        const weeks = [];
+        const startOfMonth = moment(monthStr).startOf('month');
+        const endOfMonth = moment(monthStr).endOf('month');
+        
+        let current = moment(startOfMonth).startOf('isoWeek');
+        
+        while (current.isBefore(endOfMonth)) {
+            const weekStart = moment(current).startOf('isoWeek');
+            const weekEnd = moment(current).endOf('isoWeek');
+            
+            // Only add week if it's not entirely in the future
+            if (!weekStart.isAfter(moment(), 'day')) {
+                weeks.push({
+                    label: `Week ${weeks.length + 1}`,
+                    display: `Week ${weeks.length + 1} (${weekStart.format('MMM DD')} - ${weekEnd.format('MMM DD')})`,
+                    start: weekStart,
+                    end: weekEnd
+                });
+            }
+            current.add(1, 'week');
+        }
+        return weeks;
+    };
+
+    // Auto-select current week when month changes
+    useEffect(() => {
+        if (period === 'weekly') {
+            const weeks = getWeeksInMonth(selectedMonth);
+            const today = moment();
+            const currentWeekIdx = weeks.findIndex(w => today.isBetween(w.start, w.end, null, '[]'));
+            setSelectedWeekIndex(currentWeekIdx !== -1 ? currentWeekIdx : 0);
+        }
+    }, [selectedMonth, period]);
+
     // Data for Personal Area Chart
     const chartData = useMemo(() => {
-        return stats.map(s => ({
-            name: moment(s.date).format(period === 'daily' ? 'HH:mm' : period === 'weekly' ? 'ddd' : 'MMM DD'),
-            points: s.metrics.storyPointsDone || 0,
-            hours: s.metrics.hoursLogged || 0,
-            completed: s.metrics.tasksCompleted || 0
-        }));
+        if (period === 'monthly' && stats.length > 0) {
+            // Group daily stats into weeks for monthly view
+            const weeks = {};
+            stats.forEach(s => {
+                const weekNum = moment(s.date).isoWeek();
+                if (!weeks[weekNum]) {
+                    weeks[weekNum] = {
+                        name: `Week ${weekNum}`,
+                        points: 0,
+                        hours: 0,
+                        completed: 0,
+                        date: s.date // Keep for sorting
+                    };
+                }
+                weeks[weekNum].points += s.metrics.storyPointsDone || 0;
+                weeks[weekNum].hours += s.metrics.hoursLogged || 0;
+                weeks[weekNum].completed += s.metrics.tasksCompleted || 0;
+            });
+            
+            return Object.values(weeks)
+                .sort((a, b) => new Date(a.date) - new Date(b.date))
+                .filter(w => !moment(w.date).isAfter(moment(), 'day')) // Hide future weeks
+                .map(w => ({
+                    ...w,
+                    hours: Number(w.hours.toFixed(2))
+                }));
+        }
+
+        return stats
+            .filter(s => !moment(s.date).isAfter(moment(), 'day')) // Hide future dates
+            .map(s => ({
+                name: moment(s.date).format(period === 'daily' ? 'MMM DD' : period === 'weekly' ? 'ddd' : period === 'yearly' ? 'MMM' : 'MMM DD'),
+                points: s.metrics.storyPointsDone || 0,
+                hours: Number((s.metrics.hoursLogged || 0).toFixed(2)),
+                completed: s.metrics.tasksCompleted || 0
+            }));
     }, [stats, period]);
 
-    const aggregate = useMemo(() => stats.reduce((acc, curr) => {
-        acc.hours += curr.metrics.hoursLogged || 0;
-        acc.completed += curr.metrics.tasksCompleted || 0;
-        acc.points += curr.metrics.storyPointsDone || 0;
-        acc.onTime += curr.metrics.onTimeTasks || 0;
-        acc.total += curr.metrics.totalTasksAssigned || 0;
-        return acc;
-    }, { hours: 0, completed: 0, points: 0, onTime: 0, total: 0 }), [stats]);
+    const aggregate = useMemo(() => {
+        let statsToAggregate = stats;
+        
+        // Detailed focusing for Daily period
+        if (period === 'daily') {
+            statsToAggregate = stats.filter(s => moment(s.date).format('YYYY-MM-DD') === moment(selectedDate).format('YYYY-MM-DD'));
+        }
+
+        // Always hide future stats from aggregate
+        statsToAggregate = statsToAggregate.filter(s => !moment(s.date).isAfter(moment(), 'day'));
+
+        return statsToAggregate.reduce((acc, curr) => {
+            acc.hours += curr.metrics.hoursLogged || 0;
+            acc.completed += curr.metrics.tasksCompleted || 0;
+            acc.points += curr.metrics.storyPointsDone || 0;
+            acc.onTime += curr.metrics.onTimeTasks || 0;
+            acc.total += curr.metrics.totalTasksAssigned || 0;
+            return acc;
+        }, { hours: 0, completed: 0, points: 0, onTime: 0, total: 0 });
+    }, [stats, period, selectedDate]);
+
+    const hasNoWork = useMemo(() => {
+        return aggregate.hours === 0 && aggregate.completed === 0 && !loading;
+    }, [aggregate, loading]);
 
     const onTimeRate = aggregate.completed > 0 ? Math.round((aggregate.onTime / aggregate.completed) * 100) : 0;
 
     return (
         <div className="p-8 w-full space-y-8 animate-in fade-in duration-500 pb-20">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-2 border-b border-slate-100">
-                <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-200">
+            <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 pb-6 border-b border-slate-100">
+                <div className="flex items-center gap-4 min-w-fit">
+                    <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-200 shrink-0">
                         <IoBarChartOutline size={28} />
                     </div>
                     <div>
                         <h1 className="text-3xl font-black text-slate-800 tracking-tight">Analytics</h1>
-                        <p className="text-slate-500 font-medium">Performance insights & productivity metrics</p>
+                        <p className="text-slate-500 font-medium whitespace-nowrap">Performance insights & productivity metrics</p>
                     </div>
                 </div>
                 
-                <div className="flex flex-col sm:flex-row gap-4 items-center">
-                    {isAdminOrManager && (
-                        <button 
-                            onClick={async () => {
-                                if (window.confirm("Resync all analytics data? This may take a moment.")) {
-                                    setLoading(true);
-                                    try {
-                                        await AnalyticsApi.syncData();
-                                        await fetchStats();
-                                        await fetchDailyStats();
-                                    } catch (e) {
-                                        alert("Sync failed: " + e.message);
-                                    } finally {
-                                        setLoading(false);
+                <div className="flex flex-wrap items-center gap-4">
+                    <div className="flex items-center gap-2">
+                        {isAdminOrManager && (
+                            <button 
+                                onClick={async () => {
+                                    if (window.confirm("Resync all analytics data? This may take a moment.")) {
+                                        setLoading(true);
+                                        try {
+                                            await AnalyticsApi.syncData();
+                                            await fetchStats();
+                                            await fetchDailyStats();
+                                        } catch (e) {
+                                            alert("Sync failed: " + e.message);
+                                        } finally {
+                                            setLoading(false);
+                                        }
                                     }
-                                }
-                            }}
-                            className="px-4 py-2 bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg shadow-slate-200 flex items-center gap-2"
-                        >
-                            <IoTrendingUpOutline /> Sync Data
-                        </button>
-                    )}
-                    {isAdminOrManager && (
-                        <div className="flex bg-slate-100 p-1 rounded-2xl shadow-inner border border-slate-200/50">
-                            {['personal', 'team'].map((t) => (
+                                }}
+                                className="px-5 py-2.5 bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg shadow-slate-200 flex items-center gap-2"
+                            >
+                                <IoTrendingUpOutline /> Sync
+                            </button>
+                        )}
+                        {isAdminOrManager && (
+                            <div className="flex bg-slate-100 p-1 rounded-2xl shadow-inner border border-slate-200/50">
+                                {['personal', 'team'].map((t) => (
+                                    <button
+                                        key={t}
+                                        onClick={() => setActiveTab(t)}
+                                        className={`px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === t ? 'bg-white text-indigo-600 shadow-md font-black' : 'text-slate-500 hover:text-slate-700'}`}
+                                    >
+                                        {t}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-3 bg-slate-50/50 p-2 rounded-[1.5rem] border border-slate-200/50">
+                        <div className="flex bg-white p-1 rounded-xl shadow-sm border border-slate-200">
+                            {['daily', 'weekly', 'monthly', 'yearly', 'custom'].map((p) => (
                                 <button
-                                    key={t}
-                                    onClick={() => setActiveTab(t)}
-                                    className={`px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${activeTab === t ? 'bg-white text-indigo-600 shadow-md font-black' : 'text-slate-500 hover:text-slate-700'}`}
+                                    key={p}
+                                    onClick={() => setPeriod(p)}
+                                    className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${period === p ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'text-slate-400 hover:text-slate-600'}`}
                                 >
-                                    {t}
+                                    {p}
                                 </button>
                             ))}
                         </div>
-                    )}
-                    <div className="flex bg-white p-1 rounded-2xl shadow-sm border border-slate-200">
-                        {['daily', 'weekly', 'monthly', 'yearly'].map((p) => (
-                            <button
-                                key={p}
-                                onClick={() => setPeriod(p)}
-                                className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${period === p ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'text-slate-400 hover:text-slate-600'}`}
-                            >
-                                {p}
-                            </button>
-                        ))}
+
+                        {period === 'daily' && (
+                            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-indigo-100 shadow-sm animate-in slide-in-from-top-1 duration-300">
+                                <IoCalendarOutline className="text-indigo-600" size={14} />
+                                <div className="flex flex-col">
+                                    <span className="text-[7px] font-black text-indigo-400 uppercase leading-none mb-0.5">
+                                        SELECT DATE
+                                    </span>
+                                    <input 
+                                        type="date" 
+                                        value={selectedDate}
+                                        onChange={(e) => setSelectedDate(e.target.value)}
+                                        className="bg-transparent border-none text-[9px] font-black uppercase tracking-widest text-indigo-700 focus:ring-0 p-0 h-auto"
+                                    />
+                                </div>
+                            </div>
+                        )}
+
+                        {period === 'weekly' && (
+                            <>
+                                <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-indigo-100 shadow-sm animate-in slide-in-from-top-1 duration-300">
+                                    <IoCalendarOutline className="text-indigo-600" size={14} />
+                                    <div className="flex flex-col">
+                                        <span className="text-[7px] font-black text-indigo-400 uppercase leading-none mb-0.5">SELECT MONTH</span>
+                                        <input 
+                                            type="month" 
+                                            value={selectedMonth}
+                                            onChange={(e) => setSelectedMonth(e.target.value)}
+                                            className="bg-transparent border-none text-[9px] font-black uppercase tracking-widest text-indigo-700 focus:ring-0 cursor-pointer p-0 h-auto"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-indigo-100 shadow-sm animate-in slide-in-from-top-1 duration-300">
+                                    <IoFlaskOutline className="text-indigo-600" size={14} />
+                                    <div className="flex flex-col">
+                                        <span className="text-[7px] font-black text-indigo-400 uppercase leading-none mb-0.5">SELECT WEEK</span>
+                                        <select 
+                                            value={selectedWeekIndex}
+                                            onChange={(e) => setSelectedWeekIndex(parseInt(e.target.value))}
+                                            className="bg-transparent border-none text-[9px] font-black uppercase tracking-widest text-indigo-700 focus:ring-0 p-0 h-auto cursor-pointer appearance-none"
+                                        >
+                                            {getWeeksInMonth(selectedMonth).map((w, idx) => (
+                                                <option key={idx} value={idx}>{w.display}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
+                        {period === 'monthly' && (
+                            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-indigo-100 shadow-sm animate-in slide-in-from-top-1 duration-300">
+                                <IoCalendarOutline className="text-indigo-600" size={14} />
+                                <div className="flex flex-col">
+                                    <span className="text-[7px] font-black text-indigo-400 uppercase leading-none mb-0.5">SELECT MONTH</span>
+                                    <input 
+                                        type="month" 
+                                        value={selectedMonth}
+                                        onChange={(e) => setSelectedMonth(e.target.value)}
+                                        className="bg-transparent border-none text-[9px] font-black uppercase tracking-widest text-indigo-700 focus:ring-0 cursor-pointer p-0 h-auto"
+                                    />
+                                </div>
+                            </div>
+                        )}
+
+                        {period === 'yearly' && (
+                            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-indigo-100 shadow-sm animate-in slide-in-from-top-1 duration-300">
+                                <IoCalendarOutline className="text-indigo-600" size={14} />
+                                <div className="flex flex-col">
+                                    <span className="text-[7px] font-black text-indigo-400 uppercase leading-none mb-0.5">SELECT YEAR</span>
+                                    <input 
+                                        type="number" 
+                                        min="2020"
+                                        max="2030"
+                                        value={selectedYear}
+                                        onChange={(e) => setSelectedYear(e.target.value)}
+                                        className="bg-transparent border-none text-[9px] font-black uppercase tracking-widest text-indigo-700 focus:ring-0 p-0 h-5 w-12"
+                                    />
+                                </div>
+                            </div>
+                        )}
+
+                        {period === 'custom' && (
+                            <div className="flex items-center gap-3 bg-white px-3 py-1.5 rounded-xl border border-indigo-100 shadow-sm animate-in slide-in-from-top-1 duration-300">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[8px] font-black text-indigo-400 uppercase">From</span>
+                                    <input 
+                                        type="date" 
+                                        value={customStart}
+                                        onChange={(e) => setCustomStart(e.target.value)}
+                                        className="bg-transparent border-none text-[9px] font-black uppercase tracking-widest text-indigo-700 focus:ring-0 p-0"
+                                    />
+                                </div>
+                                <div className="w-px h-3 bg-indigo-100"></div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[8px] font-black text-indigo-400 uppercase">To</span>
+                                    <input 
+                                        type="date" 
+                                        value={customEnd}
+                                        onChange={(e) => setCustomEnd(e.target.value)}
+                                        className="bg-transparent border-none text-[9px] font-black uppercase tracking-widest text-indigo-700 focus:ring-0 p-0"
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -222,9 +452,27 @@ const PerformanceDashboard = () => {
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Main Performance Chart */}
-                        <div className="lg:col-span-2 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-100/50 h-[450px]">
+                        <div className="lg:col-span-2 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-100/50 h-[450px] relative overflow-hidden">
                             <div className="flex items-center justify-between mb-8">
-                                <h3 className="text-xl font-black" style={{ color: '#1e293b' }}>Performance Trend</h3>
+                                <div className="flex flex-col">
+                                    <h3 className="text-xl font-black" style={{ color: '#1e293b' }}>Performance Trend</h3>
+                                    {period === 'monthly' && (
+                                        <div className="flex bg-slate-100 p-1 rounded-xl mt-2 w-fit">
+                                            <button 
+                                                onClick={() => setChartView('trend')}
+                                                className={`px-3 py-1 rounded-lg text-[8px] font-black uppercase tracking-wider transition-all ${chartView === 'trend' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400'}`}
+                                            >
+                                                Daily Trend
+                                            </button>
+                                            <button 
+                                                onClick={() => setChartView('weekly')}
+                                                className={`px-3 py-1 rounded-lg text-[8px] font-black uppercase tracking-wider transition-all ${chartView === 'weekly' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400'}`}
+                                            >
+                                                Weekly View
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                                 <div className="flex items-center gap-6 text-[10px] font-black uppercase tracking-widest">
                                     <span className="flex items-center gap-1.5" style={{ color: '#4f46e5' }}><span className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: '#6366f1' }}></span> POINTS</span>
                                     <span className="flex items-center gap-1.5" style={{ color: '#3b82f6' }}><span className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: '#93c5fd' }}></span> HOURS</span>
@@ -235,6 +483,32 @@ const PerformanceDashboard = () => {
                                     <div className="w-full h-full flex items-center justify-center bg-slate-50/50 rounded-3xl animate-pulse">
                                         <span className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Synchronizing Data...</span>
                                     </div>
+                                ) : hasNoWork ? (
+                                    <TrollingEmptyState period={period} />
+                                ) : (period === 'monthly' && chartView === 'weekly') ? (
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                            <XAxis 
+                                                dataKey="name" 
+                                                axisLine={false} 
+                                                tickLine={false} 
+                                                tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }} 
+                                            />
+                                            <YAxis 
+                                                axisLine={false} 
+                                                tickLine={false} 
+                                                tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }} 
+                                            />
+                                            <Tooltip 
+                                                contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', fontSize: '12px', padding: '16px' }}
+                                                itemStyle={{ fontWeight: 900, padding: '2px 0' }}
+                                                formatter={(value, name) => [name === 'hours' ? `${Number(value).toFixed(2)} hrs` : value, name.toUpperCase()]}
+                                            />
+                                            <Bar dataKey="points" fill="#6366f1" radius={[6, 6, 0, 0]} barSize={24} />
+                                            <Bar dataKey="hours" fill="#93c5fd" radius={[6, 6, 0, 0]} barSize={24} />
+                                        </BarChart>
+                                    </ResponsiveContainer>
                                 ) : stats.length > 0 ? (
                                     <ResponsiveContainer width="100%" height="100%">
                                         <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -262,8 +536,10 @@ const PerformanceDashboard = () => {
                                                 tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }} 
                                             />
                                             <Tooltip 
-                                                contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontSize: '12px' }}
-                                                itemStyle={{ fontWeight: 800 }}
+                                                contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)', fontSize: '12px', padding: '16px' }}
+                                                itemStyle={{ fontWeight: 900, padding: '2px 0' }}
+                                                formatter={(value, name) => [name === 'hours' ? `${Number(value).toFixed(2)} hrs` : value, name.toUpperCase()]}
+                                                labelStyle={{ color: '#64748b', fontWeight: 800, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.1em' }}
                                             />
                                             <Area 
                                                 type="monotone" 
@@ -285,10 +561,7 @@ const PerformanceDashboard = () => {
                                         </AreaChart>
                                     </ResponsiveContainer>
                                 ) : (
-                                    <div className="w-full h-full flex flex-col items-center justify-center bg-slate-50 border-2 border-dashed border-slate-200 rounded-3xl">
-                                        <IoTrendingUpOutline size={40} className="text-slate-300 mb-3" />
-                                        <p className="text-sm font-bold text-slate-400">No activity data for this period</p>
-                                    </div>
+                                    <TrollingEmptyState period={period} />
                                 )}
                             </div>
                         </div>
@@ -325,9 +598,13 @@ const PerformanceDashboard = () => {
                              <ConsistencyCalendar stats={dailyStats.length ? dailyStats : stats} />
                          </div>
                          <div className="lg:col-span-2 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-100/50">
-                             <h3 className="text-xl font-black text-slate-800 mb-6 uppercase tracking-tight">Recent Milestone Impact</h3>
+                             <h3 className="text-xl font-black text-slate-800 mb-6 uppercase tracking-tight">Peak Activity Days</h3>
                              <div className="space-y-4">
-                                 {stats.slice(0, 3).map((s, idx) => (
+                                 {stats
+                                    .filter(s => (s.metrics.tasksCompleted > 0 || s.metrics.storyPointsDone > 0 || s.metrics.hoursLogged > 0))
+                                    .sort((a, b) => (b.metrics.storyPointsDone - a.metrics.storyPointsDone) || (b.metrics.tasksCompleted - a.metrics.tasksCompleted))
+                                    .slice(0, 3)
+                                    .map((s, idx) => (
                                      <div key={idx} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white cursor-pointer transition-all hover:scale-[1.02] hover:shadow-md">
                                          <div className="flex items-center gap-4">
                                              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-indigo-600 shadow-sm">
@@ -335,7 +612,9 @@ const PerformanceDashboard = () => {
                                              </div>
                                              <div>
                                                  <p className="font-black text-slate-800 text-sm italic">{moment(s.date).format('MMMM DD, YYYY')}</p>
-                                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{s.metrics.tasksCompleted} Tasks Resolved</p>
+                                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                                     {s.metrics.tasksCompleted} Tasks · {s.metrics.hoursLogged.toFixed(1)} hrs
+                                                 </p>
                                              </div>
                                          </div>
                                          <div className="text-right">
@@ -346,10 +625,10 @@ const PerformanceDashboard = () => {
                                          </div>
                                      </div>
                                  ))}
-                                 {stats.length === 0 && (
+                                 {(stats.filter(s => (s.metrics.tasksCompleted > 0 || s.metrics.storyPointsDone > 0)).length === 0) && (
                                      <div className="h-40 flex flex-col items-center justify-center text-slate-400">
-                                         <p className="text-xs font-black uppercase tracking-widest italic">No recent activity found</p>
-                                         <p className="text-[10px] mt-2 font-bold opacity-60">Click sync to populate your performance map</p>
+                                         <p className="text-xs font-black uppercase tracking-widest italic opacity-60">Waiting for your next big win...</p>
+                                         <p className="text-[10px] mt-2 font-bold opacity-40 capitalize">Complete tasks to see your daily impact here</p>
                                      </div>
                                  )}
                              </div>
@@ -365,7 +644,7 @@ const PerformanceDashboard = () => {
                              </div>
                              <div className="bg-indigo-50 px-4 py-2 rounded-xl border border-indigo-100">
                                  <span className="text-indigo-600 font-black text-sm">
-                                     Total: {focusSessions.reduce((acc, s) => acc + (s.duration || 0), 0)} mins focus
+                                     Total: {Number(focusSessions.reduce((acc, s) => acc + (s.duration || 0), 0) / 60).toFixed(1)} hrs focus
                                  </span>
                              </div>
                          </div>
@@ -399,7 +678,10 @@ const PerformanceDashboard = () => {
                              )}
                          </div>
                          {focusSessions.length > 6 && (
-                             <button className="w-full mt-6 py-3 text-xs font-black uppercase tracking-[0.2em] text-indigo-600 hover:text-indigo-800 transition-colors border-t border-slate-50 italic">
+                             <button 
+                                onClick={() => navigate('/focus-timer')}
+                                className="w-full mt-6 py-3 text-xs font-black uppercase tracking-[0.2em] text-indigo-600 hover:text-indigo-800 transition-all border border-indigo-100 hover:bg-indigo-50 rounded-xl italic"
+                             >
                                  View full focus history →
                              </button>
                          )}
@@ -504,7 +786,7 @@ const PerformanceDashboard = () => {
                                                 <td className="px-4 py-5 text-center">
                                                     {stat.metrics.delayedTasks > 3 ? (
                                                         <span className="px-2 py-1 bg-rose-50 text-rose-600 rounded-lg text-[10px] font-black uppercase tracking-widest border border-rose-100">At Risk</span>
-                                                    ) : isOvertime ? (
+                                                    ) : stat.metrics.hoursLogged > 8 ? (
                                                         <span className="px-2 py-1 bg-amber-50 text-amber-600 rounded-lg text-[10px] font-black uppercase tracking-widest border border-amber-100">Overworked</span>
                                                     ) : (
                                                         <span className="px-2 py-1 bg-emerald-50 text-emerald-600 rounded-lg text-[10px] font-black uppercase tracking-widest border border-emerald-100">Healthy</span>

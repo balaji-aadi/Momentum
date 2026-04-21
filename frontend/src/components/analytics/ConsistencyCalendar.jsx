@@ -22,12 +22,14 @@ const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false }) 
     // Fill in the actual days
     for (let i = 1; i <= daysInMonth; i++) {
         const dateStr = moment(currentMonth).date(i).format('YYYY-MM-DD');
+        const isFuture = moment(dateStr).isAfter(moment(), 'day');
         const dayStats = stats.find(s => moment(s.date).format('YYYY-MM-DD') === dateStr);
         calendarDays.push({
             day: i,
             date: dateStr,
             metrics: dayStats?.metrics || { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0 },
-            isToday: moment().format('YYYY-MM-DD') === dateStr
+            isToday: moment().format('YYYY-MM-DD') === dateStr,
+            isFuture
         });
     }
 
@@ -82,7 +84,8 @@ const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false }) 
                     
                     // Intensity scale for Github-style heatmap:
                     let bgClass = 'bg-white/5 text-slate-500'; // Idle
-                    if (hasWork) {
+                    if (item.isFuture) bgClass = 'bg-transparent text-slate-800 opacity-20'; // Future
+                    else if (hasWork) {
                         if (tasks >= 10 || hours >= 8 || accLogs >= 5) bgClass = 'bg-emerald-400 text-white shadow-lg shadow-emerald-400/30'; // High
                         else if (tasks >= 5 || hours >= 4 || accLogs >= 3) bgClass = 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'; // Mid
                         else if (tasks >= 2 || hours >= 2 || accLogs >= 2) bgClass = 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'; // Low-Mid
@@ -92,11 +95,11 @@ const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false }) 
                     return (
                         <div 
                             key={idx} 
-                            className={`aspect-square flex items-center justify-center rounded-lg relative text-[10px] font-bold group/day cursor-pointer transition-all
-                                ${item.padding ? 'opacity-0 pointer-events-none' : 'hover:scale-105'}
+                            className={`aspect-square flex items-center justify-center rounded-lg relative text-[10px] font-bold group/day transition-all
+                                ${item.padding ? 'opacity-0 pointer-events-none' : item.isFuture ? 'cursor-default' : 'hover:scale-105 cursor-pointer'}
                                 ${item.isToday ? 'ring-2 ring-indigo-500 ring-offset-1 ring-offset-[#1a1a1a]' : ''}
                                 ${bgClass}
-                                ${!item.padding && !hasWork ? 'hover:bg-white/10' : ''}
+                                ${!item.padding && !hasWork && !item.isFuture ? 'hover:bg-white/10' : ''}
                             `}
                         >
                             {!item.padding && (
@@ -109,7 +112,7 @@ const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false }) 
                                         `}>
                                             <div className="flex justify-between items-center mb-1">
                                                 <span className="text-slate-400 tracking-tighter uppercase font-bold">Focus</span>
-                                                <span className="text-emerald-400 font-black">{item.metrics.hoursLogged}h</span>
+                                                <span className="text-emerald-400 font-black">{item.metrics.hoursLogged.toFixed(1)}h</span>
                                             </div>
                                             <div className="flex justify-between items-center">
                                                 <span className="text-slate-400 tracking-tighter uppercase font-bold">Tasks</span>
