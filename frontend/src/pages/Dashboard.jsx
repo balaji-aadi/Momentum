@@ -101,6 +101,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTasks = async () => {
         setLoading(true);
+        setTasks(null); // Clear old tasks to prevent data leak during project switch
         try {
             const filter = {};
             if (projectId) filter.projectName = projectId;
@@ -108,6 +109,13 @@ const Dashboard = () => {
 
             // Note: If search is implemented in backend, add here. 
             // Otherwise we filter client-side below.
+            
+            // Avoid fetching all tasks if we are in a project context but ID is briefly missing
+            if (!projectId) {
+                setTasks([]);
+                setLoading(false);
+                return;
+            }
             
             const res = await TaskApi.getAllTasks({ filter });
             setTasks(res.data?.data || []);

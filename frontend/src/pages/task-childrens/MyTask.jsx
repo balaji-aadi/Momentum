@@ -69,13 +69,25 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
     const currentProjectId = externalProjectId || selectedProject;
     const currentMemberId = externalMemberId || selectedMember;
 
+    // Reset tasks when switching context to prevent data leak
+    setProjectTasks(null);
+    setTasks([]);
+
     const loadData = async () => {
         // Use tasks passed from Dashboard ONLY if they have been fetched (not null)
         if (externalTasks !== null && !milestoneId) {
-            setProjectTasks(externalTasks);
-            setTasks(externalTasks);
+            // Fail-safe: Filter external tasks to ensure they belong to the current project context
+            const filteredTasks = currentProjectId 
+                ? externalTasks.filter(t => {
+                    const pId = typeof t.projectName === 'object' ? t.projectName?._id : t.projectName;
+                    return pId === currentProjectId;
+                })
+                : externalTasks;
+                
+            setProjectTasks(filteredTasks);
+            setTasks(filteredTasks);
             setIsInitialLoading(externalLoading);
-            handleLoading(externalLoading); // Ensure global loader syncs with parent state
+            handleLoading(externalLoading);
             return;
         }
 
@@ -96,6 +108,13 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
                 if (isMounted) setMilestones(mRes?.data?.data?.milestones || []);
             } else {
                 // Fetch all tasks if no project selected (Dashboard view)
+                // Avoid fetching all tasks if we are in a project context but ID is briefly missing
+                if (!currentProjectId && (externalProjectId || urlProjectId)) {
+                    setTasks([]);
+                    handleLoading(false);
+                    return;
+                }
+            
                 const res = await TaskApi.getAllTasks();
                 if (isMounted) {
                     setTasks(res.data?.data || []);

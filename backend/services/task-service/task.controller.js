@@ -491,7 +491,7 @@ tc.getallTasks = asyncHandler(async (req, res) => {
     delete filter.type;
 
     const tasks = await Task.find({ ...searchCondition, ...filter })
-    .populate("projectName", "name key")
+    .populate("projectName", "name key settings")
     .populate("assignee", "firstName lastName email")
     .populate("milestone", "milestoneName")
     .populate("epic", "epicName")
@@ -701,7 +701,8 @@ tc.getallTasksfree = asyncHandler(async (req, res) => {
     }
 
     const tasks = await Task.find(searchCondition)
-    .populate("projectName assignee milestone activityLogs.user")
+    .populate("projectName", "name key settings")
+    .populate("assignee milestone activityLogs.user")
     .populate({
       path: "dependentTasks",
       populate: [

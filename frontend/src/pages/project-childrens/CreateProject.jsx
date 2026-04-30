@@ -66,6 +66,12 @@ const CreateProject = ({
     teamMembers: [],
     rolesAndResponsibilities: [],
     milestones: [],
+    settings: {
+      enableYoutubeSearch: false,
+      enableLeetCodeSearch: false,
+      enableSprints: false,
+      sprintDuration: 2
+    }
   };
 
   const formik = useFormik({
@@ -168,7 +174,13 @@ const CreateProject = ({
         projectManager: projectData.projectManager?._id || projectData.projectManager || "",
         teamMembers: projectData.teamMembers?.map((m) => m._id || m) || [],
         rolesAndResponsibilities: mappedRoles,
-        milestones: projectData.milestones || [] // Keep original objects for _id reference
+        milestones: projectData.milestones || [], // Keep original objects for _id reference
+        settings: projectData.settings || {
+            enableYoutubeSearch: false,
+            enableLeetCodeSearch: false,
+            enableSprints: false,
+            sprintDuration: 2
+        }
       });
       setRolesAndResponsibilities(mappedRoles);
       
@@ -544,6 +556,31 @@ const CreateProject = ({
                         onChange={formik.handleChange}
                         placeholder="GitHub / GitLab URL"
                     />
+                    
+                    {/* Quick Actions Settings */}
+                    <div className="pt-4 border-t border-borderLight space-y-4">
+                        <h4 className="text-xs font-bold text-textSub uppercase tracking-wider">Quick Actions</h4>
+                        <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-borderLight/50">
+                            <span className="text-sm font-medium text-textMain">YouTube Search</span>
+                            <input 
+                                type="checkbox"
+                                name="settings.enableYoutubeSearch"
+                                checked={formik.values.settings.enableYoutubeSearch}
+                                onChange={formik.handleChange}
+                                className="w-4 h-4 text-primary rounded border-borderLight focus:ring-primary"
+                            />
+                        </div>
+                        <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-borderLight/50">
+                            <span className="text-sm font-medium text-textMain">LeetCode Search</span>
+                            <input 
+                                type="checkbox"
+                                name="settings.enableLeetCodeSearch"
+                                checked={formik.values.settings.enableLeetCodeSearch}
+                                onChange={formik.handleChange}
+                                className="w-4 h-4 text-primary rounded border-borderLight focus:ring-primary"
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
 

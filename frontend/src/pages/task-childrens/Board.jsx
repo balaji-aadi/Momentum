@@ -79,6 +79,9 @@ const Board = ({
   }, [boardTasks]);
 
   useEffect(() => {
+    // Clear board state immediately on any project/context change to prevent data leak
+    setBoardTasks([]);
+    
     if (tasks) {
       setBoardTasks(tasks);
     } else {

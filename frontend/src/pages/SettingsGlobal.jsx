@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ProjectApi } from '../services/api/Project.api';
 import { IoSettingsOutline, IoLogoYoutube, IoSaveOutline } from 'react-icons/io5';
+import { SiLeetcode } from 'react-icons/si';
 import toast from 'react-hot-toast';
 
 const SettingsGlobal = () => {
@@ -51,6 +52,33 @@ const SettingsGlobal = () => {
             
             await ProjectApi.updateProject(project._id, payload);
             toast.success(`YouTube search ${!currentState ? 'enabled' : 'disabled'} for ${project.name}`);
+            
+            setProjects(prev => prev.map(p => 
+                p._id === project._id ? { ...p, settings: updatedSettings } : p
+            ));
+        } catch (error) {
+            console.error("Failed to update project settings", error);
+            toast.error("Failed to update settings");
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleToggleLeetCode = async (project, currentState) => {
+        try {
+            setSaving(true);
+            const updatedSettings = {
+                ...(project.settings || {}),
+                enableLeetCodeSearch: !currentState
+            };
+            
+            const payload = {
+                ...project,
+                settings: updatedSettings
+            };
+            
+            await ProjectApi.updateProject(project._id, payload);
+            toast.success(`LeetCode search ${!currentState ? 'enabled' : 'disabled'} for ${project.name}`);
             
             setProjects(prev => prev.map(p => 
                 p._id === project._id ? { ...p, settings: updatedSettings } : p
@@ -129,7 +157,7 @@ const SettingsGlobal = () => {
                                     <p className="text-sm font-medium text-slate-400 mt-1">Enable or disable specific features on a per-project basis.</p>
                                 </div>
 
-                                <div className="space-y-6">
+                                <div className="space-y-8">
                                     {/* YouTube Search Feature */}
                                     <div className="bg-slate-50 rounded-2xl border border-slate-100 p-6">
                                         <div className="flex items-start gap-4 mb-6 pb-6 border-b border-slate-200/60">
@@ -138,12 +166,11 @@ const SettingsGlobal = () => {
                                             </div>
                                             <div>
                                                 <h3 className="text-base font-black text-slate-800">YouTube Search Action</h3>
-                                                <p className="text-xs font-medium text-slate-500 mt-1 leading-relaxed">Adds a quick-action button to child tasks that instantly searches YouTube for the task's name. Useful for learning-focused projects.</p>
+                                                <p className="text-xs font-medium text-slate-500 mt-1 leading-relaxed">Adds a quick-action button to child tasks that instantly searches YouTube for the task's name.</p>
                                             </div>
                                         </div>
 
                                         <div className="space-y-3">
-                                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Project Toggles</h4>
                                             {loading ? (
                                                 <div className="text-sm font-bold text-slate-400 p-4 text-center">Loading projects...</div>
                                             ) : projects.length > 0 ? (
@@ -159,6 +186,48 @@ const SettingsGlobal = () => {
                                                             </div>
                                                             <button 
                                                                 onClick={() => handleToggleYoutube(project, isEnabled)}
+                                                                disabled={saving}
+                                                                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none disabled:opacity-50 ${isEnabled ? 'bg-primary' : 'bg-slate-200'}`}
+                                                                role="switch"
+                                                                aria-checked={isEnabled}
+                                                            >
+                                                                <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isEnabled ? 'translate-x-5' : 'translate-x-0'}`} />
+                                                            </button>
+                                                        </div>
+                                                    )
+                                                })
+                                            ) : null}
+                                        </div>
+                                    </div>
+
+                                    {/* LeetCode Search Feature */}
+                                    <div className="bg-slate-50 rounded-2xl border border-slate-100 p-6">
+                                        <div className="flex items-start gap-4 mb-6 pb-6 border-b border-slate-200/60">
+                                            <div className="w-12 h-12 rounded-2xl bg-orange-50 text-orange-500 flex items-center justify-center shrink-0 border border-orange-100">
+                                                <SiLeetcode size={24} />
+                                            </div>
+                                            <div>
+                                                <h3 className="text-base font-black text-slate-800">LeetCode Search Action</h3>
+                                                <p className="text-xs font-medium text-slate-500 mt-1 leading-relaxed">Adds a quick-action button to tasks that instantly searches LeetCode for the task's name. Perfect for DSA tracking.</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            {loading ? (
+                                                <div className="text-sm font-bold text-slate-400 p-4 text-center">Loading projects...</div>
+                                            ) : projects.length > 0 ? (
+                                                projects.map((project) => {
+                                                    const isEnabled = project.settings?.enableLeetCodeSearch || false;
+                                                    return (
+                                                        <div key={project._id} className="flex items-center justify-between p-3 rounded-xl hover:bg-white border border-transparent hover:border-slate-200 hover:shadow-sm transition-all group">
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-black text-xs">
+                                                                    {project.key || project.name.substring(0,2).toUpperCase()}
+                                                                </div>
+                                                                <span className="text-sm font-bold text-slate-700">{project.name}</span>
+                                                            </div>
+                                                            <button 
+                                                                onClick={() => handleToggleLeetCode(project, isEnabled)}
                                                                 disabled={saving}
                                                                 className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none disabled:opacity-50 ${isEnabled ? 'bg-primary' : 'bg-slate-200'}`}
                                                                 role="switch"

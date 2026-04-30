@@ -198,6 +198,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Draggable } from "@hello-pangea/dnd";
 import { IoFlagSharp, IoLogoYoutube } from "react-icons/io5";
+import { SiLeetcode } from "react-icons/si";
 import { IoMdTime } from "react-icons/io";
 import { FaCalendar } from "react-icons/fa";
 import { FiActivity, FiChevronDown, FiChevronUp } from "react-icons/fi";
@@ -354,8 +355,42 @@ const Task = ({ key, task, index, handleClick }) => {
                         return null;
                     })()}
                     </div>
-                    <div className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${priorityColors[task.taskPriority] || 'bg-slate-50 text-slate-500 border-slate-100'}`}>
-                    {task.taskPriority}
+                    <div className="flex items-center gap-2">
+                        {/* YouTube Search Icon - Child tasks only */}
+                        {task.parentTask && task.projectName?.settings?.enableYoutubeSearch && (
+                            <button 
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(task.taskName)}`, '_blank');
+                                }}
+                                className="text-red-500 hover:text-red-600 hover:scale-110 transition-all shrink-0 inline-flex items-center p-1 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20"
+                                title="Search on YouTube"
+                            >
+                                <IoLogoYoutube size={18} />
+                            </button>
+                        )}
+                        {/* LeetCode Search Icon - Child tasks only */}
+                        {task.parentTask && task.projectName?.settings?.enableLeetCodeSearch && (
+                            <button 
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    const slug = task.taskName
+                                        .toLowerCase()
+                                        .trim()
+                                        .replace(/[^\w\s-]/g, '')
+                                        .replace(/[\s_-]+/g, '-')
+                                        .replace(/^-+|-+$/g, '');
+                                    window.open(`https://leetcode.com/problems/${slug}/description/`, '_blank');
+                                }}
+                                className="text-orange-500 hover:text-orange-600 hover:scale-110 transition-all shrink-0 inline-flex items-center p-1 rounded-md hover:bg-orange-50 dark:hover:bg-orange-900/20"
+                                title="Open on LeetCode"
+                            >
+                                <SiLeetcode size={18} />
+                            </button>
+                        )}
+                        <div className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${priorityColors[task.taskPriority] || 'bg-slate-50 text-slate-500 border-slate-100'}`}>
+                            {task.taskPriority}
+                        </div>
                     </div>
                 </div>
 
@@ -365,19 +400,7 @@ const Task = ({ key, task, index, handleClick }) => {
                     {renderAssigneeImage()}
                     </div>
                     <div className="min-w-0 flex-1">
-                    <h4 className={`flex items-start gap-1.5 text-sm sm:text-[15px] font-bold leading-snug mb-0.5 line-clamp-2 ${task.status === 'done' ? 'text-slate-400 line-through opacity-70' : task.parentTask ? 'text-blue-700 dark:text-blue-300' : 'text-slate-800 dark:text-slate-100'}`}>
-                        {task.parentTask && task.projectName?.settings?.enableYoutubeSearch && (
-                            <button 
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(task.taskName)}`, '_blank');
-                                }}
-                                className="mt-0.5 text-red-500 hover:text-red-600 hover:scale-110 transition-all shrink-0"
-                                title="Search on YouTube"
-                            >
-                                <IoLogoYoutube size={16} />
-                            </button>
-                        )}
+                    <h4 className={`text-sm sm:text-[15px] font-bold leading-snug mb-0.5 line-clamp-2 ${task.status === 'done' ? 'text-slate-400 line-through opacity-70' : task.parentTask ? 'text-blue-700 dark:text-blue-300' : 'text-slate-800 dark:text-slate-100'}`}>
                         <span>{task.taskName}</span>
                     </h4>
                     <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">
