@@ -27,7 +27,7 @@ instance.interceptors.response.use(
     const url = error.config?.url;
 
     if (status === 401) {
-      localStorage.removeItem("token");
+      localStorage.removeItem("accessToken");
     }
     if (status === 403) {
       console.error("Session Expired! Failed URL:", url);
