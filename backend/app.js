@@ -42,19 +42,20 @@ app.use("/api/v1", router);
 
 const httpServer = http.createServer(app);
 
-function init() {
-  socketService._io.attach(httpServer);
+// function init() {
+//   socketService._io.attach(httpServer);
 
-  socketService.initListeners();
+//   socketService.initListeners();
 
-  // Initialize background jobs
-  initSprintActivationJob();
-  initTaskTransitionJob();
+//   // Initialize background jobs
+//   initSprintActivationJob();
+//   initTaskTransitionJob();
 
-  // Run data repairs
-  repairAllProgress();
-}
+//   // Run data repairs
+//   repairAllProgress();
+// }
 
-init();
+// init();
+socketService._io.attach(httpServer);
 
 export default httpServer;
