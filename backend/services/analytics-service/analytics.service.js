@@ -21,7 +21,23 @@ class AnalyticsService {
 
     const branchId = task.branchId;
     const date = new Date();
-    await this._recordStatUpdate(userId, projectId, task, oldStatus, newStatus, date, branchId);
+    
+    // If task was previously done and is now reopened, find original completion date to decrement from
+    let origDoneDate = date;
+    if (oldStatus === "done" && task.activityLogs && task.activityLogs.length > 0) {
+      const doneLog = [...task.activityLogs].reverse().find(l => l.currentStatus === "done");
+      if (doneLog && doneLog.date) {
+        origDoneDate = doneLog.date;
+      } else {
+        origDoneDate = task.createdAt || date;
+      }
+    }
+
+    if (oldStatus === "done" && newStatus !== "done") {
+      await this._recordStatUpdate(userId, projectId, task, oldStatus, newStatus, origDoneDate, branchId);
+    } else {
+      await this._recordStatUpdate(userId, projectId, task, oldStatus, newStatus, date, branchId);
+    }
   }
 
   /**
@@ -53,18 +69,17 @@ class AnalyticsService {
 
       // 1. Basic metrics (Completed, Points, On-Time)
       const createdDate = task.createdAt || new Date();
-      const updatedDate = task.updatedAt || new Date();
 
       // Find the exact completion or inprogress date from activity logs to be highly precise
-      let statusChangeDate = updatedDate;
+      let statusChangeDate = createdDate;
       if (task.status === "done" && task.activityLogs && task.activityLogs.length > 0) {
           const doneLog = [...task.activityLogs].reverse().find(log => log.currentStatus === "done");
-          if (doneLog) {
+          if (doneLog && doneLog.date) {
               statusChangeDate = doneLog.date;
           }
       } else if (task.status === "inprogress" && task.activityLogs && task.activityLogs.length > 0) {
           const inprogressLog = [...task.activityLogs].reverse().find(log => log.currentStatus === "inprogress");
-          if (inprogressLog) {
+          if (inprogressLog && inprogressLog.date) {
               statusChangeDate = inprogressLog.date;
           }
       }
@@ -130,6 +145,9 @@ class AnalyticsService {
         }
     }
 
+    // Sanitize any negative values resulting from updates
+    await this._sanitizeAllStats();
+
     return { 
         tasksProcessed: tasks.length, 
         focusSessionsProcessed: focusSessions.length,
@@ -137,6 +155,27 @@ class AnalyticsService {
     };
   }
 
+  /**
+   * Helper to clamp metric fields to 0 or positive values
+   */
+  async _sanitizeAllStats() {
+    const stats = await PerformanceStat.find({});
+    const fields = ["hoursLogged", "tasksCompleted", "storyPointsDone", "onTimeTasks", "delayedTasks", "reopenedTasks", "totalTasksAssigned", "accountabilityLogs", "backlogTasksCompleted", "backlogHoursLogged"];
+    for (const stat of stats) {
+      let updated = false;
+      if (stat.metrics) {
+        fields.forEach(f => {
+          if (typeof stat.metrics[f] === "number" && stat.metrics[f] < 0) {
+            stat.metrics[f] = 0;
+            updated = true;
+          }
+        });
+      }
+      if (updated) {
+        await stat.save();
+      }
+    }
+  }
 
   /**
    * Update or create a PerformanceStat record
@@ -190,11 +229,26 @@ class AnalyticsService {
 
     // Only update if there are fields to increment to prevent empty $inc operator errors
     if (update.$inc && Object.keys(update.$inc).length > 0) {
-        await PerformanceStat.findOneAndUpdate(
+        const updatedStat = await PerformanceStat.findOneAndUpdate(
           query,
           update,
           { upsert: true, new: true, setDefaultsOnInsert: true }
         );
+
+        // Clamp negative values if any metric dropped below 0
+        if (updatedStat && updatedStat.metrics) {
+          let hasNegative = false;
+          const fields = ["hoursLogged", "tasksCompleted", "storyPointsDone", "onTimeTasks", "delayedTasks", "reopenedTasks", "totalTasksAssigned", "accountabilityLogs"];
+          fields.forEach(f => {
+            if (typeof updatedStat.metrics[f] === "number" && updatedStat.metrics[f] < 0) {
+              updatedStat.metrics[f] = 0;
+              hasNegative = true;
+            }
+          });
+          if (hasNegative) {
+            await updatedStat.save();
+          }
+        }
     }
   }
 
@@ -204,7 +258,13 @@ class AnalyticsService {
   async handleTaskDeletion(task) {
     if (!task || !task.assignee || !task.projectName) return;
 
-    const date = task.updatedAt || task.createdAt || new Date();
+    let date = task.createdAt || new Date();
+    if (task.status === "done" && task.activityLogs && task.activityLogs.length > 0) {
+      const doneLog = [...task.activityLogs].reverse().find(l => l.currentStatus === "done");
+      if (doneLog && doneLog.date) {
+        date = doneLog.date;
+      }
+    }
     const periods = ["daily", "weekly", "monthly", "yearly"];
     const branchId = task.branchId;
 
@@ -236,17 +296,10 @@ class AnalyticsService {
           queryProject.branchId = branchId;
       }
 
-      await PerformanceStat.findOneAndUpdate(
-        queryUser,
-        update,
-        { upsert: true }
-      );
-      await PerformanceStat.findOneAndUpdate(
-        queryProject,
-        update,
-        { upsert: true }
-      );
+      await PerformanceStat.findOneAndUpdate(queryUser, update, { upsert: true });
+      await PerformanceStat.findOneAndUpdate(queryProject, update, { upsert: true });
     }
+    await this._sanitizeAllStats();
   }
 
   /**
@@ -333,6 +386,7 @@ class AnalyticsService {
         }
       }
     }
+    await this._sanitizeAllStats();
   }
 
   /**
@@ -346,6 +400,295 @@ class AnalyticsService {
     if (period === "yearly") return mDate.startOf("year").toDate();
     return date;
   }
+
+  /**
+   * Dynamic fetching for project consistency stats with revisions tracking & UTC date grouping
+   */
+  async getProjectConsistencyStats(projectId) {
+    if (!projectId) return [];
+    try {
+      const pId = new mongoose.Types.ObjectId(projectId);
+      const dateMap = {};
+
+      const tasks = await Task.find({ projectName: pId });
+
+      tasks.forEach(t => {
+        // Done tasks
+        if (t.status === "done") {
+          let doneDate = t.createdAt;
+          if (t.activityLogs && t.activityLogs.length > 0) {
+            const doneLog = [...t.activityLogs].reverse().find(l => l.currentStatus === "done");
+            if (doneLog && doneLog.date) {
+              doneDate = doneLog.date;
+            }
+          }
+          const dStr = moment.utc(doneDate).format("YYYY-MM-DD");
+          if (!dateMap[dStr]) {
+            dateMap[dStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
+          }
+          dateMap[dStr].tasksCompleted += 1;
+          dateMap[dStr].storyPointsDone += (t.storyPoints || 0);
+        }
+
+        // Revision logs
+        if (t.revisionLogs && t.revisionLogs.length > 0) {
+          t.revisionLogs.forEach(rl => {
+            if (rl.revisionDate) {
+              const rStr = moment.utc(rl.revisionDate).format("YYYY-MM-DD");
+              if (!dateMap[rStr]) {
+                dateMap[rStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
+              }
+              dateMap[rStr].revisionsCount += 1;
+            }
+          });
+        }
+      });
+
+      // Focus Sessions
+      const sessions = await FocusSession.find({}).populate({
+        path: "task",
+        match: { projectName: pId }
+      });
+
+      sessions.forEach(s => {
+        if (s.task && s.duration) {
+          const dStr = moment.utc(s.date || s.startTime).format("YYYY-MM-DD");
+          if (!dateMap[dStr]) {
+            dateMap[dStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
+          }
+          dateMap[dStr].hoursLogged += Number((s.duration / 60).toFixed(2));
+        }
+      });
+
+      return Object.entries(dateMap).map(([dateStr, metrics]) => ({
+        entityType: "project",
+        entityId: pId,
+        period: "daily",
+        date: new Date(dateStr + "T00:00:00.000Z"),
+        metrics
+      })).sort((a, b) => new Date(a.date) - new Date(b.date));
+    } catch (err) {
+      console.error("Error in getProjectConsistencyStats:", err);
+      return [];
+    }
+  }
+
+  /**
+   * Dynamic fetching for user global consistency stats with revisions tracking & UTC date grouping
+   */
+  async getUserConsistencyStats(userId) {
+    if (!userId) return [];
+    try {
+      const uId = new mongoose.Types.ObjectId(userId);
+      const dateMap = {};
+
+      const tasks = await Task.find({ assignee: uId });
+
+      tasks.forEach(t => {
+        // Done tasks
+        if (t.status === "done") {
+          let doneDate = t.createdAt;
+          if (t.activityLogs && t.activityLogs.length > 0) {
+            const doneLog = [...t.activityLogs].reverse().find(l => l.currentStatus === "done");
+            if (doneLog && doneLog.date) {
+              doneDate = doneLog.date;
+            }
+          }
+          const dStr = moment.utc(doneDate).format("YYYY-MM-DD");
+          if (!dateMap[dStr]) {
+            dateMap[dStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
+          }
+          dateMap[dStr].tasksCompleted += 1;
+          dateMap[dStr].storyPointsDone += (t.storyPoints || 0);
+        }
+
+        // Revision logs
+        if (t.revisionLogs && t.revisionLogs.length > 0) {
+          t.revisionLogs.forEach(rl => {
+            if (rl.revisionDate) {
+              const rStr = moment.utc(rl.revisionDate).format("YYYY-MM-DD");
+              if (!dateMap[rStr]) {
+                dateMap[rStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
+              }
+              dateMap[rStr].revisionsCount += 1;
+            }
+          });
+        }
+      });
+
+      // Focus Sessions
+      const sessions = await FocusSession.find({ user: uId });
+      sessions.forEach(s => {
+        if (s.duration) {
+          const dStr = moment.utc(s.date || s.startTime).format("YYYY-MM-DD");
+          if (!dateMap[dStr]) {
+            dateMap[dStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
+          }
+          dateMap[dStr].hoursLogged += Number((s.duration / 60).toFixed(2));
+        }
+      });
+
+      // Daily Accountability
+      const board = await DailyAccountability.findOne({ userId: uId });
+      if (board && board.sections) {
+        board.sections.forEach(sec => {
+          (sec.rows || []).forEach(row => {
+            if (row.date) {
+              const dStr = row.date;
+              if (!dateMap[dStr]) {
+                dateMap[dStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
+              }
+              dateMap[dStr].accountabilityLogs += 1;
+            }
+          });
+        });
+      }
+
+      return Object.entries(dateMap).map(([dateStr, metrics]) => ({
+        entityType: "user",
+        entityId: uId,
+        period: "daily",
+        date: new Date(dateStr + "T00:00:00.000Z"),
+        metrics
+      })).sort((a, b) => new Date(a.date) - new Date(b.date));
+    } catch (err) {
+      console.error("Error in getUserConsistencyStats:", err);
+      return [];
+    }
+  }
+
+  /**
+   * Fetch detailed activity breakdown (solved problems, revisions, focus time) for a specific date
+   */
+  async getDayDetails(userId, dateStr, projectId = null, branchId = null) {
+    // 1. Completed tasks / problems solved for this day
+    const taskQuery = { status: "done" };
+    if (projectId) {
+      taskQuery.projectName = new mongoose.Types.ObjectId(projectId);
+    }
+    if (branchId) {
+      taskQuery.branchId = branchId;
+    }
+
+    const allDoneTasks = await Task.find(taskQuery)
+      .populate("projectName", "name key")
+      .populate("assignee", "firstName lastName profileImage");
+
+    const completedTasks = [];
+    allDoneTasks.forEach(t => {
+      let doneDate = t.createdAt;
+      if (t.activityLogs && t.activityLogs.length > 0) {
+        const doneLog = [...t.activityLogs].reverse().find(l => l.currentStatus === "done");
+        if (doneLog && doneLog.date) {
+          doneDate = doneLog.date;
+        }
+      }
+      const doneStr = moment.utc(doneDate).format("YYYY-MM-DD");
+      if (doneStr === dateStr) {
+        completedTasks.push({
+          _id: t._id,
+          taskId: t.taskId,
+          taskName: t.taskName,
+          taskType: t.taskType,
+          taskPriority: t.taskPriority,
+          storyPoints: t.storyPoints || 0,
+          estimatedHours: t.estimatedHours || 0,
+          completedAt: doneDate,
+          projectName: t.projectName,
+          assignee: t.assignee
+        });
+      }
+    });
+
+    // 2. Revised tasks / problems revised for this day
+    const revisionQuery = projectId ? { projectName: new mongoose.Types.ObjectId(projectId) } : {};
+    if (branchId) {
+      revisionQuery.branchId = branchId;
+    }
+
+    const revisedTasksRaw = await Task.find(revisionQuery)
+      .populate("projectName", "name key")
+      .populate("assignee", "firstName lastName profileImage");
+
+    const revisedTasks = [];
+    revisedTasksRaw.forEach(t => {
+      (t.revisionLogs || []).forEach(rl => {
+        if (rl.revisionDate) {
+          const revStr = moment.utc(rl.revisionDate).format("YYYY-MM-DD");
+          if (revStr === dateStr) {
+            revisedTasks.push({
+              _id: t._id,
+              taskId: t.taskId,
+              taskName: t.taskName,
+              taskType: t.taskType,
+              notes: rl.notes,
+              revisionDate: rl.revisionDate,
+              projectName: t.projectName
+            });
+          }
+        }
+      });
+    });
+
+    // 3. Focus Sessions for this day
+    const sessionQuery = { user: new mongoose.Types.ObjectId(userId) };
+    const focusSessionsRaw = await FocusSession.find(sessionQuery)
+      .populate({
+        path: "task",
+        select: "taskName taskId taskType projectName",
+        populate: { path: "projectName", select: "name key" }
+      });
+
+    const focusSessions = focusSessionsRaw.filter(s => {
+      const sDate = s.date || s.startTime;
+      if (!sDate) return false;
+      const sessionStr = moment.utc(sDate).format("YYYY-MM-DD");
+      if (sessionStr !== dateStr) return false;
+      if (projectId && s.task && s.task.projectName) {
+        const pIdStr = s.task.projectName._id ? s.task.projectName._id.toString() : s.task.projectName.toString();
+        return pIdStr === projectId.toString();
+      }
+      return true;
+    }).map(s => ({
+      _id: s._id,
+      durationMinutes: s.duration || 0,
+      durationHours: Number(((s.duration || 0) / 60).toFixed(2)),
+      startTime: s.startTime || s.date,
+      task: s.task
+    }));
+
+    // 4. Daily Accountability logs for this day
+    let accountabilityLogsCount = 0;
+    if (!projectId) {
+      const board = await DailyAccountability.findOne({ userId: new mongoose.Types.ObjectId(userId) });
+      if (board) {
+        (board.sections || []).forEach(sec => {
+          (sec.rows || []).forEach(row => {
+            if (row.date === dateStr) {
+              accountabilityLogsCount++;
+            }
+          });
+        });
+      }
+    }
+
+    const totalFocusHours = Number(focusSessions.reduce((acc, s) => acc + s.durationHours, 0).toFixed(2));
+
+    return {
+      date: dateStr,
+      completedTasks,
+      revisedTasks,
+      focusSessions,
+      summary: {
+        tasksCompleted: completedTasks.length,
+        tasksRevised: revisedTasks.length,
+        totalFocusHours,
+        accountabilityLogsCount
+      }
+    };
+  }
+
 }
 
 export default new AnalyticsService();
+

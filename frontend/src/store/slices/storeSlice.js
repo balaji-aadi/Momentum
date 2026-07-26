@@ -55,9 +55,14 @@ const storeSlice = createSlice({
     globalSettings: {
         subscriptionType: "free"
     },
-    dailyRevision: null
+    dailyRevision: null,
+    isSidebarCollapsed: localStorage.getItem("isSidebarCollapsed") === "true"
   },
   reducers: {
+    toggleSidebarCollapsed: (state) => {
+      state.isSidebarCollapsed = !state.isSidebarCollapsed;
+      localStorage.setItem("isSidebarCollapsed", state.isSidebarCollapsed);
+    },
     setDailyRevision: (state, action) => {
       state.dailyRevision = action.payload;
     },
@@ -172,5 +177,5 @@ const storeSlice = createSlice({
   },
 });
 
-export const { setDailyRevision, setGlobalSettings, setShowConsistencyModal, setGlobalSearch, setActiveBranch, setBranches, updateCurrentUser } = storeSlice.actions;
+export const { toggleSidebarCollapsed, setDailyRevision, setGlobalSettings, setShowConsistencyModal, setGlobalSearch, setActiveBranch, setBranches, updateCurrentUser } = storeSlice.actions;
 export default storeSlice.reducer;

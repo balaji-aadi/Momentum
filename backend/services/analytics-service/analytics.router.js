@@ -14,6 +14,7 @@ router.get("/personal-stats", analyticsController.getPersonalStats);
 router.get("/team-stats", analyticsController.getTeamStats);
 router.get("/project-health", analyticsController.getProjectHealth);
 router.get("/member-stats/:userId", analyticsController.getMemberStats);
+router.get("/day-details", analyticsController.getDayDetails);
 router.post("/sync", analyticsController.syncData);
 
 export default router;

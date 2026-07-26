@@ -14,7 +14,7 @@ import { IoTimerOutline } from 'react-icons/io5';
 import toast from 'react-hot-toast';
 
 const MainLayout = () => {
-    const { activeBranch, currentUser, globalSettings, dailyRevision } = useSelector((state) => state.store);
+    const { activeBranch, currentUser, globalSettings, dailyRevision, isSidebarCollapsed } = useSelector((state) => state.store);
     const location = useLocation();
     const isLocked = dailyRevision && !dailyRevision.isCompleted;
     const allowedPaths = ['/revision', '/login', '/branch', '/pricing'];
@@ -111,34 +111,10 @@ const MainLayout = () => {
     }, [currentUser?.subscriptionType, currentUser?.invitationTimeRemaining, navigate]);
 
     useEffect(() => {
-        const handleDefaultBranch = async () => {
-            // Only attempt if authenticated but no branch selected
-            if (currentUser && !activeBranch) {
-                try {
-                    const res = await BranchApi.getAllBranches();
-                    const branches = res.data?.data || [];
-                    
-                    if (branches.length > 0) {
-                        // Look for "Software Development"
-                        const defaultBranch = branches.find(b => b.name?.toLowerCase() === "software development");
-                        if (defaultBranch) {
-                            dispatch(setActiveBranch(defaultBranch));
-                            return; // Success
-                        }
-                    }
-                } catch (error) {
-                    console.error("Auto-branch selection failed", error);
-                }
-            }
-            
-            // Final fallback: redirect if still no branch
-            if (!activeBranch && !['/branch', '/pricing'].includes(location.pathname)) {
-                navigate('/branch', { replace: true });
-            }
-        };
-
-        handleDefaultBranch();
-    }, [activeBranch, currentUser, location.pathname, navigate, dispatch]);
+        if (!activeBranch && !['/branch', '/pricing', '/login'].includes(location.pathname)) {
+            navigate('/branch', { replace: true });
+        }
+    }, [activeBranch, location.pathname, navigate]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -158,10 +134,10 @@ const MainLayout = () => {
                 />
             )}
             
-            <div className={`flex-1 ${activeBranch ? 'lg:ml-72' : ''} flex flex-col h-full overflow-hidden relative transition-all duration-300`}>
+            <div className={`flex-1 ${activeBranch ? (isSidebarCollapsed ? 'lg:ml-20' : 'lg:ml-72') : ''} flex flex-col h-full overflow-hidden relative transition-all duration-300`}>
                 {activeBranch && <Header toggleSidebar={() => setSidebarOpen(prev => !prev)} />}
                 
-                <main className={`flex-1 ${location.pathname === '/notes' ? 'overflow-hidden p-0' : 'overflow-y-auto p-4 sm:p-8'}`}>
+                <main className="flex-1 overflow-y-auto p-4 sm:p-8">
                     {isLocked && !isPathAllowed ? (
                         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6 animate-in fade-in duration-300">
                             <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center text-primary mb-4 border border-rose-100 shadow-sm animate-bounce">

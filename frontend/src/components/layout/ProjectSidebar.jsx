@@ -9,7 +9,8 @@ import {
   IoListOutline, 
   IoBarChartOutline, 
   IoSettingsOutline,
-  IoArrowBackOutline
+  IoArrowBackOutline,
+  IoFlameOutline
 } from 'react-icons/io5';
 
 const ProjectSidebar = ({ project }) => {
@@ -18,6 +19,7 @@ const ProjectSidebar = ({ project }) => {
 
     const menuItems = [
         { icon: <IoGridOutline />, label: 'Overview', path: `/project/${projectId}/overview` },
+        { icon: <IoFlameOutline />, label: 'Consistency', path: `/project/${projectId}/consistency` },
         { icon: <IoClipboardOutline />, label: 'Board', path: `/project/${projectId}/board` },
         { icon: <IoListOutline />, label: 'Backlog', path: `/project/${projectId}/backlog` },
         { icon: <IoSettingsOutline />, label: 'Settings', path: `/project/${projectId}/settings` },

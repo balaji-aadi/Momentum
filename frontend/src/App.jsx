@@ -8,6 +8,7 @@ import { IoTimeOutline } from "react-icons/io5";
 
 import {
   Route,
+  Navigate,
   RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
@@ -50,14 +51,15 @@ import FocusTimer from "./pages/focus-timer/FocusTimer";
 import Revision from "./pages/task-childrens/Revision";
 import SettingsGlobal from "./pages/SettingsGlobal";
 import BranchDashboard from "./pages/BranchDashboard";
-import CanvasNotes from "./pages/CanvasNotes";
 import PricingPage from "./pages/subscription/PricingPage";
 
 import ProjectList from "./pages/project-childrens/ProjectList";
 import TeamList from "./pages/user-childrens/TeamList";
 import ProjectLayout from "./components/layout/ProjectLayout";
 import ProjectOverview from "./pages/project-childrens/ProjectOverview";
+import ProjectConsistencyPage from "./pages/project-childrens/ProjectConsistencyPage";
 import Milestones from "./pages/project-childrens/Milestones";
+
 import ProjectBoard from "./pages/project-childrens/ProjectBoard";
 import Backlog from "./pages/project-childrens/Backlog";
 import Sprints from "./pages/project-childrens/Sprints";
@@ -348,7 +350,7 @@ function App() {
           />
           <Route
             path="performance"
-            element={<ProtectedRoute element={<PerformanceDashboard />} />}
+            element={<Navigate to="/?view=analytics" replace />}
           />
           <Route
             path="daily-accountability"
@@ -363,10 +365,6 @@ function App() {
             element={<ProtectedRoute element={<Revision />} />}
           />
           <Route
-            path="notes"
-            element={<ProtectedRoute element={<CanvasNotes />} />}
-          />
-          <Route
             path="settings"
             element={<ProtectedRoute element={<SettingsGlobal />} />}
           />
@@ -379,12 +377,14 @@ function App() {
         {/* Project Specific Routes (Separate Layout) */}
         <Route path="project/:projectId" element={<ProtectedRoute element={<ProjectLayout />} />}>
             <Route path="overview" element={<ProtectedRoute element={<ProjectOverview />} />} />
+            <Route path="consistency" element={<ProtectedRoute element={<ProjectConsistencyPage />} />} />
             <Route path="milestones" element={<ProtectedRoute element={<Milestones />} />} />
             <Route path="board" element={<ProtectedRoute element={<ProjectBoard />} />} />
             <Route path="backlog" element={<ProtectedRoute element={<Backlog />} />} />
             <Route path="sprints" element={<ProtectedRoute element={<Sprints />} />} />
             <Route path="settings" element={<ProtectedRoute element={<Settings />} />} />
         </Route>
+
       </>
     )
   );

@@ -3,6 +3,8 @@ import { useParams, useOutletContext } from 'react-router-dom';
 import { TaskApi } from '../../services/api/Task.api';
 import moment from 'moment';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as ChartTooltip } from 'recharts';
+import ArenaConsistencyView from '../../components/analytics/ArenaConsistencyView';
+
 
 const ProjectOverview = () => {
     const { projectId } = useParams();
@@ -134,6 +136,12 @@ const ProjectOverview = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Arena Consistency Section */}
+            <div className="mt-6">
+                <ArenaConsistencyView projectId={project._id || projectId} projectName={project.name} />
+            </div>
+
 
             {project.description && (
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-borderLight mt-6">

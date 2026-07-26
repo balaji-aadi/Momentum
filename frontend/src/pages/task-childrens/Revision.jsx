@@ -109,6 +109,10 @@ const Revision = () => {
     const [dailyRevisionState, setDailyRevisionState] = useState(null);
     const [timerTimeLeft, setTimerTimeLeft] = useState(10800);
     const [timerIsActive, setTimerIsActive] = useState(false);
+    
+    // Testing states
+    const [showCompletionModal, setShowCompletionModal] = useState(false);
+
     const isManager = currentUser?.userRole?.name === "projectmanager";
     const isAdmin = currentUser?.userRole?.name === "admin";
     const canEdit = isManager || isAdmin;
@@ -265,6 +269,10 @@ const Revision = () => {
     }, [activeBranch]);
 
     const loadInitialData = async () => {
+        if (!navigator.onLine) {
+            console.log("Sarthi is offline. Waiting to go online to sync revision state...");
+            return;
+        }
         handleLoading(true);
         try {
             const timezoneOffset = new Date().getTimezoneOffset();
@@ -296,6 +304,13 @@ const Revision = () => {
                 setTimerTimeLeft(getRemainingSeconds(dailyRev));
                 setTimerIsActive(dailyRev.timerIsActive);
                 dispatch(setDailyRevision(dailyRev)); // Sync with global store
+                
+                if (dailyRev.isCompleted) {
+                    const hasSeenKey = `seen_revision_summary_${dailyRev.dateStr}`;
+                    if (!localStorage.getItem(hasSeenKey)) {
+                        setShowCompletionModal(true);
+                    }
+                }
             }
         } catch (error) {
             console.error("Failed to load revision data", error);
@@ -367,6 +382,7 @@ const Revision = () => {
     }, [dailyRevisionState?.isStarted, dailyRevisionState?.isCompleted, timerIsActive, dailyRevisionState?.timerLastUpdated, dailyRevisionState?.timeLeft]);
 
     // 2. Periodically sync timer to backend (every 30 seconds) using accurately calculated remaining time
+    // 2. Periodically sync timer to backend (every 30 seconds) using accurately calculated remaining time
     useEffect(() => {
         if (!dailyRevisionState?.isStarted || dailyRevisionState?.isCompleted || !timerIsActive || !dailyRevisionState?.timerLastUpdated) return;
         const syncInterval = setInterval(async () => {
@@ -388,29 +404,36 @@ const Revision = () => {
         return () => clearInterval(syncInterval);
     }, [timerIsActive, dailyRevisionState]);
 
-    // 3. Document visibility change listener to immediately refetch and sync upon tab focus
+    // 3. Document visibility change listener to handle auto reload after > 5 hours sleep
     useEffect(() => {
-        const handleVisibilityChange = async () => {
-            if (document.visibilityState === 'visible' && dailyRevisionState?.isStarted && !dailyRevisionState?.isCompleted) {
-                try {
-                    const tzOffset = new Date().getTimezoneOffset();
-                    const res = await TaskApi.getDailyRevision(tzOffset);
-                    const dailyRev = res.data?.data;
-                    setDailyRevisionState(dailyRev);
-                    if (dailyRev) {
-                        setTimerTimeLeft(getRemainingSeconds(dailyRev));
-                        setTimerIsActive(dailyRev.timerIsActive);
-                        dispatch(setDailyRevision(dailyRev));
+        // Record last active time periodically (every 10 seconds)
+        const recordInterval = setInterval(() => {
+            if (document.visibilityState === 'visible') {
+                localStorage.setItem("sarthi_last_active_time", Date.now().toString());
+            }
+        }, 10000);
+
+        const handleResume = () => {
+            if (document.visibilityState === 'visible') {
+                const lastActiveStr = localStorage.getItem("sarthi_last_active_time");
+                if (lastActiveStr) {
+                    const lastActive = parseInt(lastActiveStr, 10);
+                    const elapsedMs = Date.now() - lastActive;
+                    const FIVE_HOURS_MS = 5 * 60 * 60 * 1000;
+                    if (elapsedMs > FIVE_HOURS_MS) {
+                        console.log("Sarthi was asleep/inactive for > 5 hours. Reloading...");
+                        window.location.reload();
                     }
-                } catch (err) {
-                    console.error("Visibility sync failed:", err);
                 }
             }
         };
 
-        document.addEventListener("visibilitychange", handleVisibilityChange);
-        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
-    }, [dailyRevisionState, dispatch]);
+        document.addEventListener("visibilitychange", handleResume);
+        return () => {
+            clearInterval(recordInterval);
+            document.removeEventListener("visibilitychange", handleResume);
+        };
+    }, []);
 
     useEffect(() => {
         applyFilters();
@@ -547,6 +570,8 @@ const Revision = () => {
             return;
         }
 
+
+
         handleLoading(true);
         try {
             const tzOffset = new Date().getTimezoneOffset();
@@ -563,6 +588,7 @@ const Revision = () => {
                 dispatch(setDailyRevision(dailyRev));
                 if (dailyRev.isCompleted) {
                     toast.success("🎉 Daily revision complete! Sarthi is fully unlocked!");
+                    setShowCompletionModal(true);
                 }
             }
 
@@ -767,6 +793,19 @@ const Revision = () => {
 
     const isLockedMode = dailyRevisionState && dailyRevisionState.isStarted && !dailyRevisionState.isCompleted;
 
+    if (!dailyRevisionState) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[75vh] bg-[#F8FAFC] p-6 animate-in fade-in duration-500">
+                <div className="relative w-16 h-16 flex items-center justify-center mb-4">
+                    <div className="absolute inset-0 rounded-full border-4 border-slate-100 border-t-primary animate-spin"></div>
+                    <span className="text-xl">🔒</span>
+                </div>
+                <h3 className="text-sm font-black text-slate-700 tracking-wider uppercase">Initializing Revision Protocol...</h3>
+                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1.5 animate-pulse">Syncing Sarthi Security Gate</p>
+            </div>
+        );
+    }
+
     if (dailyRevisionState && !dailyRevisionState.isStarted) {
         return (
             <div className="flex items-center justify-center min-h-[75vh] bg-[#F8FAFC] p-6 animate-in fade-in duration-500">
@@ -937,8 +976,12 @@ const Revision = () => {
                                     </span>
                                 </div>
 
-                                <h2 className="text-2xl font-black text-slate-800 tracking-tight leading-snug">
+                                <h2 
+                                    onClick={() => handleOpenDrawer(task)}
+                                    className="text-2xl font-black text-slate-800 tracking-tight leading-snug hover:text-primary transition-colors cursor-pointer flex items-center gap-2"
+                                >
                                     {completedQuestionsCount + 1}. {task.taskName}
+                                    <span className="text-xs font-normal text-slate-400 font-sans tracking-normal opacity-70">(click to view details & notes)</span>
                                 </h2>
                                 <p className="text-xs font-bold text-slate-400 mt-1 uppercase tracking-widest">{task.taskId || 'DSA-X'}</p>
 
@@ -960,7 +1003,13 @@ const Revision = () => {
                                 </div>
 
                                 {/* Action Links */}
-                                <div className="flex items-center gap-3 mt-6">
+                                <div className="flex items-center gap-3 mt-6 flex-wrap">
+                                    <button
+                                        onClick={() => handleOpenDrawer(task)}
+                                        className="flex items-center gap-2 px-4 py-2.5 bg-primary/5 hover:bg-primary/10 text-xs font-bold text-primary rounded-xl border border-primary/10 transition-all shrink-0 active:scale-95"
+                                    >
+                                        📖 VIEW DETAILS & NOTES
+                                    </button>
                                     {(task.projectName?.key === 'DSA' || (task.taskId && task.taskId.startsWith('DSA-'))) && (
                                         <button
                                             onClick={() => {
@@ -972,7 +1021,7 @@ const Revision = () => {
                                                     .replace(/^-+|-+$/g, '');
                                                 window.open(`https://leetcode.com/problems/${slug}/description/`, '_blank');
                                             }}
-                                            className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-600 rounded-xl border border-slate-100 transition-all shrink-0"
+                                            className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-600 rounded-xl border border-slate-100 transition-all shrink-0 animate-fade-in"
                                         >
                                             <img src="/leetcode.png" alt="LeetCode" className="w-4 h-4 object-contain" />
                                             LEETCODE DESCRIPTION
@@ -984,7 +1033,7 @@ const Revision = () => {
                                                 setYtModalTask(task);
                                                 setShowYtModal(true);
                                             }}
-                                            className="flex items-center gap-2 px-4 py-2.5 bg-red-50 hover:bg-red-100 text-xs font-bold text-red-600 rounded-xl border border-red-100 transition-all shrink-0"
+                                            className="flex items-center gap-2 px-4 py-2.5 bg-red-50 hover:bg-red-100 text-xs font-bold text-red-600 rounded-xl border border-red-100 transition-all shrink-0 animate-fade-in"
                                         >
                                             <IoLogoYoutube size={16} />
                                             VIDEO RESOURCE
@@ -996,7 +1045,7 @@ const Revision = () => {
                                                 setNotesModalTask(task);
                                                 setShowNotesModal(true);
                                             }}
-                                            className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-600 rounded-xl border border-slate-100 transition-all shrink-0"
+                                            className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-600 rounded-xl border border-slate-100 transition-all shrink-0 animate-fade-in"
                                         >
                                             <IoDocumentTextOutline size={16} className="text-slate-400" />
                                             REFERENCE NOTES
@@ -1037,7 +1086,10 @@ const Revision = () => {
                                 const isPinned = dailyRevisionState.reviseTomorrowQuestions?.some(pq => pq._id === q._id || pq === q._id);
                                 return (
                                     <div key={q._id} className="flex items-center justify-between bg-slate-50 border border-slate-100 rounded-2xl p-3 hover:bg-slate-100/50 transition-colors">
-                                        <div className="truncate pr-4 flex items-center gap-2">
+                                        <div 
+                                            onClick={() => handleOpenDrawer(q)}
+                                            className="truncate pr-4 flex items-center gap-2 cursor-pointer hover:text-primary transition-colors"
+                                        >
                                             <span className="text-green-500 font-bold">✓</span>
                                             <span className="text-xs font-bold text-slate-700 truncate">{idx + 1}. {q.taskName}</span>
                                         </div>
@@ -1274,6 +1326,14 @@ const Revision = () => {
                         </div>
                     </div>
                 )}
+
+                <TaskDetailDrawer
+                    isOpen={isDrawerOpen}
+                    onClose={() => setIsDrawerOpen(false)}
+                    task={selectedTaskForDrawer}
+                    canEdit={canEdit}
+                    onTaskUpdate={handleEditFromDrawer}
+                />
             </div>
         );
     }
@@ -1318,6 +1378,7 @@ const Revision = () => {
                             <IoSparklesOutline size={14} />
                             AI Challenge
                         </button>
+
                         <button
                             onClick={() => setShowFilters(!showFilters)}
                             className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all border ${showFilters ? 'bg-slate-50 text-slate-600 border-slate-200' : 'bg-primary text-white border-primary shadow-lg shadow-primary/20'}`}
@@ -2189,6 +2250,145 @@ const Revision = () => {
                                     loadInitialData();
                                 }}
                             />
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showCompletionModal && dailyRevisionState && (
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+                    {/* Backdrop */}
+                    <div 
+                        className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-500"
+                        onClick={() => {
+                            const dateStr = dailyRevisionState.dateStr;
+                            localStorage.setItem(`seen_revision_summary_${dateStr}`, "true");
+                            setShowCompletionModal(false);
+                        }}
+                    ></div>
+                    
+                    {/* Modal Content */}
+                    <div className="relative bg-white rounded-[2.5rem] shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-white/20">
+                        {/* Header / Celebration Banner */}
+                        <div className="bg-slate-900 px-8 py-10 flex items-center justify-between text-white relative overflow-hidden">
+                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent)] pointer-events-none"></div>
+                            <div className="relative z-10 flex items-center gap-4">
+                                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-xl border border-white/10 text-xl animate-bounce">
+                                    🎉
+                                </div>
+                                <div>
+                                    <h3 className="font-black text-xl tracking-tight leading-none">Revision Protocol Completed</h3>
+                                    <p className="text-primary text-[10px] font-bold uppercase tracking-widest mt-1.5">All Focus Questions Solved</p>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => {
+                                    const dateStr = dailyRevisionState.dateStr;
+                                    localStorage.setItem(`seen_revision_summary_${dateStr}`, "true");
+                                    setShowCompletionModal(false);
+                                }}
+                                className="relative z-10 w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full transition-all border border-white/5 text-white"
+                            >
+                                <IoCloseOutline size={24} />
+                            </button>
+                        </div>
+
+                        {/* Body */}
+                        <div className="p-8 bg-white max-h-[50vh] overflow-y-auto custom-scrollbar">
+                            {/* Stats Grid */}
+                            <div className="grid grid-cols-2 gap-4 mb-6">
+                                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 text-center">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Questions Revised</span>
+                                    <p className="text-2xl font-black text-slate-800 mt-1">4 / 4</p>
+                                </div>
+                                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 text-center">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Time Spent</span>
+                                    <p className="text-2xl font-black text-primary mt-1">
+                                        {(() => {
+                                            const totalSecs = dailyRevisionState.questionLogs?.reduce((acc, log) => acc + (log.timeSpent || 0), 0) || 0;
+                                            const m = Math.floor(totalSecs / 60);
+                                            return `${m} minutes`;
+                                        })()}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Question list with pinning option and stats */}
+                            <div className="space-y-4">
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Question Stats & Pin Preferences</span>
+                                <div className="space-y-3">
+                                    {dailyRevisionState.questions?.map((q, idx) => {
+                                        const isPinned = dailyRevisionState.reviseTomorrowQuestions?.some(pq => pq._id === q._id || pq === q._id);
+                                        const logEntry = dailyRevisionState.questionLogs?.find(l => (l.taskId?._id || l.taskId) === q._id);
+                                        const timeSpentSecs = logEntry ? logEntry.timeSpent : 0;
+                                        const formatTimeSpent = (totalSeconds) => {
+                                            if (!totalSeconds) return "N/A";
+                                            const m = Math.floor(totalSeconds / 60);
+                                            const s = totalSeconds % 60;
+                                            return `${m}m ${s}s`;
+                                        };
+
+                                        return (
+                                            <div key={q._id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50 border border-slate-100 rounded-2xl p-4 hover:bg-slate-100/50 transition-colors">
+                                                <div className="flex-1 min-w-0 pr-2">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className="text-green-500 font-bold">✓</span>
+                                                        <span className="text-xs font-bold text-slate-700 truncate">{idx + 1}. {q.taskName}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-3 text-[10px] text-slate-400 font-semibold pl-5">
+                                                        <span>Arena: <strong className="text-slate-500">{q.projectName?.key || 'DSA'}</strong></span>
+                                                        <span>•</span>
+                                                        <span>Time: <strong className="text-slate-500">{formatTimeSpent(timeSpentSecs)}</strong></span>
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    onClick={async () => {
+                                                        try {
+                                                            const tzOffset = new Date().getTimezoneOffset();
+                                                            const res = await TaskApi.toggleReviseTomorrow({
+                                                                taskId: q._id,
+                                                                reviseTomorrow: !isPinned,
+                                                                timezoneOffset: tzOffset
+                                                            });
+                                                            setDailyRevisionState(res.data?.data);
+                                                            dispatch(setDailyRevision(res.data?.data));
+                                                            if (!isPinned) {
+                                                                toast.success("Pinned to revise again tomorrow! 📌");
+                                                            } else {
+                                                                toast.success("Removed from tomorrow's list.");
+                                                            }
+                                                        } catch (err) {
+                                                            console.error("Failed to pin task:", err);
+                                                            toast.error("Failed to update preference");
+                                                        }
+                                                    }}
+                                                    className={`px-4 py-2 rounded-xl text-[10px] font-black tracking-wider uppercase transition-all shrink-0 active:scale-95 border ${
+                                                        isPinned 
+                                                        ? 'bg-gradient-to-r from-primary to-vermilion-500 hover:from-primary-dark hover:to-vermilion-600 text-white border-transparent shadow-sm' 
+                                                        : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
+                                                    }`}
+                                                >
+                                                    {isPinned ? '📌 PINNED' : '🔄 REVISE TOMORROW'}
+                                                </button>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="p-8 border-t border-slate-100 flex justify-center bg-slate-50">
+                            <button
+                                onClick={() => {
+                                    const dateStr = dailyRevisionState.dateStr;
+                                    localStorage.setItem(`seen_revision_summary_${dateStr}`, "true");
+                                    setShowCompletionModal(false);
+                                }}
+                                className="w-full py-4 rounded-xl text-[10px] font-black text-white bg-gradient-to-r from-primary to-vermilion-500 hover:from-primary-dark hover:to-vermilion-600 shadow-lg shadow-primary/20 transition-all active:scale-95 text-center uppercase tracking-widest"
+                            >
+                                Unlock All & Continue to Dashboard
+                            </button>
                         </div>
                     </div>
                 </div>

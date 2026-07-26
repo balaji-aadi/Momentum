@@ -30,8 +30,8 @@ const PORT = process.env.PORT || 5001;
 
 connectDB()
   .then(() => {
-    httpServer.listen(PORT, async () => {
-      console.log(`Server running on port ${PORT}`);
+    httpServer.listen(PORT, "0.0.0.0", async () => {
+      console.log(`Server running on port ${PORT} across all network interfaces (0.0.0.0)`);
 
       // Initialize socket listeners
       socketService.initListeners();

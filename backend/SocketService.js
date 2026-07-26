@@ -1,12 +1,12 @@
 import { Server } from "socket.io";
-import { whiteListCors } from "./config/cors.js";
+import { whiteListCors, corsOriginHandler } from "./config/cors.js";
 
 class SocketService {
   constructor() {
     console.log("Initializing socket server...");
     this._io = new Server({
       cors: {
-        origin: whiteListCors,
+        origin: corsOriginHandler,
         methods: ["GET", "POST"],
         credentials: true,
       },

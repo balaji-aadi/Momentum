@@ -76,8 +76,13 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
     const loadData = async () => {
         // Use tasks passed from Dashboard ONLY if they have been fetched (not null)
         if (externalTasks !== null && !milestoneId) {
-            // Dashboard already fetches tasks filtered by project. Use them directly.
-            const filteredTasks = externalTasks;
+            // Dashboard already fetches tasks filtered by project. Double check project matching!
+            const filteredTasks = currentProjectId
+                ? externalTasks.filter(t => {
+                    const pId = typeof t.projectName === 'object' ? (t.projectName?._id || t.projectName?.id) : t.projectName;
+                    return pId?.toString() === currentProjectId?.toString();
+                })
+                : externalTasks;
                 
             setProjectTasks(filteredTasks);
             setTasks(filteredTasks);
@@ -391,7 +396,7 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
           )}
 
           {/* Board Content */}
-          <div className={`flex-1 ${currentViewMode === 'board' ? 'p-2 sm:p-4' : 'p-6'} ${currentViewMode === 'spreadsheet' ? 'overflow-x-auto' : 'flex flex-col min-h-0'}`}>
+          <div className={`flex-1 ${currentViewMode === 'board' ? 'p-0 sm:p-1' : 'p-4'} ${currentViewMode === 'spreadsheet' ? 'overflow-x-auto' : 'flex flex-col min-h-0'}`}>
              {currentViewMode === 'spreadsheet' ? (
                 <TaskTable 
                     tasks={(() => {

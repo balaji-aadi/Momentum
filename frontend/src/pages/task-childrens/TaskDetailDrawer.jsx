@@ -83,6 +83,17 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
         accumulatedScrollRef.current = 0;
     }, [activeReaderNoteId]);
 
+    const handleExitReadingMode = () => {
+        transitionLockRef.current = true;
+        accumulatedScrollRef.current = 0;
+        setIsReadingModeActive(false);
+        // Lock transitions for 1200ms so any scroll events fired during header/sidebar expansion are completely ignored
+        setTimeout(() => {
+            transitionLockRef.current = false;
+            accumulatedScrollRef.current = 0;
+        }, 1200);
+    };
+
     useEffect(() => {
         const handleMessage = (e) => {
             if (e.data?.type === 'iframeScroll') {
@@ -95,8 +106,13 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                     canScroll: scrollHeight > clientHeight + 100
                 });
 
-                if (scrollHeight < parentHeight) {
-                    setIsReadingModeActive(false);
+                if (scrollHeight < parentHeight && !isReadingModeActive) {
+                    return;
+                }
+
+                if (transitionLockRef.current) {
+                    accumulatedScrollRef.current = 0;
+                    lastScrollTopRef.current = scrollTop;
                     return;
                 }
 
@@ -111,39 +127,21 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                     accumulatedScrollRef.current += delta;
                 }
 
-                if (transitionLockRef.current) return;
+                const isScrollingDown = accumulatedScrollRef.current > 120;
 
-                const isAtTop = scrollTop < 20;
-                const isScrollingDown = accumulatedScrollRef.current > 50;
-                const isScrollingUp = accumulatedScrollRef.current < -50;
-
-                if (isAtTop) {
-                    setIsReadingModeActive(false);
+                // Only automatically ENTER reading mode when scrolling down.
+                // Once in reading mode, NEVER automatically exit via scroll. User must click "End Read" / "Exit Full Screen".
+                if (!isReadingModeActive && isScrollingDown && scrollTop > 150) {
+                    transitionLockRef.current = true;
                     accumulatedScrollRef.current = 0;
-                } else if (isScrollingDown && scrollTop > 100) {
-                    setIsReadingModeActive((prev) => {
-                        if (!prev) {
-                            transitionLockRef.current = true;
-                            accumulatedScrollRef.current = 0;
-                            setTimeout(() => { transitionLockRef.current = false; }, 600);
-                        }
-                        return true;
-                    });
-                } else if (isScrollingUp) {
-                    setIsReadingModeActive((prev) => {
-                        if (prev) {
-                            transitionLockRef.current = true;
-                            accumulatedScrollRef.current = 0;
-                            setTimeout(() => { transitionLockRef.current = false; }, 600);
-                        }
-                        return false;
-                    });
+                    setIsReadingModeActive(true);
+                    setTimeout(() => { transitionLockRef.current = false; }, 800);
                 }
             }
         };
         window.addEventListener('message', handleMessage);
         return () => window.removeEventListener('message', handleMessage);
-    }, []);
+    }, [isReadingModeActive]);
 
     const handleReaderScroll = (e) => {
         const { scrollTop, scrollHeight, clientHeight } = e.target;
@@ -154,8 +152,13 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
             canScroll: scrollHeight > clientHeight + 100
         });
 
-        if (scrollHeight < parentHeight) {
-            setIsReadingModeActive(false);
+        if (scrollHeight < parentHeight && !isReadingModeActive) {
+            return;
+        }
+
+        if (transitionLockRef.current) {
+            accumulatedScrollRef.current = 0;
+            lastScrollTopRef.current = scrollTop;
             return;
         }
 
@@ -170,33 +173,15 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
             accumulatedScrollRef.current += delta;
         }
 
-        if (transitionLockRef.current) return;
+        const isScrollingDown = accumulatedScrollRef.current > 120;
 
-        const isAtTop = scrollTop < 20;
-        const isScrollingDown = accumulatedScrollRef.current > 50;
-        const isScrollingUp = accumulatedScrollRef.current < -50;
-
-        if (isAtTop) {
-            setIsReadingModeActive(false);
+        // Only automatically ENTER reading mode when scrolling down.
+        // Once in reading mode, NEVER automatically exit via scroll. User must click "End Read" / "Exit Full Screen".
+        if (!isReadingModeActive && isScrollingDown && scrollTop > 150) {
+            transitionLockRef.current = true;
             accumulatedScrollRef.current = 0;
-        } else if (isScrollingDown && scrollTop > 100) {
-            setIsReadingModeActive((prev) => {
-                if (!prev) {
-                    transitionLockRef.current = true;
-                    accumulatedScrollRef.current = 0;
-                    setTimeout(() => { transitionLockRef.current = false; }, 600);
-                }
-                return true;
-            });
-        } else if (isScrollingUp) {
-            setIsReadingModeActive((prev) => {
-                if (prev) {
-                    transitionLockRef.current = true;
-                    accumulatedScrollRef.current = 0;
-                    setTimeout(() => { transitionLockRef.current = false; }, 600);
-                }
-                return false;
-            });
+            setIsReadingModeActive(true);
+            setTimeout(() => { transitionLockRef.current = false; }, 800);
         }
     };
 
@@ -906,32 +891,43 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                 });
 
                 return (
-                    <div className={`fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-xs transition-all duration-500 ${isReadingModeActive ? 'p-0' : 'p-4 md:p-8'}`}>
-                        <div className={`bg-white dark:bg-themeBG text-themeText shadow-2xl w-full h-full overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-300 transition-all ${isReadingModeActive ? 'rounded-none' : 'rounded-3xl'}`}>
+                    <div className={`fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-xs transition-all duration-500 ${isReadingModeActive ? 'p-0' : 'p-2 sm:p-4 md:p-8'}`}>
+                        <div className={`bg-white dark:bg-themeBG text-themeText shadow-2xl w-full h-full overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-300 transition-all ${isReadingModeActive ? 'rounded-none' : 'rounded-2xl sm:rounded-3xl'}`}>
                             {/* Header */}
-                            <div className={`px-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 transition-all duration-500 ease-in-out origin-top ${isReadingModeActive ? 'max-h-0 py-0 opacity-0 overflow-hidden border-none' : 'max-h-[100px] py-5 opacity-100'}`}>
-                                <div className="min-w-0">
-                                    <h2 className="text-lg font-black text-slate-800 dark:text-white truncate">
-                                        Document Center: {task?.taskName}
-                                    </h2>
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">
-                                        {linkedNotes.length} Linked Note(s)
-                                    </p>
+                            <div className={`px-4 sm:px-6 md:px-8 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-50/50 transition-all duration-500 ease-in-out origin-top ${isReadingModeActive ? 'max-h-0 py-0 opacity-0 overflow-hidden border-none' : 'max-h-[160px] sm:max-h-[100px] py-3.5 sm:py-5 opacity-100'}`}>
+                                <div className="min-w-0 w-full sm:w-auto flex items-center justify-between sm:block">
+                                    <div className="min-w-0">
+                                        <h2 className="text-base sm:text-lg font-black text-slate-800 dark:text-white truncate">
+                                            Document Center: {task?.taskName}
+                                        </h2>
+                                        <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">
+                                            {linkedNotes.length} Linked Note(s)
+                                        </p>
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            setIsReaderOpen(false);
+                                            setReaderSearchTerm("");
+                                        }}
+                                        className="sm:hidden group p-2 bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-red-500 rounded-xl transition-all duration-200 border border-slate-200/50 cursor-pointer shrink-0"
+                                    >
+                                        <IoClose size={18} />
+                                    </button>
                                 </div>
-                                <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end">
                                     <input
                                         type="text"
                                         placeholder="Search linked notes..."
                                         value={readerSearchTerm}
                                         onChange={(e) => setReaderSearchTerm(e.target.value)}
-                                        className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-1 focus:ring-primary w-60 bg-white font-semibold text-slate-800"
+                                        className="px-3 sm:px-4 py-1.5 sm:py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-1 focus:ring-primary w-full sm:w-60 bg-white font-semibold text-slate-800"
                                     />
                                     <button
                                         onClick={() => {
                                             setIsReaderOpen(false);
                                             setReaderSearchTerm("");
                                         }}
-                                        className="group p-2.5 bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-red-500 rounded-xl transition-all duration-200 border border-slate-200/50 cursor-pointer"
+                                        className="hidden sm:flex group p-2.5 bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-red-500 rounded-xl transition-all duration-200 border border-slate-200/50 cursor-pointer shrink-0"
                                     >
                                         <IoClose size={18} />
                                     </button>
@@ -939,9 +935,13 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                             </div>
 
                             {/* Split Body */}
-                            <div className="flex-1 flex overflow-hidden min-h-0">
+                            <div className="flex-1 flex overflow-hidden min-h-0 relative">
                                 {/* Left Column: Notes List Sidebar */}
-                                <div className={`border-r border-slate-100 dark:border-slate-800 flex flex-col bg-slate-50/20 shrink-0 transition-all duration-500 ease-in-out origin-left ${isReadingModeActive ? 'w-0 opacity-0 overflow-hidden border-none' : 'w-80 opacity-100'}`}>
+                                <div className={`border-r border-slate-100 dark:border-slate-800 flex flex-col bg-slate-50/20 shrink-0 transition-all duration-500 ease-in-out origin-left ${
+                                    isReadingModeActive
+                                        ? 'w-0 opacity-0 overflow-hidden border-none'
+                                        : `${activeReaderNoteId ? 'hidden md:flex' : 'flex w-full'} md:w-72 lg:w-80 opacity-100`
+                                }`}>
                                     <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-2">
                                         {linkedNotes
                                             .filter(n => {
@@ -990,23 +990,40 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
 
                                 {/* Right Column: Reading Area */}
                                 <div
-                                    className="flex-1 flex flex-col bg-white dark:bg-themeBG overflow-y-auto custom-scrollbar min-w-0"
+                                    className={`flex-1 flex flex-col bg-white dark:bg-themeBG overflow-y-auto custom-scrollbar min-w-0 ${
+                                        !activeReaderNoteId ? 'hidden md:flex' : 'flex w-full'
+                                    }`}
                                     onScroll={handleReaderScroll}
                                 >
                                     {(() => {
                                         const activeNote = linkedNotes.find(n => n._id === activeReaderNoteId);
                                         if (!activeNote) {
                                             return (
-                                                <div className="flex-1 flex flex-col items-center justify-center text-slate-400 gap-2">
+                                                <div className="flex-1 flex flex-col items-center justify-center text-slate-400 gap-2 p-6 text-center">
                                                     <p className="text-xs font-bold uppercase tracking-wider">Select a note from the sidebar to read</p>
                                                 </div>
                                             );
                                         }
 
                                         return (
-                                            <div className="w-full space-y-6">
+                                            <div className="w-full space-y-4 sm:space-y-6">
+                                                {/* Mobile Navigation Bar back to Notes List */}
+                                                {!isReadingModeActive && (
+                                                    <div className="md:hidden px-4 pt-3 pb-2 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 flex items-center justify-between sticky top-0 z-[100000]">
+                                                        <button
+                                                            onClick={() => setActiveReaderNoteId(null)}
+                                                            className="flex items-center gap-1.5 text-xs font-black text-primary bg-primary/10 px-3 py-1.5 rounded-xl active:scale-95 transition-all shadow-2xs cursor-pointer"
+                                                        >
+                                                            <span className="text-sm">←</span> All Notes ({linkedNotes.length})
+                                                        </button>
+                                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest truncate max-w-[140px] pl-2">
+                                                            {activeNote.title || "Untitled Note"}
+                                                        </span>
+                                                    </div>
+                                                )}
+
                                                 {/* Note Header */}
-                                                <div className={`flex items-center justify-between border-slate-100 dark:border-slate-800 sticky top-0 bg-white z-[99999] transition-all duration-500 ease-in-out overflow-hidden ${isReadingModeActive ? 'max-h-0 p-0 opacity-0 border-none' : 'max-h-[200px] p-5 border-b opacity-100'}`}>
+                                                <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-slate-100 dark:border-slate-800 sticky top-0 bg-white z-[99999] transition-all duration-500 ease-in-out overflow-hidden ${isReadingModeActive ? 'max-h-0 p-0 opacity-0 border-none' : 'max-h-[320px] sm:max-h-[200px] px-4 sm:px-8 py-3.5 sm:py-5 border-b opacity-100'}`}>
                                                     <div className="min-w-0 flex-1">
                                                         <div className="flex items-center gap-2 mb-2">
                                                             <span
@@ -1020,10 +1037,10 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                                                 type="text"
                                                                 value={editedTitle}
                                                                 onChange={(e) => setEditedTitle(e.target.value)}
-                                                                className="text-2xl font-black text-slate-900 dark:text-white leading-tight w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl outline-none focus:ring-1 focus:ring-primary"
+                                                                className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl outline-none focus:ring-1 focus:ring-primary"
                                                             />
                                                         ) : (
-                                                            <h1 className="text-3xl font-black text-slate-900 dark:text-white leading-tight">
+                                                            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-tight break-words">
                                                                 {activeNote.title || "Untitled Note"}
                                                             </h1>
                                                         )}
@@ -1040,7 +1057,7 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                                     </div>
 
                                                     {/* Edit & Action Buttons */}
-                                                    <div className="flex items-center gap-2 shrink-0 ml-4">
+                                                    <div className="flex flex-wrap items-center gap-2 shrink-0 sm:ml-4 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 sm:border-none w-full sm:w-auto justify-end">
                                                         {isEditingNote ? (
                                                             <>
                                                                 <button
@@ -1317,19 +1334,31 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                                             />
                                                         )}
 
-                                                        {/* Floating Scroll Button (Only visible in Full Screen/Reading Mode) */}
-                                                        {isReadingModeActive && iframeScrollInfo.canScroll && (
-                                                            <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[9999] pointer-events-auto">
+                                                        {/* Floating Bottom Action Bar (End Read & Scroll Button) in Full Screen/Reading Mode */}
+                                                        {isReadingModeActive && (
+                                                            <div className="fixed bottom-8 sm:bottom-10 left-1/2 -translate-x-1/2 z-[999999] pointer-events-auto flex items-center gap-3 animate-in slide-in-from-bottom-5 fade-in zoom-in duration-300">
                                                                 <button
-                                                                    onClick={handleFloatingScroll}
-                                                                    className="group flex items-center justify-center w-12 h-12 rounded-full bg-white/20 dark:bg-slate-900/40 backdrop-blur-md border border-white/30 dark:border-white/10 shadow-lg text-slate-700 dark:text-white transition-all duration-300 hover:bg-white/40 dark:hover:bg-slate-800/60 hover:scale-110 active:scale-95 animate-in slide-in-from-bottom-5 fade-in zoom-in"
+                                                                    onClick={handleExitReadingMode}
+                                                                    className="group flex items-center gap-2 px-5 py-3 rounded-full bg-slate-900/70 dark:bg-slate-900/80 hover:bg-slate-900 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-2xl text-white transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer text-xs font-black tracking-wider uppercase select-none"
+                                                                    title="Exit Full Screen Reading Mode"
                                                                 >
-                                                                    {iframeScrollInfo.isAtBottom ? (
-                                                                        <IoArrowUp className="text-xl opacity-80 group-hover:opacity-100 transition-opacity" />
-                                                                    ) : (
-                                                                        <IoArrowDown className="text-xl opacity-80 group-hover:opacity-100 transition-opacity" />
-                                                                    )}
+                                                                    <IoClose className="text-base text-red-400 group-hover:rotate-90 transition-transform duration-300" />
+                                                                    <span>End Read</span>
                                                                 </button>
+
+                                                                {iframeScrollInfo.canScroll && (
+                                                                    <button
+                                                                        onClick={handleFloatingScroll}
+                                                                        className="group flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/30 dark:bg-slate-900/60 hover:bg-white/50 dark:hover:bg-slate-900/80 backdrop-blur-md border border-white/30 dark:border-white/10 shadow-2xl text-slate-800 dark:text-white transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer select-none"
+                                                                        title={iframeScrollInfo.isAtBottom ? "Scroll to Top" : "Scroll to Bottom"}
+                                                                    >
+                                                                        {iframeScrollInfo.isAtBottom ? (
+                                                                            <IoArrowUp className="text-lg sm:text-xl opacity-90 group-hover:opacity-100 transition-opacity" />
+                                                                        ) : (
+                                                                            <IoArrowDown className="text-lg sm:text-xl opacity-90 group-hover:opacity-100 transition-opacity" />
+                                                                        )}
+                                                                    </button>
+                                                                )}
                                                             </div>
                                                         )}
                                                     </div>

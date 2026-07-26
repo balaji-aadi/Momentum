@@ -18,7 +18,4 @@ router.route("/:id")
 router.route("/ai-enhance")
   .post(noteController.aiEnhance);
 
-router.route("/ai-suggest")
-  .post(noteController.aiSuggest);
-
 export default router;

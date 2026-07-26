@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 import { IoCheckmarkCircle, IoFlashOutline, IoChevronBack, IoChevronForward } from 'react-icons/io5';
+import DayActivityModal from './DayActivityModal';
 
-const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false }) => {
+const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false, projectId = null, projectName = null }) => {
     const [currentMonth, setCurrentMonth] = useState(moment());
+    const [selectedDateModal, setSelectedDateModal] = useState(null);
 
     // Generate days for the selected month
     const startOfMonth = moment(currentMonth).startOf('month');
@@ -80,23 +82,39 @@ const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false }) 
                     const tasks = item.metrics?.tasksCompleted || 0;
                     const hours = item.metrics?.hoursLogged || 0;
                     const accLogs = item.metrics?.accountabilityLogs || 0;
-                    const hasWork = tasks > 0 || hours > 0 || accLogs > 0;
+                    const revisions = item.metrics?.revisionsCount || 0;
+
+                    const hasWork = tasks > 0 || hours > 0 || accLogs > 0 || revisions > 0;
+                    const isRevisionOnly = tasks === 0 && revisions > 0;
                     
                     // Intensity scale for Github-style heatmap:
                     let bgClass = 'bg-white/5 text-slate-500'; // Idle
                     if (item.isFuture) bgClass = 'bg-transparent text-slate-800 opacity-20'; // Future
                     else if (hasWork) {
-                        if (tasks >= 10 || hours >= 8 || accLogs >= 5) bgClass = 'bg-emerald-400 text-white shadow-lg shadow-emerald-400/30'; // High
-                        else if (tasks >= 5 || hours >= 4 || accLogs >= 3) bgClass = 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'; // Mid
-                        else if (tasks >= 2 || hours >= 2 || accLogs >= 2) bgClass = 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'; // Low-Mid
-                        else bgClass = 'bg-emerald-800 text-slate-200'; // Dip (1 log)
+                        if (isRevisionOnly) {
+                            // Orange / Amber theme for Revision-Only Days!
+                            bgClass = 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/30 border border-amber-400/50';
+                        } else if (tasks >= 10 || hours >= 8 || accLogs >= 5) {
+                            bgClass = 'bg-emerald-400 text-white shadow-lg shadow-emerald-400/30';
+                        } else if (tasks >= 5 || hours >= 4 || accLogs >= 3) {
+                            bgClass = 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20';
+                        } else if (tasks >= 2 || hours >= 2 || accLogs >= 2) {
+                            bgClass = 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20';
+                        } else {
+                            bgClass = 'bg-emerald-800 text-slate-200';
+                        }
                     }
 
                     return (
                         <div 
                             key={idx} 
+                            onClick={() => {
+                                if (!item.padding && !item.isFuture) {
+                                    setSelectedDateModal(item.date);
+                                }
+                            }}
                             className={`aspect-square flex items-center justify-center rounded-lg relative text-[10px] font-bold group/day transition-all
-                                ${item.padding ? 'opacity-0 pointer-events-none' : item.isFuture ? 'cursor-default' : 'hover:scale-105 cursor-pointer'}
+                                ${item.padding ? 'opacity-0 pointer-events-none' : item.isFuture ? 'cursor-default' : 'hover:scale-105 cursor-pointer active:scale-95'}
                                 ${item.isToday ? 'ring-2 ring-indigo-500 ring-offset-1 ring-offset-[#1a1a1a]' : ''}
                                 ${bgClass}
                                 ${!item.padding && !hasWork && !item.isFuture ? 'hover:bg-white/10' : ''}
@@ -107,17 +125,28 @@ const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false }) 
                                     {item.day}
                                     {/* Hover Details */}
                                     {hasWork && (
-                                        <div className={`absolute opacity-0 group-hover/day:opacity-100 bottom-full mb-2 w-28 bg-black p-2 rounded-lg text-[8px] font-black z-[100] pointer-events-none shadow-2xl border border-white/10 transition-all duration-200
+                                        <div className={`absolute opacity-0 group-hover/day:opacity-100 bottom-full mb-2 w-32 bg-black/95 p-2 rounded-xl text-[8px] font-black z-[100] pointer-events-none shadow-2xl border border-white/10 transition-all duration-200
                                             ${idx % 7 === 6 ? 'right-0' : idx % 7 === 0 ? 'left-0' : 'left-1/2 -translate-x-1/2'}
                                         `}>
-                                            <div className="flex justify-between items-center mb-1">
+                                            {isRevisionOnly && (
+                                                <div className="text-center py-0.5 text-amber-400 font-extrabold uppercase tracking-wider text-[7px] border-b border-white/10 mb-1">
+                                                    Revision Only
+                                                </div>
+                                            )}
+                                            <div className="flex justify-between items-center mb-0.5">
                                                 <span className="text-slate-400 tracking-tighter uppercase font-bold">Focus</span>
-                                                <span className="text-emerald-400 font-black">{item.metrics.hoursLogged.toFixed(1)}h</span>
+                                                <span className="text-indigo-400 font-black">{hours.toFixed(1)}h</span>
                                             </div>
-                                            <div className="flex justify-between items-center">
+                                            <div className="flex justify-between items-center mb-0.5">
                                                 <span className="text-slate-400 tracking-tighter uppercase font-bold">Tasks</span>
-                                                <span className="text-amber-400 font-black">{item.metrics.tasksCompleted}</span>
+                                                <span className="text-emerald-400 font-black">{tasks}</span>
                                             </div>
+                                            {revisions > 0 && (
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-slate-400 tracking-tighter uppercase font-bold">Revisions</span>
+                                                    <span className="text-amber-400 font-black">{revisions}</span>
+                                                </div>
+                                            )}
                                             <div className={`absolute top-full -mt-1 border-4 border-transparent border-t-black
                                                 ${idx % 7 === 6 ? 'right-3' : idx % 7 === 0 ? 'left-3' : 'left-1/2 -translate-x-1/2'}
                                             `}></div>
@@ -131,13 +160,17 @@ const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false }) 
             </div>
 
             {/* Compact Legend */}
-            <div className="mt-3 pt-3 border-t border-white/5 flex items-center gap-3 text-[8px] font-black uppercase tracking-widest text-slate-500">
-                <div className="flex items-center gap-1">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                    <span>Active</span>
+            <div className="mt-3 pt-2.5 border-t border-white/5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] font-bold text-slate-400 whitespace-nowrap">
+                <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></div>
+                    <span>Active Work</span>
                 </div>
-                <div className="flex items-center gap-1">
-                    <div className="w-1.5 h-1.5 rounded-full bg-white/10"></div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="w-2 h-2 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50"></div>
+                    <span>Revision Only</span>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="w-2 h-2 rounded-full bg-white/20"></div>
                     <span>Idle</span>
                 </div>
             </div>
@@ -148,7 +181,7 @@ const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false }) 
                     <p className="text-[7px] font-black text-slate-500 uppercase tracking-widest mb-0.5">Streak</p>
                     <div className="flex items-center justify-between">
                         <span className="text-sm font-black text-emerald-500">
-                            {calendarDays.filter(d => !d.padding && (d.metrics.hoursLogged > 0)).length}d
+                            {calendarDays.filter(d => !d.padding && (d.metrics.hoursLogged > 0 || d.metrics.tasksCompleted > 0 || d.metrics.accountabilityLogs > 0 || (d.metrics.revisionsCount || 0) > 0)).length}d
                         </span>
                         <IoCheckmarkCircle className="text-emerald-500" size={12} />
                     </div>
@@ -157,12 +190,32 @@ const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false }) 
                     <p className="text-[7px] font-black text-slate-500 uppercase tracking-widest mb-0.5">Impact</p>
                     <div className="flex items-center justify-between">
                         <span className="text-sm font-black text-amber-500">
-                            {stats.reduce((acc, s) => acc + (Number(s.metrics?.storyPointsDone) || 0), 0)}
+                            {(() => {
+                                const totalPoints = stats.reduce((acc, s) => acc + (Number(s.metrics?.storyPointsDone) || 0), 0);
+                                if (totalPoints > 0) return totalPoints;
+                                // Fallback impact score calculated from tasks completed, revisions, and focus hours
+                                return stats.reduce((acc, s) => {
+                                    const tasks = Number(s.metrics?.tasksCompleted) || 0;
+                                    const hours = Number(s.metrics?.hoursLogged) || 0;
+                                    const logs = Number(s.metrics?.accountabilityLogs) || 0;
+                                    const revs = Number(s.metrics?.revisionsCount) || 0;
+                                    return acc + (tasks * 5) + Math.round(hours * 3) + (logs * 2) + (revs * 3);
+                                }, 0);
+                            })()}
                         </span>
                         <span className="text-[8px] text-amber-500/80 font-black">PTS</span>
                     </div>
                 </div>
             </div>
+
+            {/* Day Details Activity Modal */}
+            <DayActivityModal
+                isOpen={!!selectedDateModal}
+                onClose={() => setSelectedDateModal(null)}
+                date={selectedDateModal}
+                projectId={projectId}
+                projectName={projectName}
+            />
         </div>
     );
 };

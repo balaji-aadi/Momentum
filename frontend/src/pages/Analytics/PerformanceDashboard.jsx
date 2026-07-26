@@ -2,54 +2,47 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AnalyticsApi } from '../../services/api/Analytics.api';
-import { FocusApi } from '../../services/api/Focus.api';
-import { 
-    IoTimeOutline, 
-    IoCheckmarkDoneCircleOutline, 
-    IoTrendingUpOutline, 
+import { TaskApi } from '../../services/api/Task.api';
+import {
+    IoTimeOutline,
+    IoCheckmarkDoneCircleOutline,
+    IoTrendingUpOutline,
     IoAlertCircleOutline,
-    IoPeopleOutline,
     IoBarChartOutline,
-    IoChevronForward,
     IoFlame
 } from 'react-icons/io5';
 import moment from 'moment';
 import ConsistencyCalendar from '../../components/analytics/ConsistencyCalendar';
-import { 
-    AreaChart, 
-    Area, 
-    XAxis, 
-    YAxis, 
-    CartesianGrid, 
-    Tooltip, 
+import AllArenasConsistency from '../../components/analytics/AllArenasConsistency';
+import {
+    AreaChart,
+    Area,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
     ResponsiveContainer,
     BarChart,
     Bar
 } from 'recharts';
 import TrollingEmptyState from '../../components/analytics/TrollingEmptyState';
-import { IoCalendarOutline, IoChevronDownOutline, IoFlaskOutline } from 'react-icons/io5';
+import { IoCalendarOutline, IoFlaskOutline } from 'react-icons/io5';
 
 const PerformanceDashboard = () => {
     const { currentUser, activeBranch } = useSelector((state) => state.store);
     const navigate = useNavigate();
     const [period, setPeriod] = useState('weekly');
-    const [activeTab, setActiveTab] = useState('personal');
     const [stats, setStats] = useState([]);
-    const [teamStats, setTeamStats] = useState([]);
+    const [allTasks, setAllTasks] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [selectedMember, setSelectedMember] = useState(null);
-    const [memberStats, setMemberStats] = useState([]);
-    const [memberLoading, setMemberLoading] = useState(false);
     const [dailyStats, setDailyStats] = useState([]);
     const [dailyLoading, setDailyLoading] = useState(false);
-    const [focusSessions, setFocusSessions] = useState([]);
     const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
     const [selectedMonth, setSelectedMonth] = useState(moment().format('YYYY-MM'));
     const [selectedWeekIndex, setSelectedWeekIndex] = useState(0);
     const [selectedYear, setSelectedYear] = useState(moment().format('YYYY'));
     const [customStart, setCustomStart] = useState(moment().subtract(30, 'days').format('YYYY-MM-DD'));
     const [customEnd, setCustomEnd] = useState(moment().format('YYYY-MM-DD'));
-    const [customRange, setCustomRange] = useState(null);
     const [chartView, setChartView] = useState('trend'); // 'trend' or 'weekly'
 
     const userRole = (currentUser?.userRole?.name || currentUser?.userRoles?.[0]?.name || "").toLowerCase();
@@ -59,8 +52,7 @@ const PerformanceDashboard = () => {
         setLoading(true);
         try {
             let params = { period };
-            
-            // Advance Performance Calculator logic:
+
             if (period === 'daily') {
                 params.period = 'daily';
                 params.startDate = moment(selectedDate).subtract(6, 'days').startOf('day').toISOString();
@@ -85,13 +77,8 @@ const PerformanceDashboard = () => {
                 params.endDate = moment(customEnd).endOf('day').toISOString();
             }
 
-            if (activeTab === 'personal') {
-                const res = await AnalyticsApi.getPersonalStats(params);
-                setStats(res.data?.data || []);
-            } else {
-                const res = await AnalyticsApi.getTeamStats(params);
-                setTeamStats(res.data?.data || []);
-            }
+            const res = await AnalyticsApi.getPersonalStats(params);
+            setStats(res.data?.data || []);
         } catch (error) {
             console.error("Failed to fetch analytics", error);
         } finally {
@@ -99,39 +86,12 @@ const PerformanceDashboard = () => {
         }
     };
 
-    useEffect(() => {
-        if (activeBranch) {
-            fetchStats();
-            // Load latest focus sessions for activity logs
-            const fetchFocusLogs = async () => {
-                try {
-                    // Limit to latest 10 for performance
-                    const res = await FocusApi.getSessions({ limit: 10 });
-                    setFocusSessions(res.data?.data || []);
-                } catch (error) {
-                    console.error("Failed to fetch focus logs", error);
-                }
-            };
-            fetchFocusLogs();
-        }
-    }, [period, activeTab, selectedDate, selectedMonth, selectedWeekIndex, selectedYear, customStart, customEnd, activeBranch]);
-
-    useEffect(() => {
-        if (activeBranch) {
-            // Always fetch daily stats for the consistency calendar (matches topbar modal)
-            fetchDailyStats();
-        }
-    }, [activeBranch]);
-
-    const fetchMemberStats = async (userId) => {
-        setMemberLoading(true);
+    const fetchAllTasks = async () => {
         try {
-            const res = await AnalyticsApi.getMemberStats(userId, { period: 'daily' }); // Always get daily for the calendar
-            setMemberStats(res.data?.data || []);
+            const res = await TaskApi.getAllTasks({});
+            setAllTasks(res.data?.data || []);
         } catch (error) {
-            console.error("Failed to fetch member stats", error);
-        } finally {
-            setMemberLoading(false);
+            console.error("Failed to fetch all tasks for metrics", error);
         }
     };
 
@@ -147,18 +107,30 @@ const PerformanceDashboard = () => {
         }
     };
 
+    useEffect(() => {
+        if (activeBranch) {
+            fetchStats();
+            fetchAllTasks();
+        }
+    }, [period, selectedDate, selectedMonth, selectedWeekIndex, selectedYear, customStart, customEnd, activeBranch]);
+
+    useEffect(() => {
+        if (activeBranch) {
+            fetchDailyStats();
+        }
+    }, [activeBranch]);
+
     const getWeeksInMonth = (monthStr) => {
         const weeks = [];
         const startOfMonth = moment(monthStr).startOf('month');
         const endOfMonth = moment(monthStr).endOf('month');
-        
+
         let current = moment(startOfMonth).startOf('isoWeek');
-        
+
         while (current.isBefore(endOfMonth)) {
             const weekStart = moment(current).startOf('isoWeek');
             const weekEnd = moment(current).endOf('isoWeek');
-            
-            // Only add week if it's not entirely in the future
+
             if (!weekStart.isAfter(moment(), 'day')) {
                 weeks.push({
                     label: `Week ${weeks.length + 1}`,
@@ -172,7 +144,6 @@ const PerformanceDashboard = () => {
         return weeks;
     };
 
-    // Auto-select current week when month changes
     useEffect(() => {
         if (period === 'weekly') {
             const weeks = getWeeksInMonth(selectedMonth);
@@ -182,76 +153,225 @@ const PerformanceDashboard = () => {
         }
     }, [selectedMonth, period]);
 
-    // Data for Personal Area Chart
+    const currentPeriodRange = useMemo(() => {
+        if (period === 'daily') {
+            return {
+                start: moment.utc(selectedDate).startOf('day'),
+                end: moment.utc(selectedDate).endOf('day')
+            };
+        } else if (period === 'weekly') {
+            const weeks = getWeeksInMonth(selectedMonth);
+            const targetWeek = weeks[selectedWeekIndex] || weeks[0];
+            if (targetWeek) {
+                return {
+                    start: moment.utc(targetWeek.start).startOf('day'),
+                    end: moment.utc(targetWeek.end).endOf('day')
+                };
+            }
+            return {
+                start: moment.utc().startOf('isoWeek'),
+                end: moment.utc().endOf('isoWeek')
+            };
+        } else if (period === 'monthly') {
+            return {
+                start: moment.utc(selectedMonth).startOf('month'),
+                end: moment.utc(selectedMonth).endOf('month')
+            };
+        } else if (period === 'yearly') {
+            return {
+                start: moment.utc(selectedYear, 'YYYY').startOf('year'),
+                end: moment.utc(selectedYear, 'YYYY').endOf('year')
+            };
+        } else if (period === 'custom') {
+            return {
+                start: moment.utc(customStart).startOf('day'),
+                end: moment.utc(customEnd).endOf('day')
+            };
+        }
+        return { start: moment.utc().startOf('isoWeek'), end: moment.utc().endOf('isoWeek') };
+    }, [period, selectedDate, selectedMonth, selectedWeekIndex, selectedYear, customStart, customEnd]);
+
+    const periodStats = useMemo(() => {
+        if (!stats || stats.length === 0) return [];
+        return stats.filter(s => {
+            const d = moment.utc(s.date);
+            return d.isSameOrAfter(currentPeriodRange.start, 'day') && 
+                   d.isSameOrBefore(currentPeriodRange.end, 'day') &&
+                   !d.isAfter(moment.utc(), 'day');
+        });
+    }, [stats, currentPeriodRange]);
+
+    // Data for Personal Performance Trend Chart
     const chartData = useMemo(() => {
-        if (period === 'monthly' && stats.length > 0) {
-            // Group daily stats into weeks for monthly view
+        if (period === 'weekly') {
+            const days = [];
+            let curr = currentPeriodRange.start.clone();
+            while (curr.isSameOrBefore(currentPeriodRange.end, 'day')) {
+                if (!curr.isAfter(moment.utc(), 'day')) {
+                    const dStr = curr.format('YYYY-MM-DD');
+                    const match = stats.find(s => moment.utc(s.date).format('YYYY-MM-DD') === dStr);
+                    days.push({
+                        name: curr.format('ddd DD'),
+                        fullDate: curr.format('MMM DD, YYYY'),
+                        points: match?.metrics?.storyPointsDone || (match?.metrics?.tasksCompleted ? match.metrics.tasksCompleted * 3 : 0),
+                        hours: Number((match?.metrics?.hoursLogged || 0).toFixed(2)),
+                        completed: match?.metrics?.tasksCompleted || 0
+                    });
+                }
+                curr.add(1, 'day');
+            }
+            return days;
+        }
+
+        if (period === 'daily') {
+            const days = [];
+            let curr = moment.utc(selectedDate).subtract(6, 'days');
+            const end = moment.utc(selectedDate);
+            while (curr.isSameOrBefore(end, 'day')) {
+                if (!curr.isAfter(moment.utc(), 'day')) {
+                    const dStr = curr.format('YYYY-MM-DD');
+                    const match = stats.find(s => moment.utc(s.date).format('YYYY-MM-DD') === dStr);
+                    days.push({
+                        name: curr.format('MMM DD'),
+                        fullDate: curr.format('MMM DD, YYYY'),
+                        points: match?.metrics?.storyPointsDone || (match?.metrics?.tasksCompleted ? match.metrics.tasksCompleted * 3 : 0),
+                        hours: Number((match?.metrics?.hoursLogged || 0).toFixed(2)),
+                        completed: match?.metrics?.tasksCompleted || 0
+                    });
+                }
+                curr.add(1, 'day');
+            }
+            return days;
+        }
+
+        if (period === 'monthly' && chartView === 'weekly' && stats.length > 0) {
             const weeks = {};
-            stats.forEach(s => {
-                const weekNum = moment(s.date).isoWeek();
+            periodStats.forEach(s => {
+                const weekNum = moment.utc(s.date).isoWeek();
                 if (!weeks[weekNum]) {
                     weeks[weekNum] = {
                         name: `Week ${weekNum}`,
                         points: 0,
                         hours: 0,
                         completed: 0,
-                        date: s.date // Keep for sorting
+                        date: s.date
                     };
                 }
-                weeks[weekNum].points += s.metrics.storyPointsDone || 0;
-                weeks[weekNum].hours += s.metrics.hoursLogged || 0;
-                weeks[weekNum].completed += s.metrics.tasksCompleted || 0;
+                weeks[weekNum].points += s.metrics?.storyPointsDone || (s.metrics?.tasksCompleted ? s.metrics.tasksCompleted * 3 : 0);
+                weeks[weekNum].hours += s.metrics?.hoursLogged || 0;
+                weeks[weekNum].completed += s.metrics?.tasksCompleted || 0;
             });
-            
+
             return Object.values(weeks)
                 .sort((a, b) => new Date(a.date) - new Date(b.date))
-                .filter(w => !moment(w.date).isAfter(moment(), 'day')) // Hide future weeks
                 .map(w => ({
                     ...w,
                     hours: Number(w.hours.toFixed(2))
                 }));
         }
 
-        return stats
-            .filter(s => !moment(s.date).isAfter(moment(), 'day')) // Hide future dates
+        return periodStats
+            .sort((a, b) => new Date(a.date) - new Date(b.date))
             .map(s => ({
-                name: moment(s.date).format(period === 'daily' ? 'MMM DD' : period === 'weekly' ? 'ddd' : period === 'yearly' ? 'MMM' : 'MMM DD'),
-                points: s.metrics.storyPointsDone || 0,
-                hours: Number((s.metrics.hoursLogged || 0).toFixed(2)),
-                completed: s.metrics.tasksCompleted || 0
+                name: moment.utc(s.date).format(period === 'yearly' ? 'MMM' : 'MMM DD'),
+                fullDate: moment.utc(s.date).format('MMM DD, YYYY'),
+                points: s.metrics?.storyPointsDone || (s.metrics?.tasksCompleted ? s.metrics.tasksCompleted * 3 : 0),
+                hours: Number((s.metrics?.hoursLogged || 0).toFixed(2)),
+                completed: s.metrics?.tasksCompleted || 0
             }));
-    }, [stats, period]);
+    }, [stats, periodStats, period, currentPeriodRange, selectedDate, chartView]);
 
     const aggregate = useMemo(() => {
-        let statsToAggregate = stats;
-        
-        // Detailed focusing for Daily period
-        if (period === 'daily') {
-            statsToAggregate = stats.filter(s => moment(s.date).format('YYYY-MM-DD') === moment(selectedDate).format('YYYY-MM-DD'));
-        }
-
-        // Always hide future stats from aggregate
-        statsToAggregate = statsToAggregate.filter(s => !moment(s.date).isAfter(moment(), 'day'));
-
-        return statsToAggregate.reduce((acc, curr) => {
-            acc.hours += curr.metrics.hoursLogged || 0;
-            acc.completed += curr.metrics.tasksCompleted || 0;
-            acc.points += curr.metrics.storyPointsDone || 0;
-            acc.onTime += curr.metrics.onTimeTasks || 0;
-            acc.total += curr.metrics.totalTasksAssigned || 0;
-            acc.backlogCompleted += curr.metrics.backlogTasksCompleted || 0;
+        return periodStats.reduce((acc, curr) => {
+            acc.hours += curr.metrics?.hoursLogged || 0;
+            acc.completed += curr.metrics?.tasksCompleted || 0;
+            acc.points += curr.metrics?.storyPointsDone || 0;
+            acc.onTime += curr.metrics?.onTimeTasks || 0;
+            acc.total += curr.metrics?.totalTasksAssigned || 0;
+            acc.backlogCompleted += curr.metrics?.backlogTasksCompleted || 0;
             return acc;
         }, { hours: 0, completed: 0, points: 0, onTime: 0, total: 0, backlogCompleted: 0 });
-    }, [stats, period, selectedDate]);
+    }, [periodStats]);
+
+    // User-specific task filtering for logged-in user personal metrics
+    const userTasks = useMemo(() => {
+        if (!allTasks || allTasks.length === 0) return [];
+        if (!currentUser?._id) return allTasks;
+        const uid = currentUser._id.toString();
+        return allTasks.filter(t => {
+            const assigneeId = typeof t.assignee === 'object' ? t.assignee?._id?.toString() : t.assignee?.toString();
+            const createdById = typeof t.createdBy === 'object' ? t.createdBy?._id?.toString() : t.createdBy?.toString();
+            return assigneeId === uid || createdById === uid;
+        });
+    }, [allTasks, currentUser]);
+
+    // Precise live metrics calculated directly from user's assigned/created tasks within the current period
+    const userDoneTasks = useMemo(() => {
+        return userTasks.filter(t => {
+            if (t.status !== 'done' && t.status !== 'completed') return false;
+            let doneDate = t.createdAt;
+            if (t.activityLogs && t.activityLogs.length > 0) {
+                const doneLog = [...t.activityLogs].reverse().find(l => l.currentStatus === 'done');
+                if (doneLog && doneLog.date) {
+                    doneDate = doneLog.date;
+                }
+            }
+            const d = moment.utc(doneDate);
+            return d.isSameOrAfter(currentPeriodRange.start, 'day') && d.isSameOrBefore(currentPeriodRange.end, 'day');
+        });
+    }, [userTasks, currentPeriodRange]);
+
+    const tasksCompletedCount = useMemo(() => {
+        return Math.max(aggregate.completed || 0, userDoneTasks.length);
+    }, [aggregate.completed, userDoneTasks.length]);
+
+    const totalAssignedCount = useMemo(() => {
+        return userTasks.length || aggregate.total || 0;
+    }, [userTasks.length, aggregate.total]);
+
+    const backlogCount = useMemo(() => {
+        return userTasks.filter(t => {
+            const st = (t.status || '').toLowerCase();
+            return st === 'backlog';
+        }).length;
+    }, [userTasks]);
+
+    const calculatedStoryPoints = useMemo(() => {
+        if (aggregate.points > 0) return aggregate.points;
+        return userDoneTasks.reduce((sum, t) => {
+            if (t.storyPoints && t.storyPoints > 0) return sum + t.storyPoints;
+            const priorityPoints = t.taskPriority === 'high' ? 5 : t.taskPriority === 'medium' ? 3 : 1;
+            return sum + priorityPoints;
+        }, 0);
+    }, [aggregate.points, userDoneTasks]);
+
+    const calculatedOnTimeData = useMemo(() => {
+        if (userDoneTasks.length === 0) {
+            const fallbackRate = aggregate.completed > 0 ? Math.round((aggregate.onTime / aggregate.completed) * 100) : 100;
+            return { onTimeCount: aggregate.onTime || 0, rate: fallbackRate };
+        }
+        const onTimeTasks = userDoneTasks.filter(t => {
+            if (!t.taskDueDate) return true;
+            const completionDate = t.updatedAt || new Date();
+            return !moment.utc(completionDate).isAfter(moment.utc(t.taskDueDate), 'day');
+        });
+        const rate = Math.round((onTimeTasks.length / userDoneTasks.length) * 100);
+        return { onTimeCount: onTimeTasks.length, rate };
+    }, [userDoneTasks, aggregate.onTime, aggregate.completed]);
+
+    const efficiencyScore = useMemo(() => {
+        const doneCount = userDoneTasks.length;
+        const totalCount = userTasks.length;
+        const completionRate = totalCount > 0 ? (doneCount / totalCount) * 100 : 100;
+        return Math.min(100, Math.round((calculatedOnTimeData.rate * 0.7) + (completionRate * 0.3)));
+    }, [userDoneTasks.length, userTasks.length, calculatedOnTimeData.rate]);
 
     const hasNoWork = useMemo(() => {
-        return aggregate.hours === 0 && aggregate.completed === 0 && !loading;
-    }, [aggregate, loading]);
-
-    const onTimeRate = aggregate.completed > 0 ? Math.round((aggregate.onTime / aggregate.completed) * 100) : 0;
+        return aggregate.hours === 0 && tasksCompletedCount === 0 && userDoneTasks.length === 0 && !loading;
+    }, [aggregate.hours, tasksCompletedCount, userDoneTasks.length, loading]);
 
     return (
-        <div className="p-8 w-full space-y-8 animate-in fade-in duration-500 pb-20">
+        <div className="px-1 py-4 sm:px-2 w-full max-w-full space-y-6 animate-in fade-in duration-500 pb-20">
             {/* Header */}
             <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 pb-6 border-b border-slate-100">
                 <div className="flex items-center gap-4 min-w-fit">
@@ -259,48 +379,12 @@ const PerformanceDashboard = () => {
                         <IoBarChartOutline size={28} />
                     </div>
                     <div>
-                        <h1 className="text-3xl font-black text-slate-800 tracking-tight">Analytics</h1>
+                        <h1 className="text-3xl font-black text-slate-800 tracking-tight">Smart Dashboard</h1>
                         <p className="text-slate-500 font-medium whitespace-nowrap">Performance insights & productivity metrics</p>
                     </div>
                 </div>
-                
+
                 <div className="flex flex-wrap items-center gap-4">
-                    <div className="flex items-center gap-2">
-                        {isAdminOrManager && (
-                            <button 
-                                onClick={async () => {
-                                    if (window.confirm("Resync all analytics data? This may take a moment.")) {
-                                        setLoading(true);
-                                        try {
-                                            await AnalyticsApi.syncData();
-                                            await fetchStats();
-                                            await fetchDailyStats();
-                                        } catch (e) {
-                                            alert("Sync failed: " + e.message);
-                                        } finally {
-                                            setLoading(false);
-                                        }
-                                    }
-                                }}
-                                className="px-5 py-2.5 bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg shadow-slate-200 flex items-center gap-2"
-                            >
-                                <IoTrendingUpOutline /> Sync
-                            </button>
-                        )}
-                        {isAdminOrManager && (
-                            <div className="flex bg-slate-100 p-1 rounded-2xl shadow-inner border border-slate-200/50">
-                                {['personal', 'team'].map((t) => (
-                                    <button
-                                        key={t}
-                                        onClick={() => setActiveTab(t)}
-                                        className={`px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === t ? 'bg-white text-primary shadow-md font-black' : 'text-slate-500 hover:text-slate-700'}`}
-                                    >
-                                        {t}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
 
                     <div className="flex flex-wrap items-center gap-3 bg-slate-50/50 p-2 rounded-[1.5rem] border border-slate-200/50">
                         <div className="flex bg-white p-1 rounded-xl shadow-sm border border-slate-200">
@@ -322,8 +406,8 @@ const PerformanceDashboard = () => {
                                     <span className="text-[7px] font-black text-vermilion-400 uppercase leading-none mb-0.5">
                                         SELECT DATE
                                     </span>
-                                    <input 
-                                        type="date" 
+                                    <input
+                                        type="date"
                                         value={selectedDate}
                                         onChange={(e) => setSelectedDate(e.target.value)}
                                         className="bg-transparent border-none text-[9px] font-black uppercase tracking-widest text-primary focus:ring-0 p-0 h-auto"
@@ -338,8 +422,8 @@ const PerformanceDashboard = () => {
                                     <IoCalendarOutline className="text-primary" size={14} />
                                     <div className="flex flex-col">
                                         <span className="text-[7px] font-black text-vermilion-400 uppercase leading-none mb-0.5">SELECT MONTH</span>
-                                        <input 
-                                            type="month" 
+                                        <input
+                                            type="month"
                                             value={selectedMonth}
                                             onChange={(e) => setSelectedMonth(e.target.value)}
                                             className="bg-transparent border-none text-[9px] font-black uppercase tracking-widest text-primary focus:ring-0 cursor-pointer p-0 h-auto"
@@ -350,7 +434,7 @@ const PerformanceDashboard = () => {
                                     <IoFlaskOutline className="text-primary" size={14} />
                                     <div className="flex flex-col">
                                         <span className="text-[7px] font-black text-vermilion-400 uppercase leading-none mb-0.5">SELECT WEEK</span>
-                                        <select 
+                                        <select
                                             value={selectedWeekIndex}
                                             onChange={(e) => setSelectedWeekIndex(parseInt(e.target.value))}
                                             className="bg-transparent border-none text-[9px] font-black uppercase tracking-widest text-primary focus:ring-0 p-0 h-auto cursor-pointer appearance-none"
@@ -369,8 +453,8 @@ const PerformanceDashboard = () => {
                                 <IoCalendarOutline className="text-primary" size={14} />
                                 <div className="flex flex-col">
                                     <span className="text-[7px] font-black text-vermilion-400 uppercase leading-none mb-0.5">SELECT MONTH</span>
-                                    <input 
-                                        type="month" 
+                                    <input
+                                        type="month"
                                         value={selectedMonth}
                                         onChange={(e) => setSelectedMonth(e.target.value)}
                                         className="bg-transparent border-none text-[9px] font-black uppercase tracking-widest text-primary focus:ring-0 cursor-pointer p-0 h-auto"
@@ -384,8 +468,8 @@ const PerformanceDashboard = () => {
                                 <IoCalendarOutline className="text-primary" size={14} />
                                 <div className="flex flex-col">
                                     <span className="text-[7px] font-black text-vermilion-400 uppercase leading-none mb-0.5">SELECT YEAR</span>
-                                    <input 
-                                        type="number" 
+                                    <input
+                                        type="number"
                                         min="2020"
                                         max="2030"
                                         value={selectedYear}
@@ -400,8 +484,8 @@ const PerformanceDashboard = () => {
                             <div className="flex items-center gap-3 bg-white px-3 py-1.5 rounded-xl border border-vermilion-100 shadow-sm animate-in slide-in-from-top-1 duration-300">
                                 <div className="flex items-center gap-2">
                                     <span className="text-[8px] font-black text-vermilion-400 uppercase">From</span>
-                                    <input 
-                                        type="date" 
+                                    <input
+                                        type="date"
                                         value={customStart}
                                         onChange={(e) => setCustomStart(e.target.value)}
                                         className="bg-transparent border-none text-[9px] font-black uppercase tracking-widest text-primary focus:ring-0 p-0"
@@ -410,8 +494,8 @@ const PerformanceDashboard = () => {
                                 <div className="w-px h-3 bg-vermilion-100"></div>
                                 <div className="flex items-center gap-2">
                                     <span className="text-[8px] font-black text-vermilion-400 uppercase">To</span>
-                                    <input 
-                                        type="date" 
+                                    <input
+                                        type="date"
                                         value={customEnd}
                                         onChange={(e) => setCustomEnd(e.target.value)}
                                         className="bg-transparent border-none text-[9px] font-black uppercase tracking-widest text-primary focus:ring-0 p-0"
@@ -419,450 +503,290 @@ const PerformanceDashboard = () => {
                                 </div>
                             </div>
                         )}
+
+                        {isAdminOrManager && (
+                            <button
+                                onClick={async () => {
+                                    if (window.confirm("Resync all analytics data? This may take a moment.")) {
+                                        setLoading(true);
+                                        try {
+                                            await AnalyticsApi.syncData();
+                                            await fetchStats();
+                                            await fetchDailyStats();
+                                            await fetchAllTasks();
+                                        } catch (e) {
+                                            alert("Sync failed: " + e.message);
+                                        } finally {
+                                            setLoading(false);
+                                        }
+                                    }
+                                }}
+                                className="px-5 py-2.5 bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg shadow-slate-200 flex items-center gap-2"
+                            >
+                                <IoTrendingUpOutline /> Sync
+                            </button>
+                        )}
+                    </div>
+
+                </div>
+            </div>
+
+            {/* Quick Stats Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                <StatCard
+                    icon={<IoTimeOutline size={32} />}
+                    label="Hours Logged"
+                    value={aggregate.hours ? `${Math.floor(aggregate.hours)}h ${Math.round((aggregate.hours % 1) * 60)}m` : "0h 0m"}
+                    subtext="Total focus time"
+                    color="indigo"
+                />
+                <StatCard
+                    icon={<IoCheckmarkDoneCircleOutline size={32} />}
+                    label="Tasks Completed"
+                    value={tasksCompletedCount}
+                    subtext={`${totalAssignedCount} assigned`}
+                    color="emerald"
+                />
+                <StatCard
+                    icon={<IoFlame size={32} />}
+                    label="Backlog"
+                    value={backlogCount}
+                    subtext="Active & overdue backlog"
+                    color="rose"
+                />
+                <StatCard
+                    icon={<IoTrendingUpOutline size={32} />}
+                    label="Story Points"
+                    value={calculatedStoryPoints}
+                    subtext="Complexity delivered"
+                    color="blue"
+                />
+                <StatCard
+                    icon={<IoCheckmarkDoneCircleOutline size={32} />}
+                    label="On-Time Rate"
+                    value={`${calculatedOnTimeData.rate}%`}
+                    subtext="Punctuality percentage"
+                    color="amber"
+                />
+            </div>
+
+            {/* Performance Trend Chart & Workload Distribution */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Main Performance Chart */}
+                <div className="lg:col-span-2 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-100/50 min-h-[450px] relative overflow-hidden">
+                    <div className="flex items-center justify-between mb-8">
+                        <div className="flex flex-col">
+                            <h3 className="text-xl font-black" style={{ color: '#1e293b' }}>Performance Trend</h3>
+                            {period === 'monthly' && (
+                                <div className="flex bg-slate-100 p-1 rounded-xl mt-2 w-fit">
+                                    <button
+                                        onClick={() => setChartView('trend')}
+                                        className={`px-3 py-1 rounded-lg text-[8px] font-black uppercase tracking-wider transition-all ${chartView === 'trend' ? 'bg-white text-primary shadow-sm' : 'text-slate-400'}`}
+                                    >
+                                        Daily Trend
+                                    </button>
+                                    <button
+                                        onClick={() => setChartView('weekly')}
+                                        className={`px-3 py-1 rounded-lg text-[8px] font-black uppercase tracking-wider transition-all ${chartView === 'weekly' ? 'bg-white text-primary shadow-sm' : 'text-slate-400'}`}
+                                    >
+                                        Weekly View
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-6 text-[10px] font-black uppercase tracking-widest">
+                            <span className="flex items-center gap-1.5" style={{ color: '#E34234' }}><span className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: '#E34234' }}></span> POINTS</span>
+                            <span className="flex items-center gap-1.5" style={{ color: '#FF7F50' }}><span className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: '#FFA590' }}></span> HOURS</span>
+                        </div>
+                    </div>
+                    <div className="h-[300px] w-full">
+                        {loading ? (
+                            <div className="w-full h-full flex items-center justify-center bg-slate-50/50 rounded-3xl animate-pulse">
+                                <span className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Synchronizing Data...</span>
+                            </div>
+                        ) : hasNoWork ? (
+                            <TrollingEmptyState period={period} />
+                        ) : (period === 'monthly' && chartView === 'weekly') ? (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                    <XAxis
+                                        dataKey="name"
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }}
+                                    />
+                                    <YAxis
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }}
+                                    />
+                                    <Tooltip
+                                        contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', fontSize: '12px', padding: '16px' }}
+                                        itemStyle={{ fontWeight: 900, padding: '2px 0' }}
+                                        formatter={(value, name) => [name === 'hours' ? `${Number(value).toFixed(2)} hrs` : value, name.toUpperCase()]}
+                                    />
+                                    <Bar dataKey="points" fill="#E34234" radius={[6, 6, 0, 0]} barSize={24} />
+                                    <Bar dataKey="hours" fill="#FF7F50" radius={[6, 6, 0, 0]} barSize={24} />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        ) : stats.length > 0 ? (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                    <defs>
+                                        <linearGradient id="colorPoints" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#E34234" stopOpacity={0.1} />
+                                            <stop offset="95%" stopColor="#E34234" stopOpacity={0} />
+                                        </linearGradient>
+                                        <linearGradient id="colorHours" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#FF7F50" stopOpacity={0.1} />
+                                            <stop offset="95%" stopColor="#FF7F50" stopOpacity={0} />
+                                        </linearGradient>
+                                    </defs>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                    <XAxis
+                                        dataKey="name"
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }}
+                                        dy={10}
+                                    />
+                                    <YAxis
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }}
+                                    />
+                                    <Tooltip
+                                        contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)', fontSize: '12px', padding: '16px' }}
+                                        itemStyle={{ fontWeight: 900, padding: '2px 0' }}
+                                        formatter={(value, name) => [name === 'hours' ? `${Number(value).toFixed(2)} hrs` : value, name.toUpperCase()]}
+                                        labelStyle={{ color: '#64748b', fontWeight: 800, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.1em' }}
+                                    />
+                                    <Area
+                                        type="monotone"
+                                        dataKey="points"
+                                        stroke="#E34234"
+                                        strokeWidth={4}
+                                        fillOpacity={1}
+                                        fill="url(#colorPoints)"
+                                    />
+                                    <Area
+                                        type="monotone"
+                                        dataKey="hours"
+                                        stroke="#FF7F50"
+                                        strokeWidth={2}
+                                        fillOpacity={1}
+                                        fill="url(#colorHours)"
+                                        strokeDasharray="5 5"
+                                    />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <TrollingEmptyState period={period} />
+                        )}
+                    </div>
+                </div>
+
+                {/* Workload Distribution Card */}
+                <div
+                    style={{ backgroundColor: '#1e293b', color: '#ffffff' }}
+                    className="p-8 rounded-[2.5rem] shadow-xl shadow-slate-200/50 flex flex-col justify-between overflow-hidden relative group"
+                >
+                    <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full blur-3xl group-hover:bg-white/10 transition-all duration-700"></div>
+                    <div className="relative z-10">
+                        <h3 className="text-xl font-black mb-8 tracking-tight" style={{ color: '#ffffff' }}>Workload Distribution</h3>
+                        <div className="space-y-6">
+                            <DistributionItem
+                                label="Completed"
+                                value={aggregate.completed || allTasks.filter(t => t.status === 'done').length}
+                                total={allTasks.length || aggregate.total || 1}
+                                color="bg-emerald-400"
+                                isDark
+                            />
+                            <DistributionItem
+                                label="On-Time"
+                                value={calculatedOnTimeData.onTimeCount}
+                                total={aggregate.completed || allTasks.filter(t => t.status === 'done').length || 1}
+                                color="bg-amber-400"
+                                isDark
+                            />
+                            <DistributionItem
+                                label="Story Points"
+                                value={calculatedStoryPoints}
+                                total={Math.max(calculatedStoryPoints + 5, 20)}
+                                color="bg-primary"
+                                isDark
+                            />
+                        </div>
+                    </div>
+                    <div className="relative z-10 mt-8 pt-6 border-t border-white/10">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-xl">🚀</div>
+                            <div>
+                                <p className="text-[11px] font-black uppercase tracking-widest mb-0.5" style={{ color: '#e2e8f0' }}>Efficiency Score</p>
+                                <p className="text-lg font-black" style={{ color: '#ffffff' }}>{efficiencyScore}% Punctual & Productive</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {activeTab === 'personal' ? (
-                <>
-                    {/* Quick Stats Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-                        <StatCard 
-                            icon={<IoTimeOutline />} 
-                            label="Hours Logged" 
-                            value={aggregate.hours ? `${Math.floor(aggregate.hours)}h ${Math.round((aggregate.hours % 1) * 60)}m` : "0h 0m"} 
-                            subtext="Total focus time"
-                            color="indigo"
-                        />
-                        <StatCard 
-                            icon={<IoCheckmarkDoneCircleOutline />} 
-                            label="Tasks Completed" 
-                            value={aggregate.completed} 
-                            subtext={`${aggregate.total} assigned`}
-                            color="emerald"
-                        />
-                        <StatCard 
-                            icon={<IoFlame />} 
-                            label="Backlog Clearance" 
-                            value={aggregate.backlogCompleted} 
-                            subtext="Overdue tasks finished"
-                            color="rose"
-                        />
-                        <StatCard 
-                            icon={<IoTrendingUpOutline />} 
-                            label="Story Points" 
-                            value={aggregate.points} 
-                            subtext="Complexity delivered"
-                            color="blue"
-                        />
-                        <StatCard 
-                            icon={<IoCheckmarkDoneCircleOutline />} 
-                            label="On-Time Rate" 
-                            value={`${onTimeRate}%`} 
-                            subtext="Punctuality percentage"
-                            color="amber"
-                        />
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Main Performance Chart */}
-                        <div className="lg:col-span-2 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-100/50 h-[450px] relative overflow-hidden">
-                            <div className="flex items-center justify-between mb-8">
-                                <div className="flex flex-col">
-                                    <h3 className="text-xl font-black" style={{ color: '#1e293b' }}>Performance Trend</h3>
-                                    {period === 'monthly' && (
-                                        <div className="flex bg-slate-100 p-1 rounded-xl mt-2 w-fit">
-                                            <button 
-                                                onClick={() => setChartView('trend')}
-                                                className={`px-3 py-1 rounded-lg text-[8px] font-black uppercase tracking-wider transition-all ${chartView === 'trend' ? 'bg-white text-primary shadow-sm' : 'text-slate-400'}`}
-                                            >
-                                                Daily Trend
-                                            </button>
-                                            <button 
-                                                onClick={() => setChartView('weekly')}
-                                                className={`px-3 py-1 rounded-lg text-[8px] font-black uppercase tracking-wider transition-all ${chartView === 'weekly' ? 'bg-white text-primary shadow-sm' : 'text-slate-400'}`}
-                                            >
-                                                Weekly View
-                                            </button>
+            {/* Consistency & Peak Activity Days Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-1">
+                    <ConsistencyCalendar stats={dailyStats.length ? dailyStats : stats} />
+                </div>
+                <div className="lg:col-span-2 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-100/50">
+                    <h3 className="text-xl font-black text-slate-800 mb-6 uppercase tracking-tight">Peak Activity Days</h3>
+                    <div className="space-y-4">
+                        {stats
+                            .filter(s => (s.metrics.tasksCompleted > 0 || s.metrics.storyPointsDone > 0 || s.metrics.hoursLogged > 0))
+                            .sort((a, b) => (b.metrics.storyPointsDone - a.metrics.storyPointsDone) || (b.metrics.tasksCompleted - a.metrics.tasksCompleted))
+                            .slice(0, 3)
+                            .map((s, idx) => {
+                                const dayPoints = s.metrics.storyPointsDone || 0;
+                                return (
+                                    <div key={idx} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white cursor-pointer transition-all hover:scale-[1.02] hover:shadow-md">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-primary shadow-sm">
+                                                <IoCheckmarkDoneCircleOutline size={20} />
+                                            </div>
+                                            <div>
+                                                <p className="font-black text-slate-800 text-sm italic">{moment(s.date).format('MMMM DD, YYYY')}</p>
+                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                                    {s.metrics.tasksCompleted} Tasks · {s.metrics.hoursLogged.toFixed(1)} hrs
+                                                </p>
+                                            </div>
                                         </div>
-                                    )}
-                                </div>
-                                <div className="flex items-center gap-6 text-[10px] font-black uppercase tracking-widest">
-                                    <span className="flex items-center gap-1.5" style={{ color: '#E34234' }}><span className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: '#E34234' }}></span> POINTS</span>
-                                    <span className="flex items-center gap-1.5" style={{ color: '#FF7F50' }}><span className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: '#FFA590' }}></span> HOURS</span>
-                                </div>
-                            </div>
-                            <div className="h-[300px] w-full">
-                                {loading ? (
-                                    <div className="w-full h-full flex items-center justify-center bg-slate-50/50 rounded-3xl animate-pulse">
-                                        <span className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Synchronizing Data...</span>
-                                    </div>
-                                ) : hasNoWork ? (
-                                    <TrollingEmptyState period={period} />
-                                ) : (period === 'monthly' && chartView === 'weekly') ? (
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                            <XAxis 
-                                                dataKey="name" 
-                                                axisLine={false} 
-                                                tickLine={false} 
-                                                tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }} 
-                                            />
-                                            <YAxis 
-                                                axisLine={false} 
-                                                tickLine={false} 
-                                                tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }} 
-                                            />
-                                            <Tooltip 
-                                                contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', fontSize: '12px', padding: '16px' }}
-                                                itemStyle={{ fontWeight: 900, padding: '2px 0' }}
-                                                formatter={(value, name) => [name === 'hours' ? `${Number(value).toFixed(2)} hrs` : value, name.toUpperCase()]}
-                                            />
-                                            <Bar dataKey="points" fill="#E34234" radius={[6, 6, 0, 0]} barSize={24} />
-                                            <Bar dataKey="hours" fill="#FF7F50" radius={[6, 6, 0, 0]} barSize={24} />
-                                        </BarChart>
-                                    </ResponsiveContainer>
-                                ) : stats.length > 0 ? (
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                                            <defs>
-                                                <linearGradient id="colorPoints" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#E34234" stopOpacity={0.1}/>
-                                                    <stop offset="95%" stopColor="#E34234" stopOpacity={0}/>
-                                                </linearGradient>
-                                                <linearGradient id="colorHours" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#FF7F50" stopOpacity={0.1}/>
-                                                    <stop offset="95%" stopColor="#FF7F50" stopOpacity={0}/>
-                                                </linearGradient>
-                                            </defs>
-                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                            <XAxis 
-                                                dataKey="name" 
-                                                axisLine={false} 
-                                                tickLine={false} 
-                                                tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }} 
-                                                dy={10}
-                                            />
-                                            <YAxis 
-                                                axisLine={false} 
-                                                tickLine={false} 
-                                                tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700 }} 
-                                            />
-                                            <Tooltip 
-                                                contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)', fontSize: '12px', padding: '16px' }}
-                                                itemStyle={{ fontWeight: 900, padding: '2px 0' }}
-                                                formatter={(value, name) => [name === 'hours' ? `${Number(value).toFixed(2)} hrs` : value, name.toUpperCase()]}
-                                                labelStyle={{ color: '#64748b', fontWeight: 800, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.1em' }}
-                                            />
-                                            <Area 
-                                                type="monotone" 
-                                                dataKey="points" 
-                                                stroke="#E34234" 
-                                                strokeWidth={4} 
-                                                fillOpacity={1} 
-                                                fill="url(#colorPoints)" 
-                                            />
-                                            <Area 
-                                                type="monotone" 
-                                                dataKey="hours" 
-                                                stroke="#FF7F50" 
-                                                strokeWidth={2} 
-                                                fillOpacity={1} 
-                                                fill="url(#colorHours)" 
-                                                strokeDasharray="5 5"
-                                            />
-                                        </AreaChart>
-                                    </ResponsiveContainer>
-                                ) : (
-                                    <TrollingEmptyState period={period} />
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Distribution Card - Fail-safe inline styles */}
-                        <div 
-                            style={{ backgroundColor: '#1e293b', color: '#ffffff' }}
-                            className="p-8 rounded-[2.5rem] shadow-xl shadow-slate-200/50 flex flex-col justify-between overflow-hidden relative group"
-                        >
-                            <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full blur-3xl group-hover:bg-white/10 transition-all duration-700"></div>
-                            <div className="relative z-10">
-                                <h3 className="text-xl font-black mb-8 tracking-tight" style={{ color: '#ffffff' }}>Workload Distribution</h3>
-                                <div className="space-y-6">
-                                    <DistributionItem label="Completed" value={aggregate.completed} total={aggregate.total} color="bg-emerald-400" isDark />
-                                    <DistributionItem label="On-Time" value={aggregate.onTime} total={aggregate.completed} color="bg-amber-400" isDark />
-                                    <DistributionItem label="Story Points" value={aggregate.points} total={aggregate.points + 10} color="bg-primary" isDark />
-                                </div>
-                            </div>
-                            <div className="relative z-10 mt-8 pt-6 border-t border-white/10">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-xl">🚀</div>
-                                    <div>
-                                        <p className="text-[11px] font-black uppercase tracking-widest mb-0.5" style={{ color: '#e2e8f0' }}>Efficiency Score</p>
-                                        <p className="text-lg font-black" style={{ color: '#ffffff' }}>{onTimeRate}% Punctual</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* New Consistency & Detail Section */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                         <div className="lg:col-span-1">
-                             <ConsistencyCalendar stats={dailyStats.length ? dailyStats : stats} />
-                         </div>
-                         <div className="lg:col-span-2 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-100/50">
-                             <h3 className="text-xl font-black text-slate-800 mb-6 uppercase tracking-tight">Peak Activity Days</h3>
-                             <div className="space-y-4">
-                                 {stats
-                                    .filter(s => (s.metrics.tasksCompleted > 0 || s.metrics.storyPointsDone > 0 || s.metrics.hoursLogged > 0))
-                                    .sort((a, b) => (b.metrics.storyPointsDone - a.metrics.storyPointsDone) || (b.metrics.tasksCompleted - a.metrics.tasksCompleted))
-                                    .slice(0, 3)
-                                    .map((s, idx) => (
-                                     <div key={idx} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white cursor-pointer transition-all hover:scale-[1.02] hover:shadow-md">
-                                         <div className="flex items-center gap-4">
-                                             <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-primary shadow-sm">
-                                                 <IoCheckmarkDoneCircleOutline size={20} />
-                                             </div>
-                                             <div>
-                                                 <p className="font-black text-slate-800 text-sm italic">{moment(s.date).format('MMMM DD, YYYY')}</p>
-                                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                                     {s.metrics.tasksCompleted} Tasks · {s.metrics.hoursLogged.toFixed(1)} hrs
-                                                 </p>
-                                             </div>
-                                         </div>
-                                         <div className="text-right">
-                                             <p className="font-black text-primary">+{s.metrics.storyPointsDone} PTS</p>
-                                             <div className="h-1 w-20 bg-slate-200 rounded-full mt-1 overflow-hidden">
-                                                 <div className="bg-primary h-full" style={{ width: `${Math.min(s.metrics.storyPointsDone * 10, 100)}%` }}></div>
-                                             </div>
-                                         </div>
-                                     </div>
-                                 ))}
-                                 {(stats.filter(s => (s.metrics.tasksCompleted > 0 || s.metrics.storyPointsDone > 0)).length === 0) && (
-                                     <div className="h-40 flex flex-col items-center justify-center text-slate-400">
-                                         <p className="text-xs font-black uppercase tracking-widest italic opacity-60">Waiting for your next big win...</p>
-                                         <p className="text-[10px] mt-2 font-bold opacity-40 capitalize">Complete tasks to see your daily impact here</p>
-                                     </div>
-                                 )}
-                             </div>
-                         </div>
-                    </div>
-
-                     {/* Focus Sessions Tracking Section */}
-                     <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-100/50 mt-8">
-                         <div className="flex items-center justify-between mb-8">
-                             <div>
-                                 <h3 className="text-xl font-black text-slate-800 tracking-tight">Focus Mastery Logs</h3>
-                                 <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-1">Self-directed study & deep work sessions</p>
-                             </div>
-                             <div className="bg-vermilion-50 px-4 py-2 rounded-xl border border-vermilion-100">
-                                 <span className="text-primary font-black text-sm">
-                                     Total: {Number(focusSessions.reduce((acc, s) => acc + (s.duration || 0), 0) / 60).toFixed(1)} hrs focus
-                                 </span>
-                             </div>
-                         </div>
-                         
-                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                             {focusSessions.length > 0 ? focusSessions.slice(0, 6).map((session, idx) => (
-                                 <div key={idx} className="p-5 bg-slate-50 rounded-[1.5rem] border border-slate-100 hover:bg-white hover:shadow-lg transition-all group">
-                                     <div className="flex items-center justify-between mb-3">
-                                         <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-vermilion-50 px-2 py-0.5 rounded-md">
-                                             {moment(session.date).format('MMM DD')}
-                                         </span>
-                                         <span className="text-xs font-black text-slate-800">{session.duration} MINS</span>
-                                     </div>
-                                     <div className="flex items-center gap-3 text-slate-400 mb-1">
-                                         <IoTimeOutline size={14} />
-                                         <div className="flex items-center gap-2 text-[11px] font-bold">
-                                             <span>{moment(session.startTime).format("HH:mm")}</span>
-                                             <span>→</span>
-                                             <span>{moment(session.endTime).format("HH:mm")}</span>
-                                         </div>
-                                     </div>
-                                     <div className="mt-3 h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                                         <div className="bg-gradient-to-r from-primary to-primary h-full" style={{ width: `${Math.min((session.duration / 60) * 100, 100)}%` }}></div>
-                                     </div>
-                                 </div>
-                             )) : (
-                                 <div className="lg:col-span-3 h-32 flex flex-col items-center justify-center text-slate-300 italic border-2 border-dashed border-slate-100 rounded-3xl">
-                                     <p className="text-sm font-bold">No focus sessions recorded today</p>
-                                     <p className="text-[10px] font-black uppercase tracking-widest mt-1">Start your first session in Focus Mode</p>
-                                 </div>
-                             )}
-                         </div>
-                         {focusSessions.length > 6 && (
-                             <button 
-                                onClick={() => navigate('/focus-timer')}
-                                className="w-full mt-6 py-3 text-xs font-black uppercase tracking-[0.2em] text-primary hover:text-primaryHover transition-all border border-vermilion-100 hover:bg-vermilion-50 rounded-xl italic"
-                             >
-                                 View full focus history →
-                             </button>
-                         )}
-                     </div>
-                </>
-            ) : (
-                /* Team / Manager View */
-                <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                         <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-5">
-                            <div className="w-14 h-14 bg-vermilion-50 text-primary rounded-2xl flex items-center justify-center">
-                                <IoPeopleOutline size={28} />
-                            </div>
-                            <div>
-                                <h4 className="text-2xl font-black text-slate-800">{new Set(teamStats.map(s => s.entityId?._id)).size}</h4>
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Active Members</p>
-                            </div>
-                         </div>
-                         <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-5">
-                            <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
-                                <IoCheckmarkDoneCircleOutline size={28} />
-                            </div>
-                            <div>
-                                <h4 className="text-2xl font-black text-slate-800">
-                                    {teamStats.reduce((acc, s) => acc + (s.metrics.tasksCompleted || 0), 0)}
-                                </h4>
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Team Completions</p>
-                            </div>
-                         </div>
-                         <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-5">
-                            <div className="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center">
-                                <IoAlertCircleOutline size={28} />
-                            </div>
-                            <div>
-                                <h4 className="text-2xl font-black text-slate-800">
-                                    {teamStats.reduce((acc, s) => acc + (s.metrics.delayedTasks || 0), 0)}
-                                </h4>
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Delayed Tasks</p>
-                            </div>
-                         </div>
-                    </div>
-
-                    {/* Team Table */}
-                    <div className="bg-white rounded-[2.5rem] border border-slate-200 shadow-xl shadow-slate-200/50 overflow-hidden">
-                        <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                            <h3 className="text-xl font-black text-slate-800">Team Performance Overview</h3>
-                            <button className="text-xs font-bold uppercase tracking-widest text-indigo-600 hover:underline">Export Report</button>
-                        </div>
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left">
-                                <thead>
-                                    <tr className="border-b border-slate-100 italic">
-                                        <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Employee</th>
-                                        <th className="px-4 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">Hours</th>
-                                        <th className="px-4 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">Points</th>
-                                        <th className="px-4 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">Punctuality</th>
-                                        <th className="px-4 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">Status</th>
-                                        <th className="px-8 py-4"></th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-50">
-                                    {teamStats.length > 0 ? teamStats.map((stat, idx) => {
-                                        const user = stat.entityId;
-                                        const onTime = stat.metrics.tasksCompleted > 0 ? Math.round((stat.metrics.onTimeTasks / stat.metrics.tasksCompleted) * 100) : 0;
-                                        
-                                        return (
-                                            <tr 
-                                                key={stat._id} 
-                                                className="hover:bg-slate-50 transition-colors group cursor-pointer"
-                                                onClick={() => {
-                                                    setSelectedMember(user);
-                                                    fetchMemberStats(user._id);
-                                                }}
-                                            >
-                                                <td className="px-8 py-5">
-                                                    <div className="flex items-center gap-3">
-                                                        <img 
-                                                            src={user?.profileImage || `https://ui-avatars.com/api/?name=${user?.firstName}+${user?.lastName}&background=random`} 
-                                                            className="w-10 h-10 rounded-full shadow-sm ring-2 ring-white"
-                                                            alt=""
-                                                        />
-                                                        <div>
-                                                            <p className="text-sm font-bold text-slate-800">{user?.firstName} {user?.lastName}</p>
-                                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Assigned: {stat.metrics.totalTasksAssigned}</p>
-                                                        </div>
+                                        <div className="text-right">
+                                            {dayPoints > 0 ? (
+                                                <>
+                                                    <p className="font-black text-primary">+{dayPoints} PTS</p>
+                                                    <div className="h-1 w-20 bg-slate-200 rounded-full mt-1 overflow-hidden">
+                                                        <div className="bg-primary h-full" style={{ width: `${Math.min(dayPoints * 10, 100)}%` }}></div>
                                                     </div>
-                                                </td>
-                                                <td className="px-4 py-5 text-center font-black text-slate-700 text-sm">
-                                                    {stat.metrics.hoursLogged ? `${Math.floor(stat.metrics.hoursLogged)}h ${Math.round((stat.metrics.hoursLogged % 1) * 60)}m` : "0h 0m"}
-                                                </td>
-                                                <td className="px-4 py-5 text-center font-black text-indigo-600 text-sm">
-                                                    {stat.metrics.storyPointsDone || 0}
-                                                </td>
-                                                <td className="px-4 py-5">
-                                                    <div className="flex flex-col items-center gap-1.5">
-                                                        <span className="text-[10px] font-black text-slate-800">{onTime}%</span>
-                                                        <div className="w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
-                                                            <div className={`h-full ${onTime > 75 ? 'bg-emerald-500' : 'bg-amber-500'}`} style={{ width: `${onTime}%` }} />
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-4 py-5 text-center">
-                                                    {stat.metrics.delayedTasks > 3 ? (
-                                                        <span className="px-2 py-1 bg-rose-50 text-rose-600 rounded-lg text-[10px] font-black uppercase tracking-widest border border-rose-100">At Risk</span>
-                                                    ) : stat.metrics.hoursLogged > 8 ? (
-                                                        <span className="px-2 py-1 bg-amber-50 text-amber-600 rounded-lg text-[10px] font-black uppercase tracking-widest border border-amber-100">Overworked</span>
-                                                    ) : (
-                                                        <span className="px-2 py-1 bg-emerald-50 text-emerald-600 rounded-lg text-[10px] font-black uppercase tracking-widest border border-emerald-100">Healthy</span>
-                                                    )}
-                                                </td>
-                                                <td className="px-8 py-5 text-right">
-                                                    <button className="p-2 hover:bg-slate-200 rounded-xl transition-all text-slate-400 group-hover:text-primary">
-                                                        <IoChevronForward size={18} />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        );
-                                    }) : (
-                                        <tr>
-                                            <td colSpan="6" className="px-8 py-10 text-center text-slate-400 italic">No team activity data found</td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
+                                                </>
+                                            ) : (
+                                                <span className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-xl text-[10px] font-black uppercase tracking-wider border border-emerald-100/60">
+                                                    Active Day
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        {(stats.filter(s => (s.metrics.tasksCompleted > 0 || s.metrics.hoursLogged > 0)).length === 0) && (
+                            <div className="h-40 flex flex-col items-center justify-center text-slate-400">
+                                <p className="text-xs font-black uppercase tracking-widest italic opacity-60">Waiting for your next big win...</p>
+                                <p className="text-[10px] mt-2 font-bold opacity-40 capitalize">Complete tasks to see your daily impact here</p>
+                            </div>
+                        )}
                     </div>
                 </div>
-            )}
+            </div>
 
-            {/* Member Performance Modal */}
-            {selectedMember && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setSelectedMember(null)}></div>
-                    <div className="relative w-full max-w-2xl animate-in zoom-in-95 duration-200">
-                        <div className="bg-white rounded-[3rem] overflow-hidden shadow-2xl">
-                             <div className="bg-slate-800 p-8 text-white flex justify-between items-center">
-                                 <div className="flex items-center gap-4">
-                                     <img 
-                                        src={selectedMember.profileImage || `https://ui-avatars.com/api/?name=${selectedMember.firstName}+${selectedMember.lastName}&background=random`} 
-                                        className="w-16 h-16 rounded-2xl shadow-xl ring-4 ring-white/20"
-                                        alt=""
-                                     />
-                                     <div>
-                                         <h2 className="text-2xl font-black">{selectedMember.firstName} {selectedMember.lastName}</h2>
-                                         <p className="text-slate-400 font-bold uppercase tracking-widest text-xs mt-1">Consistency Profile</p>
-                                     </div>
-                                 </div>
-                                 <button 
-                                    onClick={() => setSelectedMember(null)}
-                                    className="p-2 hover:bg-white/10 rounded-xl transition-colors"
-                                 >
-                                     <IoChevronForward size={24} className="rotate-180" />
-                                 </button>
-                             </div>
-                             <div className="p-8">
-                                 {memberLoading ? (
-                                     <div className="h-64 flex items-center justify-center text-primary">
-                                         <div className="animate-spin rounded-full h-12 w-12 border-4 border-current border-t-transparent"></div>
-                                     </div>
-                                 ) : (
-                                     <ConsistencyCalendar stats={memberStats} />
-                                 )}
-                             </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+            {/* All Arenas Consistency Section (Replaces Focus Mastery Logs) */}
+            <AllArenasConsistency />
         </div>
     );
 };
@@ -871,6 +795,7 @@ const StatCard = ({ icon, label, value, subtext, color, trend }) => {
     const colors = {
         indigo: 'text-primary bg-vermilion-50 border-vermilion-100',
         emerald: 'text-emerald-600 bg-emerald-50 border-emerald-100',
+        rose: 'text-rose-600 bg-rose-50 border-rose-100',
         blue: 'text-slate-600 bg-slate-50 border-slate-100',
         amber: 'text-amber-600 bg-amber-50 border-amber-100',
     };
@@ -878,7 +803,7 @@ const StatCard = ({ icon, label, value, subtext, color, trend }) => {
     return (
         <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-100/50 hover:shadow-2xl hover:-translate-y-1 transition-all group overflow-hidden relative min-h-[180px] flex flex-col justify-between">
             <div className="flex justify-between items-start mb-4">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform border ${colors[color]}`}>
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform border ${colors[color] || colors.indigo}`}>
                     <span className="text-xl">{icon}</span>
                 </div>
                 {trend && (
@@ -900,20 +825,20 @@ const DistributionItem = ({ label, value, total, color, isDark }) => {
     const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
     return (
         <div>
-            <div 
+            <div
                 className={`flex justify-between text-[10px] font-black uppercase tracking-widest mb-2.5`}
                 style={{ color: isDark ? '#e0e7ff' : '#64748b' }}
             >
                 <span>{label}</span>
                 <span style={{ color: isDark ? '#ffffff' : '#0f172a' }}>{value} ({percentage}%)</span>
             </div>
-            <div 
+            <div
                 className={`h-2.5 w-full rounded-full overflow-hidden shadow-inner`}
                 style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : '#f1f5f9' }}
             >
-                <div 
-                    className={`${color} h-full transition-all duration-1000 ease-out shadow-sm relative`} 
-                    style={{ width: `${percentage}%` }}
+                <div
+                    className={`${color} h-full transition-all duration-1000 ease-out shadow-sm relative`}
+                    style={{ width: `${Math.min(percentage, 100)}%` }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 animate-shimmer"></div>
                 </div>

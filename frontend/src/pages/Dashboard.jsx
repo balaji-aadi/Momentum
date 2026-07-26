@@ -4,18 +4,17 @@ import TaskTable from '../components/tasks/TaskTable';
 import MyTask from './task-childrens/MyTask';
 import TimelineBoard from '../components/tasks/TimelineBoard';
 import CalendarBoard from '../components/tasks/CalendarBoard';
+import PerformanceDashboard from './Analytics/PerformanceDashboard';
 import { ProjectApi } from '../services/api/Project.api';
 import { UserApi } from '../services/api/user.api';
 import { TaskApi } from '../services/api/Task.api';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import Sprints from './project-childrens/Sprints';
 import TaskDetailDrawer from '../components/tasks/TaskDetailDrawer';
-import { useSearchParams, useParams } from 'react-router-dom';
+import { setGlobalSearch } from '../store/slices/storeSlice';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoChevronDownOutline, IoFilterOutline } from 'react-icons/io5';
-import { useDispatch } from 'react-redux';
-import { setGlobalSearch } from '../store/slices/storeSlice';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -23,329 +22,293 @@ const Dashboard = () => {
   const { slug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const { currentUser, globalSearch, activeBranch } = useSelector((state) => state.store);
+
   const isManager = currentUser?.userRole?.name === "projectmanager";
   const isAdmin = currentUser?.userRole?.name === "admin";
   const canCreate = isManager || isAdmin;
 
-  const [viewMode, setViewMode] = useState('board'); // 'board', 'spreadsheet', 'timeline', 'calendar'
-  
-  useEffect(() => {
-    if (!activeBranch) {
-        navigate('/branch', { replace: true });
-    }
-  }, [activeBranch, navigate]);
-  
+  // View mode for Arena views ('board', 'spreadsheet', 'timeline', 'calendar', 'sprints')
+  const [viewMode, setViewMode] = useState(searchParams.get('view') || 'board');
+  const [isEditingTask, setIsEditingTask] = useState(false);
+
+  // Controls visibility toggle for Arena views (collapsed by default as shown in Image 2)
+  const [isControlsVisible, setIsControlsVisible] = useState(false);
+
   // Global Filters
   const [projectId, setProjectId] = useState('');
   const [memberId, setMemberId] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [parentId, setParentId] = useState('');
   const [parentTasks, setParentTasks] = useState([]);
-  
+
   // Data State
   const [projects, setProjects] = useState([]);
   const [members, setMembers] = useState([]);
-  const [tasks, setTasks] = useState(null); // For views that need raw tasks (Timeline, Calendar, Table)
+  const [tasks, setTasks] = useState(null);
   const [loading, setLoading] = useState(false);
-  
-  // Controls Visibility Logic
-  const [isControlsVisible, setIsControlsVisible] = useState(false); // Default to false for max space
-  const [isEditingTask, setIsEditingTask] = useState(false);
 
-  // Sync filters from URL
+  // In-memory cache for ultra-fast instant switching without network delays
+  const taskCacheRef = React.useRef({});
+  const projectsCacheRef = React.useRef(null);
+
   useEffect(() => {
-    // If slug is present, projectId is handled by the fetchOptions effect
-    if (!slug) {
-        const pId = searchParams.get('projectId');
-        // If projectId is in URL, set it. If missing, clear it.
-        setProjectId(pId || '');
+    if (!activeBranch) {
+      navigate('/branch', { replace: true });
     }
-  }, [searchParams, slug]);
+  }, [activeBranch, navigate]);
 
-  // Sync slug to projectId
+  // Consolidated Fast Fetch Effect
   useEffect(() => {
-      if (slug && projects.length > 0) {
-          const matched = projects.find(p => p.slug === slug);
-          if (matched && matched.value !== projectId) {
-              setProjectId(matched.value);
-          }
-      }
-  }, [slug, projects, projectId]);
+    if (!slug || !activeBranch) return;
 
-  // Fetch Options (Projects, Members)
-  useEffect(() => {
-    const fetchOptions = async () => {
-        // Fetch Projects
+    let isMounted = true;
+
+    const loadArenaData = async () => {
+      let currentProjects = projectsCacheRef.current;
+
+      // 1. Fetch projects in parallel if not cached
+      if (!currentProjects) {
         try {
-            const pRes = await ProjectApi.getAllProjects();
-            const fetchedProjects = pRes.data?.data?.map(p => ({ 
-               value: p._id, 
-               label: p.name,
-               slug: p.key?.toLowerCase() || p.name.toLowerCase().replace(/\s+/g, '-') 
-            })) || [];
-            
-            // Reorder based on localStorage priority
-            const savedOrder = JSON.parse(localStorage.getItem('projectTabsOrder')) || [];
-            if (savedOrder.length > 0) {
-                fetchedProjects.sort((a, b) => {
-                    const indexA = savedOrder.indexOf(a.value);
-                    const indexB = savedOrder.indexOf(b.value);
-                    if (indexA === -1 && indexB === -1) return 0;
-                    if (indexA === -1) return 1;
-                    if (indexB === -1) return -1;
-                    return indexA - indexB;
-                });
-            }
-            setProjects(fetchedProjects);
-
-            if (slug) {
-                const matched = fetchedProjects.find(p => p.slug === slug);
-                if (matched) {
-                    setProjectId(matched.value);
-                } else if (fetchedProjects.length > 0) {
-                    navigate(`/arena/${fetchedProjects[0].slug}`, { replace: true });
-                }
-            } else {
-                // Auto-select the first project if no projectId is currently selected (meaning user just opened dashboard)
-                const currentUrlProjectId = searchParams.get('projectId');
-                if (!currentUrlProjectId && fetchedProjects.length > 0) {
-                    navigate(`/arena/${fetchedProjects[0].slug}`, { replace: true });
-                }
-            }
-        } catch (error) {
-            console.error("Failed to fetch dashboard projects", error);
-        }
-
-        // Fetch Members (Only for Managers/Admins based on sidebar/roles, but safe to try and catch)
-        try {
-            const uRes = await UserApi.users();
+          const [pRes, uRes] = await Promise.all([
+            ProjectApi.getAllProjects(),
+            UserApi.users()
+          ]);
+          currentProjects = pRes.data?.data?.map(p => ({
+            value: p._id,
+            label: p.name,
+            slug: p.key?.toLowerCase() || p.name.toLowerCase().replace(/\s+/g, '-')
+          })) || [];
+          projectsCacheRef.current = currentProjects;
+          if (isMounted) {
+            setProjects(currentProjects);
             setMembers(uRes.data?.data?.map(u => ({ value: u._id, label: `${u.firstName} ${u.lastName}` })) || []);
+          }
         } catch (error) {
-            console.error("Failed to fetch dashboard members (likely restricted)", error);
+          console.error("Failed to load options", error);
         }
-    };
-    if (activeBranch) {
-        fetchOptions();
-    }
-  }, [activeBranch]);
+      }
 
-  // Fetch Tasks for Non-Board Views (Board fetches its own for now to preserve strict logic)
-  useEffect(() => {
-    const fetchTasks = async () => {
-        setLoading(true);
-        setTasks(null); // Clear old tasks to prevent data leak during project switch
-        try {
-            const filter = {};
-            if (projectId) filter.projectName = projectId;
-            if (memberId) filter.assignee = memberId;
+      // 2. Instant project resolution from slug
+      const matched = (currentProjects || []).find(p => p.slug === slug);
+      const targetProjectId = matched ? matched.value : null;
 
-            // Note: If search is implemented in backend, add here. 
-            // Otherwise we filter client-side below.
-            
-            // Avoid fetching all tasks if we are in a project context but ID is briefly missing
-            if (slug && !projectId) {
-                setTasks([]);
-                setLoading(false);
-                return;
-            }
-            
-            const res = await TaskApi.getAllTasks({ filter });
-            setTasks(res.data?.data || []);
-        } catch (error) {
-            console.error("Failed to fetch tasks", error);
-        } finally {
-            setLoading(false);
+      if (!targetProjectId) {
+        if (isMounted) {
+          setLoading(false);
+          setTasks([]);
         }
+        return;
+      }
+
+      if (isMounted) setProjectId(targetProjectId);
+
+      // 3. Instant Cache Hit: Display cached tasks instantly (0ms latency!)
+      if (taskCacheRef.current[targetProjectId]) {
+        if (isMounted) {
+          setTasks(taskCacheRef.current[targetProjectId]);
+          setLoading(false);
+        }
+      } else {
+        if (isMounted) setLoading(true);
+      }
+
+      // 4. Background Fetch to keep data freshly synced
+      try {
+        const filter = { projectName: targetProjectId };
+        if (memberId) filter.assignee = memberId;
+
+        const res = await TaskApi.getAllTasks({ filter });
+        const fetchedTasks = res.data?.data || [];
+
+        // Save to cache for 0ms instant load next time
+        taskCacheRef.current[targetProjectId] = fetchedTasks;
+
+        if (isMounted) {
+          setTasks(fetchedTasks);
+        }
+      } catch (error) {
+        console.error("Failed to fetch tasks", error);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
     };
-    if (activeBranch) {
-        fetchTasks();
-    }
-  }, [projectId, memberId, viewMode, sortBy, parentId, activeBranch]);
+
+    loadArenaData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [slug, memberId, activeBranch]);
 
   // Fetch Parent Tasks for Filtering
   useEffect(() => {
     const fetchParents = async () => {
-        if (!projectId) {
-            setParentTasks([]);
-            return;
-        }
-        try {
-            const res = await TaskApi.getAllTasks({ filter: { projectName: projectId } });
-            // Filter tasks that can be parents (usually those that aren't subtasks themselves, 
-            // or just all tasks if the user wants to filter by ANY parent).
-            // Let's provide all tasks as parent options for now.
-            setParentTasks(res.data?.data || []);
-        } catch (error) {
-            console.error("Failed to fetch parent tasks", error);
-            setParentTasks([]);
-        }
+      if (!projectId || !slug) {
+        setParentTasks([]);
+        return;
+      }
+      try {
+        const res = await TaskApi.getAllTasks({ filter: { projectName: projectId } });
+        setParentTasks(res.data?.data || []);
+      } catch (error) {
+        console.error("Failed to fetch parent tasks", error);
+        setParentTasks([]);
+      }
     };
     fetchParents();
-  }, [projectId]);
+  }, [projectId, slug]);
 
-  const filteredTasks = (tasks || []).filter(t => 
-    t.taskName?.toLowerCase().includes(globalSearch.toLowerCase()) ||
-    t.taskId?.toLowerCase().includes(globalSearch.toLowerCase())
-  );
+  const filteredTasks = (tasks || []).filter(t => {
+    const matchesSearch = t.taskName?.toLowerCase().includes(globalSearch.toLowerCase()) ||
+      t.taskId?.toLowerCase().includes(globalSearch.toLowerCase());
+    
+    if (!projectId) return matchesSearch;
+    const pId = typeof t.projectName === 'object' ? (t.projectName?._id || t.projectName?.id) : t.projectName;
+    return matchesSearch && (pId?.toString() === projectId?.toString());
+  });
 
   const handleCreateTask = () => {
-      navigate('/task/create-task');
+    navigate('/task/create-task');
   };
 
-    const handleTaskClick = (task) => {
-        const newParams = new URLSearchParams(searchParams);
-        newParams.set('taskId', task._id);
-        setSearchParams(newParams);
-    };
+  const handleTaskClick = (task) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('taskId', task._id);
+    setSearchParams(newParams);
+  };
 
-
-
-    // Premium Auto-hide Logic with Activity Tracking
-    const timerRef = React.useRef(null);
-
-    const resetTimer = React.useCallback(() => {
-        if (timerRef.current) clearTimeout(timerRef.current);
-        if (isControlsVisible && viewMode === 'board' && !isEditingTask) {
-            timerRef.current = setTimeout(() => {
-                setIsControlsVisible(false);
-            }, 30000); // Updated to 30 seconds
-        }
-    }, [isControlsVisible, viewMode, isEditingTask]);
-
-    useEffect(() => {
-        resetTimer();
-        return () => {
-            if (timerRef.current) clearTimeout(timerRef.current);
-        };
-    }, [isControlsVisible, viewMode, isEditingTask, resetTimer]);
-
+  // 1. MAIN DASHBOARD ROUTE ("/") -> Render ONLY Performance Analytics Dashboard
+  if (!slug) {
     return (
-      <div className="h-full flex flex-col bg-bgLight relative">
-          {/* Quick Access Floating Trigger - Dynamic Height for responsiveness */}
-          {!isControlsVisible && viewMode === 'board' && !isEditingTask && (
-              <div 
-                  className="fixed right-8 z-[100] pointer-events-none"
-                  onMouseEnter={() => setIsControlsVisible(true)}
-              >
-                  <motion.button 
-                    initial={{ scale: 0.8, opacity: 0, x: 20 }}
-                    animate={{ scale: 1, opacity: 1, x: 0 }}
-                    whileHover={{ scale: 1.05 }}
-                     className="group flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-full shadow-[0_8px_30px_rgba(227,66,52,0.3)] transition-all duration-300 border border-white/20 pointer-events-auto"
-                    onClick={() => setIsControlsVisible(true)}
-                  >
-                     <IoFilterOutline className="group-hover:rotate-12 transition-transform" size={14} />
-                     <span className="text-[10px] font-bold uppercase tracking-tight">Controls</span>
-                     <IoChevronDownOutline size={12} className="opacity-50" />
-                  </motion.button>
-              </div>
-          )}
-
-          <AnimatePresence>
-            {((isControlsVisible || viewMode !== 'board') && !isEditingTask) && (
-                <motion.div
-                    initial={{ height: 0, opacity: 0, y: -20 }}
-                    animate={{ height: 'auto', opacity: 1, y: 0 }}
-                    exit={{ height: 0, opacity: 0, y: -20 }}
-                    transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                    onMouseMove={resetTimer}
-                    onClick={resetTimer}
-                    onKeyDown={resetTimer}
-                    className="z-40 bg-bgLight overflow-hidden border-b border-borderLight"
-                >
-                    <div className="w-full max-w-full overflow-hidden">
-                        <DashboardHeader 
-                            viewMode={viewMode}
-                            setViewMode={setViewMode}
-                            projects={projects}
-                            members={members}
-                            selectedProject={projectId}
-                            onProjectChange={(id) => {
-                                const selected = projects.find(p => p.value === id);
-                                if (selected) {
-                                    navigate(`/arena/${selected.slug}`);
-                                } else {
-                                    navigate('/');
-                                }
-                            }}
-                            selectedMember={memberId}
-                            onMemberChange={setMemberId}
-                            search={globalSearch}
-                            onSearchChange={(val) => dispatch(setGlobalSearch(val))}
-                            onResetFilters={() => {
-                                setProjectId('');
-                                setMemberId('');
-                                dispatch(setGlobalSearch(''));
-                                setSortBy('');
-                                setParentId('');
-                                setSearchParams({});
-                            }}
-                            onCreateTask={handleCreateTask}
-                            isManager={isManager}
-                            isAdmin={isAdmin}
-                            canCreate={canCreate}
-                            sortBy={sortBy}
-                            onSortChange={setSortBy}
-                            parentId={parentId}
-                            onParentChange={setParentId}
-                            parentTasks={parentTasks}
-                        />
-                    </div>
-
-
-                </motion.div>
-            )}
-          </AnimatePresence>
-
-         <div 
-            className={`flex-1 overflow-y-auto ${viewMode === 'board' ? 'p-0' : 'p-6'} transition-all duration-500`}
-            onMouseEnter={() => {
-                // Optional: You could start the timer here if it's already shown
-            }}
-         >
-             {viewMode === 'board' && (
-                 <MyTask 
-                      viewMode={viewMode} 
-                      setViewMode={setViewMode}
-                      externalProjectId={projectId}
-                      externalMemberId={memberId}
-                      externalSearch={globalSearch}
-                      externalSort={sortBy}
-                      externalParentId={parentId}
-                      externalTasks={tasks}
-                      externalLoading={loading}
-                      onEditStateChange={(editing) => setIsEditingTask(editing)}
-                 />
-             )}
-             
-             {viewMode === 'spreadsheet' && (
-                 <TaskTable 
-                      tasks={filteredTasks}
-                      isLoading={loading}
-                      projects={projects.map(p => ({ _id: p.value, name: p.label }))}
-                      members={members.map(m => ({ _id: m.value, firstName: m.label.split(' ')[0], lastName: m.label.split(' ')[1] }))}
-                      selectedProject={projectId}
-                      selectedMember={memberId}
-                      onProjectChange={setProjectId}
-                      onMemberChange={setMemberId}
-                 />
-             )}
-
-             {viewMode === 'timeline' && (
-                 <TimelineBoard tasks={filteredTasks} isLoading={loading} onTaskClick={handleTaskClick} />
-             )}
-
-             {viewMode === 'calendar' && (
-                 <CalendarBoard tasks={filteredTasks} isLoading={loading} onTaskClick={handleTaskClick} />
-             )}
-
-             {viewMode === 'sprints' && (
-                 <Sprints projectId={projectId} />
-             )}
-         </div>
-         <TaskDetailDrawer />
+      <div className="h-full w-full overflow-y-auto bg-bgLight">
+        <PerformanceDashboard />
       </div>
     );
-  };
-  
-  export default Dashboard;
+  }
+
+  // 2. SPECIFIC ARENA ROUTE ("/arena/:slug") -> Render Arena Tasks with Collapsible Controls Header
+  return (
+    <div className="h-full flex flex-col bg-bgLight relative">
+      {/* Floating CONTROLS Trigger Button when Collapsed */}
+      {!isControlsVisible && !isEditingTask && (
+        <div className="fixed right-4 top-20 z-[100] pointer-events-auto">
+          <motion.button
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
+            onClick={() => setIsControlsVisible(true)}
+            className="flex items-center gap-1 px-3 py-1.5 bg-vermilion-500 hover:bg-vermilion-600 text-white rounded-full shadow-md transition-all border border-white/20 text-[9px] font-black uppercase tracking-wider cursor-pointer"
+          >
+            <IoFilterOutline size={12} />
+            <span className='text-[12px]'>Controls</span>
+            <IoChevronDownOutline size={11} className="opacity-70" />
+          </motion.button>
+        </div>
+      )}
+
+      {/* Expandable Header Controls (Image 3 style) */}
+      <AnimatePresence>
+        {isControlsVisible && !isEditingTask && (
+          <motion.div
+            initial={{ height: 0, opacity: 0, y: -15 }}
+            animate={{ height: 'auto', opacity: 1, y: 0 }}
+            exit={{ height: 0, opacity: 0, y: -15 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+            className="z-40 bg-bgLight border-b border-borderLight shadow-sm"
+          >
+            <DashboardHeader
+              viewMode={viewMode}
+              setViewMode={(mode) => {
+                setViewMode(mode);
+                const newParams = new URLSearchParams(searchParams);
+                newParams.set('view', mode);
+                setSearchParams(newParams);
+              }}
+              projects={projects}
+              members={members}
+              selectedProject={projectId}
+              onProjectChange={(id) => {
+                const selected = projects.find(p => p.value === id);
+                if (selected) {
+                  navigate(`/arena/${selected.slug}`);
+                } else {
+                  navigate('/');
+                }
+              }}
+              selectedMember={memberId}
+              onMemberChange={setMemberId}
+              search={globalSearch}
+              onSearchChange={(val) => dispatch(setGlobalSearch(val))}
+              onResetFilters={() => {
+                setProjectId('');
+                setMemberId('');
+                dispatch(setGlobalSearch(''));
+                setSortBy('');
+                setParentId('');
+                setSearchParams({});
+              }}
+              onCreateTask={handleCreateTask}
+              isManager={isManager}
+              isAdmin={isAdmin}
+              canCreate={canCreate}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
+              parentId={parentId}
+              onParentChange={setParentId}
+              parentTasks={parentTasks}
+              onHideControls={() => setIsControlsVisible(false)}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Arena View Content (Board, Spreadsheet, Timeline, Calendar, Sprints) - Full Page Coverage */}
+      <div className={`flex-1 overflow-y-auto w-full transition-all duration-500 ${viewMode === 'board' ? 'p-0 h-full' : 'p-3 sm:p-4'}`}>
+        {viewMode === 'board' && (
+          <MyTask
+            viewMode={viewMode}
+            setViewMode={setViewMode}
+            externalProjectId={projectId}
+            externalMemberId={memberId}
+            externalSearch={globalSearch}
+            externalSort={sortBy}
+            externalParentId={parentId}
+            externalTasks={tasks}
+            externalLoading={loading}
+            onEditStateChange={(editing) => setIsEditingTask(editing)}
+          />
+        )}
+
+        {viewMode === 'spreadsheet' && (
+          <TaskTable
+            tasks={filteredTasks}
+            isLoading={loading}
+            projects={projects.map(p => ({ _id: p.value, name: p.label }))}
+            members={members.map(m => ({ _id: m.value, firstName: m.label.split(' ')[0], lastName: m.label.split(' ')[1] }))}
+            selectedProject={projectId}
+            selectedMember={memberId}
+            onProjectChange={setProjectId}
+            onMemberChange={setMemberId}
+          />
+        )}
+
+        {viewMode === 'timeline' && (
+          <TimelineBoard tasks={filteredTasks} isLoading={loading} onTaskClick={handleTaskClick} />
+        )}
+
+        {viewMode === 'calendar' && (
+          <CalendarBoard tasks={filteredTasks} isLoading={loading} onTaskClick={handleTaskClick} />
+        )}
+
+        {viewMode === 'sprints' && (
+          <Sprints projectId={projectId} />
+        )}
+      </div>
+
+      <TaskDetailDrawer />
+    </div>
+  );
+};
+
+export default Dashboard;

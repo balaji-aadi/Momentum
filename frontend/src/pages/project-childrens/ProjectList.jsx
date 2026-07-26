@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ProjectApi } from '../../services/api/Project.api';
 import { useNavigate } from 'react-router-dom';
-import { IoAdd, IoSearchOutline, IoGridOutline, IoListOutline, IoFlagOutline } from 'react-icons/io5';
+import { IoAdd, IoSearchOutline, IoGridOutline, IoListOutline, IoFlagOutline, IoFlame } from 'react-icons/io5';
 import moment from 'moment';
 import { Table } from '../../components/Table/Table';
 import { FaEdit } from 'react-icons/fa';
 import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
 import InputField from '../../components/InputField';
+import ArenaConsistencyModal from '../../components/analytics/ArenaConsistencyModal';
 
 const ProjectList = () => {
     const [projects, setProjects] = useState([]);
@@ -17,8 +18,10 @@ const ProjectList = () => {
     const [viewMode, setViewMode] = useState('grid');
     const [isMilestoneModalOpen, setIsMilestoneModalOpen] = useState(false);
     const [selectedProjectId, setSelectedProjectId] = useState(null);
+    const [consistencyModalProject, setConsistencyModalProject] = useState(null);
     const { activeBranch } = useSelector((state) => state.store);
     const navigate = useNavigate();
+
 
     useEffect(() => {
         if (activeBranch) {
@@ -148,24 +151,23 @@ const ProjectList = () => {
                         View Project
                     </button>
                     <button 
+                        onClick={() => setConsistencyModalProject(params.data)}
+                        className="text-emerald-500 hover:text-emerald-700 p-1 rounded hover:bg-emerald-50 transition-colors"
+                        title="Arena Consistency"
+                    >
+                        <IoFlame size={16} />
+                    </button>
+                    <button 
                         onClick={() => handleEditProject(params.data)}
-                        className="text-blue-500 hover:text-blue-700"
+                        className="text-blue-500 hover:text-blue-700 p-1 rounded hover:bg-blue-50 transition-colors"
                         title="Edit Arena"
                     >
                         <FaEdit />
                     </button>
-                    {false && (
-                        <button 
-                            onClick={() => openMilestoneModal(params.data._id)}
-                            className="text-amber-500 hover:text-amber-700"
-                            title="Add Milestone"
-                        >
-                            <IoFlagOutline />
-                        </button>
-                    )}
                 </div>
             )
-        }
+        },
+
     ];
 
     const getProjectsForTable = async () => {
@@ -307,15 +309,13 @@ const ProjectList = () => {
                                         </div>
 
                                         <div className="absolute top-6 right-6 flex gap-1 opacity-0 group-hover:opacity-100 transition-all z-10 translate-x-2 group-hover:translate-x-0">
-                                             {false && (
-                                                <button 
-                                                    onClick={(e) => { e.stopPropagation(); openMilestoneModal(project._id); }}
-                                                    className="w-8 h-8 flex items-center justify-center text-amber-500 bg-white shadow-sm border border-amber-100 rounded-xl hover:bg-amber-50 transition-colors"
-                                                    title="Add Milestone"
-                                                >
-                                                    <IoFlagOutline size={14} />
-                                                </button>
-                                             )}
+                                             <button 
+                                                 onClick={(e) => { e.stopPropagation(); setConsistencyModalProject(project); }}
+                                                 className="w-8 h-8 flex items-center justify-center text-emerald-500 bg-white shadow-sm border border-emerald-100 rounded-xl hover:bg-emerald-50 transition-colors"
+                                                 title="Arena Consistency"
+                                             >
+                                                <IoFlame size={15} />
+                                             </button>
                                              <button 
                                                  onClick={(e) => { e.stopPropagation(); handleEditProject(project); }}
                                                  className="w-8 h-8 flex items-center justify-center text-primary bg-white shadow-sm border border-vermilion-100 rounded-xl hover:bg-vermilion-50 transition-colors"
@@ -323,7 +323,7 @@ const ProjectList = () => {
                                              >
                                                 <FaEdit size={14} />
                                              </button>
-                                        </div>
+                                         </div>
 
                                         <div className="mt-2 pt-4 border-t border-slate-50 flex items-center justify-between">
                                             <div className="flex -space-x-2.5">
@@ -474,8 +474,16 @@ const ProjectList = () => {
                     </div>
                 </div>
             )}
+
+            {/* Arena Consistency Modal */}
+            <ArenaConsistencyModal
+                isOpen={!!consistencyModalProject}
+                onClose={() => setConsistencyModalProject(null)}
+                project={consistencyModalProject}
+            />
         </div>
     );
 };
+
 
 export default ProjectList;

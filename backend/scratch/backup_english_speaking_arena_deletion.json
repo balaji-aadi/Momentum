@@ -1,0 +1,484 @@
+{
+  "timestamp": "2026-07-24T17:12:54.725Z",
+  "project": {
+    "_id": "6a5bae2fe7a8257ceaea3941",
+    "name": "English Speaking",
+    "access": "private",
+    "key": "ESP",
+    "description": "",
+    "startDate": "2026-07-18T00:00:00.000Z",
+    "endDate": "2026-12-10T00:00:00.000Z",
+    "priority": "medium",
+    "clientName": "",
+    "githubRepository": "",
+    "budget": 0,
+    "progress": 50,
+    "projectManager": "6993047f16e85ff3e4efd9a3",
+    "teamMembers": [
+      "6993047f16e85ff3e4efd9a3"
+    ],
+    "rolesAndResponsibilities": [],
+    "status": "active",
+    "completedAt": null,
+    "settings": {
+      "sprintDuration": 2,
+      "enableSprints": false,
+      "enableYoutubeSearch": false,
+      "enableLeetCodeSearch": false
+    },
+    "createdBy": "6993047f16e85ff3e4efd9a3",
+    "branchId": "6a081b6e111c99b633b00d76",
+    "createdAt": "2026-07-18T16:47:43.930Z",
+    "updatedAt": "2026-07-21T16:50:28.957Z"
+  },
+  "tasks": [
+    {
+      "_id": "6a5bafc9e7a8257ceaea3cdc",
+      "projectName": "6a5bae2fe7a8257ceaea3941",
+      "taskName": "Day - 1",
+      "taskId": "ESP-1",
+      "taskPriority": "medium",
+      "taskType": "Preparation",
+      "taskStartDate": "2026-08-19T00:00:00.000Z",
+      "taskDueDate": "2026-08-19T00:00:00.000Z",
+      "estimatedHours": 1.5,
+      "backlogEstimatedHours": 0,
+      "storyPoints": 0,
+      "progress": 100,
+      "taskDescription": "<p>My name is ____. I wake up early every day. I study English for thirty minutes because I want to speak confidently.</p>",
+      "additionalNotes": "",
+      "youtubeUrl": "",
+      "attachments": [],
+      "milestone": null,
+      "parentTask": "6a5bb023e7a8257ceaea40ec",
+      "dependentTasks": [],
+      "assignee": "6993047f16e85ff3e4efd9a3",
+      "status": "done",
+      "holdDate": null,
+      "subtaskStats": {
+        "total": 0,
+        "completed": 0
+      },
+      "createdBy": "6993047f16e85ff3e4efd9a3",
+      "activityLogs": [
+        {
+          "oldStatus": "todo",
+          "currentStatus": "done",
+          "user": "6993047f16e85ff3e4efd9a3",
+          "date": "2026-07-19T17:34:46.880Z",
+          "message": "Status had been changed from todo >>> done",
+          "_id": "6a5d0ab6e7a8257ceaea7e03"
+        },
+        {
+          "oldStatus": null,
+          "currentStatus": "",
+          "user": "6993047f16e85ff3e4efd9a3",
+          "date": "2026-07-18T16:54:33.301Z",
+          "message": "Task created with status Todo",
+          "_id": "6a5bafc9e7a8257ceaea3cdd"
+        }
+      ],
+      "branchId": "6a081b6e111c99b633b00d76",
+      "revisionLogs": [],
+      "createdAt": "2026-07-18T16:54:33.306Z",
+      "updatedAt": "2026-07-19T17:34:46.881Z",
+      "updatedBy": "6993047f16e85ff3e4efd9a3"
+    },
+    {
+      "_id": "6a5ce253e7a8257ceaea6a2c",
+      "projectName": "6a5bae2fe7a8257ceaea3941",
+      "taskName": "Day - 2",
+      "taskId": "ESP-3",
+      "taskPriority": "medium",
+      "taskType": "Preparation",
+      "taskStartDate": "2026-08-19T00:00:00.000Z",
+      "taskDueDate": "2026-11-19T00:00:00.000Z",
+      "estimatedHours": 1,
+      "backlogEstimatedHours": 0,
+      "storyPoints": 0,
+      "progress": 100,
+      "taskDescription": "<p>Every morning, I wake up at 6 o'clock because I want to improve myself. First, I drink a glass of water and then I go for a short walk. Although I sometimes feel tired, I never skip my routine because I know small habits lead to big success. After I come home, I study English for thirty minutes before I start my work. Learning every day makes me more confident, and I believe consistency is more important than perfection.</p>",
+      "additionalNotes": "",
+      "youtubeUrl": "",
+      "attachments": [],
+      "milestone": null,
+      "parentTask": "6a5bb023e7a8257ceaea40ec",
+      "dependentTasks": [],
+      "assignee": "6993047f16e85ff3e4efd9a3",
+      "status": "done",
+      "holdDate": null,
+      "subtaskStats": {
+        "total": 0,
+        "completed": 0
+      },
+      "createdBy": "6993047f16e85ff3e4efd9a3",
+      "activityLogs": [
+        {
+          "oldStatus": "todo",
+          "currentStatus": "done",
+          "user": "6993047f16e85ff3e4efd9a3",
+          "date": "2026-07-19T17:34:42.478Z",
+          "message": "Status had been changed from todo >>> done",
+          "_id": "6a5d0ab2e7a8257ceaea7de4"
+        },
+        {
+          "oldStatus": null,
+          "currentStatus": "",
+          "user": "6993047f16e85ff3e4efd9a3",
+          "date": "2026-07-19T14:42:27.241Z",
+          "message": "Task created with status Todo",
+          "_id": "6a5ce253e7a8257ceaea6a2d"
+        }
+      ],
+      "branchId": "6a081b6e111c99b633b00d76",
+      "revisionLogs": [],
+      "createdAt": "2026-07-19T14:42:27.244Z",
+      "updatedAt": "2026-07-19T17:34:42.481Z",
+      "updatedBy": "6993047f16e85ff3e4efd9a3"
+    },
+    {
+      "_id": "6a5bb023e7a8257ceaea40ec",
+      "projectName": "6a5bae2fe7a8257ceaea3941",
+      "taskName": "Context-Based Learning",
+      "taskId": "ESP-2",
+      "taskPriority": "medium",
+      "taskType": "Preparation",
+      "taskStartDate": "2026-07-18T00:00:00.000Z",
+      "taskDueDate": "2026-12-10T00:00:00.000Z",
+      "estimatedHours": 1,
+      "backlogEstimatedHours": 0,
+      "storyPoints": 0,
+      "progress": 50,
+      "taskDescription": "<p>1. Read Everyday paragraph 5 times.</p><p>2. Learn all new vocabulary.</p><p>3. Understand grammar.</p><p>4. Make 5 new sentences.</p><p>5. Speak for 2–3 minutes.</p><p>6. Record voice.</p><p>7. Listen and note mistakes.</p>",
+      "additionalNotes": "<p>Day 1 - Day 90</p>",
+      "youtubeUrl": "",
+      "attachments": [],
+      "milestone": null,
+      "parentTask": null,
+      "dependentTasks": [],
+      "assignee": "6993047f16e85ff3e4efd9a3",
+      "status": "todo",
+      "holdDate": null,
+      "subtaskStats": {
+        "total": 4,
+        "completed": 2
+      },
+      "createdBy": "6993047f16e85ff3e4efd9a3",
+      "activityLogs": [
+        {
+          "oldStatus": null,
+          "currentStatus": "",
+          "user": "6993047f16e85ff3e4efd9a3",
+          "date": "2026-07-18T16:56:03.776Z",
+          "message": "Task created with status Todo",
+          "_id": "6a5bb023e7a8257ceaea40ed"
+        }
+      ],
+      "branchId": "6a081b6e111c99b633b00d76",
+      "revisionLogs": [],
+      "createdAt": "2026-07-18T16:56:03.778Z",
+      "updatedAt": "2026-07-21T16:50:28.814Z",
+      "updatedBy": "6993047f16e85ff3e4efd9a3"
+    },
+    {
+      "_id": "6a5f9e4de7a8257ceaead034",
+      "projectName": "6a5bae2fe7a8257ceaea3941",
+      "taskName": "Day - 3",
+      "taskId": "ESP-4",
+      "taskPriority": "medium",
+      "taskType": "Preparation",
+      "taskStartDate": "2026-08-19T00:00:00.000Z",
+      "taskDueDate": "2026-11-19T00:00:00.000Z",
+      "estimatedHours": 1,
+      "backlogEstimatedHours": 0,
+      "storyPoints": 0,
+      "progress": 0,
+      "taskDescription": "<ol><li>I wake up at six.</li><li>I drink a glass of water.</li><li>I open the window.</li><li>I breathe the fresh air.</li><li>I eat a healthy breakfast.</li><li>I read a book.</li><li>I study English every day.</li><li>I write in my notebook.</li><li>I learn new words.</li><li>I practice speaking every evening.</li><li>I enjoy my routine.</li><li>I sleep at ten.</li></ol>",
+      "additionalNotes": "",
+      "youtubeUrl": "",
+      "attachments": [],
+      "milestone": null,
+      "parentTask": "6a5bb023e7a8257ceaea40ec",
+      "dependentTasks": [],
+      "assignee": "6993047f16e85ff3e4efd9a3",
+      "status": "todo",
+      "holdDate": null,
+      "subtaskStats": {
+        "total": 0,
+        "completed": 0
+      },
+      "createdBy": "6993047f16e85ff3e4efd9a3",
+      "activityLogs": [
+        {
+          "oldStatus": null,
+          "currentStatus": "",
+          "user": "6993047f16e85ff3e4efd9a3",
+          "date": "2026-07-21T16:29:01.467Z",
+          "message": "Task created with status Todo",
+          "_id": "6a5f9e4de7a8257ceaead035"
+        }
+      ],
+      "branchId": "6a081b6e111c99b633b00d76",
+      "revisionLogs": [],
+      "createdAt": "2026-07-21T16:29:01.472Z",
+      "updatedAt": "2026-07-21T16:29:01.472Z"
+    },
+    {
+      "_id": "6a5fa354e7a8257ceaead800",
+      "projectName": "6a5bae2fe7a8257ceaea3941",
+      "taskName": "Day - 3 Part ii",
+      "taskId": "ESP-5",
+      "taskPriority": "medium",
+      "taskType": "Preparation",
+      "taskStartDate": "2026-08-19T00:00:00.000Z",
+      "taskDueDate": "2026-11-19T00:00:00.000Z",
+      "estimatedHours": 1,
+      "backlogEstimatedHours": 0,
+      "storyPoints": 0,
+      "progress": 0,
+      "taskDescription": "<p>I wake up at 6:00 a.m.</p><p>I take a bath and eat my breakfast before 9:00 a.m.</p><p>After that, I study for two hours. Then, I take a 20-minute break.</p><p>After the break, I study again for two hours.</p><p>At 1:00 p.m., I eat my lunch.</p><p>After lunch, I sleep for two hours.</p><p>At 4:00 p.m., I start studying again for two or three hours.</p><p>At 5:00 p.m., I usually have a cup of tea.</p><p>After finishing my tea, I go to the gym.</p><p>Before 9:00 p.m., I eat my dinner.</p><p>Then, I go to bed at 11:00 p.m.</p>",
+      "additionalNotes": "",
+      "youtubeUrl": "",
+      "attachments": [],
+      "milestone": null,
+      "parentTask": "6a5bb023e7a8257ceaea40ec",
+      "dependentTasks": [],
+      "assignee": "6993047f16e85ff3e4efd9a3",
+      "status": "todo",
+      "holdDate": null,
+      "subtaskStats": {
+        "total": 0,
+        "completed": 0
+      },
+      "createdBy": "6993047f16e85ff3e4efd9a3",
+      "activityLogs": [
+        {
+          "oldStatus": null,
+          "currentStatus": "",
+          "user": "6993047f16e85ff3e4efd9a3",
+          "date": "2026-07-21T16:50:28.539Z",
+          "message": "Task created with status Todo",
+          "_id": "6a5fa354e7a8257ceaead801"
+        }
+      ],
+      "branchId": "6a081b6e111c99b633b00d76",
+      "revisionLogs": [],
+      "createdAt": "2026-07-21T16:50:28.541Z",
+      "updatedAt": "2026-07-21T16:50:28.541Z"
+    }
+  ],
+  "notes": [
+    {
+      "_id": "6a5bb1f5e7a8257ceaea4b7b",
+      "userId": "6993047f16e85ff3e4efd9a3",
+      "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>English Learning Notes</title>\n    <style>\n        :root {\n            --primary-color: #2c3e50;\n            --secondary-color: #3498db;\n            --bg-color: #f8f9fa;\n            --card-bg: #ffffff;\n            --text-color: #333333;\n            --accent-color: #e74c3c;\n        }\n\n        body {\n            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n            background-color: var(--bg-color);\n            color: var(--text-color);\n            line-height: 1.6;\n            margin: 0;\n            padding: 20px;\n        }\n\n        .container {\n            background: var(--card-bg);\n            padding: 30px;\n            box-shadow: 0 4px 15px rgba(0,0,0,0.05);\n        }\n\n        header {\n            text-align: center;\n            border-bottom: 3px solid var(--secondary-color);\n            padding-bottom: 20px;\n            margin-bottom: 30px;\n        }\n\n        h1 {\n            color: var(--primary-color);\n            margin: 0;\n        }\n\n        .today-sentence {\n            background-color: #e8f4fd;\n            border-left: 5px solid var(--secondary-color);\n            padding: 15px;\n            font-style: italic;\n            font-size: 1.1em;\n            margin-bottom: 30px;\n        }\n\n        h2 {\n            color: var(--primary-color);\n            border-bottom: 2px solid #eaeded;\n            padding-bottom: 8px;\n            margin-top: 30px;\n        }\n\n        table {\n            width: 100%;\n            border-collapse: collapse;\n            margin: 15px 0;\n        }\n\n        th, td {\n            border: 1px solid #eaeded;\n            padding: 12px;\n            text-align: left;\n        }\n\n        th {\n            background-color: var(--primary-color);\n            color: white;\n        }\n\n        tr:nth-child(even) {\n            background-color: #f9f9f9;\n        }\n\n        .note-box {\n            background-color: #fff9e6;\n            border-left: 5px solid #f1c40f;\n            padding: 15px;\n            margin: 15px 0;\n            border-radius: 4px;\n        }\n\n        .quiz-section {\n            background-color: #fdf2e9;\n            border-left: 5px solid #e67e22;\n            padding: 15px;\n            margin-top: 20px;\n            border-radius: 4px;\n        }\n\n        .badge {\n            background-color: var(--secondary-color);\n            color: white;\n            padding: 3px 8px;\n            border-radius: 4px;\n            font-size: 0.85em;\n            font-weight: bold;\n        }\n\n        .btn {\n            background-color: var(--secondary-color);\n            color: white;\n            border: none;\n            padding: 10px 15px;\n            border-radius: 5px;\n            cursor: pointer;\n            font-weight: bold;\n            margin-top: 10px;\n        }\n\n        .btn:hover {\n            background-color: #2980b9;\n        }\n\n        .hidden-answer {\n            display: none;\n            margin-top: 10px;\n            padding: 10px;\n            background: #d4edda;\n            color: #155724;\n            border-radius: 4px;\n        }\n    </style>\n</head>\n<body>\n\n<div class=\"container\">\n    <header>\n        <p>Focus: Daily Routines & Intentions</p>\n    </header>\n\n    <section>\n        <h2>Today's Base Paragraph</h2>\n        <div class=\"today-sentence\">\n            \"My name is ____. I wake up early every day. I study English for thirty minutes because I want to speak confidently.\"\n        </div>\n    </section>\n\n    <section>\n        <h2>1. Vocabulary Breakdown (Verb Forms)</h2>\n        <p>Verbs change depending on <strong>when</strong> the action happens. Here are the verbs from your paragraph:</p>\n        \n        <table>\n            <thead>\n                <tr>\n                    <th>Base Form (V1)</th>\n                    <th>Past Simple (V2)</th>\n                    <th>Past Participle (V3)</th>\n                    <th>Continuous (-ing)</th>\n                    <th>Meaning / Note</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr>\n                    <td><strong>Wake</strong></td>\n                    <td>Woke</td>\n                    <td>Woken</td>\n                    <td>Waking</td>\n                    <td>To stop sleeping. (Usually used as \"wake up\")</td>\n                </tr>\n                <tr>\n                    <td><strong>Study</strong></td>\n                    <td>Studied</td>\n                    <td>Studied</td>\n                    <td>Studying</td>\n                    <td>To learn a subject.</td>\n                </tr>\n                <tr>\n                    <td><strong>Want</strong></td>\n                    <td>Wanted</td>\n                    <td>Wanted</td>\n                    <td>Wanting</td>\n                    <td>To desire something.</td>\n                </tr>\n                <tr>\n                    <td><strong>Speak</strong></td>\n                    <td>Spoke</td>\n                    <td>Spoken</td>\n                    <td>Speaking</td>\n                    <td>To talk / express ideas.</td>\n                </tr>\n            </tbody>\n        </table>\n    </section>\n\n    <section>\n        <h2>2. Grammar Focus: The Pronoun \"I\"</h2>\n        <div class=\"note-box\">\n            <strong>Rule 1: Always Capitalized</strong><br>\n            No matter where \"I\" is in a sentence (beginning, middle, or end), it must <strong>always</strong> be a capital letter. Never write it as a lowercase \"i\".\n            <br><br>\n            <strong>Rule 2: When & Why to Use It</strong><br>\n            Use \"I\" when you are the person performing the action (the subject). \n            <ul>\n                <li><em>Example:</em> <strong>I</strong> study English. (Correct)</li>\n                <li><em>Example:</em> Me study English. (Incorrect - \"me\" is used when the action happens <em>to</em> you).</li>\n            </ul>\n        </div>\n    </section>\n\n    <section>\n        <h2>3. Tense Analysis: Present Simple</h2>\n        <p>Paragraph uses the <strong>Present Simple Tense</strong> (<span class=\"badge\">Subject + V1</span>).</p>\n        <p><strong>Why did you use it here?</strong> Because you are talking about <strong>habits, routines, and permanent facts</strong> (\"every day\").</p>\n        \n        <div class=\"note-box\" style=\"background-color: #eaf2f8; border-left-color: #3498db;\">\n            <strong>Pro-Tip for Speaking:</strong> If the subject is <em>He, She, or It</em>, you must add an <strong>-s</strong> or <strong>-es</strong> to the verb!\n            <ul>\n                <li><strong>I</strong> wake up early. -> <strong>He</strong> wake<u>s</u> up early.</li>\n                <li><strong>I</strong> study English. -> <strong>She</strong> studi<u>es</u> English.</li>\n            </ul>\n        </div>\n    </section>\n\n    <section>\n        <h2>4. Sentence Expansion (Create New Sentences)</h2>\n        <p>Try using your exact sentence structure to talk about different habits:</p>\n        <ul>\n            <li>\"I <strong>go to the gym</strong> every day because I want to <strong>stay healthy</strong>.\"</li>\n            <li>\"I <strong>read books</strong> for thirty minutes because I want to <strong>learn new things</strong>.\"</li>\n        </ul>\n    </section>\n\n    <section class=\"quiz-section\">\n        <h2>5. Today's Quiz & Tasks</h2>\n        <p><strong>Task 1: Change the Subject</strong><br>Rewrite your paragraph as if you are talking about your friend, Sarah. (Remember the -s rule!)</p>\n        \n        <p><strong>Task 2: Multiple Choice</strong><br>Which sentence is grammatically correct?</p>\n        <label><input type=\"radio\" name=\"q1\"> a) Yesterday, I wake up early.</label><br>\n        <label><input type=\"radio\" name=\"q1\"> b) Every day, he study English.</label><br>\n        <label><input type=\"radio\" name=\"q1\"> c) I practice speaking every day because I want to improve.</label><br>\n        \n        <button class=\"btn\" onclick=\"toggleAnswer()\">Show Answers</button>\n        \n        <div id=\"answer\" class=\"hidden-answer\">\n            <strong>Task 1 Answer:</strong> \"Her name is Sarah. She wake<u>s</u> up early every day. She studi<u>es</u> English for thirty minutes because she want<u>s</u> to speak confidently.\"<br><br>\n            <strong>Task 2 Answer:</strong> <strong>c</strong> (a is wrong because \"yesterday\" needs past tense \"woke\"; b is wrong because \"he\" needs \"studies\").\n        </div>\n    </section>\n</div>\n\n<script>\n    function toggleAnswer() {\n        var x = document.getElementById(\"answer\");\n        if (x.style.display === \"block\") {\n            x.style.display = \"none\";\n        } else {\n            x.style.display = \"block\";\n        }\n    }\n</script>\n\n</body>\n</html>",
+      "imageUrl": "",
+      "color": "#fef08a",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "size": {
+        "width": 380,
+        "height": 350
+      },
+      "isPinned": false,
+      "title": "Day - 1",
+      "tags": [],
+      "taskId": "6a5bafc9e7a8257ceaea3cdc",
+      "taskIds": [],
+      "createdAt": "2026-07-18T17:03:49.991Z",
+      "updatedAt": "2026-07-19T17:34:34.369Z"
+    },
+    {
+      "_id": "6a5ce2c3e7a8257ceaea7773",
+      "userId": "6993047f16e85ff3e4efd9a3",
+      "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>My English Speaking Coach</title>\n    <style>\n        body {\n            font-family: 'Segoe UI', Arial, sans-serif;\n            background-color: #f5f7fa;\n            color: #333333;\n            line-height: 1.6;\n            margin: 0;\n            padding: 30px 15px;\n        }\n\n        .lesson-container {\n            background: #ffffff;\n            padding: 40px;\n            border-radius: 12px;\n            box-shadow: 0 4px 15px rgba(0,0,0,0.05);\n        }\n\n        header {\n            text-align: center;\n            border-bottom: 3px solid #3498db;\n            padding-bottom: 15px;\n            margin-bottom: 30px;\n        }\n\n        h1 {\n            color: #2c3e50;\n            margin: 0;\n            font-size: 2.2rem;\n        }\n\n        .coach-tip {\n            color: #7f8c8d;\n            font-size: 1.1rem;\n            margin-top: 5px;\n        }\n\n        .paragraph-box {\n            background-color: #e8f4f8;\n            border-left: 6px solid #3498db;\n            padding: 20px;\n            font-size: 1.2rem;\n            font-weight: 500;\n            margin-bottom: 35px;\n            border-radius: 4px;\n        }\n\n        h2 {\n            color: #2c3e50;\n            font-size: 1.5rem;\n            border-bottom: 2px solid #ecf0f1;\n            padding-bottom: 5px;\n            margin-top: 40px;\n        }\n\n        h3 {\n            color: #34495e;\n            font-size: 1.2rem;\n            margin-top: 20px;\n        }\n\n        .highlight-box {\n            background-color: #fff9db;\n            border-left: 4px solid #f1c40f;\n            padding: 15px;\n            margin: 15px 0;\n            border-radius: 4px;\n        }\n\n        .practice-box {\n            background-color: #e8f8f5;\n            border-left: 4px solid #2ecc71;\n            padding: 15px;\n            margin: 15px 0;\n            border-radius: 4px;\n        }\n\n        table {\n            width: 100%;\n            border-collapse: collapse;\n            margin: 20px 0;\n        }\n\n        th, td {\n            padding: 12px;\n            border: 1px solid #e2e8f0;\n            text-align: left;\n        }\n\n        th {\n            background-color: #34495e;\n            color: white;\n        }\n\n        tr:nth-child(even) {\n            background-color: #f8f9fa;\n        }\n\n        .btn {\n            background-color: #3498db;\n            color: white;\n            border: none;\n            padding: 8px 16px;\n            border-radius: 4px;\n            cursor: pointer;\n            font-weight: bold;\n            margin-top: 10px;\n        }\n\n        .btn:hover {\n            background-color: #2980b9;\n        }\n\n        .hidden-answer {\n            display: none;\n            background-color: #eaedd5;\n            padding: 15px;\n            margin-top: 10px;\n            border-radius: 4px;\n            border-left: 4px solid #27ae60;\n        }\n\n        .quiz-card {\n            background-color: #fdf2e9;\n            border: 1px solid #e67e22;\n            border-radius: 8px;\n            padding: 20px;\n            margin-top: 30px;\n        }\n\n        .quiz-item {\n            margin-bottom: 15px;\n        }\n\n        .quiz-options label {\n            display: block;\n            margin: 5px 0;\n            cursor: pointer;\n        }\n\n        .feedback {\n            font-weight: bold;\n            margin-top: 5px;\n            display: none;\n        }\n    </style>\n</head>\n<body>\n\n<div class=\"lesson-container\">\n    <header>\n        <p class=\"coach-tip\">Focus: Speaking Naturally About Your Day</p>\n    </header>\n\n    <!-- Today's Paragraph -->\n    <div class=\"paragraph-box\">\n        \"Every morning, I wake up at 6 o'clock because I want to improve myself. First, I drink a glass of water and then I go for a short walk. Although I sometimes feel tired, I never skip my routine because I know small habits lead to big success. After I come home, I study English for thirty minutes before I start my work. Learning every day makes me more confident, and I believe consistency is more important than perfection.\"\n    </div>\n\n    <!-- Section 1: Simple Meaning -->\n    <h2>1. The Big Picture (What it means)</h2>\n    <p>This paragraph is about a simple morning routine built to help you grow. The speaker does a few things in a specific order: gets up early, drinks water, goes for a walk, and studies English before starting their job. Even when they are tired, they keep going because they believe that doing something regularly matters more than doing it perfectly.</p>\n\n    <!-- NEW SECTION: Verb Forms Discovery -->\n    <h2>2. Verb Forms Discovery (Action Shifters)</h2>\n    <p>Verbs are the engine of your speech. To change <strong>when</strong> an action happened (past, present, or continuous), you must know how the verb changes shape. Here are the core verbs pulled directly from your paragraph:</p>\n    \n    <table>\n        <thead>\n            <tr>\n                <th>Base Form (V1) <br><small>Present / Routine</small></th>\n                <th>Past Simple (V2) <br><small>Yesterday / Completed</small></th>\n                <th>Past Participle (V3) <br><small>Perfect / Completed Life Experience</small></th>\n                <th>Continuous (-ing) <br><small>Action Happening Now</small></th>\n                <th>Speaking Tip</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <td><strong>Wake (up)</strong></td>\n                <td>Woke (up)</td>\n                <td>Woken (up)</td>\n                <td>Waking (up)</td>\n                <td>Say \"I woke up late yesterday\" to talk about the past.</td>\n            </tr>\n            <tr>\n                <td><strong>Want</strong></td>\n                <td>Wanted</td>\n                <td>Wanted</td>\n                <td>Wanting</td>\n                <td>Native speakers rarely say \"I am wanting.\" Stick to \"I want.\"</td>\n            </tr>\n            <tr>\n                <td><strong>Improve</strong></td>\n                <td>Improved</td>\n                <td>Improved</td>\n                <td>Improving</td>\n                <td>Add a clean 'd' sound at the end for past tense: /ɪmˈpruːvd/.</td>\n            </tr>\n            <tr>\n                <td><strong>Drink</strong></td>\n                <td>Drank</td>\n                <td>Drunk</td>\n                <td>Drinking</td>\n                <td>Make sure to shift the vowel clear from 'i' to 'a' for the past form.</td>\n            </tr>\n            <tr>\n                <td><strong>Go</strong></td>\n                <td>Went</td>\n                <td>Gone</td>\n                <td>Going</td>\n                <td>\"Went\" is completely irregular. Practice saying \"I went for a walk.\"</td>\n            </tr>\n            <tr>\n                <td><strong>Feel</strong></td>\n                <td>Felt</td>\n                <td>Felt</td>\n                <td>Feeling</td>\n                <td>Shorten the vowel sound when moving from \"feel\" to \"felt.\"</td>\n            </tr>\n            <tr>\n                <td><strong>Skip</strong></td>\n                <td>Skipped</td>\n                <td>Skipped</td>\n                <td>Skipping</td>\n                <td>Double the letter 'p' when writing the past or continuous forms.</td>\n            </tr>\n            <tr>\n                <td><strong>Know</strong></td>\n                <td>Knew</td>\n                <td>Known</td>\n                <td>Knowing</td>\n                <td>The letter 'K' is completely silent in all of these forms.</td>\n            </tr>\n            <tr>\n                <td><strong>Lead</strong></td>\n                <td>Led</td>\n                <td>Led</td>\n                <td>Leading</td>\n                <td>Pronounced exactly like the past form of the word \"read\" (Red).</td>\n            </tr>\n            <tr>\n                <td><strong>Come</strong></td>\n                <td>Came</td>\n                <td>Come</td>\n                <td>Coming</td>\n                <td>Notice that the V1 and V3 forms are spelled exactly the same way.</td>\n            </tr>\n            <tr>\n                <td><strong>Study</strong></td>\n                <td>Studied</td>\n                <td>Studied</td>\n                <td>Studying</td>\n                <td>Change the 'y' to 'ied' for past forms.</td>\n            </tr>\n            <tr>\n                <td><strong>Start</strong></td>\n                <td>Started</td>\n                <td>Started</td>\n                <td>Starting</td>\n                <td>Pronounce the past ending with an extra clear syllable: /id/.</td>\n            </tr>\n            <tr>\n                <td><strong>Make</strong></td>\n                <td>Made</td>\n                <td>Made</td>\n                <td>Making</td>\n                <td>A vital high-frequency verb for daily work updates.</td>\n            </tr>\n            <tr>\n                <td><strong>Believe</strong></td>\n                <td>Believed</td>\n                <td>Believed</td>\n                <td>Believing</td>\n                <td>Gently bite your lower lip on the 'v' sound at the end.</td>\n            </tr>\n        </tbody>\n    </table>\n\n    <!-- Section 3: Useful Vocabulary -->\n    <h2>3. Real-Life Vocabulary (Words you will actually use)</h2>\n    <table>\n        <thead>\n            <tr>\n                <th>Word & Type</th>\n                <th>How to Say It & Meaning</th>\n                <th>Words that go together (Collocations)</th>\n                <th>Natural Examples for Speaking</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <td><strong>Consistency</strong><br><small>Noun</small></td>\n                <td>/kənˈsɪs.tən.si/<br><br>Doing the same thing regularly to get results.</td>\n                <td>Great consistency, lack of consistency.</td>\n                <td>1. Consistency is the secret to learning a language.<br>2. Your speaking improves with consistency.<br>3. I struggle with consistency when I am busy.</td>\n            </tr>\n            <tr>\n                <td><strong>Routine</strong><br><small>Noun</small></td>\n                <td>/ruːˈtiːn/<br><br>Your usual fix of daily habits.</td>\n                <td>Morning routine, daily routine, stick to a routine.</td>\n                <td>1. I need to fix my morning routine.<br>2. Going to the gym is part of my routine.<br>3. Don't break your routine on weekends.</td>\n            </tr>\n            <tr>\n                <td><strong>Improve</strong><br><small>Verb</small></td>\n                <td>/ɪmˈpruːv/<br><br>To make something better than it was before.</td>\n                <td>Want to improve, drastically improve.</td>\n                <td>1. I really want to improve my speaking skills.<br>2. You can improve by practicing every day.<br>3. The weather is starting to improve.</td>\n            </tr>\n        </tbody>\n    </table>\n\n    <!-- Section 4: Grammar Discovery -->\n    <h2>4. Grammar Discovery: Turning Actions into Names (-ing Words)</h2>\n    <p>Look at this part of your paragraph: <em>\"<strong>Learning</strong> every day makes me more confident...\"</em></p>\n    <ul>\n        <li><strong>What is it?</strong> We call this a <strong>Gerund</strong>. It is just a verb with \"-ing\" added to it, but it acts like a regular noun (a name of a thing).</li>\n        <li><strong>Why is it used here?</strong> The speaker wants to talk about the *concept* of learning as a single habit that brings a result.</li>\n        <li><strong>When to use it:</strong> Use it whenever you want to start a sentence with an activity as the main topic. (e.g., Cooking is fun, Running is hard).</li>\n        <li><strong>When NOT to use it:</strong> Do not use it if you are talking about an action you are doing right now. (Say \"I am learning right now,\" NOT \"Learning right now\").</li>\n        <li><strong>Formula:</strong> <mark>Action-ing + Verb with 's' + Object</mark></li>\n    </ul>\n\n    <div class=\"highlight-box\">\n        <strong>Common Mistake:</strong><br>\n        ❌ <em>Speak English daily makes me confident.</em><br>\n        ✅ <strong>Speaking</strong> English daily <strong>makes</strong> me confident. (Always add -ing when the action is the subject, and add 's' to the next verb!).\n    </div>\n\n    <h4>5 Natural Examples to Use While Speaking:</h4>\n    <ol>\n        <li><strong>Waking</strong> up early gives me more free time.</li>\n        <li><strong>Practicing</strong> daily helps me talk faster.</li>\n        <li><strong>Reading</strong> books expands my vocabulary.</li>\n        <li><strong>Drinking</strong> water keeps me energized.</li>\n        <li><strong>Skipping</strong> meals makes me feel tired.</li>\n    </ol>\n\n    <!-- Section 5: Tiny Words -->\n    <h2>5. The Tiny Words (Fluency Boosters)</h2>\n    <ul>\n        <li><strong>at (at 6 o'clock):</strong> Used because it marks an exact spot on the clock.</li>\n        <li><strong>for (for thirty minutes):</strong> Used to show how long an action lasted (a block of time).</li>\n        <li><strong>although (Although I feel tired):</strong> Used to connect a problem with an action that happened anyway. (Note: Never use \"but\" in the same sentence with although!).</li>\n        <li><strong>because (because I want to):</strong> Used to give the direct reason for your action.</li>\n    </ul>\n\n    <!-- Section 6: Sentence Patterns -->\n    <h2>6. Sentence Blueprints (Copy and Paste These)</h2>\n    <p>Try using these exact patterns to talk about different areas of your life:</p>\n    <ul>\n        <li><strong>Pattern 1: \"After I [Action 1], I [Action 2] before I start my work.\"</strong>\n            <br><em>Your new example:</em> \"After I drink coffee, I check my schedule before I start my work.\"\n        </li>\n        <li><strong>Pattern 2: \"Although I sometimes feel [Negative Feeling], I never skip [My Habit].\"</strong>\n            <br><em>Your new example:</em> \"Although I sometimes feel lazy, I never skip my gym session.\"\n        </li>\n    </ul>\n\n    <!-- Section 7: Tenses -->\n    <h2>7. Tense Check: Why Present Simple?</h2>\n    <p>This paragraph uses the <strong>Present Simple Tense</strong> (I wake up, I drink, I study). We use this because we are talking about <strong>permanent habits and routines</strong>. We do NOT use the Present Continuous (\"I am waking up\") because you aren't describing what you are doing at this exact second; you are describing your life style.</p>\n\n    <!-- Section 8: Speaking Practice -->\n    <h2>8. Speaking & Pronunciation Room</h2>\n    <div class=\"practice-box\">\n        <strong>1. Word Stress (Say it loud):</strong><br>\n        When speaking, put extra energy on the most important words: \"Every <strong>MORNING</strong>, I wake up at <strong>SIX</strong> o'clock...\"\n        <br><br>\n        <strong>2. Shadowing Exercise:</strong><br>\n        Read the sentence along with a timer. Try to group words together naturally without stopping: <em>\"Although I sometimes feel tired... [pause] ...I never skip my routine.\"</em>\n    </div>\n\n    <!-- Section 9: Quick Writing & Correction Labs -->\n    <h2>9. Quick Writing & Correction Labs</h2>\n    <div class=\"exercise-card\">\n        <p><strong>Fix the Error:</strong> \"Every day, swim keeps me healthy and happy.\"</p>\n        <button class=\"btn\" onclick=\"toggleAnswer('e1')\">Show Coach Answer</button>\n        <div id=\"e1\" class=\"hidden-answer\"><strong>Correction:</strong> \"Every day, <strong>swimming keeps</strong> me healthy and happy.\" (Needs the -ing form as the subject).</div>\n    </div>\n\n    <!-- Section 10: Revision Connect -->\n    <h2>10. Moving Forward (70% Old + 30% New)</h2>\n    <p>In our last lesson, you learned basic sentences like *\"I study English.\"* Today, we took that exact idea and added **Time Markers** (*First, then, after*) and **Obstacles** (*Although I feel tired*). Next time, we will use these same habits to talk about what you *used* to do in the past.</p>\n\n    <!-- Section 11: Your Homework (20 Minutes) -->\n    <h2>11. Tonight's Homework Challenge</h2>\n    <ol>\n        <li><strong>Speaking (5 mins):</strong> Look in the mirror and say your paragraph out loud 3 times without looking at the paper.</li>\n        <li><strong>Writing (10 mins):</strong> Use Blueprint 2 to write one sentence about a habit you do even when you are busy or lazy.</li>\n        <li><strong>Quiz (5 mins):</strong> Complete the 3 interactive questions below!</li>\n    </ol>\n\n    <!-- Interactive Quiz Engine -->\n    <div class=\"quiz-card\">\n        <h3>Quick Fluency Check</h3>\n        \n        <div class=\"quiz-item\">\n            <p>1. Which sentence sounds natural and correct?</p>\n            <label><input type=\"radio\" name=\"q1\" value=\"wrong\"> Although it was hot, but he went for a walk.</label>\n            <label><input type=\"radio\" name=\"q1\" value=\"right\"> Although it was hot, he went for a walk.</label>\n        </div>\n\n        <div class=\"quiz-item\">\n            <p>2. Fill the blank: \"________ every day helps me speak clearly.\"</p>\n            <label><input type=\"radio\" name=\"q2\" value=\"wrong\"> Practice</label>\n            <label><input type=\"radio\" name=\"q2\" value=\"right\"> Practicing</label>\n        </div>\n\n        <div class=\"quiz-item\">\n            <p>3. Yesterday, I ________ three glasses of water before lunch.</p>\n            <label><input type=\"radio\" name=\"q3\" value=\"right\"> drank (V2)</label>\n            <label><input type=\"radio\" name=\"q3\" value=\"wrong\"> drink (V1)</label>\n        </div>\n\n        <button class=\"btn\" style=\"background-color: #e67e22;\" onclick=\"checkAnswers()\">Check My Score</button>\n        <div id=\"quiz-result\" style=\"margin-top: 15px; font-weight: bold; color: #2c3e50;\"></div>\n    </div>\n</div>\n\n<script>\n    function toggleAnswer(id) {\n        var x = document.getElementById(id);\n        x.style.display = (x.style.display === \"block\") ? \"none\" : \"block\";\n    }\n\n    function checkAnswers() {\n        let score = 0;\n        if(document.querySelector('input[name=\"q1\"]:checked')?.value === 'right') score++;\n        if(document.querySelector('input[name=\"q2\"]:checked')?.value === 'right') score++;\n        if(document.querySelector('input[name=\"q3\"]:checked')?.value === 'right') score++;\n        \n        document.getElementById('quiz-result').innerText = \"You scored \" + score + \" out of 3! Keep practicing out loud!\";\n    }\n</script>\n\n</body>\n</html>",
+      "imageUrl": "",
+      "color": "#fef08a",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "size": {
+        "width": 380,
+        "height": 350
+      },
+      "isPinned": false,
+      "title": "Day - 2",
+      "tags": [],
+      "taskId": "6a5ce253e7a8257ceaea6a2c",
+      "taskIds": [],
+      "createdAt": "2026-07-19T14:44:19.209Z",
+      "updatedAt": "2026-07-19T17:26:48.948Z"
+    },
+    {
+      "_id": "6a5f9eabe7a8257ceaead43c",
+      "userId": "6993047f16e85ff3e4efd9a3",
+      "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>English Learning</title>\n    <style>\n        body {\n            font-family: 'Segoe UI', Arial, sans-serif;\n            background-color: #f5f7fa;\n            color: #333333;\n            line-height: 1.6;\n            margin: 0;\n            padding: 30px 15px;\n        }\n\n        .lesson-container {\n            background: #ffffff;\n            padding: 40px;\n            border-radius: 12px;\n            box-shadow: 0 4px 15px rgba(0,0,0,0.05);\n        }\n\n        header {\n            text-align: center;\n            border-bottom: 3px solid #3498db;\n            padding-bottom: 15px;\n            margin-bottom: 30px;\n        }\n\n        h1 {\n            color: #2c3e50;\n            margin: 0;\n            font-size: 2.2rem;\n        }\n\n        .coach-tip {\n            color: #7f8c8d;\n            font-size: 1.1rem;\n            margin-top: 5px;\n        }\n\n        .paragraph-box {\n            background-color: #e8f4f8;\n            border-left: 6px solid #3498db;\n            padding: 20px;\n            font-size: 1.2rem;\n            font-weight: 500;\n            margin-bottom: 35px;\n            border-radius: 4px;\n        }\n\n        h2 {\n            color: #2c3e50;\n            font-size: 1.5rem;\n            border-bottom: 2px solid #ecf0f1;\n            padding-bottom: 5px;\n            margin-top: 40px;\n        }\n\n        h3 {\n            color: #34495e;\n            font-size: 1.2rem;\n            margin-top: 20px;\n        }\n\n        .highlight-box {\n            background-color: #fff9db;\n            border-left: 4px solid #f1c40f;\n            padding: 15px;\n            margin: 15px 0;\n            border-radius: 4px;\n        }\n\n        .practice-box {\n            background-color: #e8f8f5;\n            border-left: 4px solid #2ecc71;\n            padding: 15px;\n            margin: 15px 0;\n            border-radius: 4px;\n        }\n\n        table {\n            width: 100%;\n            border-collapse: collapse;\n            margin: 20px 0;\n        }\n\n        th, td {\n            padding: 12px;\n            border: 1px solid #e2e8f0;\n            text-align: left;\n        }\n\n        th {\n            background-color: #34495e;\n            color: white;\n        }\n\n        tr:nth-child(even) {\n            background-color: #f8f9fa;\n        }\n\n        .btn {\n            background-color: #3498db;\n            color: white;\n            border: none;\n            padding: 8px 16px;\n            border-radius: 4px;\n            cursor: pointer;\n            font-weight: bold;\n            margin-top: 10px;\n        }\n\n        .btn:hover {\n            background-color: #2980b9;\n        }\n\n        .hidden-answer {\n            display: none;\n            background-color: #eaedd5;\n            padding: 15px;\n            margin-top: 10px;\n            border-radius: 4px;\n            border-left: 4px solid #27ae60;\n        }\n\n        .quiz-card {\n            background-color: #fdf2e9;\n            border: 1px solid #e67e22;\n            border-radius: 8px;\n            padding: 20px;\n            margin-top: 30px;\n        }\n\n        .quiz-item {\n            margin-bottom: 15px;\n        }\n\n        .quiz-options label {\n            display: block;\n            margin: 5px 0;\n            cursor: pointer;\n        }\n\n        .exercise-card {\n            background-color: #f8f9fa;\n            border: 1px solid #e2e8f0;\n            border-radius: 6px;\n            padding: 15px;\n            margin-bottom: 15px;\n        }\n    </style>\n</head>\n<body>\n\n<div class=\"lesson-container\">\n    <header>\n        <p class=\"coach-tip\">Day - 3 • Expressing Daily Habits Step-by-Step</p>\n    </header>\n\n    <!-- Today's Paragraph -->\n    <div class=\"paragraph-box\">\n        \"I wake up at six. I drink a glass of water. I open the window. I breathe the fresh air. I eat a healthy breakfast. I read a book. I study English every day. I write in my notebook. I learn new words. I practice speaking every evening. I enjoy my routine. I sleep at ten.\"\n    </div>\n\n    <!-- Section 1: Simple Meaning -->\n    <h2>1. The Big Picture (What it means)</h2>\n    <p>This paragraph walks through a complete, healthy day from start to finish. It outlines a step-by-step habit loop: waking up early at 6 AM, refreshing the body and mind (water, fresh air, healthy breakfast), dedicating focused time to self-improvement (reading, writing, practicing English), and ending the day peacefully with sleep at 10 PM.</p>\n\n    <!-- Section 2: Verb Forms Discovery -->\n    <h2>2. Verb Forms Discovery (Action Engine)</h2>\n    <p>Here are all 12 action verbs from today's paragraph. Mastering these forms allows you to effortlessly shift your story between what you do every day (V1) and what you did yesterday (V2):</p>\n\n    <table>\n        <thead>\n            <tr>\n                <th>Base Form (V1) <br><small>Habit / Everyday</small></th>\n                <th>Past Simple (V2) <br><small>Yesterday / Past</small></th>\n                <th>Past Participle (V3) <br><small>Completed Action</small></th>\n                <th>Continuous (-ing) <br><small>Action Happening Now</small></th>\n                <th>Speaking Tip</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <td><strong>Wake</strong></td>\n                <td>Woke</td>\n                <td>Woken</td>\n                <td>Waking</td>\n                <td>Usually paired with \"up\": \"I wake up early.\"</td>\n            </tr>\n            <tr>\n                <td><strong>Drink</strong></td>\n                <td>Drank</td>\n                <td>Drunk</td>\n                <td>Drinking</td>\n                <td>Notice the vowel shift: Drink (present) $\\rightarrow$ Drank (past).</td>\n            </tr>\n            <tr>\n                <td><strong>Open</strong></td>\n                <td>Opened</td>\n                <td>Opened</td>\n                <td>Opening</td>\n                <td>Soft 'd' sound at the end in past tense: /oʊpənd/.</td>\n            </tr>\n            <tr>\n                <td><strong>Breathe</strong></td>\n                <td>Breathed</td>\n                <td>Breathed</td>\n                <td>Breathing</td>\n                <td>Ends with a soft 'th' sound. Don't confuse with the noun \"breath.\"</td>\n            </tr>\n            <tr>\n                <td><strong>Eat</strong></td>\n                <td>Ate</td>\n                <td>Eaten</td>\n                <td>Eating</td>\n                <td>Past form \"ate\" is pronounced like the number \"eight.\"</td>\n            </tr>\n            <tr>\n                <td><strong>Read</strong></td>\n                <td>Read</td>\n                <td>Read</td>\n                <td>Reading</td>\n                <td>Spelled the same in past, but pronounced like the color \"red\"!</td>\n            </tr>\n            <tr>\n                <td><strong>Study</strong></td>\n                <td>Studied</td>\n                <td>Studied</td>\n                <td>Studying</td>\n                <td>Drop the 'y' and add 'ied' for the past tense.</td>\n            </tr>\n            <tr>\n                <td><strong>Write</strong></td>\n                <td>Wrote</td>\n                <td>Written</td>\n                <td>Writing</td>\n                <td>The 'W' is silent! Pronounce as \"rite\" and \"rote.\"</td>\n            </tr>\n            <tr>\n                <td><strong>Learn</strong></td>\n                <td>Learned / Learnt</td>\n                <td>Learned / Learnt</td>\n                <td>Learning</td>\n                <td>Both \"learned\" and \"learnt\" are correct and natural.</td>\n            </tr>\n            <tr>\n                <td><strong>Practice</strong></td>\n                <td>Practiced</td>\n                <td>Practiced</td>\n                <td>Practicing</td>\n                <td>Ends with a soft 'st' sound in the past tense: /ˈpræktɪst/.</td>\n            </tr>\n            <tr>\n                <td><strong>Enjoy</strong></td>\n                <td>Enjoyed</td>\n                <td>Enjoyed</td>\n                <td>Enjoying</td>\n                <td>Stress the second syllable: en-JOY.</td>\n            </tr>\n            <tr>\n                <td><strong>Sleep</strong></td>\n                <td>Slept</td>\n                <td>Slept</td>\n                <td>Sleeping</td>\n                <td>Vowel shortens in the past: Sleep $\\rightarrow$ Slept.</td>\n            </tr>\n        </tbody>\n    </table>\n\n    <!-- Section 3: Useful Vocabulary -->\n    <h2>3. Real-Life Vocabulary (Useful Daily Words)</h2>\n    <table>\n        <thead>\n            <tr>\n                <th>Word & Type</th>\n                <th>How to Say It & Meaning</th>\n                <th>Words that go together (Collocations)</th>\n                <th>Natural Examples for Speaking</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <td><strong>Healthy</strong><br><small>Adjective</small></td>\n                <td>/ˈhel.θi/<br><br>Good for your body and mind.</td>\n                <td>Healthy breakfast, healthy lifestyle, healthy habit.</td>\n                <td>1. I try to eat a healthy breakfast every morning.<br>2. Walking daily is a healthy habit.<br>3. Staying hydrated keeps you healthy.</td>\n            </tr>\n            <tr>\n                <td><strong>Practice</strong><br><small>Verb</small></td>\n                <td>/ˈpræk.tɪs/<br><br>Doing an activity regularly to become good at it.</td>\n                <td>Practice speaking, practice daily, need to practice.</td>\n                <td>1. I practice speaking English with my friends.<br>2. You must practice if you want to improve.<br>3. I practice playing guitar after work.</td>\n            </tr>\n            <tr>\n                <td><strong>Routine</strong><br><small>Noun</small></td>\n                <td>/ruːˈtiːn/<br><br>A fixed set of actions you do regularly.</td>\n                <td>Daily routine, enjoy my routine, stick to a routine.</td>\n                <td>1. I really enjoy my morning routine.<br>2. Having a routine saves time.<br>3. My routine changes on weekends.</td>\n            </tr>\n        </tbody>\n    </table>\n\n    <!-- Section 4: Grammar Discovery -->\n    <h2>4. Grammar Discovery: Connecting Actions with \"-ing\" Words</h2>\n    <p>In our last lesson, we learned how Gerunds act as subjects (e.g., <em>\"Learning every day makes me confident\"</em>). Today, look at another natural way we use \"-ing\" after verbs like <strong>practice</strong> or <strong>enjoy</strong>!</p>\n\n    <ul>\n        <li><strong>What is it?</strong> When one action verb follows words like <em>practice</em>, <em>enjoy</em>, or <em>stop</em>, the second verb MUST take \"-ing\".</li>\n        <li><strong>Why is it used here?</strong> In <em>\"I practice speaking,\"</em> the word \"speaking\" acts as the thing/activity you are practicing.</li>\n        <li><strong>When to use it:</strong> Whenever you describe an activity that you practice, enjoy, finish, or keep doing.</li>\n        <li><strong>When NOT to use it:</strong> Don't use \"to\" between these verbs (Do NOT say \"I practice to speak\").</li>\n        <li><strong>Formula:</strong> <mark>Subject + Practice / Enjoy + Verb-ing</mark></li>\n    </ul>\n\n    <div class=\"highlight-box\">\n        <strong>Common Mistake:</strong><br>\n        ❌ <em>I practice speak English every evening.</em> / <em>I practice to speak English.</em><br>\n        ✅ <strong>I practice speaking</strong> English every evening.\n    </div>\n\n    <h4>5 Natural Examples for Daily Speaking:</h4>\n    <ol>\n        <li>I enjoy <strong>reading</strong> books in the quiet morning.</li>\n        <li>She practices <strong>writing</strong> new sentences every day.</li>\n        <li>We enjoy <strong>walking</strong> in the fresh air.</li>\n        <li>He practices <strong>listening</strong> to English podcasts.</li>\n        <li>They enjoy <strong>learning</strong> new skills together.</li>\n    </ol>\n\n    <!-- Section 5: Tiny Words -->\n    <h2>5. The Tiny Words (Fluency Boosters)</h2>\n    <ul>\n        <li><strong>at (at six / at ten):</strong> Used to point to a specific, exact time on the clock.</li>\n        <li><strong>a (a glass / a book / a healthy breakfast):</strong> Used before single, countable things mentioned generally for the first time.</li>\n        <li><strong>the (the window / the fresh air):</strong> Used when talking about something specific that both the speaker and listener know (e.g., the window in your room).</li>\n        <li><strong>in (in my notebook):</strong> Used because the writing goes *inside* the pages of the notebook.</li>\n    </ul>\n\n    <!-- Section 6: Sentence Patterns -->\n    <h2>6. Sentence Blueprints (Speaking Linkers)</h2>\n    <p>Your short paragraph has 12 quick sentences. Native speakers combine short sentences using simple connection words like <strong>and</strong>, <strong>then</strong>, and <strong>after</strong> to speak smoothly!</p>\n    <ul>\n        <li><strong>Blueprint 1 (Combining Actions):</strong> \"I wake up at six and drink a glass of water.\"</li>\n        <li><strong>Blueprint 2 (Sequential Flow):</strong> \"First, I open the window to breathe fresh air. Then, I eat a healthy breakfast.\"</li>\n        <li><strong>Blueprint 3 (Activity Linker):</strong> \"I study English by writing in my notebook and practicing speaking every evening.\"</li>\n    </ul>\n\n    <!-- Section 7: Tenses -->\n    <h2>7. Tense Check: Present Simple vs. Present Continuous</h2>\n    <p>Today's paragraph uses the <strong>Present Simple Tense</strong> (I wake, I drink, I study) because it describes a <strong>regular daily routine</strong>.</p>\n    <p><strong>Why not Present Continuous?</strong> If you say <em>\"I am drinking water,\"</em> it means you have a glass in your hand right this second. To tell someone about your life habits, stick to <strong>Present Simple</strong> (<em>\"I drink water every morning\"</em>).</p>\n\n    <!-- Section 8: Speaking Practice -->\n    <h2>8. Speaking & Pronunciation Room</h2>\n    <div class=\"practice-box\">\n        <strong>1. Pronunciation Tip (Word Linking):</strong><br>\n        Native speakers connect the end of one word to the beginning of the next word if it starts with a vowel:\n        <ul>\n            <li>\"wake up\" sounds like <strong>\"wa-kup\"</strong></li>\n            <li>\"drink a\" sounds like <strong>\"drin-ka\"</strong></li>\n            <li>\"eat a\" sounds like <strong>\"ee-ta\"</strong></li>\n        </ul>\n        <br>\n        <strong>2. Dialogue Role-Play (Practice reading both sides out loud):</strong><br>\n        <strong>Friend:</strong> \"What time do you usually wake up?\"<br>\n        <strong>You:</strong> \"I wake up at six every morning.\"<br>\n        <strong>Friend:</strong> \"What is the first thing you do?\"<br>\n        <strong>You:</strong> \"I drink a glass of water and open the window to breathe fresh air.\"<br>\n        <strong>Friend:</strong> \"When do you practice English?\"<br>\n        <strong>You:</strong> \"I study in the morning and practice speaking every evening!\"\n    </div>\n\n    <!-- Section 9: Quick Writing & Correction Labs -->\n    <h2>9. Quick Writing & Correction Labs</h2>\n    <div class=\"exercise-card\">\n        <p><strong>1. Fix the Error:</strong> \"I enjoy to read books and practice to speak English.\"</p>\n        <button class=\"btn\" onclick=\"toggleAnswer('e1')\">Show Coach Answer</button>\n        <div id=\"e1\" class=\"hidden-answer\"><strong>Correction:</strong> \"I enjoy <strong>reading</strong> books and practice <strong>speaking</strong> English.\" (After 'enjoy' and 'practice', always use -ing!).</div>\n    </div>\n    <div class=\"exercise-card\">\n        <p><strong>2. Sentence Building:</strong> Combine these three short ideas into one smooth sentence: \"I study English. I write in my notebook. I learn new words.\"</p>\n        <button class=\"btn\" onclick=\"toggleAnswer('e2')\">Show Coach Answer</button>\n        <div id=\"e2\" class=\"hidden-answer\"><strong>Example:</strong> \"I study English by writing in my notebook to learn new words.\"</div>\n    </div>\n\n    <!-- Section 10: Revision Connect -->\n    <h2>10. Moving Forward (70% Old + 30% New)</h2>\n    <p><strong>70% Old Review:</strong> We are reinforcing your morning routine structure and habit-building mindset (*Present Simple*, exact clock times with *at*, time duration with *for*).</p>\n    <p><strong>30% New Concept:</strong> Today, we added <strong>verb linking with -ing</strong> (*practice speaking*, *enjoy reading*) and combining short choppy sentences into smooth, flowing speech using *and*, *then*, and *by*.</p>\n\n    <!-- Section 11: Your Homework (20 Minutes) -->\n    <h2>11. Tonight's Homework Challenge</h2>\n    <ol>\n        <li><strong>Speaking (5 mins):</strong> Stand up and speak your 12-sentence routine out loud, linking \"wake up\" to \"wa-kup\" and \"drink a\" to \"drin-ka.\"</li>\n        <li><strong>Writing (10 mins):</strong> Write 3 original sentences about what you enjoy doing or practicing in the evening using the <mark>Verb + -ing</mark> pattern.</li>\n        <li><strong>Quiz (5 mins):</strong> Complete the interactive self-test below!</li>\n    </ol>\n\n    <!-- Interactive Quiz Engine -->\n    <div class=\"quiz-card\">\n        <h3>Quick Fluency Check</h3>\n        \n        <div class=\"quiz-item\">\n            <p>1. Which sentence is correctly written and natural?</p>\n            <label><input type=\"radio\" name=\"q1\" value=\"wrong\"> I practice speak English every day.</label>\n            <label><input type=\"radio\" name=\"q1\" value=\"right\"> I practice speaking English every day.</label>\n        </div>\n\n        <div class=\"quiz-item\">\n            <p>2. What is the correct past simple (V2) form of 'read' in \"Yesterday I _____ a book\"?</p>\n            <label><input type=\"radio\" name=\"q2\" value=\"right\"> Read (pronounced like 'red')</label>\n            <label><input type=\"radio\" name=\"q2\" value=\"wrong\"> Readed</label>\n        </div>\n\n        <div class=\"quiz-item\">\n            <p>3. Choose the correct preposition: \"I sleep _____ ten o'clock.\"</p>\n            <label><input type=\"radio\" name=\"q3\" value=\"right\"> at</label>\n            <label><input type=\"radio\" name=\"q3\" value=\"wrong\"> on</label>\n        </div>\n\n        <button class=\"btn\" style=\"background-color: #e67e22;\" onclick=\"checkAnswers()\">Check My Score</button>\n        <div id=\"quiz-result\" style=\"margin-top: 15px; font-weight: bold; color: #2c3e50;\"></div>\n    </div>\n</div>\n\n<script>\n    function toggleAnswer(id) {\n        var x = document.getElementById(id);\n        x.style.display = (x.style.display === \"block\") ? \"none\" : \"block\";\n    }\n\n    function checkAnswers() {\n        let score = 0;\n        if(document.querySelector('input[name=\"q1\"]:checked')?.value === 'right') score++;\n        if(document.querySelector('input[name=\"q2\"]:checked')?.value === 'right') score++;\n        if(document.querySelector('input[name=\"q3\"]:checked')?.value === 'right') score++;\n        \n        document.getElementById('quiz-result').innerText = \"You scored \" + score + \" out of 3! Excellent work on today's routine lesson!\";\n    }\n</script>\n\n</body>\n</html>",
+      "imageUrl": "",
+      "color": "#fef08a",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "size": {
+        "width": 380,
+        "height": 350
+      },
+      "isPinned": false,
+      "title": "Day - 3",
+      "tags": [],
+      "taskId": "6a5f9e4de7a8257ceaead034",
+      "taskIds": [],
+      "createdAt": "2026-07-21T16:30:35.493Z",
+      "updatedAt": "2026-07-21T16:32:30.588Z"
+    },
+    {
+      "_id": "6a5fa5a9e7a8257ceaead966",
+      "userId": "6993047f16e85ff3e4efd9a3",
+      "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>English Speaking Coach - Lesson 3</title>\n    <style>\n        body {\n            font-family: 'Segoe UI', Arial, sans-serif;\n            background-color: #f5f7fa;\n            color: #333333;\n            line-height: 1.6;\n            margin: 0;\n            padding: 30px 15px;\n        }\n\n        .lesson-container {\n            background: #ffffff;\n            padding: 40px;\n            border-radius: 12px;\n            box-shadow: 0 4px 15px rgba(0,0,0,0.05);\n        }\n\n        header {\n            text-align: center;\n            border-bottom: 3px solid #3498db;\n            padding-bottom: 15px;\n            margin-bottom: 30px;\n        }\n\n        h1 {\n            color: #2c3e50;\n            margin: 0;\n            font-size: 2.2rem;\n        }\n\n        .coach-tip {\n            color: #7f8c8d;\n            font-size: 1.1rem;\n            margin-top: 5px;\n        }\n\n        .paragraph-box {\n            background-color: #e8f4f8;\n            border-left: 6px solid #3498db;\n            padding: 20px;\n            font-size: 1.15rem;\n            font-weight: 500;\n            margin-bottom: 35px;\n            border-radius: 4px;\n        }\n\n        h2 {\n            color: #2c3e50;\n            font-size: 1.5rem;\n            border-bottom: 2px solid #ecf0f1;\n            padding-bottom: 5px;\n            margin-top: 40px;\n        }\n\n        h3 {\n            color: #34495e;\n            font-size: 1.2rem;\n            margin-top: 20px;\n        }\n\n        .highlight-box {\n            background-color: #fff9db;\n            border-left: 4px solid #f1c40f;\n            padding: 15px;\n            margin: 15px 0;\n            border-radius: 4px;\n        }\n\n        .practice-box {\n            background-color: #e8f8f5;\n            border-left: 4px solid #2ecc71;\n            padding: 15px;\n            margin: 15px 0;\n            border-radius: 4px;\n        }\n\n        table {\n            width: 100%;\n            border-collapse: collapse;\n            margin: 20px 0;\n        }\n\n        th, td {\n            padding: 12px;\n            border: 1px solid #e2e8f0;\n            text-align: left;\n        }\n\n        th {\n            background-color: #34495e;\n            color: white;\n        }\n\n        tr:nth-child(even) {\n            background-color: #f8f9fa;\n        }\n\n        .btn {\n            background-color: #3498db;\n            color: white;\n            border: none;\n            padding: 8px 16px;\n            border-radius: 4px;\n            cursor: pointer;\n            font-weight: bold;\n            margin-top: 10px;\n        }\n\n        .btn:hover {\n            background-color: #2980b9;\n        }\n\n        .hidden-answer {\n            display: none;\n            background-color: #eaedd5;\n            padding: 15px;\n            margin-top: 10px;\n            border-radius: 4px;\n            border-left: 4px solid #27ae60;\n        }\n\n        .quiz-card {\n            background-color: #fdf2e9;\n            border: 1px solid #e67e22;\n            border-radius: 8px;\n            padding: 20px;\n            margin-top: 30px;\n        }\n\n        .quiz-item {\n            margin-bottom: 15px;\n        }\n\n        .quiz-options label {\n            display: block;\n            margin: 5px 0;\n            cursor: pointer;\n        }\n\n        .exercise-card {\n            background-color: #f8f9fa;\n            border: 1px solid #e2e8f0;\n            border-radius: 6px;\n            padding: 15px;\n            margin-bottom: 15px;\n        }\n\n        .rule-card {\n            background-color: #f4ecf7;\n            border-left: 5px solid #8e44ad;\n            padding: 15px;\n            margin: 15px 0;\n            border-radius: 4px;\n        }\n    </style>\n</head>\n<body>\n\n<div class=\"lesson-container\">\n    <header>\n        <h1>Daily English Fluency Session</h1>\n        <p class=\"coach-tip\">Lesson 3 • Master Daily Routines, Tiny Words, and Long Conversations</p>\n    </header>\n\n    <!-- Today's Paragraph -->\n    <div class=\"paragraph-box\">\n        \"I wake up at 6:00 a.m. I take a bath and eat my breakfast before 9:00 a.m. After that, I study for two hours. Then, I take a 20-minute break. After the break, I study again for two hours. At 1:00 p.m., I eat my lunch. After lunch, I sleep for two hours. At 4:00 p.m., I start studying again for two or three hours. At 5:00 p.m., I usually have a cup of tea. After finishing my tea, I go to the gym. Before 9:00 p.m., I eat my dinner. Then, I go to bed at 11:00 p.m.\"\n    </div>\n\n    <!-- Section 1: Verb Forms Discovery -->\n    <h2>1. Verb Forms Discovery (Action Engine)</h2>\n    <p>Every verb changes form based on time. Use V1 for daily habits, V2 for past events, V3 for completed actions, and -ing for actions happening right now.</p>\n\n    <table>\n        <thead>\n            <tr>\n                <th>Base Form (V1) <br><small>Habit / Everyday</small></th>\n                <th>Past Simple (V2) <br><small>Yesterday / Past</small></th>\n                <th>Past Participle (V3) <br><small>Completed Action</small></th>\n                <th>Continuous (-ing) <br><small>Happening Now</small></th>\n                <th>Speaking Tip</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <td><strong>Wake</strong></td>\n                <td>Woke</td>\n                <td>Woken</td>\n                <td>Waking</td>\n                <td>Paired with \"up\": \"I woke up early yesterday.\"</td>\n            </tr>\n            <tr>\n                <td><strong>Take</strong></td>\n                <td>Took</td>\n                <td>Taken</td>\n                <td>Taking</td>\n                <td>Used for baths, breaks, and time: \"I take a break.\"</td>\n            </tr>\n            <tr>\n                <td><strong>Eat</strong></td>\n                <td>Ate</td>\n                <td>Eaten</td>\n                <td>Eating</td>\n                <td>\"Ate\" sounds like the number eight.</td>\n            </tr>\n            <tr>\n                <td><strong>Study</strong></td>\n                <td>Studied</td>\n                <td>Studied</td>\n                <td>Studying</td>\n                <td>Drop the 'y' and add 'ied' for the past tense.</td>\n            </tr>\n            <tr>\n                <td><strong>Sleep</strong></td>\n                <td>Slept</td>\n                <td>Slept</td>\n                <td>Sleeping</td>\n                <td>Vowel shortens in the past: Sleep turns to Slept.</td>\n            </tr>\n            <tr>\n                <td><strong>Start</strong></td>\n                <td>Started</td>\n                <td>Started</td>\n                <td>Starting</td>\n                <td>Pronounce past ending as an extra syllable: /id/.</td>\n            </tr>\n            <tr>\n                <td><strong>Have</strong></td>\n                <td>Had</td>\n                <td>Had</td>\n                <td>Having</td>\n                <td>Used for meals and drinks: \"I have tea.\"</td>\n            </tr>\n            <tr>\n                <td><strong>Finish</strong></td>\n                <td>Finished</td>\n                <td>Finished</td>\n                <td>Finishing</td>\n                <td>Ends with a soft 't' sound in past: /fɪnɪʃt/.</td>\n            </tr>\n            <tr>\n                <td><strong>Go</strong></td>\n                <td>Went</td>\n                <td>Gone</td>\n                <td>Going</td>\n                <td>\"Went\" is completely irregular. Practice: \"I went to bed.\"</td>\n            </tr>\n        </tbody>\n    </table>\n\n    <!-- Section 2: Real-Life Vocabulary -->\n    <h2>2. Real-Life Vocabulary</h2>\n    <table>\n        <thead>\n            <tr>\n                <th>Word & Type</th>\n                <th>How to Say It & Meaning</th>\n                <th>Common Collocations</th>\n                <th>Natural Examples for Speaking</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <td><strong>Break</strong><br><small>Noun</small></td>\n                <td>/breɪk/<br><br>A short pause in work or study.</td>\n                <td>Take a break, short break, lunch break.</td>\n                <td>1. I take a 20-minute break after studying.<br>2. Let's take a short coffee break.<br>3. Don't skip your lunch break.</td>\n            </tr>\n            <tr>\n                <td><strong>Usually</strong><br><small>Adverb</small></td>\n                <td>/ˈjuː.ʒu.ə.li/<br><br>Most of the time; as a habit.</td>\n                <td>Usually have, usually go, as I usually do.</td>\n                <td>1. I usually have tea at 5:00 p.m.<br>2. She usually wakes up early.<br>3. We usually eat dinner together.</td>\n            </tr>\n            <tr>\n                <td><strong>Routine</strong><br><small>Noun</small></td>\n                <td>/ruːˈtiːn/<br><br>A fixed set of daily habits.</td>\n                <td>Daily routine, study routine, stick to a routine.</td>\n                <td>1. My daily routine helps me stay focused.<br>2. I try not to break my study routine.<br>3. Having a routine saves energy.</td>\n            </tr>\n        </tbody>\n    </table>\n\n    <!-- Section 3: Grammar Discovery -->\n    <h2>3. Grammar Discovery: \"Have, Has, and Had\" Masterclass</h2>\n    <p>In your paragraph, you said: <em>\"I usually <strong>have</strong> a cup of tea.\"</em> Understanding how to use <strong>have, has, and had</strong> correctly is one of the biggest leaps in English fluency.</p>\n\n    <div class=\"rule-card\">\n        <h3>1. HAVE (Present Tense — I, You, We, They)</h3>\n        <p><strong>When to use:</strong> Use with I, You, We, They to talk about possessions, meals, drinks, routines, or experiences in the present.</p>\n        <p><strong>How to use:</strong></p>\n        <ul>\n            <li><strong>Meals/Drinks:</strong> \"I <em>have</em> breakfast at 8:00 a.m.\" / \"We <em>have</em> lunch together.\"</li>\n            <li><strong>Possession:</strong> \"I <em>have</em> a study schedule.\"</li>\n            <li><strong>Actions:</strong> \"They <em>have</em> a break.\"</li>\n        </ul>\n        <p><strong>Formula:</strong> Subject (I/You/We/They) + HAVE + Object</p>\n    </div>\n\n    <div class=\"rule-card\">\n        <h3>2. HAS (Present Tense — He, She, It, Single Name)</h3>\n        <p><strong>When to use:</strong> Use when the subject is He, She, It, or a person's name (like Rahul or Priya) in the present time.</p>\n        <p><strong>How to use:</strong></p>\n        <ul>\n            <li><strong>Meals/Drinks:</strong> \"She <em>has</em> a cup of tea at 5:00 p.m.\"</li>\n            <li><strong>Possession:</strong> \"He <em>has</em> a busy routine.\"</li>\n        </ul>\n        <p><strong>Formula:</strong> Subject (He/She/It/Name) + HAS + Object</p>\n    </div>\n\n    <div class=\"rule-card\">\n        <h3>3. HAD (Past Tense — ALL Subjects: I, You, He, She, We, They)</h3>\n        <p><strong>When to use:</strong> Use for past actions, meals, or possessions that are completely finished.</p>\n        <p><strong>How to use:</strong></p>\n        <ul>\n            <li><strong>Past Meals/Drinks:</strong> \"I <em>had</em> dinner at 8:30 p.m. yesterday.\"</li>\n            <li><strong>Past Routine:</strong> \"She <em>had</em> a long study session yesterday.\"</li>\n        </ul>\n        <p><strong>Formula:</strong> Subject (ANY) + HAD + Object</p>\n    </div>\n\n    <div class=\"highlight-box\">\n        <strong>Common Mistakes to Avoid:</strong><br>\n        ❌ <em>He have a cup of tea every evening.</em> $\\rightarrow$ ✅ <strong>He has</strong> a cup of tea every evening.<br>\n        ❌ <em>Yesterday I have lunch at 2:00 p.m.</em> $\\rightarrow$ ✅ <strong>Yesterday I had</strong> lunch at 2:00 p.m.<br>\n        ❌ <em>I am having a car.</em> (For possession, do not use -ing) $\\rightarrow$ ✅ <strong>I have</strong> a car.\n    </div>\n\n    <!-- Section 4: Tiny Words Deep-Dive -->\n    <h2>4. Tiny Words Deep-Dive (Fluency Engine)</h2>\n    <p>Tiny words are the glue of speaking English naturally. Here is the exact guide on how, where, and when to use the tiny words from your paragraph.</p>\n\n    <div class=\"exercise-card\">\n        <h3>1. AT</h3>\n        <p><strong>Where to use:</strong> Before exact clock times, specific points in the day, or specific locations.</p>\n        <p><strong>When to use:</strong> When pointing to a precise moment without any duration.</p>\n        <p><strong>How to use:</strong> Place \"at\" directly before the time or place.</p>\n        <ul>\n            <li>\"I wake up <strong>at</strong> 6:00 a.m.\" (Exact time)</li>\n            <li>\"I eat lunch <strong>at</strong> 1:00 p.m.\" (Exact time)</li>\n            <li>\"I go to bed <strong>at</strong> 11:00 p.m.\" (Exact time)</li>\n            <li>\"She is <strong>at</strong> the gym right now.\" (Exact location)</li>\n        </ul>\n    </div>\n\n    <div class=\"exercise-card\">\n        <h3>2. BEFORE</h3>\n        <p><strong>Where to use:</strong> Before a specific time, event, or action to show something happens earlier.</p>\n        <p><strong>When to use:</strong> When setting a deadline or indicating priority in time.</p>\n        <p><strong>How to use:</strong> Put \"before\" right in front of the time phrase or event.</p>\n        <ul>\n            <li>\"I eat breakfast <strong>before</strong> 9:00 a.m.\" (Before a time limit)</li>\n            <li>\"I eat dinner <strong>before</strong> 9:00 p.m.\" (Before a time limit)</li>\n            <li>\"I wash my hands <strong>before</strong> eating.\" (Before an action)</li>\n            <li>\"Finish your work <strong>before</strong> you leave.\" (Before an action)</li>\n        </ul>\n    </div>\n\n    <div class=\"exercise-card\">\n        <h3>3. AFTER</h3>\n        <p><strong>Where to use:</strong> Before a noun, event, or action to show something happens later.</p>\n        <p><strong>When to use:</strong> To show the next step in a timeline.</p>\n        <p><strong>How to use:</strong> Follow \"after\" with a noun or a verb taking \"-ing\".</p>\n        <ul>\n            <li>\"<strong>After</strong> that, I study for two hours.\" (Following an event)</li>\n            <li>\"<strong>After</strong> lunch, I sleep for two hours.\" (Following a noun)</li>\n            <li>\"<strong>After finishing</strong> my tea, I go to the gym.\" (Following verb + ing)</li>\n            <li>\"<strong>After</strong> studying, I take a break.\" (Following verb + ing)</li>\n        </ul>\n    </div>\n\n    <div class=\"exercise-card\">\n        <h3>4. FOR</h3>\n        <p><strong>Where to use:</strong> Before a duration or span of time.</p>\n        <p><strong>When to use:</strong> When answering \"How long does the action last?\"</p>\n        <p><strong>How to use:</strong> Pair \"for\" with numbers and time units (minutes, hours, days).</p>\n        <ul>\n            <li>\"I study <strong>for</strong> two hours.\" (Duration of time)</li>\n            <li>\"I take a break <strong>for</strong> 20 minutes.\" (Duration of time)</li>\n            <li>\"I sleep <strong>for</strong> two hours.\" (Duration of time)</li>\n            <li>\"I worked <strong>for</strong> three years at that company.\" (Duration of time)</li>\n        </ul>\n    </div>\n\n    <div class=\"exercise-card\">\n        <h3>5. TO</h3>\n        <p><strong>Where to use:</strong> Before a destination or direction.</p>\n        <p><strong>When to use:</strong> When moving from one place toward another place.</p>\n        <p><strong>How to use:</strong> Combine \"go/travel/head\" + \"to\" + destination.</p>\n        <ul>\n            <li>\"I go <strong>to</strong> the gym.\" (Direction/Destination)</li>\n            <li>\"I go <strong>to</strong> bed at 11:00 p.m.\" (Direction/Destination)</li>\n            <li>\"She goes <strong>to</strong> work every morning.\" (Direction/Destination)</li>\n            <li>\"We are travelling <strong>to</strong> Delhi tomorrow.\" (Direction/Destination)</li>\n        </ul>\n    </div>\n\n    <!-- Section 5: Sentence Patterns -->\n    <h2>5. Sentence Blueprints</h2>\n    <p>Use these exact structural blocks to talk about your day naturally:</p>\n    <ul>\n        <li><strong>Blueprint 1 (Deadline Pattern):</strong> \"I [Action] before [Time/Event].\"\n            <br><em>Example:</em> \"I complete my assignments before 6:00 p.m.\"\n        </li>\n        <li><strong>Blueprint 2 (Duration Pattern):</strong> \"I [Action] for [Number] hours.\"\n            <br><em>Example:</em> \"I exercise at the gym for one hour.\"\n        </li>\n        <li><strong>Blueprint 3 (Sequential Activity):</strong> \"After finishing my [Noun/Verb-ing], I [Next Action].\"\n            <br><em>Example:</em> \"After finishing my work, I spend time with my family.\"\n        </li>\n    </ul>\n\n    <!-- Section 6: Tenses -->\n    <h2>6. Tense Check: Present Simple vs. Past Simple</h2>\n    <p>This paragraph uses <strong>Present Simple</strong> because it outlines your daily schedule (routine truth). If you want to talk about what happened <strong>yesterday</strong>, you must shift every verb into Past Simple (V2):</p>\n    <ul>\n        <li><strong>Everyday Routine (Present):</strong> \"I wake up at 6:00 a.m. and study for two hours.\"</li>\n        <li><strong>Yesterday's Story (Past):</strong> \"Yesterday, I <strong>woke</strong> up at 6:00 a.m. and <strong>studied</strong> for two hours.\"</li>\n    </ul>\n\n    <!-- Section 7: NEW — Long Conversation Masterclass -->\n    <h2>7. Long Conversation Masterclass (How to Keep Talking)</h2>\n    <p>The single biggest issue beginners face is running out of things to say after 2 or 3 short sentences. Here are three simple techniques to build long, natural conversations effortlessly.</p>\n\n    <div class=\"practice-box\">\n        <h3>Technique 1: The \"And-Because-So\" Chain Rule</h3>\n        <p>Never end a sentence with just one fact. Attach a reason (using <em>because</em>) or a result (using <em>so</em>).</p>\n        <ul>\n            <li><strong>Short/Choppy:</strong> \"I wake up at 6:00 a.m.\"</li>\n            <li><strong>Extended Conversation:</strong> \"I wake up at 6:00 a.m. <strong>because</strong> I like having quiet time in the morning, <strong>so</strong> I drink water and study before anyone else gets up.\"</li>\n        </ul>\n    </div>\n\n    <div class=\"practice-box\">\n        <h3>Technique 2: The \"Add a Feeling or Reason\" Technique</h3>\n        <p>Whenever you mention an action, follow it up with how you feel about it or why you do it.</p>\n        <ul>\n            <li><strong>Fact:</strong> \"At 5:00 p.m., I usually have a cup of tea.\"</li>\n            <li><strong>Add Feeling/Reason:</strong> \"At 5:00 p.m., I usually have a cup of tea. It helps me relax after a long study session, and it gives me energy before heading to the gym.\"</li>\n        </ul>\n    </div>\n\n    <div class=\"practice-box\">\n        <h3>Technique 3: Long Conversation Role-Play (Practice Out Loud)</h3>\n        <p>Read both sides of this extended conversation to build speaking stamina:</p>\n        \n        <p><strong>Friend:</strong> \"Hey, you look super organized these days! What does your daily schedule look like?\"</p>\n        <p><strong>You:</strong> \"Thanks! Yeah, I follow a pretty strict routine. I usually wake up at 6:00 a.m., take a bath, and make sure I finish breakfast before 9:00 a.m.\"</p>\n        <p><strong>Friend:</strong> \"Nice! How much time do you dedicate to studying?\"</p>\n        <p><strong>You:</strong> \"I break it down into sessions. First, I study for two hours, then I take a 20-minute break to stretch. After the break, I study for another two hours before having lunch at 1:00 p.m.\"</p>\n        <p><strong>Friend:</strong> \"Don't you get tired during the day?\"</p>\n        <p><strong>You:</strong> \"I used to, but now after lunch, I sleep for two hours to recharge. At 4:00 p.m., I start another study block for a couple of hours.\"</p>\n        <p><strong>Friend:</strong> \"When do you get time for fitness or relaxation?\"</p>\n        <p><strong>You:</strong> \"Around 5:00 p.m., I usually have a cup of tea to refresh my mind. After finishing my tea, I go straight to the gym. Then I eat dinner before 9:00 p.m. and head to bed at 11:00 p.m.\"</p>\n    </div>\n\n    <!-- Section 8: Quick Writing & Correction Labs -->\n    <h2>8. Quick Writing & Correction Labs</h2>\n    <div class=\"exercise-card\">\n        <p><strong>1. Fix the Error:</strong> \"He go to gym at 6:00 p.m. after have tea.\"</p>\n        <button class=\"btn\" onclick=\"toggleAnswer('e1')\">Show Coach Answer</button>\n        <div id=\"e1\" class=\"hidden-answer\"><strong>Correction:</strong> \"He <strong>goes</strong> to <strong>the</strong> gym at 6:00 p.m. after <strong>having</strong> tea.\"</div>\n    </div>\n    <div class=\"exercise-card\">\n        <p><strong>2. Combine into One Long Sentence:</strong> \"I eat dinner. The time is 8:30 p.m. After dinner I go to bed.\"</p>\n        <button class=\"btn\" onclick=\"toggleAnswer('e2')\">Show Coach Answer</button>\n        <div id=\"e2\" class=\"hidden-answer\"><strong>Example:</strong> \"I eat dinner before 9:00 p.m., and after finishing my meal, I go to bed.\"</div>\n    </div>\n\n    <!-- Section 9: Revision Connect -->\n    <h2>9. Moving Forward (70% Old + 30% New)</h2>\n    <p><strong>70% Old Review:</strong> Present simple routines, exact clock times with <em>at</em>, time duration with <em>for</em>, and sequential order using <em>first, then, after</em>.</p>\n    <p><strong>30% New Concept:</strong> Deep usage of <strong>have / has / had</strong>, tiny words (<em>before, after, to</em>), and building <strong>long conversations</strong> using the \"And-Because-So\" chain.</p>\n\n    <!-- Section 10: Your Homework -->\n    <h2>10. Tonight's Homework Challenge (20 Minutes)</h2>\n    <ol>\n        <li><strong>Speaking (10 mins):</strong> Read the entire Long Conversation Role-Play (Section 7) out loud two times. Practice changing your tone naturally!</li>\n        <li><strong>Writing (5 mins):</strong> Write 3 sentences using \"before,\" \"after,\" and \"for\" about your actual day.</li>\n        <li><strong>Quiz (5 mins):</strong> Complete the interactive quiz below!</li>\n    </ol>\n\n    <!-- Interactive Quiz Engine -->\n    <div class=\"quiz-card\">\n        <h3>Quick Fluency Check</h3>\n        \n        <div class=\"quiz-item\">\n            <p>1. Which sentence correctly uses HAS/HAVE?</p>\n            <label><input type=\"radio\" name=\"q1\" value=\"wrong\"> She have a cup of tea at 5:00 p.m.</label>\n            <label><input type=\"radio\" name=\"q1\" value=\"right\"> She has a cup of tea at 5:00 p.m.</label>\n        </div>\n\n        <div class=\"quiz-item\">\n            <p>2. Fill in the blank: \"I study _____ two hours every afternoon.\"</p>\n            <label><input type=\"radio\" name=\"q2\" value=\"right\"> for</label>\n            <label><input type=\"radio\" name=\"q2\" value=\"wrong\"> at</label>\n        </div>\n\n        <div class=\"quiz-item\">\n            <p>3. Choose the correct form: \"After _____ my tea, I go to the gym.\"</p>\n            <label><input type=\"radio\" name=\"q3\" value=\"right\"> finishing</label>\n            <label><input type=\"radio\" name=\"q3\" value=\"wrong\"> finish</label>\n        </div>\n\n        <button class=\"btn\" style=\"background-color: #e67e22;\" onclick=\"checkAnswers()\">Check My Score</button>\n        <div id=\"quiz-result\" style=\"margin-top: 15px; font-weight: bold; color: #2c3e50;\"></div>\n    </div>\n</div>\n\n<script>\n    function toggleAnswer(id) {\n        var x = document.getElementById(id);\n        x.style.display = (x.style.display === \"block\") ? \"none\" : \"block\";\n    }\n\n    function checkAnswers() {\n        let score = 0;\n        if(document.querySelector('input[name=\"q1\"]:checked')?.value === 'right') score++;\n        if(document.querySelector('input[name=\"q2\"]:checked')?.value === 'right') score++;\n        if(document.querySelector('input[name=\"q3\"]:checked')?.value === 'right') score++;\n        \n        document.getElementById('quiz-result').innerText = \"You scored \" + score + \" out of 3! Great job on mastering today's routine structures!\";\n    }\n</script>\n\n</body>\n</html>",
+      "imageUrl": "",
+      "color": "#fef08a",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "size": {
+        "width": 380,
+        "height": 350
+      },
+      "isPinned": false,
+      "title": "Day - 3 Part ii",
+      "tags": [],
+      "taskId": "6a5fa354e7a8257ceaead800",
+      "taskIds": [],
+      "createdAt": "2026-07-21T17:00:25.538Z",
+      "updatedAt": "2026-07-21T17:00:55.463Z"
+    }
+  ],
+  "notifications": [
+    {
+      "_id": "6a5bafc9e7a8257ceaea3cdf",
+      "senderId": "6993047f16e85ff3e4efd9a3",
+      "receiverId": "6993047f16e85ff3e4efd9a3",
+      "projectId": "6a5bae2fe7a8257ceaea3941",
+      "title": "Task created for you",
+      "message": "Day - 1",
+      "notificationStatus": true,
+      "createdAt": "2026-07-18T16:54:33.404Z",
+      "updatedAt": "2026-07-18T16:56:41.779Z"
+    },
+    {
+      "_id": "6a5bb023e7a8257ceaea40ef",
+      "senderId": "6993047f16e85ff3e4efd9a3",
+      "receiverId": "6993047f16e85ff3e4efd9a3",
+      "projectId": "6a5bae2fe7a8257ceaea3941",
+      "title": "Task created for you",
+      "message": "English Through Paragraphs",
+      "notificationStatus": true,
+      "createdAt": "2026-07-18T16:56:03.886Z",
+      "updatedAt": "2026-07-18T16:56:41.779Z"
+    },
+    {
+      "_id": "6a5bb02fe7a8257ceaea4499",
+      "senderId": "6993047f16e85ff3e4efd9a3",
+      "receiverId": "6993047f16e85ff3e4efd9a3",
+      "projectId": "6a5bae2fe7a8257ceaea3941",
+      "title": "Task updated for you",
+      "message": "Day - 1",
+      "notificationStatus": true,
+      "createdAt": "2026-07-18T16:56:15.063Z",
+      "updatedAt": "2026-07-18T16:56:41.779Z"
+    },
+    {
+      "_id": "6a5bb060e7a8257ceaea480a",
+      "senderId": "6993047f16e85ff3e4efd9a3",
+      "receiverId": "6993047f16e85ff3e4efd9a3",
+      "projectId": "6a5bae2fe7a8257ceaea3941",
+      "title": "Task updated for you",
+      "message": "Day - 1",
+      "notificationStatus": true,
+      "createdAt": "2026-07-18T16:57:04.884Z",
+      "updatedAt": "2026-07-18T17:21:49.883Z"
+    },
+    {
+      "_id": "6a5bb08de7a8257ceaea4b1b",
+      "senderId": "6993047f16e85ff3e4efd9a3",
+      "receiverId": "6993047f16e85ff3e4efd9a3",
+      "projectId": "6a5bae2fe7a8257ceaea3941",
+      "title": "Task updated for you",
+      "message": "English Through Paragraphs",
+      "notificationStatus": true,
+      "createdAt": "2026-07-18T16:57:49.210Z",
+      "updatedAt": "2026-07-18T17:21:49.883Z"
+    },
+    {
+      "_id": "6a5ce0b4e7a8257ceaea66fa",
+      "senderId": "6993047f16e85ff3e4efd9a3",
+      "receiverId": "6993047f16e85ff3e4efd9a3",
+      "projectId": "6a5bae2fe7a8257ceaea3941",
+      "title": "Task updated for you",
+      "message": "Context-Based Learning",
+      "notificationStatus": true,
+      "createdAt": "2026-07-19T14:35:32.101Z",
+      "updatedAt": "2026-07-19T14:41:39.824Z"
+    },
+    {
+      "_id": "6a5ce253e7a8257ceaea6a2f",
+      "senderId": "6993047f16e85ff3e4efd9a3",
+      "receiverId": "6993047f16e85ff3e4efd9a3",
+      "projectId": "6a5bae2fe7a8257ceaea3941",
+      "title": "Task created for you",
+      "message": "Day - 2",
+      "notificationStatus": true,
+      "createdAt": "2026-07-19T14:42:27.325Z",
+      "updatedAt": "2026-07-19T17:41:34.775Z"
+    },
+    {
+      "_id": "6a5ce2aae7a8257ceaea7401",
+      "senderId": "6993047f16e85ff3e4efd9a3",
+      "receiverId": "6993047f16e85ff3e4efd9a3",
+      "projectId": "6a5bae2fe7a8257ceaea3941",
+      "title": "Task updated for you",
+      "message": "Context-Based Learning",
+      "notificationStatus": true,
+      "createdAt": "2026-07-19T14:43:54.257Z",
+      "updatedAt": "2026-07-19T17:41:34.775Z"
+    },
+    {
+      "_id": "6a5ce2bce7a8257ceaea7725",
+      "senderId": "6993047f16e85ff3e4efd9a3",
+      "receiverId": "6993047f16e85ff3e4efd9a3",
+      "projectId": "6a5bae2fe7a8257ceaea3941",
+      "title": "Task updated for you",
+      "message": "Day - 2",
+      "notificationStatus": true,
+      "createdAt": "2026-07-19T14:44:12.903Z",
+      "updatedAt": "2026-07-19T17:41:34.775Z"
+    },
+    {
+      "_id": "6a5f9e4de7a8257ceaead037",
+      "senderId": "6993047f16e85ff3e4efd9a3",
+      "receiverId": "6993047f16e85ff3e4efd9a3",
+      "projectId": "6a5bae2fe7a8257ceaea3941",
+      "title": "Task created for you",
+      "message": "Day - 3",
+      "notificationStatus": true,
+      "createdAt": "2026-07-21T16:29:01.562Z",
+      "updatedAt": "2026-07-22T08:20:23.403Z"
+    },
+    {
+      "_id": "6a5fa354e7a8257ceaead803",
+      "senderId": "6993047f16e85ff3e4efd9a3",
+      "receiverId": "6993047f16e85ff3e4efd9a3",
+      "projectId": "6a5bae2fe7a8257ceaea3941",
+      "title": "Task created for you",
+      "message": "Day - 3 Part ii",
+      "notificationStatus": true,
+      "createdAt": "2026-07-21T16:50:28.627Z",
+      "updatedAt": "2026-07-22T08:20:23.403Z"
+    }
+  ],
+  "performanceStats": []
+}

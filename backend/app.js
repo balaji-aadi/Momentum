@@ -8,7 +8,7 @@ import helmet from "helmet";
 import xss from "xss-clean";
 import compression from "compression";
 import router from "./api-gateway/router.js";
-import { whiteListCors } from "./config/cors.js";
+import { whiteListCors, corsOriginHandler } from "./config/cors.js";
 import fileUpload from "express-fileupload";
 import { socketService } from "./socket-instance.js";
 import "./models/permission.model.js";
@@ -21,7 +21,7 @@ const app = express();
 export { socketService };
 
 // Middleware setup
-app.use(cors({ origin: whiteListCors, credentials: true }));
+app.use(cors({ origin: corsOriginHandler, credentials: true }));
 app.use(morgan("dev"));
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true, limit: "5mb" }));

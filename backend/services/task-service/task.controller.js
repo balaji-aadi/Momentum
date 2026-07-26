@@ -649,31 +649,33 @@ const autoSyncHeldParentChildren = async (tasks, userId) => {
         
     if (heldParentIds.length === 0) return tasks;
 
-    // 2. Loop through all fetched tasks and sync child tasks
+    const updatePromises = [];
+    // 2. Loop through all fetched tasks and sync child tasks in parallel
     for (let task of tasks) {
         const pIdStr = getParentTaskId(task.parentTask);
         if (pIdStr && heldParentIds.includes(pIdStr)) {
             // This child belongs to a held parent task.
             // If it is not 'done' and not 'hold', update it to 'hold'!
             if (task.status !== 'hold' && task.status !== 'done') {
-                // Update in DB
-                await Task.updateOne(
-                    { _id: task._id },
-                    {
-                        $set: { status: 'hold', updatedBy: userId },
-                        $push: {
-                            activityLogs: {
-                                $each: [{
-                                    oldStatus: task.status,
-                                    currentStatus: 'hold',
-                                    user: userId,
-                                    date: new Date(),
-                                    message: `Status automatically synced to hold because parent task is on hold`,
-                                }],
-                                $position: 0
+                updatePromises.push(
+                    Task.updateOne(
+                        { _id: task._id },
+                        {
+                            $set: { status: 'hold', updatedBy: userId },
+                            $push: {
+                                activityLogs: {
+                                    $each: [{
+                                        oldStatus: task.status,
+                                        currentStatus: 'hold',
+                                        user: userId,
+                                        date: new Date(),
+                                        message: `Status automatically synced to hold because parent task is on hold`,
+                                    }],
+                                    $position: 0
+                                }
                             }
                         }
-                    }
+                    )
                 );
                 
                 // Update in returned list object
@@ -687,10 +689,14 @@ const autoSyncHeldParentChildren = async (tasks, userId) => {
                     message: `Status automatically synced to hold because parent task is on hold`,
                 });
                 
-                // Trigger analytics update
+                // Trigger analytics update asynchronously
                 AnalyticsService.handleTaskUpdate(task.assignee, task.projectName, task._id, task.status, 'hold').catch(err => console.error("Analytics Error:", err));
             }
         }
+    }
+    
+    if (updatePromises.length > 0) {
+        await Promise.all(updatePromises);
     }
     
     return tasks;
