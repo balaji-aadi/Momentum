@@ -1,10 +1,25 @@
-* {
+*,
+::before,
+::after {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
   font: 12pt Tahoma;
-  /* font-family: "Roboto", sans-serif; */
-  font-family: "Poppins", serif;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+/* Force Monaco Editor code spans to strictly use Monospace font & 14.5px font size */
+.monaco-editor,
+.monaco-editor *,
+.monaco-editor .view-line,
+.monaco-editor .mtk1,
+.monaco-editor span {
+  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+  font-size: 14.5px !important;
 }
 
 :root {

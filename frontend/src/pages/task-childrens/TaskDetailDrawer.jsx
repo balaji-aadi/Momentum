@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { IoClose, IoFlagSharp, IoCalendarOutline, IoTimeOutline, IoPersonOutline, IoAttachOutline, IoGitNetworkSharp, IoCheckmarkCircleOutline, IoTrashOutline, IoArrowDown, IoArrowUp } from 'react-icons/io5';
 import { MdEdit } from 'react-icons/md';
+import { LuCode2 } from 'react-icons/lu';
 import moment from 'moment';
 window.moment = moment;
 import { TaskApi } from '../../services/api/Task.api';
@@ -8,6 +9,8 @@ import { NoteApi } from '../../services/api/Note.api';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { server } from '../../services/config';
+import DsaCodingArenaModal from '../../components/dsa/DsaCodingArenaModal';
+import { FaCode } from "react-icons/fa";
 
 const hasAdditionalNotes = (notes) => {
     if (!notes) return false;
@@ -49,6 +52,7 @@ const isHtmlNote = (content) => {
 
 const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, canEdit }) => {
     const [task, setTask] = useState(initialTask);
+    const [showCodingModal, setShowCodingModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [subtasks, setSubtasks] = useState([]);
     const [activeTab, setActiveTab] = useState('subtasks'); // 'subtasks', 'activity', 'attachments'
@@ -442,29 +446,39 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
 
                 {/* Header */}
                 <div className="flex items-center justify-between p-5 border-b border-slate-100 bg-white sticky top-0 z-[70] shadow-sm">
-                    <div className="flex items-center gap-3 min-w-0">
+                    <div className="flex items-center gap-3 min-w-0 justify-between w-full">
                         <span className="text-sm font-mono font-bold text-textSub bg-slate-50 px-2 py-1 rounded border border-borderLight shadow-sm shrink-0">
                             {task?.taskId || `#${task?._id?.slice(-4)}`}
                         </span>
                         <h2 className="text-lg font-bold text-textMain truncate tracking-tight">{task?.taskName}</h2>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0 ml-4">
-                        {canEdit && (
+                        <div className="flex items-center justify-between gap-2 shrink-0">
+                            {task?.parentTask && (
+                                <button
+                                    onClick={() => setShowCodingModal(true)}
+                                    className="px-2.5 py-1.5 bg-slate-50 text-textSub rounded-xl transition-all flex items-center gap-1.5 text-xs font-bold shadow-sm group cursor-pointer"
+                                    title="Open Code Workspace"
+                                >
+                                    <span className="text-emerald-500 font-black text-sm tracking-tighter"><FaCode /></span>
+                                    <span className="hidden sm:inline text-sm font-semibold">Code</span>
+                                </button>
+                            )}
+                            {canEdit && (
+                                <button
+                                    onClick={() => onTaskUpdate(task)}
+                                    className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-all flex items-center gap-1 text-sm font-bold"
+                                >
+                                    <MdEdit size={20} />
+                                    <span className="hidden sm:inline">Edit</span>
+                                </button>
+                            )}
                             <button
-                                onClick={() => onTaskUpdate(task)}
-                                className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-all flex items-center gap-1 text-sm font-bold"
+                                onClick={onClose}
+                                className="text-slate-500 hover:text-red-500 rounded-lg transition-all shadow-lg"
+                                title="Close"
                             >
-                                <MdEdit size={20} />
-                                <span className="hidden sm:inline">Edit</span>
+                                <IoClose size={24} />
                             </button>
-                        )}
-                        <button
-                            onClick={onClose}
-                            className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-red-500 rounded-lg transition-all shadow-sm"
-                            title="Close"
-                        >
-                            <IoClose size={24} />
-                        </button>
+                        </div>
                     </div>
                 </div>
 
@@ -937,11 +951,10 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                             {/* Split Body */}
                             <div className="flex-1 flex overflow-hidden min-h-0 relative">
                                 {/* Left Column: Notes List Sidebar */}
-                                <div className={`border-r border-slate-100 dark:border-slate-800 flex flex-col bg-slate-50/20 shrink-0 transition-all duration-500 ease-in-out origin-left ${
-                                    isReadingModeActive
-                                        ? 'w-0 opacity-0 overflow-hidden border-none'
-                                        : `${activeReaderNoteId ? 'hidden md:flex' : 'flex w-full'} md:w-72 lg:w-80 opacity-100`
-                                }`}>
+                                <div className={`border-r border-slate-100 dark:border-slate-800 flex flex-col bg-slate-50/20 shrink-0 transition-all duration-500 ease-in-out origin-left ${isReadingModeActive
+                                    ? 'w-0 opacity-0 overflow-hidden border-none'
+                                    : `${activeReaderNoteId ? 'hidden md:flex' : 'flex w-full'} md:w-72 lg:w-80 opacity-100`
+                                    }`}>
                                     <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-2">
                                         {linkedNotes
                                             .filter(n => {
@@ -990,9 +1003,8 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
 
                                 {/* Right Column: Reading Area */}
                                 <div
-                                    className={`flex-1 flex flex-col bg-white dark:bg-themeBG overflow-y-auto custom-scrollbar min-w-0 ${
-                                        !activeReaderNoteId ? 'hidden md:flex' : 'flex w-full'
-                                    }`}
+                                    className={`flex-1 flex flex-col bg-white dark:bg-themeBG overflow-y-auto custom-scrollbar min-w-0 ${!activeReaderNoteId ? 'hidden md:flex' : 'flex w-full'
+                                        }`}
                                     onScroll={handleReaderScroll}
                                 >
                                     {(() => {
@@ -1406,6 +1418,13 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                     </div>
                 </div>
             )}
+
+            {/* LeetCode Coding Simulation Modal */}
+            <DsaCodingArenaModal
+                isOpen={showCodingModal}
+                onClose={() => setShowCodingModal(false)}
+                task={task}
+            />
         </div>
     );
 };

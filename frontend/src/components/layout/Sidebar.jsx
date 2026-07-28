@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink, useNavigate, useSearchParams, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useSearchParams, useParams, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
     IoGridOutline,
@@ -10,7 +10,14 @@ import {
     IoAdd,
     IoTimeOutline,
     IoSyncOutline,
-    IoBusinessOutline
+    IoBusinessOutline,
+    IoCodeSlashOutline,
+    IoAddCircleOutline,
+    IoBookOutline,
+    IoLayersOutline,
+    IoTerminalOutline,
+    IoChevronDownOutline,
+    IoChevronForwardOutline
 } from 'react-icons/io5';
 import { ProjectApi } from '../../services/api/Project.api';
 import { useSelector, useDispatch } from 'react-redux';
@@ -46,6 +53,14 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
     const { slug } = useParams();
     const currentProjectId = searchParams.get('projectId');
+    const location = useLocation();
+    const [isDsaOpen, setIsDsaOpen] = useState(() => location.pathname.startsWith('/dsa-management'));
+
+    useEffect(() => {
+        if (location.pathname.startsWith('/dsa-management')) {
+            setIsDsaOpen(true);
+        }
+    }, [location.pathname]);
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -287,6 +302,80 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                 </div>
                             )}
                         </NavLink>
+                    )}
+                </div>
+
+                {/* DSA Management Collapsible Section */}
+                <div className="mt-4 border-t border-slate-100/80 pt-3">
+                    {/* Collapsible Parent Header */}
+                    <button
+                        type="button"
+                        onClick={() => setIsDsaOpen(prev => !prev)}
+                        className={`w-full flex items-center ${isSidebarCollapsed ? 'justify-center py-2.5 px-0' : 'gap-3 px-4 py-2'} rounded-xl transition-all duration-200 group text-textSub hover:text-textMain hover:bg-slate-50 cursor-pointer ${location.pathname.startsWith('/dsa-management') ? 'bg-primary/5 text-primary font-bold' : ''}`}
+                        title={isSidebarCollapsed ? "DSA Management" : undefined}
+                    >
+                        {!isSidebarCollapsed && (
+                            <span className={`w-1 h-1 rounded-full transition-all ${location.pathname.startsWith('/dsa-management') ? 'bg-primary' : 'bg-transparent'} shrink-0`}></span>
+                        )}
+                        <span className="text-base opacity-70 group-hover:opacity-100 shrink-0">
+                            <IoCodeSlashOutline />
+                        </span>
+                        {!isSidebarCollapsed && (
+                            <div className="flex items-center justify-between w-full min-w-0">
+                                <span className="text-[13px] font-semibold truncate">
+                                    DSA Management
+                                </span>
+                                <span className="text-slate-400 text-xs shrink-0 ml-auto transition-transform">
+                                    {isDsaOpen ? <IoChevronDownOutline size={14} /> : <IoChevronForwardOutline size={14} />}
+                                </span>
+                            </div>
+                        )}
+                    </button>
+
+                    {/* Collapsible Sub-items */}
+                    {(isDsaOpen || isSidebarCollapsed) && (
+                        <div className={`space-y-0.5 mt-1 ${!isSidebarCollapsed ? 'pl-3' : ''}`}>
+                            {[
+                                { label: 'Problems', path: '/dsa-management/problems', icon: <IoCodeSlashOutline /> },
+                                { label: 'Create Problem', path: '/dsa-management/create-problem', icon: <IoAddCircleOutline /> },
+                                { label: 'Companies', path: '/dsa-management/companies', icon: <IoBusinessOutline /> },
+                                { label: 'Topics', path: '/dsa-management/topics', icon: <IoBookOutline /> },
+                                { label: 'Patterns', path: '/dsa-management/patterns', icon: <IoLayersOutline /> },
+                                { label: 'Languages', path: '/dsa-management/languages', icon: <IoTerminalOutline /> }
+                            ].map((dsaItem, idx) => (
+                                <NavLink
+                                    key={idx}
+                                    to={noBranchLocked ? '#' : dsaItem.path}
+                                    title={isSidebarCollapsed ? dsaItem.label : undefined}
+                                    onClick={(e) => {
+                                        if (noBranchLocked) {
+                                            e.preventDefault();
+                                            toast.error("Please select a Module to enter the workspace!");
+                                            return;
+                                        }
+                                        if (isRevisionLocked) {
+                                            e.preventDefault();
+                                            toast.error("Complete your Daily Revision first!");
+                                            return;
+                                        }
+                                        if (setIsOpen) setIsOpen(false);
+                                    }}
+                                    className={({ isActive }) => `flex items-center ${isSidebarCollapsed ? 'justify-center py-2 px-0' : 'gap-2.5 pl-6 pr-3 py-1.5'} rounded-xl transition-all duration-200 group relative ${noBranchLocked ? 'opacity-40 cursor-not-allowed' : (isActive ? 'active text-primary bg-primary/5 font-bold' : 'text-textSub/80 hover:text-textMain hover:bg-slate-50')}`}
+                                >
+                                    {!isSidebarCollapsed && (
+                                        <span className="w-1 h-1 rounded-full transition-all group-[.active]:bg-primary bg-transparent shrink-0"></span>
+                                    )}
+                                    <span className="text-sm opacity-70 group-[.active]:opacity-100 shrink-0">
+                                        {dsaItem.icon}
+                                    </span>
+                                    {!isSidebarCollapsed && (
+                                        <span className="text-xs font-medium group-[.active]:font-bold truncate">
+                                            {dsaItem.label}
+                                        </span>
+                                    )}
+                                </NavLink>
+                            ))}
+                        </div>
                     )}
                 </div>
 

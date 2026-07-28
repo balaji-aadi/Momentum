@@ -38,6 +38,14 @@ import MyTasks from "./pages/testing-childrens/MyTasks";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ZohoCallback from "./pages/auth/ZohoCallback";
+
+// DSA Management imports
+import ProblemList from "./pages/dsa-management/ProblemList";
+import CreateProblem from "./pages/dsa-management/CreateProblem";
+import CompanyManagement from "./pages/dsa-management/CompanyManagement";
+import TopicManagement from "./pages/dsa-management/TopicManagement";
+import PatternManagement from "./pages/dsa-management/PatternManagement";
+import LanguageManagement from "./pages/dsa-management/LanguageManagement";
 import ProtectedRoute, { PublicRoute } from "./ProtectedRoute";
 import Forget from "./pages/auth/Forget";
 import Verification from "./pages/auth/Verification";
@@ -59,6 +67,7 @@ import ProjectLayout from "./components/layout/ProjectLayout";
 import ProjectOverview from "./pages/project-childrens/ProjectOverview";
 import ProjectConsistencyPage from "./pages/project-childrens/ProjectConsistencyPage";
 import Milestones from "./pages/project-childrens/Milestones";
+import DsaProblemPage from "./pages/dsa/DsaProblemPage";
 
 import ProjectBoard from "./pages/project-childrens/ProjectBoard";
 import Backlog from "./pages/project-childrens/Backlog";
@@ -242,6 +251,14 @@ function App() {
             element={<ProtectedRoute element={<BranchDashboard />} />}
           />
           <Route
+            path="arena/dsa/problem/:problemId"
+            element={<ProtectedRoute element={<DsaProblemPage />} />}
+          />
+          <Route
+            path="arena/dsa/problem"
+            element={<ProtectedRoute element={<DsaProblemPage />} />}
+          />
+          <Route
             path="arena/:slug"
             element={<ProtectedRoute element={<Dashboard />} />}
           />
@@ -368,6 +385,16 @@ function App() {
             path="settings"
             element={<ProtectedRoute element={<SettingsGlobal />} />}
           />
+          {/* DSA Management routes */}
+          <Route path="dsa-management">
+            <Route path="problems" element={<ProtectedRoute element={<ProblemList />} />} />
+            <Route path="create-problem" element={<ProtectedRoute element={<CreateProblem />} />} />
+            <Route path="companies" element={<ProtectedRoute element={<CompanyManagement />} />} />
+            <Route path="topics" element={<ProtectedRoute element={<TopicManagement />} />} />
+            <Route path="patterns" element={<ProtectedRoute element={<PatternManagement />} />} />
+            <Route path="languages" element={<ProtectedRoute element={<LanguageManagement />} />} />
+          </Route>
+
           <Route
             path="pricing"
             element={currentUser?.email === "balajiaadi2000@gmail.com" ? <Dashboard /> : <ProtectedRoute element={<PricingPage />} />}

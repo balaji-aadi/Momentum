@@ -1,0 +1,213 @@
+The Software Design Document is excellent and I approve the overall architecture.
+
+The document is well structured and provides a strong foundation for the DSA Management CMS and the Universal Problem Engine.
+
+Before implementation, I would like to make a few final architectural improvements so this design remains scalable for many years.
+
+These are architecture improvements only.
+
+Do not start implementation yet.
+
+Please update the SDD with the following changes.
+
+=========================================================
+1. Submission Collection
+=========================================================
+
+Although the Judge System will be implemented later, design the Submission collection now.
+
+Each submission should contain
+
+- userId
+- problemId
+- language
+- submittedCode
+- status
+- runtime
+- memory
+- passedTestCases
+- totalTestCases
+- compilerMessage
+- executionLogs
+- source (Practice, Contest, Revision)
+- submittedAt
+
+This collection should become the foundation for
+
+- submission history
+- statistics
+- leaderboards
+- AI code review
+- learning analytics
+
+=========================================================
+2. Revision Metadata
+=========================================================
+
+Since Sarthi is primarily a learning and revision platform, every problem should support revision metadata.
+
+Create a revision object.
+
+Example
+
+revision
+
+- revisionWeight
+- recommendedRevisionInterval
+- averageRevisionTime
+- lastRevisionUpdated
+
+This metadata will later integrate with the Revision Engine.
+
+=========================================================
+3. Version History
+=========================================================
+
+Problems should support future version history.
+
+Design a ProblemHistory collection or describe the versioning strategy.
+
+Every edit should be recoverable.
+
+Store
+
+- versionNumber
+- updatedBy
+- updatedAt
+- changeSummary
+
+This is only an architectural design for now.
+
+=========================================================
+4. Media Architecture
+=========================================================
+
+Expand the architecture for images.
+
+Problem descriptions and editorials should support images.
+
+Document how media will later be uploaded to Cloudinary and referenced inside Markdown.
+
+Implementation is not required now.
+
+Only document the architecture.
+
+=========================================================
+5. API Separation
+=========================================================
+
+Separate APIs conceptually into
+
+Admin APIs
+
+Student APIs
+
+Future Judge APIs
+
+Document the responsibilities of each API group.
+
+This will improve security and maintainability.
+
+=========================================================
+6. Database Index Strategy
+=========================================================
+
+Expand the indexing section.
+
+Explain why every index exists.
+
+Include indexes for
+
+- slug
+- status
+- difficulty
+- companies
+- topics
+- pattern
+- problemType
+
+Explain how each index improves performance.
+
+=========================================================
+7. Error Handling Strategy
+=========================================================
+
+Add one section explaining
+
+Validation Errors
+
+Authentication Errors
+
+Authorization Errors
+
+Business Logic Errors
+
+Database Errors
+
+Unexpected Server Errors
+
+Explain the response format that every API should follow.
+
+=========================================================
+8. Logging Strategy
+=========================================================
+
+Document how important events should be logged.
+
+Examples
+
+Problem Created
+
+Problem Updated
+
+Problem Archived
+
+Slug Conflict
+
+Failed Validation
+
+These logs will help future monitoring and debugging.
+
+=========================================================
+9. Design Principles
+=========================================================
+
+Add one section explaining the engineering principles followed by this architecture.
+
+Examples
+
+- Single Responsibility Principle
+- Separation of Concerns
+- Modular Component Design
+- Reusable APIs
+- Scalable Database Design
+- Extensible Universal Content Engine
+
+Explain why these principles were selected.
+
+=========================================================
+10. Future AI Integration
+=========================================================
+
+Expand the AI section.
+
+Explain how this architecture will later support
+
+- AI Hints
+- AI Code Review
+- AI Interview Generator
+- AI Roadmap Generator
+- AI Recommendation Engine
+- AI Revision Planner
+
+The goal is to ensure the current architecture does not require redesign when these features are added.
+
+=========================================================
+
+After these improvements are added, this Software Design Document should become the final architecture blueprint.
+
+After that, no further architectural changes should be made unless absolutely necessary.
+
+Implementation should then begin with Phase 1 only.
+
+Each phase should be completed, verified and approved before moving to the next phase.

@@ -213,6 +213,7 @@ import Modal from 'react-modal';
 import { IoGitNetworkSharp } from "react-icons/io5";
 
 import { useSelector } from "react-redux";
+import DsaCodingArenaModal from "../../components/dsa/DsaCodingArenaModal";
 
 const hasAdditionalNotes = (notes) => {
   if (!notes) return false;
@@ -227,6 +228,7 @@ const hasAdditionalNotes = (notes) => {
 
 const Task = ({ key, task, index, handleClick, onReleaseHold }) => {
   const { currentUser } = useSelector((state) => state.store);
+  const [showCodingModal, setShowCodingModal] = useState(false);
   const canCreateSubtask = currentUser?.userRole?.name === "projectmanager" || currentUser?.userRole?.name === "admin";
 
   const [, setMenuOpen] = useState(false);
@@ -575,7 +577,12 @@ const Task = ({ key, task, index, handleClick, onReleaseHold }) => {
         )}
       </Draggable>
 
-
+      {/* LeetCode Coding Simulation Modal */}
+      <DsaCodingArenaModal
+        isOpen={showCodingModal}
+        onClose={() => setShowCodingModal(false)}
+        task={task}
+      />
     </>
   );
 };

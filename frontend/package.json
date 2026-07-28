@@ -6,6 +6,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@hello-pangea/dnd": "^18.0.1",
+    "@monaco-editor/react": "^4.7.0",
     "@mui/material": "^5.15.17",
     "@reduxjs/toolkit": "^2.5.1",
     "@testing-library/jest-dom": "^5.17.0",

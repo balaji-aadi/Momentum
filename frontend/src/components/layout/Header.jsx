@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { IoNotificationsOutline, IoSearchOutline, IoCalendarOutline, IoTimeOutline, IoCloseCircleOutline, IoLinkOutline, IoMenuOutline } from 'react-icons/io5';
+import { LuTrophy } from 'react-icons/lu';
 import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
 import { ProjectApi } from '../../services/api/Project.api';
 import { useSocket } from '../../SocketProvider';
@@ -24,6 +25,17 @@ const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
   const notificationRef = useRef();
   const searchRef = useRef();
+
+  const [userXp, setUserXp] = useState(() => Number(localStorage.getItem('sarthi_user_xp') || 0));
+
+  useEffect(() => {
+    const syncXp = () => {
+      const saved = localStorage.getItem('sarthi_user_xp');
+      setUserXp(saved !== null ? Number(saved) : 0);
+    };
+    window.addEventListener('storage', syncXp);
+    return () => window.removeEventListener('storage', syncXp);
+  }, []);
   
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [recentSearches, setRecentSearches] = useState([]);
@@ -414,6 +426,12 @@ const Header = ({ toggleSidebar }) => {
                  )}
             </div>
             
+            {/* User Total XP Badge in Main Navbar (Image 5) */}
+            <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-extrabold text-xs shrink-0 shadow-2xs" title="Total Accumulated DSA XP">
+              <LuTrophy size={15} className="text-amber-500" />
+              <span>{userXp} XP</span>
+            </div>
+
             <button 
                 onClick={() => { if (!isLocked) dispatch(setShowConsistencyModal(true)); }}
                 disabled={isLocked}

@@ -20,7 +20,8 @@ import focusRouter from "../services/focus-service/focus.router.js";
 import branchRouter from "../services/branch-service/branch.router.js";
 import subscriptionRouter from "../services/subscription-service/subscription.router.js";
 import noteRouter from "../services/note-service/note.router.js";
-
+import problemRouter from "../services/problem-service/problem.router.js";
+import judgeRouter from "../services/judge-service/judge.router.js";
 
 const router = Router();
 
@@ -45,5 +46,7 @@ router.use("/focus", focusRouter);
 router.use("/branch", branchRouter);
 router.use("/subscription", subscriptionRouter);
 router.use("/note", noteRouter);
+router.use("/problem", problemRouter);
+router.use("/judge", judgeRouter);
 
 export default router;

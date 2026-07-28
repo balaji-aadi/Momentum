@@ -8,6 +8,8 @@ import { SprintApi } from '../../services/api/Sprint.api';
 import { ProjectApi } from '../../services/api/Project.api';
 import { CommonApi } from '../../services/api/Common.api';
 import { server } from '../../services/config';
+import DsaCodingArenaModal from '../dsa/DsaCodingArenaModal';
+import { LuCode2 } from 'react-icons/lu';
 import ReactQuill from 'react-quill';
 import { IoRepeatOutline, IoTrophyOutline, IoTrashOutline } from 'react-icons/io5';
 
@@ -59,6 +61,7 @@ const TaskDetailDrawer = () => {
     // Get taskId from query params
     const taskId = searchParams.get('taskId');
     const { currentUser } = useSelector(state => state.store);
+    const [showCodingModal, setShowCodingModal] = useState(false);
 
     // Role Permissions
     const isAdmin = currentUser?.userRole?.name === 'admin';
@@ -376,7 +379,17 @@ const TaskDetailDrawer = () => {
                     </span>
                     <span className="text-xs text-textSub font-mono font-bold bg-slate-50 px-2 py-0.5 rounded border border-borderLight">{task?.taskId}</span>
                 </div>
-                <div className="flex items-center gap-3 shrink-0">
+                <div className="flex items-center gap-2 shrink-0">
+                    {task?.parentTask && (
+                        <button
+                            onClick={() => setShowCodingModal(true)}
+                            className="px-2.5 py-1.5 bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-600 rounded-xl transition-all flex items-center gap-1.5 text-xs font-bold shadow-sm group cursor-pointer"
+                            title="Open Code Workspace"
+                        >
+                            <span className="text-emerald-500 font-black text-sm tracking-tighter">&lt;/&gt;</span>
+                            <span className="hidden sm:inline font-bold">Code</span>
+                        </button>
+                    )}
                     <button
                         onClick={closeDrawer}
                         className="p-2.5 bg-slate-100 hover:bg-red-50 text-slate-500 hover:text-red-500 rounded-xl transition-all shadow-sm flex items-center justify-center border border-slate-200 hover:border-red-200 group"
@@ -1373,6 +1386,13 @@ const TaskDetailDrawer = () => {
                     </div>
                 </div>
             )}
+
+            {/* LeetCode Coding Simulation Modal */}
+            <DsaCodingArenaModal
+                isOpen={showCodingModal}
+                onClose={() => setShowCodingModal(false)}
+                task={task}
+            />
         </div>
     );
 };

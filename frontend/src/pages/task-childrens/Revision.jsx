@@ -33,6 +33,8 @@ import {
 import toast from 'react-hot-toast';
 import InputField from '../../components/InputField';
 import { IoEllipsisHorizontalOutline } from 'react-icons/io5';
+import { FaYoutube } from 'react-icons/fa';
+import DsaCodingArenaModal from '../../components/dsa/DsaCodingArenaModal';
 import TaskDetailDrawer from './TaskDetailDrawer';
 import CreateTask from './CreateTask';
 
@@ -121,6 +123,7 @@ const Revision = () => {
     const navigate = useNavigate();
     const [tasks, setTasks] = useState([]);
     const [selectedTaskForDrawer, setSelectedTaskForDrawer] = useState(null);
+    const [codingModalTask, setCodingModalTask] = useState(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [editTaskId, setEditTaskId] = useState(null);
     const [editTaskData, setEditTaskData] = useState(null);
@@ -1011,21 +1014,21 @@ const Revision = () => {
                                         📖 VIEW DETAILS & NOTES
                                     </button>
                                     {(task.projectName?.key === 'DSA' || (task.taskId && task.taskId.startsWith('DSA-'))) && (
-                                        <button
-                                            onClick={() => {
-                                                const slug = task.taskName
-                                                    .toLowerCase()
-                                                    .trim()
-                                                    .replace(/[^\w\s-]/g, '')
-                                                    .replace(/[\s_-]+/g, '-')
-                                                    .replace(/^-+|-+$/g, '');
-                                                window.open(`https://leetcode.com/problems/${slug}/description/`, '_blank');
-                                            }}
-                                            className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-600 rounded-xl border border-slate-100 transition-all shrink-0 animate-fade-in"
-                                        >
-                                            <img src="/leetcode.png" alt="LeetCode" className="w-4 h-4 object-contain" />
-                                            LEETCODE DESCRIPTION
-                                        </button>
+                                         <button
+                                             onClick={() => {
+                                                 const slug = task.taskName
+                                                     .toLowerCase()
+                                                     .trim()
+                                                     .replace(/[^\w\s-]/g, '')
+                                                     .replace(/[\s_-]+/g, '-')
+                                                     .replace(/^-+|-+$/g, '');
+                                                 window.open(`https://leetcode.com/problems/${slug}/description/`, '_blank');
+                                             }}
+                                             className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-600 rounded-xl border border-slate-100 transition-all shrink-0 animate-fade-in"
+                                         >
+                                             <img src="/leetcode.png" alt="LeetCode" className="w-4 h-4 object-contain" />
+                                             LEETCODE DESCRIPTION
+                                         </button>
                                     )}
                                     {task.youtubeUrl && (
                                         <button
@@ -1658,7 +1661,7 @@ const Revision = () => {
                                                                         .replace(/^-+|-+$/g, '');
                                                                     window.open(`https://leetcode.com/problems/${slug}/description/`, '_blank');
                                                                 }}
-                                                                className="hover:scale-115 transition-all shrink-0 inline-flex items-center p-0.5 rounded hover:bg-orange-50"
+                                                                className="hover:scale-115 transition-all shrink-0 inline-flex items-center p-0.5 rounded hover:bg-orange-50 dark:hover:bg-orange-950/40"
                                                                 title="Open on LeetCode"
                                                             >
                                                                 <img src="/leetcode.png" alt="LeetCode" className="w-3.5 h-3.5 object-contain" />
@@ -2165,7 +2168,7 @@ const Revision = () => {
                                                 <div className="flex flex-wrap gap-1.5">
                                                     {generatedChallenge.companies.map((c, i) => (
                                                         <span key={i} className="text-[9px] font-bold text-slate-600 bg-white border border-slate-200 px-2 py-0.5 rounded-lg shadow-sm">
-                                                            {c}
+                                                            {typeof c === 'object' ? c.name : c}
                                                         </span>
                                                     ))}
                                                 </div>
@@ -2393,6 +2396,13 @@ const Revision = () => {
                     </div>
                 </div>
             )}
+
+            {/* LeetCode Coding Simulation Modal */}
+            <DsaCodingArenaModal
+                isOpen={Boolean(codingModalTask)}
+                onClose={() => setCodingModalTask(null)}
+                task={codingModalTask}
+            />
         </div>
     );
 };
