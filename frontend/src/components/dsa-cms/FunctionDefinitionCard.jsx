@@ -3,7 +3,7 @@ import { LuCode2, LuPlus, LuTrash2, LuInfo } from 'react-icons/lu';
 
 export function FunctionDefinitionCard({ functionDefinition, onChange }) {
   const {
-    functionName = 'twoSum',
+    functionName = '',
     parameters = [],
     returnType = 'number[]'
   } = functionDefinition || {};
@@ -110,6 +110,7 @@ export function FunctionDefinitionCard({ functionDefinition, onChange }) {
             <option value="number[][]">number[][] (2D Matrix / Grid)</option>
             <option value="string[][]">string[][] (2D String Matrix)</option>
             <option value="ListNode">ListNode (Linked List Head)</option>
+            <option value="RandomListNode">RandomListNode (List Node with Random Pointer)</option>
             <option value="TreeNode">TreeNode (Binary Tree Root)</option>
             <option value="void">void (No Return Value)</option>
           </select>
@@ -177,6 +178,7 @@ export function FunctionDefinitionCard({ functionDefinition, onChange }) {
                       <option value="string[]">string[] (String Array)</option>
                       <option value="number[][]">number[][] (2D Matrix)</option>
                       <option value="ListNode">ListNode (Linked List)</option>
+                      <option value="RandomListNode">RandomListNode (List Node with Random Pointer)</option>
                       <option value="TreeNode">TreeNode (Binary Tree)</option>
                     </select>
                   </div>

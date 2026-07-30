@@ -47,6 +47,90 @@ return []`
     }
   },
   {
+    id: 'linked_list',
+    label: 'Singly Linked List',
+    description: 'Generates singly linked lists for traversal, reversal, palindrome check, and fast/slow pointer problems.',
+    generatorName: 'LinkedListGeneratorProvider',
+    validatorRule: 'LinkedListValidator',
+    comparatorName: 'ExactMatch',
+    normalizerName: '',
+    defaultRandomCount: 10,
+    defaultStressCount: 2,
+    defaultFunctionDefinition: {
+      name: 'isPalindrome',
+      parameters: [
+        { name: 'head', type: 'ListNode' }
+      ],
+      returnType: 'boolean'
+    },
+    defaultTypeConstraints: {
+      head: { minNodes: 3, maxNodes: 10, minValue: 1, maxValue: 9 }
+    },
+    sampleReferenceCode: {
+      javascript:
+`if (!head || !head.next) return true;
+const vals = [];
+let curr = head;
+while (curr) {
+  vals.push(curr.val);
+  curr = curr.next;
+}
+for (let i = 0; i < Math.floor(vals.length / 2); i++) {
+  if (vals[i] !== vals[vals.length - 1 - i]) return false;
+}
+return true;`,
+      python:
+`vals = []
+curr = head
+while curr:
+    vals.append(curr.val)
+    curr = curr.next
+return vals == vals[::-1]`
+    }
+  },
+  {
+    id: 'copy_random_list',
+    label: 'Random Pointer Linked List',
+    description: 'Constructs a deep copy of a linked list where each node has a next and a random pointer.',
+    generatorName: 'RandomListGeneratorPlugin',
+    validatorRule: 'range',
+    comparatorName: 'RandomListMatch',
+    normalizerName: '',
+    defaultRandomCount: 10,
+    defaultStressCount: 2,
+    defaultFunctionDefinition: {
+      name: 'copyRandomList',
+      parameters: [
+        { name: 'head', type: 'RandomListNode' }
+      ],
+      returnType: 'RandomListNode'
+    },
+    defaultTypeConstraints: {
+      head: { nodeCountMin: 3, nodeCountMax: 10, valueMin: -100, valueMax: 100 }
+    },
+    sampleReferenceCode: {
+      javascript:
+`if (!head) return null;
+return head;`,
+      python:
+`if not head:
+    return None
+old_to_new = {}
+curr = head
+while curr:
+    old_to_new[curr] = Node(curr.val)
+    curr = curr.next
+curr = head
+while curr:
+    if curr.next:
+        old_to_new[curr].next = old_to_new[curr.next]
+    if curr.random:
+        old_to_new[curr].random = old_to_new[curr.random]
+    curr = curr.next
+return old_to_new[head]`
+    }
+  },
+  {
     id: 'binary_search',
     label: 'Binary Search / Sorted Array',
     description: 'Monotonically sorted element arrays for O(log N) search problems.',
@@ -474,6 +558,116 @@ return res`
 `return [];`,
       python:
 `return []`
+    }
+  },
+  {
+    id: 'eval_rpn',
+    label: 'Evaluate Reverse Polish Notation (RPN)',
+    description: 'Generates valid postfix expression token arrays with guaranteed operand stacks and zero division safety.',
+    generatorName: 'ExpressionGeneratorPlugin',
+    validatorRule: 'range',
+    comparatorName: 'ExactMatch',
+    normalizerName: '',
+    defaultRandomCount: 10,
+    defaultStressCount: 2,
+    defaultFunctionDefinition: {
+      name: 'evalRPN',
+      parameters: [
+        { name: 'tokens', type: 'string[]' }
+      ],
+      returnType: 'integer'
+    },
+    defaultTypeConstraints: {
+      tokens: { minN: 3, maxN: 15, minValue: -200, maxValue: 200 }
+    },
+    sampleReferenceCode: {
+      javascript:
+`const stack = [];
+for (const t of tokens) {
+  if (t === '+' || t === '-' || t === '*' || t === '/') {
+    const b = stack.pop();
+    const a = stack.pop();
+    if (t === '+') stack.push(a + b);
+    else if (t === '-') stack.push(a - b);
+    else if (t === '*') stack.push(a * b);
+    else if (t === '/') stack.push(Math.trunc(a / b));
+  } else {
+    stack.push(Number(t));
+  }
+}
+return stack[0];`,
+      python:
+`stack = []
+for t in tokens:
+    if t in ("+", "-", "*", "/"):
+        b = stack.pop()
+        a = stack.pop()
+        if t == "+": stack.append(a + b)
+        elif t == "-": stack.append(a - b)
+        elif t == "*": stack.append(a * b)
+        elif t == "/": stack.append(int(a / b))
+    else:
+        stack.append(int(t))
+return stack[0]`
+    }
+  },
+  {
+    id: 'decode_string',
+    label: 'Encoded Bracket String / Stack Parsing',
+    description: 'Generates valid nested bracket encoded strings (e.g. 3[a]2[bc], 3[a2[c]]) for stack string parsing problems.',
+    generatorName: 'EncodedStringPlugin',
+    validatorRule: 'range',
+    comparatorName: 'ExactMatch',
+    normalizerName: '',
+    defaultRandomCount: 10,
+    defaultStressCount: 2,
+    defaultFunctionDefinition: {
+      name: 'decodeString',
+      parameters: [
+        { name: 's', type: 'string' }
+      ],
+      returnType: 'string'
+    },
+    defaultTypeConstraints: {
+      s: { maxDepth: 2, maxK: 5 }
+    },
+    sampleReferenceCode: {
+      javascript:
+`const stack = [];
+let currNum = 0;
+let currStr = '';
+for (const c of s) {
+  if (!isNaN(c)) {
+    currNum = currNum * 10 + Number(c);
+  } else if (c === '[') {
+    stack.push([currStr, currNum]);
+    currStr = '';
+    currNum = 0;
+  } else if (c === ']') {
+    const [prevStr, num] = stack.pop();
+    currStr = prevStr + currStr.repeat(num);
+  } else {
+    currStr += c;
+  }
+}
+return currStr;`,
+      python:
+`stack = []
+curr_num = 0
+curr_str = ""
+for c in s:
+    if c.isdigit():
+        curr_num = curr_num * 10 + int(c)
+    elif c == '[':
+        stack.append((curr_str, curr_num))
+        curr_str = ""
+        curr_num = 0
+    elif c == ']':
+        prev_str, num = stack.pop()
+        curr_str = prev_str + curr_str * num
+    else:
+        curr_str += c
+return curr_str`
     }
   },
   {

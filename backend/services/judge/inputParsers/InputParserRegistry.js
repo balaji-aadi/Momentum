@@ -4,6 +4,7 @@ import { MatrixParser } from './MatrixParser.js';
 import { LinkedListParser } from './LinkedListParser.js';
 import { BinaryTreeParser } from './BinaryTreeParser.js';
 import { GraphParser } from './GraphParser.js';
+import { RandomListParser } from './RandomListParser.js';
 
 export const PARSER_REGISTRY = {
   PrimitiveParser,
@@ -12,6 +13,7 @@ export const PARSER_REGISTRY = {
   LinkedListParser,
   BinaryTreeParser,
   GraphParser,
+  RandomListParser,
   
   // Aliases for user profiles
   primitive: PrimitiveParser,
@@ -19,7 +21,8 @@ export const PARSER_REGISTRY = {
   matrix: MatrixParser,
   'linked-list': LinkedListParser,
   'binary-tree': BinaryTreeParser,
-  graph: GraphParser
+  graph: GraphParser,
+  'random-list': RandomListParser
 };
 
 export class InputParserRegistry {

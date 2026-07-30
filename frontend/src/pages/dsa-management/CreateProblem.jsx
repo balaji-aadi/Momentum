@@ -77,10 +77,9 @@ export default function CreateProblem() {
     ],
     executionLimits: { timeLimitMs: 2000, memoryLimitMb: 256 },
     functionDefinition: {
-      functionName: 'twoSum',
+      functionName: 'solution',
       parameters: [
-        { name: 'nums', type: 'number[]', required: true, nullable: false, description: 'Array of integers' },
-        { name: 'target', type: 'number', required: true, nullable: false, description: 'Target sum' }
+        { name: 'nums', type: 'number[]', required: true, nullable: false, description: 'Input array' }
       ],
       returnType: 'number[]'
     },

@@ -16,7 +16,9 @@ export const TYPE_MAP = {
     'boolean[]': 'List[bool]',
     'number[][]': 'List[List[int]]',
     ListNode: 'Optional[ListNode]',
-    TreeNode: 'Optional[TreeNode]'
+    TreeNode: 'Optional[TreeNode]',
+    RandomListNode: 'Optional[Node]',
+    Node: 'Optional[Node]'
   },
   javascript: {
     number: 'number',
@@ -28,7 +30,9 @@ export const TYPE_MAP = {
     'boolean[]': 'boolean[]',
     'number[][]': 'number[][]',
     ListNode: 'ListNode',
-    TreeNode: 'TreeNode'
+    TreeNode: 'TreeNode',
+    RandomListNode: 'Node',
+    Node: 'Node'
   },
   cpp: {
     number: 'int',
@@ -40,7 +44,9 @@ export const TYPE_MAP = {
     'boolean[]': 'vector<bool>',
     'number[][]': 'vector<vector<int>>',
     ListNode: 'ListNode*',
-    TreeNode: 'TreeNode*'
+    TreeNode: 'TreeNode*',
+    RandomListNode: 'Node*',
+    Node: 'Node*'
   },
   java: {
     number: 'int',
@@ -52,7 +58,9 @@ export const TYPE_MAP = {
     'boolean[]': 'boolean[]',
     'number[][]': 'int[][]',
     ListNode: 'ListNode',
-    TreeNode: 'TreeNode'
+    TreeNode: 'TreeNode',
+    RandomListNode: 'Node',
+    Node: 'Node'
   }
 };
 
@@ -63,10 +71,14 @@ export function generatePythonTemplate(fnDef) {
   const { functionName = 'solution', parameters = [], returnType = 'void' } = fnDef || {};
   const pyReturnType = TYPE_MAP.python[returnType] || returnType;
 
-  const hasStructs = parameters.some(p => p.type === 'ListNode' || p.type === 'TreeNode') || returnType === 'ListNode' || returnType === 'TreeNode';
+  const hasListNode = parameters.some(p => p.type === 'ListNode') || returnType === 'ListNode';
+  const hasTreeNode = parameters.some(p => p.type === 'TreeNode') || returnType === 'TreeNode';
+  const hasRandomNode = parameters.some(p => p.type === 'RandomListNode' || p.type === 'Node') || returnType === 'RandomListNode' || returnType === 'Node';
 
   let imports = 'from typing import List, Optional\n\n';
-  if (hasStructs) {
+  if (hasRandomNode) {
+    imports += `# Definition for a Node.\n# class Node:\n#     def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):\n#         self.val = int(x)\n#         self.next = next\n#         self.random = random\n\n`;
+  } else if (hasListNode || hasTreeNode) {
     imports += `# Definition for singly-linked list / binary tree node\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\n\n`;
   }
 
@@ -109,14 +121,11 @@ export function generateCppTemplate(fnDef) {
 
   const paramList = parameters.map(p => {
     const cppType = TYPE_MAP.cpp[p.type] || p.type;
-    // Pass vectors by reference
-    if (cppType.startsWith('vector<')) {
-      return `${cppType}& ${p.name}`;
-    }
-    return `${cppType} ${p.name}`;
+    const isReference = cppType.startsWith('vector<');
+    return isReference ? `${cppType}& ${p.name}` : `${cppType} ${p.name}`;
   }).join(', ');
 
-  return `#include <vector>\n#include <string>\nusing namespace std;\n\nclass Solution {\npublic:\n    ${cppReturnType} ${functionName}(${paramList}) {\n        // Write your solution here\n    }\n};\n`;
+  return `#include <iostream>\n#include <vector>\n#include <string>\n\nusing namespace std;\n\nclass Solution {\npublic:\n    ${cppReturnType} ${functionName}(${paramList}) {\n        // Write your solution here\n    }\n};\n`;
 }
 
 /**
@@ -131,56 +140,47 @@ export function generateJavaTemplate(fnDef) {
     return `${javaType} ${p.name}`;
   }).join(', ');
 
-  return `import java.util.*;\n\nclass Solution {\n    public ${javaReturnType} ${functionName}(${paramList}) {\n        // Write your solution here\n    }\n}\n`;
+  return `class Solution {\n    public ${javaReturnType} ${functionName}(${paramList}) {\n        // Write your solution here\n    }\n}\n`;
 }
 
 /**
- * Main Template Generator Entrypoint
+ * Generates starter templates for all 4 supported languages in a single call.
  */
-export function generateStarterCode(language, functionDefinition) {
-  const cleanLang = (language || '').toLowerCase().trim();
-  switch (cleanLang) {
-    case 'python':
-    case 'python3':
-    case 'py':
-      return generatePythonTemplate(functionDefinition);
+export function generateAllStarterTemplates(fnDef) {
+  return {
+    python: generatePythonTemplate(fnDef),
+    javascript: generateJavaScriptTemplate(fnDef),
+    cpp: generateCppTemplate(fnDef),
+    java: generateJavaTemplate(fnDef)
+  };
+}
+
+/**
+ * Dispatcher to generate starter code for any requested target language.
+ * Flexibly accepts (fnDef, language) OR (language, fnDef).
+ */
+export function generateStarterCode(arg1, arg2 = 'python') {
+  let fnDef = arg1;
+  let language = arg2;
+
+  if (typeof arg1 === 'string') {
+    language = arg1;
+    fnDef = arg2;
+  }
+
+  const lang = (language || 'python').toLowerCase();
+  switch (lang) {
     case 'javascript':
     case 'js':
-      return generateJavaScriptTemplate(functionDefinition);
+      return generateJavaScriptTemplate(fnDef);
     case 'cpp':
     case 'c++':
-      return generateCppTemplate(functionDefinition);
+      return generateCppTemplate(fnDef);
     case 'java':
-      return generateJavaTemplate(functionDefinition);
+      return generateJavaTemplate(fnDef);
+    case 'python':
+    case 'py':
     default:
-      return generatePythonTemplate(functionDefinition);
+      return generatePythonTemplate(fnDef);
   }
-}
-
-/**
- * Generate All Starter Code Templates for a Problem
- */
-export function generateAllStarterTemplates(functionDefinition) {
-  return [
-    {
-      language: 'python',
-      code: generatePythonTemplate(functionDefinition),
-      functionSignature: `${functionDefinition.functionName}(self, ...)`
-    },
-    {
-      language: 'javascript',
-      code: generateJavaScriptTemplate(functionDefinition),
-      functionSignature: `${functionDefinition.functionName}(...)`
-    },
-    {
-      language: 'cpp',
-      code: generateCppTemplate(functionDefinition),
-      functionSignature: `${functionDefinition.functionName}(...)`
-    },
-    {
-      language: 'java',
-      code: generateJavaTemplate(functionDefinition),
-      functionSignature: `${functionDefinition.functionName}(...)`
-    }
-  ];
 }

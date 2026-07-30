@@ -29,17 +29,17 @@ const executionProfileSchema = new Schema({
   },
   inputParser: { 
     type: String, 
-    enum: ['PrimitiveParser', 'ArrayParser', 'MatrixParser', 'LinkedListParser', 'BinaryTreeParser', 'GraphParser'], 
+    trim: true,
     default: 'ArrayParser' 
   },
   outputSerializer: { 
     type: String, 
-    enum: ['PrimitiveSerializer', 'ArraySerializer', 'LinkedListSerializer', 'BinaryTreeSerializer'], 
+    trim: true,
     default: 'ArraySerializer' 
   },
   comparator: { 
     type: String, 
-    enum: ['ExactMatch', 'OrderedArrayMatch', 'UnorderedArrayMatch', 'LinkedListMatch', 'TreeMatch', 'FloatToleranceMatch'], 
+    trim: true,
     default: 'ExactMatch' 
   }
 }, { _id: false });

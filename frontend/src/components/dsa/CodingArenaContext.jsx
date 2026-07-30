@@ -6,6 +6,65 @@ import toast from 'react-hot-toast';
 
 export const CodingArenaContext = createContext(null);
 
+// Helper to generate dynamic starter code template if starterCode is missing or empty
+const generateDynamicStarterCode = (fnDef, langKey) => {
+  const name = fnDef?.functionName || fnDef?.name || 'solution';
+  const params = fnDef?.parameters || [];
+  const retType = fnDef?.returnType || 'void';
+  const cleanLang = (langKey || '').toLowerCase().trim();
+
+  if (cleanLang.includes('python')) {
+    const paramStr = params.map(p => {
+      const pName = p.name || 'param';
+      const pType = p.type === 'number[]' || p.type === 'array' ? 'List[int]'
+        : p.type === 'string' ? 'str'
+        : p.type === 'boolean' ? 'bool' : 'int';
+      return `${pName}: ${pType}`;
+    }).join(', ');
+    const pyParams = paramStr ? `self, ${paramStr}` : 'self';
+    const pyRet = retType === 'number[]' || retType === 'array' || retType === 'matrix' ? 'List[int]'
+      : retType === 'string' ? 'str'
+      : retType === 'boolean' ? 'bool' : 'int';
+    return `class Solution:\n    def ${name}(${pyParams}) -> ${pyRet}:\n        pass\n`;
+  }
+
+  if (cleanLang.includes('js') || cleanLang.includes('javascript')) {
+    const paramNames = params.map(p => p.name || 'param').join(', ');
+    const docComments = params.map(p => ` * @param {${p.type || 'any'}} ${p.name || 'param'}`).join('\n');
+    return `/**\n${docComments}\n * @return {${retType}}\n */\nvar ${name} = function(${paramNames}) {\n    \n};\n`;
+  }
+
+  if (cleanLang.includes('c++') || cleanLang.includes('cpp')) {
+    const paramStr = params.map(p => {
+      const pName = p.name || 'param';
+      const pType = p.type === 'number[]' || p.type === 'array' ? 'vector<int>&'
+        : p.type === 'string' ? 'string'
+        : p.type === 'boolean' ? 'bool' : 'int';
+      return `${pType} ${pName}`;
+    }).join(', ');
+    const cppRet = retType === 'number[]' || retType === 'array' || retType === 'matrix' ? 'vector<int>'
+      : retType === 'string' ? 'string'
+      : retType === 'boolean' ? 'bool' : 'int';
+    return `class Solution {\npublic:\n    ${cppRet} ${name}(${paramStr}) {\n        \n    }\n};\n`;
+  }
+
+  if (cleanLang.includes('java')) {
+    const paramStr = params.map(p => {
+      const pName = p.name || 'param';
+      const pType = p.type === 'number[]' || p.type === 'array' ? 'int[]'
+        : p.type === 'string' ? 'String'
+        : p.type === 'boolean' ? 'boolean' : 'int';
+      return `${pType} ${pName}`;
+    }).join(', ');
+    const javaRet = retType === 'number[]' || retType === 'array' || retType === 'matrix' ? 'int[]'
+      : retType === 'string' ? 'String'
+      : retType === 'boolean' ? 'boolean' : 'int';
+    return `class Solution {\n    public ${javaRet} ${name}(${paramStr}) {\n        \n    }\n}\n`;
+  }
+
+  return `// Write your solution for ${name}\n`;
+};
+
 // Helper to resolve starter code across array and object formats
 const resolveStarterCode = (problemObj, langKey) => {
   if (!problemObj) return '';
@@ -24,18 +83,21 @@ const resolveStarterCode = (problemObj, langKey) => {
       s.language?.toLowerCase() === cleanLang
     );
     if (found && found.code && found.code.trim()) return found.code;
-    return problemObj.starterCode[0].code || '';
+    if (problemObj.starterCode[0]?.code && problemObj.starterCode[0].code.trim()) {
+      return problemObj.starterCode[0].code;
+    }
   }
 
   if (typeof problemObj.starterCode === 'object' && problemObj.starterCode !== null) {
-    return problemObj.starterCode[langNormalized] || 
-           problemObj.starterCode[cleanLang] || 
-           problemObj.starterCode.python || 
-           problemObj.starterCode.javascript || 
-           Object.values(problemObj.starterCode)[0] || '';
+    const val = problemObj.starterCode[langNormalized] || 
+                problemObj.starterCode[cleanLang] || 
+                problemObj.starterCode.python || 
+                problemObj.starterCode.javascript || 
+                Object.values(problemObj.starterCode)[0];
+    if (val && typeof val === 'string' && val.trim()) return val;
   }
 
-  return '';
+  return generateDynamicStarterCode(problemObj.functionDefinition, langKey);
 };
 
 // Helper to resolve visible test cases from MongoDB
@@ -175,11 +237,11 @@ export function CodingArenaProvider({ problem, task, onClose, onSolveSuccess, ch
   useEffect(() => {
     localStorage.setItem(`dsa_lang_${problemId}`, language);
     const saved = localStorage.getItem(`dsa_code_${problemId}_${language}`);
-    if (saved) {
+    if (saved && saved.trim()) {
       setCode(saved);
     } else {
       const starter = resolveStarterCode(problem, language);
-      if (starter) setCode(starter);
+      setCode(starter);
     }
   }, [language, problemId, problem]);
 

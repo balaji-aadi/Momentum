@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import { SeededPRNG } from './generators/prng/SeededPRNG.js';
 import { GeneratorPluginRegistry } from './generators/registries/GeneratorPluginRegistry.js';
+import { BootstrapRegistry } from './generators/registries/BootstrapRegistry.js';
 import { ConstraintValidator } from './validators/ConstraintValidator.js';
 import { StressGenerators } from './generators/stress/StressGenerators.js';
 import { ReferenceRunner } from './referenceRunner.js';
@@ -18,7 +19,7 @@ export class ProblemPackageCompiler {
    * @param {string} spec.problemId - Unique ID or slug
    * @param {string} spec.title - Problem title
    * @param {Object} spec.functionDefinition - Function schema { name, parameters, returnType }
-   * @param {string} [spec.generatorName='UniquePairGeneratorPlugin'] - Generator or plugin name
+   * @param {string} [spec.generatorName='RandomArrayPlugin'] - Generator or plugin name
    * @param {Object} [spec.generatorOptions={}] - Options for generator/plugin
    * @param {Object} [spec.constraints={}] - Validation constraints & invariant rules
    * @param {string} spec.referenceLanguage - 'javascript' | 'python'
@@ -28,20 +29,27 @@ export class ProblemPackageCompiler {
    * @param {number} [spec.randomCount=10] - Number of random test cases to generate
    * @param {number} [spec.stressCount=2] - Number of stress test cases to generate
    * @param {number} [spec.seed=133742] - Deterministic PRNG seed
-   * @returns {Promise<Object>} Self-contained problem package JSON
+   * @returns {Promise<Object>} Compiled problem package with testcases, manifest, and SHA256 checksum
    */
-  static async compilePackage(spec) {
+  static async compilePackage(spec = {}) {
+    return ProblemPackageCompiler.compile(spec);
+  }
+
+  static async compile(spec = {}) {
+    // Ensure all registered plugins & primitives are loaded dynamically
+    BootstrapRegistry.init();
+
     const {
-      problemId = `prob_${Date.now()}`,
-      title = "Untitled Problem",
+      problemId = 'custom_problem',
+      title = 'Custom Problem',
       functionDefinition,
-      generatorName = 'UniquePairGeneratorPlugin',
+      generatorName = 'RandomArrayPlugin',
       generatorOptions = {},
       constraints = {},
-      referenceLanguage = 'javascript',
+      referenceLanguage = 'python',
       referenceCode,
       comparatorName = 'ExactMatch',
-      normalizerName,
+      normalizerName = '',
       randomCount = 10,
       stressCount = 2,
       seed = 133742
@@ -62,26 +70,20 @@ export class ProblemPackageCompiler {
     const prng = new SeededPRNG(seed);
     const rawCandidates = [];
 
-    // Ensure default plugins are registered in GeneratorPluginRegistry if empty
-    if (GeneratorPluginRegistry.getPlugin('UniquePairGeneratorPlugin') === null) {
-      const { UniquePairGeneratorPlugin } = await import('./generators/plugins/UniquePairGeneratorPlugin.js');
-      const { RandomArrayPlugin } = await import('./generators/plugins/RandomArrayPlugin.js');
-      const { SortedArrayPlugin } = await import('./generators/plugins/SortedArrayPlugin.js');
-      const { ArrayPrimitive } = await import('./generators/primitives/ArrayPrimitive.js');
-
-      GeneratorPluginRegistry.registerPlugin('UniquePairGeneratorPlugin', new UniquePairGeneratorPlugin());
-      GeneratorPluginRegistry.registerPlugin('RandomArrayPlugin', new RandomArrayPlugin());
-      GeneratorPluginRegistry.registerPlugin('SortedArrayPlugin', new SortedArrayPlugin());
-      GeneratorPluginRegistry.registerPrimitive('ArrayPrimitive', new ArrayPrimitive());
-    }
-
-    // 1. Resolve Generator or Plugin from Registry
+    // 1. Resolve Generator or Plugin from Registry (No problem-specific hardcoding)
     let generator = GeneratorPluginRegistry.getPlugin(generatorName) || GeneratorPluginRegistry.getPrimitive(generatorName);
 
     if (!generator) {
-      const { UniquePairGeneratorPlugin } = await import('./generators/plugins/UniquePairGeneratorPlugin.js');
-      generator = new UniquePairGeneratorPlugin();
+      // Fallback to generic RandomArrayPlugin if plugin is unrecognized
+      generator = GeneratorPluginRegistry.getPlugin('RandomArrayPlugin') || GeneratorPluginRegistry.getPrimitive('ArrayPrimitive');
     }
+
+    // Attach primary parameter name to generatorOptions for parameter-aware output keys
+    const primaryParam = functionDefinition.parameters && functionDefinition.parameters[0];
+    const enrichedOptions = {
+      paramName: primaryParam?.name || 'nums',
+      ...generatorOptions
+    };
 
     // 2. Generate and Validate Random Test Cases
     if (generator) {
@@ -89,7 +91,7 @@ export class ProblemPackageCompiler {
         const { candidate } = ConstraintValidator.generateValidInput(
           generator,
           prng,
-          generatorOptions,
+          enrichedOptions,
           constraints
         );
 

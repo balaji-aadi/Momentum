@@ -17,7 +17,9 @@ export class StringPrimitive extends BasePrimitiveGenerator {
     uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
     alphabetic: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
     numeric: '0123456789',
-    alphanumeric: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    alphanumeric: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+    hexadecimal: '0123456789abcdef',
+    binary: '01'
   };
 
   /**

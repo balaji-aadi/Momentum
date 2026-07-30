@@ -305,9 +305,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     )}
                 </div>
 
-                {/* DSA Management Collapsible Section */}
-                <div className="mt-4 border-t border-slate-100/80 pt-3">
-                    {/* Collapsible Parent Header */}
+                {/* DSA Management Collapsible Section */} {/* Freezing the work on 31st July 2026 */}
+                {/* <div className="mt-4 border-t border-slate-100/80 pt-3">
                     <button
                         type="button"
                         onClick={() => setIsDsaOpen(prev => !prev)}
@@ -332,7 +331,6 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                         )}
                     </button>
 
-                    {/* Collapsible Sub-items */}
                     {(isDsaOpen || isSidebarCollapsed) && (
                         <div className={`space-y-0.5 mt-1 ${!isSidebarCollapsed ? 'pl-3' : ''}`}>
                             {[
@@ -377,7 +375,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                             ))}
                         </div>
                     )}
-                </div>
+                </div> */}
 
                 {/* Favorites/Projects Section */}
                 <div className="mt-6">
@@ -451,11 +449,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             {/* Bottom Actions */}
             <div className={`mt-auto border-t border-slate-100/50 ${isSidebarCollapsed ? 'p-2 space-y-2' : 'px-4 py-5 space-y-3'}`}>
                 {/* Settings Item */}
-                <MenuItem 
-                    icon={<IoSettingsOutline />} 
-                    label="Settings" 
-                    path="/settings" 
-                    isActive={window.location.pathname === '/settings'} 
+                <MenuItem
+                    icon={<IoSettingsOutline />}
+                    label="Settings"
+                    path="/settings"
+                    isActive={window.location.pathname === '/settings'}
                     onClick={() => setIsOpen && setIsOpen(false)}
                     isLocked={noBranchLocked || isRevisionLocked}
                     isCollapsed={isSidebarCollapsed}

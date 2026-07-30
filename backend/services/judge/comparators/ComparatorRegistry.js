@@ -5,6 +5,7 @@ import { UnorderedNestedArrayMatch } from './UnorderedNestedArrayMatch.js';
 import { LinkedListMatch } from './LinkedListMatch.js';
 import { TreeMatch } from './TreeMatch.js';
 import { FloatToleranceMatch } from './FloatToleranceMatch.js';
+import { RandomListComparator } from './RandomListComparator.js';
 
 export const COMPARATOR_REGISTRY = {
   ExactMatch,
@@ -13,7 +14,8 @@ export const COMPARATOR_REGISTRY = {
   UnorderedNestedArrayMatch,
   LinkedListMatch,
   TreeMatch,
-  FloatToleranceMatch
+  FloatToleranceMatch,
+  RandomListMatch: new RandomListComparator()
 };
 
 export class ComparatorRegistry {

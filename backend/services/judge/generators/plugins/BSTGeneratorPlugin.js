@@ -37,11 +37,11 @@ export class BSTGeneratorPlugin extends BaseGeneratorPlugin {
   }
 
   /**
-   * Generates a BST input object { input: { root: (number | null)[] } }.
+   * Generates a BST input object { input: { [paramName]: (number | null)[] } }.
    * @param {SeededPRNG} prng
    * @param {any} primitiveData
    * @param {Object} pluginOptions
-   * @returns {{ input: { root: (number | null)[] }, expectedOutput: null }}
+   * @returns {{ input: Object, expectedOutput: null }}
    */
   apply(prng, primitiveData, pluginOptions = {}) {
     const { input } = this.distinctPlugin.apply(prng, primitiveData, {
@@ -53,7 +53,6 @@ export class BSTGeneratorPlugin extends BaseGeneratorPlugin {
 
     const sortedValues = input.nums.sort((a, b) => a - b);
 
-    // Recursively build balanced BST tree nodes
     function buildBST(arr, start, end) {
       if (start > end) return null;
       const mid = Math.floor((start + end) / 2);
@@ -66,9 +65,10 @@ export class BSTGeneratorPlugin extends BaseGeneratorPlugin {
 
     const root = buildBST(sortedValues, 0, sortedValues.length - 1);
     const levelOrderArray = BSTGeneratorPlugin.buildLevelOrder(root);
+    const paramName = pluginOptions.paramName || 'root';
 
     return {
-      input: { root: levelOrderArray },
+      input: { [paramName]: levelOrderArray },
       expectedOutput: null
     };
   }

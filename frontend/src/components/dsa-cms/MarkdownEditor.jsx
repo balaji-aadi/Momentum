@@ -217,23 +217,23 @@ export default function MarkdownEditor({
       </div>
 
       {/* Editor Body Workspace */}
-      <div className={`grid ${viewMode === 'split' ? 'grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-borderLight dark:divide-slate-800' : 'grid-cols-1'} flex-1`}>
+      <div className={`grid ${viewMode === 'split' ? 'grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-borderLight dark:divide-slate-800' : 'grid-cols-1'} flex-1 min-h-[350px]`}>
         {/* Write Pane */}
         {viewMode !== 'preview' && (
-          <div className="p-3 flex flex-col">
+          <div className="p-3 flex flex-col min-h-[350px]">
             <textarea
               ref={textareaRef}
               value={value}
               onChange={(e) => onChange(e.target.value)}
               placeholder={placeholder}
-              className={`w-full p-3 bg-transparent text-slate-900 dark:text-slate-100 font-mono text-sm leading-relaxed focus:outline-none resize-y ${minHeight} ${isFullscreen ? 'flex-1 min-h-[400px]' : ''}`}
+              className={`w-full p-3 bg-transparent text-slate-900 dark:text-slate-100 font-mono text-sm leading-relaxed focus:outline-none resize-y min-h-[330px] ${isFullscreen ? 'flex-1 min-h-[500px]' : ''}`}
             ></textarea>
           </div>
         )}
 
         {/* Live Preview Pane */}
         {viewMode !== 'write' && (
-          <div className={`p-5 bg-white dark:bg-slate-950 overflow-y-auto max-h-[600px] ${isFullscreen ? 'flex-1 max-h-none' : minHeight}`}>
+          <div className={`p-5 bg-slate-50/70 dark:bg-slate-950 overflow-y-auto min-h-[350px] max-h-[600px] ${isFullscreen ? 'flex-1 max-h-none min-h-[500px]' : ''}`}>
             <div 
               className="prose prose-slate dark:prose-invert max-w-none text-sm leading-relaxed text-slate-900 dark:text-slate-100 font-sans"
               dangerouslySetInnerHTML={{ __html: renderMarkdown(value) }}

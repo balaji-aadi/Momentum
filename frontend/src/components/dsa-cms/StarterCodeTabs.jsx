@@ -65,7 +65,7 @@ export default function StarterCodeTabs({ formData, setFormData }) {
     fetchLanguages();
   }, []);
 
-  const starterCodeList = formData.starterCode || [];
+  const starterCodeList = Array.isArray(formData.starterCode) ? formData.starterCode : [];
 
   // Get current active language item from formData.starterCode
   const activeCodeObj = starterCodeList.find(s => s.language === activeLangCode) || {
@@ -85,7 +85,7 @@ export default function StarterCodeTabs({ formData, setFormData }) {
   // Update starter code for active language
   const handleUpdateCode = (field, value) => {
     setFormData(prev => {
-      const list = [...(prev.starterCode || [])];
+      const list = [...(Array.isArray(prev.starterCode) ? prev.starterCode : [])];
       const idx = list.findIndex(s => s.language === activeLangCode);
 
       const updatedObj = {
@@ -115,9 +115,17 @@ export default function StarterCodeTabs({ formData, setFormData }) {
   const handleGenerateAllTemplates = () => {
     const fnDef = formData.functionDefinition || { functionName: 'twoSum', parameters: [], returnType: 'void' };
     const allTemplates = generateAllStarterTemplates(fnDef);
+    
+    const starterArray = Object.entries(allTemplates).map(([langCode, codeText]) => ({
+      language: langCode,
+      code: codeText,
+      functionSignature: `${fnDef.functionName || 'solution'}(...)`,
+      defaultTemplate: codeText
+    }));
+
     setFormData(prev => ({
       ...prev,
-      starterCode: allTemplates
+      starterCode: starterArray
     }));
     toast.success("Generated templates for Python, JavaScript, C++, and Java!");
   };

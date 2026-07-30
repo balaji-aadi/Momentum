@@ -1,5 +1,5 @@
 import React from 'react';
-import { LuSliders, LuSettings } from 'react-icons/lu';
+import { LuSliders } from 'react-icons/lu';
 
 export function ExecutionProfileCard({ executionProfile, onChange }) {
   const {
@@ -45,8 +45,8 @@ export function ExecutionProfileCard({ executionProfile, onChange }) {
             onChange={(e) => handleFieldChange('runtimeType', e.target.value)}
             className="w-full px-3 py-2 text-xs font-semibold border border-slate-200 rounded-xl bg-slate-50/50 focus:outline-none focus:border-primary cursor-pointer"
           >
-            <option value="FUNCTION">FUNCTION (LeetCode / Function Call)</option>
-            <option value="CONSOLE_INPUT">CONSOLE_INPUT (Codeforces / std::cin)</option>
+            <option value="FUNCTION">FUNCTION (Function Call Signature)</option>
+            <option value="CONSOLE_INPUT">CONSOLE_INPUT (Standard Input / std::cin)</option>
           </select>
         </div>
 
@@ -64,6 +64,7 @@ export function ExecutionProfileCard({ executionProfile, onChange }) {
             <option value="ArrayParser">ArrayParser (1D Array)</option>
             <option value="MatrixParser">MatrixParser (2D Grid)</option>
             <option value="LinkedListParser">LinkedListParser (ListNode)</option>
+            <option value="RandomListParser">RandomListParser (RandomListNode)</option>
             <option value="BinaryTreeParser">BinaryTreeParser (TreeNode)</option>
             <option value="GraphParser">GraphParser (Adjacency Graph)</option>
           </select>
@@ -82,6 +83,7 @@ export function ExecutionProfileCard({ executionProfile, onChange }) {
             <option value="PrimitiveSerializer">PrimitiveSerializer</option>
             <option value="ArraySerializer">ArraySerializer</option>
             <option value="LinkedListSerializer">LinkedListSerializer</option>
+            <option value="RandomListSerializer">RandomListSerializer</option>
             <option value="BinaryTreeSerializer">BinaryTreeSerializer</option>
           </select>
         </div>
@@ -100,6 +102,7 @@ export function ExecutionProfileCard({ executionProfile, onChange }) {
             <option value="OrderedArrayMatch">OrderedArrayMatch (Strict Index)</option>
             <option value="UnorderedArrayMatch">UnorderedArrayMatch (Any Order)</option>
             <option value="LinkedListMatch">LinkedListMatch (Node Traversal)</option>
+            <option value="RandomListMatch">RandomListMatch (Random Pointer Isomorphism)</option>
             <option value="TreeMatch">TreeMatch (Tree Structure)</option>
             <option value="FloatToleranceMatch">FloatToleranceMatch (Epsilon 1e-5)</option>
           </select>

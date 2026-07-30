@@ -5,9 +5,11 @@ import { ProblemDescriptionPanel } from './ProblemDescriptionPanel';
 import { CodeEditorPanel } from './CodeEditorPanel';
 import { OutputConsolePanel } from './OutputConsolePanel';
 import { ProblemApi } from '../../services/api/Problem.api';
+import { LuFileText, LuBookOpen, LuHistory, LuChevronRight } from 'react-icons/lu';
 
 function CodingArenaWorkspace({ onClose, containerRef, isResizing, isDraggingHorizontal, isDraggingVertical, leftWidthPercent, setLeftWidthPercent, editorHeightPercent, setEditorHeightPercent, isFullscreenEditor, setIsFullscreenEditor }) {
   const { isConsoleCollapsed } = useCodingArena();
+  const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
 
   return (
     <div 
@@ -24,28 +26,66 @@ function CodingArenaWorkspace({ onClose, containerRef, isResizing, isDraggingHor
 
       {/* Main Workspace Area */}
       <div className="flex-1 flex overflow-hidden relative">
-        {/* Left Panel: Description */}
-        <div 
-          style={{ width: `${leftWidthPercent}%` }}
-          className="h-full overflow-hidden shrink-0"
-        >
-          <ProblemDescriptionPanel />
-        </div>
+        {/* Left Panel: Collapsed Vertical Sidebar vs Full Description Panel */}
+        {isLeftCollapsed ? (
+          <div className="w-[44px] h-full bg-[#141414] border-r border-[#2d2d2d] flex flex-col items-center py-3 gap-4 shrink-0 z-20 font-sans">
+            <button
+              onClick={() => setIsLeftCollapsed(false)}
+              className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-[#252526] rounded-xl transition-all cursor-pointer relative group"
+              title="Expand Description"
+            >
+              <LuFileText size={18} />
+            </button>
+            <button
+              onClick={() => setIsLeftCollapsed(false)}
+              className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-[#252526] rounded-xl transition-all cursor-pointer relative group"
+              title="Expand Editorial"
+            >
+              <LuBookOpen size={18} />
+            </button>
+            <button
+              onClick={() => setIsLeftCollapsed(false)}
+              className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-[#252526] rounded-xl transition-all cursor-pointer relative group"
+              title="Expand Submissions"
+            >
+              <LuHistory size={18} />
+            </button>
+
+            <div className="mt-auto border-t border-[#2d2d2d] pt-3 w-full flex justify-center">
+              <button
+                onClick={() => setIsLeftCollapsed(false)}
+                className="p-2 text-slate-400 hover:text-white hover:bg-[#252526] rounded-xl transition-all cursor-pointer"
+                title="Expand Description Panel"
+              >
+                <LuChevronRight size={18} />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div 
+            style={{ width: `${leftWidthPercent}%` }}
+            className="h-full overflow-hidden shrink-0"
+          >
+            <ProblemDescriptionPanel onToggleCollapse={() => setIsLeftCollapsed(true)} />
+          </div>
+        )}
 
         {/* Horizontal Splitter */}
-        <div 
-          onMouseDown={(e) => {
-            e.preventDefault();
-            isDraggingHorizontal.current = true;
-            document.body.style.cursor = 'col-resize';
-            document.body.style.userSelect = 'none';
-          }}
-          className="w-1.5 h-full bg-[#1e1e1e] hover:bg-primary/80 transition-colors cursor-col-resize shrink-0 z-10 flex items-center justify-center group"
-        >
-          <div className="w-[2px] h-6 bg-slate-600 group-hover:bg-white rounded-full"></div>
-        </div>
+        {!isLeftCollapsed && (
+          <div 
+            onMouseDown={(e) => {
+              e.preventDefault();
+              isDraggingHorizontal.current = true;
+              document.body.style.cursor = 'col-resize';
+              document.body.style.userSelect = 'none';
+            }}
+            className="w-1.5 h-full bg-[#1e1e1e] hover:bg-primary/80 transition-colors cursor-col-resize shrink-0 z-10 flex items-center justify-center group"
+          >
+            <div className="w-[2px] h-6 bg-slate-600 group-hover:bg-white rounded-full"></div>
+          </div>
+        )}
 
-        {/* Right Panel: Code Editor + Console */}
+        {/* Right Panel: Code Editor + Console (Expands to 100% when Left Panel is collapsed) */}
         <div 
           id="right-panel-container"
           className="flex-1 h-full flex flex-col overflow-hidden min-w-[200px]"
@@ -122,8 +162,10 @@ export function DsaCodingArena({ problemId, problem: inputProblem, task, onClose
     const fetchBackendProblem = async () => {
       setLoading(true);
       try {
-        const queryKey = typeof targetId === 'string' ? targetId.toLowerCase().trim().replace(/\s+/g, '-') : targetId;
-        const res = await ProblemApi.getProblemByIdOrSlug(queryKey);
+        const queryKey = typeof targetId === 'string'
+          ? targetId.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-')
+          : targetId;
+        const res = await ProblemApi.getProblemByIdOrSlug(targetId);
         
         if (res.data?.success && res.data.data) {
           setProblem(res.data.data);

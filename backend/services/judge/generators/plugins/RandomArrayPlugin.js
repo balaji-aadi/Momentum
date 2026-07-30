@@ -3,7 +3,7 @@ import { ArrayPrimitive } from '../primitives/ArrayPrimitive.js';
 
 /**
  * RandomArrayPlugin - Reusable Pattern Plugin for Random Array Problems
- * Wraps ArrayPrimitive and returns input object format { input: { nums: number[] } }
+ * Wraps ArrayPrimitive and returns input object format { input: { [paramName]: number[] } }
  */
 export class RandomArrayPlugin extends BaseGeneratorPlugin {
   constructor() {
@@ -16,12 +16,13 @@ export class RandomArrayPlugin extends BaseGeneratorPlugin {
    * @param {SeededPRNG} prng
    * @param {any} primitiveData
    * @param {Object} pluginOptions
-   * @returns {{ input: { nums: number[] }, expectedOutput: null }}
+   * @returns {{ input: Object, expectedOutput: null }}
    */
   apply(prng, primitiveData, pluginOptions = {}) {
     const nums = primitiveData || this.arrayPrimitive.generate(prng, pluginOptions);
+    const paramName = pluginOptions.paramName || 'nums';
     return {
-      input: { nums },
+      input: { [paramName]: nums },
       expectedOutput: null
     };
   }

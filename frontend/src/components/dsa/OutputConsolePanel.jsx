@@ -250,21 +250,45 @@ export function OutputConsolePanel() {
                               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-sans">Input</div>
                               {parameters.length > 0 ? (
                                 parameters.map((param) => {
-                                  const val = (typeof inputCase.input === 'object' && inputCase.input !== null)
-                                    ? inputCase.input[param.name]
-                                    : inputCase.input;
+                                  let parsedInput = inputCase.input;
+                                  if (typeof parsedInput === 'string') {
+                                    try {
+                                      parsedInput = JSON.parse(parsedInput);
+                                    } catch (e) {}
+                                  }
+
+                                  let val = (typeof parsedInput === 'object' && parsedInput !== null && !Array.isArray(parsedInput))
+                                    ? parsedInput[param.name]
+                                    : parsedInput;
+
+                                  if (val === undefined && typeof inputCase.input === 'object' && inputCase.input !== null) {
+                                    val = inputCase.input[param.name] ?? inputCase.input;
+                                  }
+
                                   return (
                                     <div key={param.name} className="space-y-1">
-                                      <span className="text-slate-400">{param.name} =</span>
-                                      <div className="p-2.5 rounded-lg bg-[#262626] border border-slate-800 text-slate-200">
+                                      <span className="text-slate-400 font-mono font-bold">{param.name} =</span>
+                                      <div className="p-2.5 rounded-lg bg-[#262626] border border-slate-800 text-slate-200 font-mono text-xs">
                                         {typeof val === 'object' ? JSON.stringify(val) : String(val ?? '')}
                                       </div>
                                     </div>
                                   );
                                 })
                               ) : (
-                                <div className="p-2.5 rounded-lg bg-[#262626] border border-slate-800 text-slate-200">
-                                  {typeof inputCase.input === 'object' ? JSON.stringify(inputCase.input) : String(inputCase.input || '')}
+                                <div className="p-2.5 rounded-lg bg-[#262626] border border-slate-800 text-slate-200 font-mono text-xs">
+                                  {(() => {
+                                    let rawInp = inputCase.input;
+                                    if (typeof rawInp === 'string') {
+                                      try {
+                                        const parsed = JSON.parse(rawInp);
+                                        if (typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
+                                          const firstVal = Object.values(parsed)[0];
+                                          return typeof firstVal === 'object' ? JSON.stringify(firstVal) : String(firstVal ?? '');
+                                        }
+                                      } catch (e) {}
+                                    }
+                                    return typeof rawInp === 'object' ? JSON.stringify(rawInp) : String(rawInp || '');
+                                  })()}
                                 </div>
                               )}
                             </div>

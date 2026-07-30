@@ -311,8 +311,9 @@ export default function TestCaseCard({ formData, setFormData }) {
         <span className="font-bold flex items-center gap-1.5 text-blue-700 dark:text-blue-300">
           <LuSparkles size={14} /> Data Structure Format Guidelines:
         </span>
-        <div className="flex items-center gap-3 text-[11px] font-mono">
+        <div className="flex items-center gap-3 text-[11px] font-mono flex-wrap">
           <div><strong className="text-blue-800 dark:text-blue-200">ListNode:</strong> <code className="bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">[1,2,3,4]</code></div>
+          <div><strong className="text-blue-800 dark:text-blue-200">RandomListNode:</strong> <code className="bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">[[7,null],[13,0]]</code></div>
           <div><strong className="text-blue-800 dark:text-blue-200">TreeNode:</strong> <code className="bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">[1,null,2,3]</code></div>
           <div><strong className="text-blue-800 dark:text-blue-200">Graph:</strong> <code className="bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">[[2,4],[1,3]]</code></div>
         </div>
@@ -342,81 +343,101 @@ export default function TestCaseCard({ formData, setFormData }) {
           </div>
         </div>
       ) : (
-        <div className="space-y-4">
-          {currentCases.map((tc, idx) => (
-            <div key={idx} className="bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/80 p-4 space-y-3 shadow-xs">
-              {/* Card Header & Controls */}
-              <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-slate-700/60">
-                <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[10px] font-extrabold">{idx + 1}</span>
-                  <span className="text-xs font-bold text-slate-800 dark:text-slate-100">{activeTab === 'visible' ? 'Sample Case' : 'Hidden Case'} #{idx + 1}</span>
-                  {tc.isPerformanceTest && (
-                    <span className="px-2 py-0.5 bg-amber-500/10 text-amber-600 text-[10px] font-bold rounded-md border border-amber-500/20">Stress Test</span>
-                  )}
+        <div className="space-y-2">
+          {/* Scroll Control Header */}
+          <div className="flex items-center justify-between text-xs font-semibold text-textSub bg-slate-50 dark:bg-slate-800/60 px-3.5 py-2 rounded-xl border border-borderLight dark:border-slate-700">
+            <span>Total {currentCases.length} {activeTab} test cases</span>
+            {currentCases.length > 3 && (
+              <span className="text-[11px] font-mono text-primary font-bold">Scroll viewport below to view all items</span>
+            )}
+          </div>
+
+          {/* Scrollable Viewport Container (Fixes UI Overflow in Image 3) */}
+          <div className="max-h-[580px] overflow-y-auto pr-2 space-y-4 custom-scrollbar rounded-xl border border-slate-200/80 dark:border-slate-800 p-2 bg-slate-50/50 dark:bg-slate-950/40">
+            {currentCases.map((tc, idx) => {
+              const currentOutputVal = tc.expectedOutput !== undefined && tc.expectedOutput !== ''
+                ? tc.expectedOutput
+                : (tc.output !== undefined && tc.output !== '' ? tc.output : '');
+
+              return (
+                <div key={idx} className="bg-white dark:bg-slate-800/90 rounded-xl border border-slate-200 dark:border-slate-700/80 p-4 space-y-3 shadow-xs">
+                  {/* Card Header & Controls */}
+                  <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-slate-700/60">
+                    <div className="flex items-center gap-2">
+                      <span className="w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[10px] font-extrabold">{idx + 1}</span>
+                      <span className="text-xs font-bold text-slate-800 dark:text-slate-100">{activeTab === 'visible' ? 'Sample Case' : 'Hidden Case'} #{idx + 1}</span>
+                      {tc.isPerformanceTest && (
+                        <span className="px-2 py-0.5 bg-amber-500/10 text-amber-600 text-[10px] font-bold rounded-md border border-amber-500/20">Stress Test</span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => handleDuplicate(idx)}
+                        className="p-1.5 text-slate-400 hover:text-emerald-600 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-950/40 cursor-pointer transition-colors"
+                        title="Duplicate Case"
+                      >
+                        <LuCopy size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(idx)}
+                        className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer transition-colors"
+                        title="Delete Case"
+                      >
+                        <LuTrash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Input & Expected Output Fields */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Dynamic Parameter Input Builder */}
+                    <StructuredParamInputBuilder
+                      tc={tc}
+                      index={idx}
+                      parameters={formData.functionDefinition?.parameters || []}
+                      onUpdateInput={(i, val) => handleUpdate(i, 'input', val)}
+                    />
+
+                    {/* Expected Output */}
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-bold text-textSub">Expected Output *</label>
+                      <input
+                        type="text"
+                        value={typeof currentOutputVal === 'object' ? JSON.stringify(currentOutputVal) : String(currentOutputVal)}
+                        onChange={(e) => {
+                          try {
+                            const parsed = JSON.parse(e.target.value);
+                            handleUpdate(idx, 'expectedOutput', parsed);
+                            handleUpdate(idx, 'output', parsed);
+                          } catch (err) {
+                            handleUpdate(idx, 'expectedOutput', e.target.value);
+                            handleUpdate(idx, 'output', e.target.value);
+                          }
+                        }}
+                        placeholder="e.g. [[7,null],[13,0]] or 3"
+                        className="w-full px-3.5 py-2.5 bg-[#262626] dark:bg-slate-900 border border-[#333333] dark:border-slate-700 rounded-xl font-mono text-xs text-white focus:outline-none focus:border-primary/80 transition-all shadow-xs"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Explanation Note */}
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-bold text-textSub">Note / Explanation (Optional)</label>
+                    <input
+                      type="text"
+                      value={tc.explanation || ''}
+                      onChange={(e) => handleUpdate(idx, 'explanation', e.target.value)}
+                      placeholder="e.g. Edge case with max array size."
+                      className="w-full p-2.5 bg-surface dark:bg-slate-900 border border-borderLight dark:border-slate-700 rounded-lg text-xs text-textMain dark:text-white focus:outline-none focus:border-primary/50"
+                    />
+                  </div>
                 </div>
-
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => handleDuplicate(idx)}
-                    className="p-1.5 text-slate-400 hover:text-emerald-600 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-950/40 cursor-pointer transition-colors"
-                    title="Duplicate Case"
-                  >
-                    <LuCopy size={14} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(idx)}
-                    className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer transition-colors"
-                    title="Delete Case"
-                  >
-                    <LuTrash2 size={14} />
-                  </button>
-                </div>
-              </div>
-
-              {/* Input & Expected Output Fields */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Dynamic Parameter Input Builder */}
-                <StructuredParamInputBuilder
-                  tc={tc}
-                  index={idx}
-                  parameters={formData.functionDefinition?.parameters || []}
-                  onUpdateInput={(i, val) => handleUpdate(i, 'input', val)}
-                />
-
-                {/* Expected Output */}
-                <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-textSub">Expected Output *</label>
-                  <textarea
-                    rows={4}
-                    value={typeof tc.expectedOutput === 'object' ? JSON.stringify(tc.expectedOutput, null, 2) : (tc.expectedOutput || '')}
-                    onChange={(e) => {
-                      try {
-                        handleUpdate(idx, 'expectedOutput', JSON.parse(e.target.value));
-                      } catch (err) {
-                        handleUpdate(idx, 'expectedOutput', e.target.value);
-                      }
-                    }}
-                    placeholder="e.g. [0, 1] or 3"
-                    className="w-full p-2.5 bg-surface dark:bg-slate-900 border border-borderLight dark:border-slate-700 rounded-lg font-mono text-xs text-textMain dark:text-white focus:outline-none focus:border-primary/50"
-                  />
-                </div>
-              </div>
-
-              {/* Explanation Note */}
-              <div className="space-y-1">
-                <label className="text-[11px] font-bold text-textSub">Note / Explanation (Optional)</label>
-                <input
-                  type="text"
-                  value={tc.explanation || ''}
-                  onChange={(e) => handleUpdate(idx, 'explanation', e.target.value)}
-                  placeholder="e.g. Edge case with max array size."
-                  className="w-full p-2.5 bg-surface dark:bg-slate-900 border border-borderLight dark:border-slate-700 rounded-lg text-xs text-textMain dark:text-white focus:outline-none focus:border-primary/50"
-                />
-              </div>
-            </div>
-          ))}
+              );
+            })}
+          </div>
         </div>
       )}
 

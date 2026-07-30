@@ -10,16 +10,11 @@ export class IntervalGeneratorPlugin extends BaseGeneratorPlugin {
   }
 
   /**
-   * Generates an interval problem input object { input: { intervals: number[][] } }.
+   * Generates an interval problem input object { input: { [paramName]: number[][] } }.
    * @param {SeededPRNG} prng
    * @param {any} primitiveData
    * @param {Object} pluginOptions
-   * @param {number} [pluginOptions.countMin=3] - Min intervals count
-   * @param {number} [pluginOptions.countMax=10] - Max intervals count
-   * @param {number} [pluginOptions.rangeMin=0] - Min bound value
-   * @param {number} [pluginOptions.rangeMax=100] - Max bound value
-   * @param {boolean} [pluginOptions.sorted=true] - Sort intervals by start value
-   * @returns {{ input: { intervals: number[][] }, expectedOutput: null }}
+   * @returns {{ input: Object, expectedOutput: null }}
    */
   apply(prng, primitiveData, pluginOptions = {}) {
     const {
@@ -45,8 +40,10 @@ export class IntervalGeneratorPlugin extends BaseGeneratorPlugin {
       intervals.sort((a, b) => a[0] - b[0]);
     }
 
+    const paramName = pluginOptions.paramName || 'intervals';
+
     return {
-      input: { intervals },
+      input: { [paramName]: intervals },
       expectedOutput: null
     };
   }

@@ -9,6 +9,7 @@ import { PrimitiveNumberType, PrimitiveStringType, PrimitiveBooleanType } from '
 import { ArrayNumberType, ArrayStringType } from './types/ArrayType';
 import { MatrixType } from './types/MatrixType';
 import { LinkedListType } from './types/LinkedListType';
+import { RandomListNodeType } from './types/RandomListNodeType';
 import { BinaryTreeType } from './types/BinaryTreeType';
 import { GraphType } from './types/GraphType';
 import { FallbackType } from './types/FallbackType';
@@ -25,6 +26,7 @@ class DataTypeRegistryManager {
     this.register(ArrayStringType);
     this.register(MatrixType);
     this.register(LinkedListType);
+    this.register(RandomListNodeType);
     this.register(BinaryTreeType);
     this.register(GraphType);
     this.register(FallbackType);

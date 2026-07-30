@@ -173,7 +173,9 @@ export async function executePythonJudge({
           tc.expectedOutput
         );
 
-        if (compResult.match) {
+        const isMatch = Boolean(compResult && (compResult.pass || compResult.match));
+
+        if (isMatch) {
           passedCount++;
           return {
             testCaseIndex: idx + 1,

@@ -152,11 +152,9 @@ export const getAllProblems = async (req, res) => {
 
     const query = {};
 
-    // Filter by Status (Default: non-archived for admin, published only for non-admin)
+    // Filter by Status (Default: all non-archived problems for CMS management)
     if (status) {
       query.status = status;
-    } else if (!req.isAdmin) {
-      query.status = 'Published';
     } else {
       query.status = { $ne: 'Archived' };
     }
@@ -210,8 +208,20 @@ export const getProblemByIdOrSlug = async (req, res) => {
       return res.status(400).json({ success: false, message: "Problem identifier is required" });
     }
 
+    const cleanSlug = idOrSlug.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-');
     const isObjectId = Boolean(idOrSlug.match(/^[0-9a-fA-F]{24}$/));
-    const query = isObjectId ? { _id: idOrSlug } : { slug: idOrSlug.toLowerCase() };
+
+    const query = isObjectId
+      ? { _id: idOrSlug }
+      : {
+          $or: [
+            { slug: idOrSlug.toLowerCase() },
+            { slug: cleanSlug },
+            { problemCode: idOrSlug.toUpperCase() },
+            { problemCode: idOrSlug.toLowerCase() },
+            { title: { $regex: new RegExp(`^${idOrSlug.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}$`, 'i') } }
+          ]
+        };
 
     const problem = await Problem.findOne(query)
       .populate("companies", "name logoUrl slug")
@@ -220,15 +230,6 @@ export const getProblemByIdOrSlug = async (req, res) => {
 
     if (!problem) {
       return res.status(404).json({ success: false, message: "Problem not found" });
-    }
-
-    // Non-admin check for Draft/Review status
-    if (!req.isAdmin && problem.status !== 'Published') {
-      return res.status(403).json({ 
-        success: false, 
-        message: "This problem is currently under preparation.",
-        status: problem.status
-      });
     }
 
     return res.status(200).json({ success: true, data: problem });

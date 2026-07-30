@@ -1,7 +1,7 @@
 /**
  * Robust GFM Markdown Renderer
- * High-Contrast 16px (text-base) Typography optimized for both Dark & Light themes.
- * Guarantees 100% text visibility against dark IDE/panel backgrounds.
+ * High-Contrast 15px (text-sm/base) Typography optimized for both Dark & Light themes.
+ * Guarantees 100% text visibility across all CMS preview cards and student arena panels.
  */
 export function renderMarkdown(markdown = '') {
   if (!markdown || typeof markdown !== 'string') return '';
@@ -38,9 +38,9 @@ export function renderMarkdown(markdown = '') {
           .replace(/</g, '&lt;')
           .replace(/>/g, '&gt;');
         
-        html += `<div class="my-4 rounded-xl overflow-hidden bg-[#1e1e1e] border border-slate-800 font-mono text-sm text-slate-100 shadow-md">
+        html += `<div class="my-4 rounded-xl overflow-hidden bg-[#1e1e1e] border border-slate-800 font-mono text-xs sm:text-sm text-slate-100 shadow-md">
           ${codeBlockLang ? `<div class="px-4 py-1.5 bg-[#252526] text-slate-400 text-xs font-bold uppercase tracking-wider border-b border-slate-800">${codeBlockLang}</div>` : ''}
-          <pre class="p-4 overflow-x-auto leading-relaxed whitespace-pre font-mono text-sm"><code>${codeContent}</code></pre>
+          <pre class="p-4 overflow-x-auto leading-relaxed whitespace-pre font-mono text-xs sm:text-sm"><code>${codeContent}</code></pre>
         </div>`;
       }
       continue;
@@ -65,11 +65,11 @@ export function renderMarkdown(markdown = '') {
         inList = true;
         listType = targetType;
         html += targetType === 'ul' 
-          ? '<ul class="list-disc list-inside space-y-2.5 my-3.5 text-slate-100 text-base font-normal leading-relaxed pl-1">' 
-          : '<ol class="list-decimal list-inside space-y-2.5 my-3.5 text-slate-100 text-base font-normal leading-relaxed pl-1">';
+          ? '<ul class="list-disc list-inside space-y-2 my-3 text-slate-800 dark:text-slate-100 text-sm sm:text-base font-normal leading-relaxed pl-1">' 
+          : '<ol class="list-decimal list-inside space-y-2 my-3 text-slate-800 dark:text-slate-100 text-sm sm:text-base font-normal leading-relaxed pl-1">';
       }
 
-      html += `<li class="my-1.5"><span class="text-slate-100">${itemContent}</span></li>`;
+      html += `<li class="my-1"><span class="text-slate-800 dark:text-slate-100">${itemContent}</span></li>`;
       continue;
     } else {
       closeListIfNeeded();
@@ -78,30 +78,30 @@ export function renderMarkdown(markdown = '') {
     // 3. Headings (#, ##, ###)
     if (line.startsWith('# ')) {
       const text = formatInlineMarkdown(line.slice(2));
-      html += `<h1 class="text-3xl font-extrabold text-white mt-7 mb-4 border-b border-slate-700/60 pb-2.5 tracking-tight">${text}</h1>`;
+      html += `<h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-6 mb-3 border-b border-slate-200 dark:border-slate-700/60 pb-2 tracking-tight">${text}</h1>`;
       continue;
     }
     if (line.startsWith('## ')) {
       const text = formatInlineMarkdown(line.slice(3));
-      html += `<h2 class="text-2xl font-bold text-white mt-6 mb-3 border-b border-slate-700/60 pb-2 tracking-tight">${text}</h2>`;
+      html += `<h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-5 mb-2.5 border-b border-slate-200 dark:border-slate-700/60 pb-1.5 tracking-tight">${text}</h2>`;
       continue;
     }
     if (line.startsWith('### ')) {
       const text = formatInlineMarkdown(line.slice(4));
-      html += `<h3 class="text-xl font-bold text-white mt-5 mb-2.5 tracking-tight">${text}</h3>`;
+      html += `<h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-4 mb-2 tracking-tight">${text}</h3>`;
       continue;
     }
 
     // 4. Blockquotes (> text)
     if (line.startsWith('> ')) {
       const text = formatInlineMarkdown(line.slice(2));
-      html += `<blockquote class="border-l-4 border-primary bg-primary/10 text-slate-200 pl-4 py-3 my-4 rounded-r-xl text-base italic leading-relaxed">${text}</blockquote>`;
+      html += `<blockquote class="border-l-4 border-primary bg-primary/5 text-slate-800 dark:text-slate-200 pl-4 py-2.5 my-3.5 rounded-r-xl text-sm italic leading-relaxed">${text}</blockquote>`;
       continue;
     }
 
     // 5. Horizontal Rule (---)
     if (line.trim() === '---' || line.trim() === '***') {
-      html += `<hr class="my-6 border-slate-700/60" />`;
+      html += `<hr class="my-5 border-slate-200 dark:border-slate-700/60" />`;
       continue;
     }
 
@@ -121,7 +121,7 @@ export function renderMarkdown(markdown = '') {
       html += `<div class="h-2"></div>`;
     } else {
       const text = formatInlineMarkdown(line);
-      html += `<p class="text-base text-slate-100 my-3 leading-relaxed font-normal">${text}</p>`;
+      html += `<p class="text-sm sm:text-base text-slate-800 dark:text-slate-100 my-2.5 leading-relaxed font-normal">${text}</p>`;
     }
   }
 
@@ -142,22 +142,22 @@ function formatInlineMarkdown(text = '') {
     .replace(/>/g, '&gt;');
 
   // Images ![alt](url)
-  res = res.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="my-4 rounded-xl border border-slate-700 max-h-96 object-contain shadow-md inline-block" />');
+  res = res.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="my-4 rounded-xl border border-slate-200 dark:border-slate-700 max-h-96 object-contain shadow-md inline-block" />');
 
   // Links [label](url)
   res = res.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline font-bold">$1</a>');
 
   // Bold & Italic (***text*** or ___text___)
-  res = res.replace(/\*\*\*(.*?)\*\*\*/g, '<strong class="font-extrabold italic text-white">$1</strong>');
+  res = res.replace(/\*\*\*(.*?)\*\*\*/g, '<strong class="font-extrabold italic text-slate-900 dark:text-white">$1</strong>');
 
   // Bold (**text**)
-  res = res.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-white">$1</strong>');
+  res = res.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-900 dark:text-white">$1</strong>');
 
   // Italic (*text*)
-  res = res.replace(/\*(.*?)\*/g, '<em class="italic text-slate-200 font-medium">$1</em>');
+  res = res.replace(/\*(.*?)\*/g, '<em class="italic text-slate-700 dark:text-slate-300 font-medium">$1</em>');
 
   // Inline Code (`code`)
-  res = res.replace(/`([^`]+)`/g, '<code class="px-2 py-0.5 rounded-md bg-rose-500/20 border border-rose-500/35 text-rose-300 font-mono text-sm font-bold shadow-2xs">$1</code>');
+  res = res.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded-md bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/60 font-mono text-xs font-semibold">$1</code>');
 
   return res;
 }
@@ -179,22 +179,22 @@ function renderMarkdownTable(tableLines = []) {
   const hasDivider = tableLines[1] && tableLines[1].includes('---');
   const bodyRows = hasDivider ? tableLines.slice(2) : tableLines.slice(1);
 
-  let html = `<div class="my-4 overflow-x-auto rounded-xl border border-slate-700 shadow-md">
-    <table class="w-full text-left text-base font-sans border-collapse">
-      <thead class="bg-slate-800 text-white font-bold border-b border-slate-700">
+  let html = `<div class="my-4 overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+    <table class="w-full text-left text-sm font-sans border-collapse">
+      <thead class="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold border-b border-slate-200 dark:border-slate-700">
         <tr>`;
   
   header.forEach(col => {
-    html += `<th class="px-4 py-3 border-r last:border-r-0 border-slate-700">${formatInlineMarkdown(col)}</th>`;
+    html += `<th class="px-3.5 py-2.5 border-r last:border-r-0 border-slate-200 dark:border-slate-700">${formatInlineMarkdown(col)}</th>`;
   });
   
-  html += `</tr></thead><tbody class="divide-y divide-slate-800">`;
+  html += `</tr></thead><tbody class="divide-y divide-slate-200 dark:divide-slate-800">`;
 
   bodyRows.forEach(rowStr => {
     const cols = parseRow(rowStr);
-    html += `<tr class="hover:bg-slate-800/40 transition-colors">`;
+    html += `<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">`;
     cols.forEach(col => {
-      html += `<td class="px-4 py-3 border-r last:border-r-0 border-slate-800 text-slate-100">${formatInlineMarkdown(col)}</td>`;
+      html += `<td class="px-3.5 py-2.5 border-r last:border-r-0 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100">${formatInlineMarkdown(col)}</td>`;
     });
     html += `</tr>`;
   });

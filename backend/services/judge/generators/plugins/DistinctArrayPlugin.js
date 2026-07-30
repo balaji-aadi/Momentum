@@ -14,7 +14,7 @@ export class DistinctArrayPlugin extends BaseGeneratorPlugin {
    * @param {SeededPRNG} prng
    * @param {any} primitiveData
    * @param {Object} pluginOptions
-   * @returns {{ input: { nums: number[] }, expectedOutput: null }}
+   * @returns {{ input: Object, expectedOutput: null }}
    */
   apply(prng, primitiveData, pluginOptions = {}) {
     const {
@@ -34,8 +34,10 @@ export class DistinctArrayPlugin extends BaseGeneratorPlugin {
     }
 
     const nums = Array.from(set);
+    const paramName = pluginOptions.paramName || 'nums';
+
     return {
-      input: { nums },
+      input: { [paramName]: nums },
       expectedOutput: null
     };
   }

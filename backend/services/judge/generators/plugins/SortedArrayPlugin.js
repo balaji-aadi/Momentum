@@ -17,15 +17,16 @@ export class SortedArrayPlugin extends BaseGeneratorPlugin {
    * @param {any} primitiveData
    * @param {Object} pluginOptions
    * @param {string} [pluginOptions.order='asc'] - 'asc' | 'desc'
-   * @returns {{ input: { nums: number[] }, expectedOutput: null }}
+   * @returns {{ input: Object, expectedOutput: null }}
    */
   apply(prng, primitiveData, pluginOptions = {}) {
     const rawNums = primitiveData || this.arrayPrimitive.generate(prng, pluginOptions);
     const order = pluginOptions.order || 'asc';
     const nums = [...rawNums].sort((a, b) => order === 'desc' ? b - a : a - b);
+    const paramName = pluginOptions.paramName || 'nums';
 
     return {
-      input: { nums },
+      input: { [paramName]: nums },
       expectedOutput: null
     };
   }

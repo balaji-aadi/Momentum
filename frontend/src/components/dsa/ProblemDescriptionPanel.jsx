@@ -11,11 +11,12 @@ import {
   LuTag,
   LuCheckCircle2,
   LuChevronDown,
-  LuChevronUp
+  LuChevronUp,
+  LuChevronLeft
 } from 'react-icons/lu';
 import { renderMarkdown } from '../../utils/markdownRenderer';
 
-export function ProblemDescriptionPanel({ task }) {
+export function ProblemDescriptionPanel({ task, onToggleCollapse }) {
   const { problem, submissions = [], taskLinkedNotes = [] } = useCodingArena();
   const [activeTab, setActiveTab] = useState('description'); // 'description' | 'editorial' | 'submissions'
   const [copiedId, setCopiedId] = useState(null);
@@ -135,6 +136,17 @@ export function ProblemDescriptionPanel({ task }) {
           <LuHistory size={15} />
           <span>Submissions</span>
         </button>
+
+        {onToggleCollapse && (
+          <button
+            type="button"
+            onClick={onToggleCollapse}
+            className="ml-auto p-1 text-slate-400 hover:text-white hover:bg-[#262626] rounded-lg transition-colors cursor-pointer"
+            title="Collapse Description Panel"
+          >
+            <LuChevronLeft size={16} />
+          </button>
+        )}
       </div>
 
       {/* Tab Content Body */}
@@ -249,7 +261,7 @@ export function ProblemDescriptionPanel({ task }) {
 
             {/* Description Statement */}
             <div
-              className="prose prose-invert max-w-none text-[#eff1f6] space-y-4 leading-relaxed text-base font-sans"
+              className="dark prose prose-invert max-w-none text-[#eff1f6] space-y-4 leading-relaxed text-base font-sans"
               dangerouslySetInnerHTML={{ __html: renderMarkdown(problem.descriptionMarkdown) || problem.descriptionHtml || task?.taskDescription || "<p>Problem description statement.</p>" }}
             />
 
