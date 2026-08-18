@@ -149,6 +149,7 @@ const Revision = () => {
     const [sortBy, setSortBy] = useState('newest');
     const [selectedParent, setSelectedParent] = useState('all');
     const [selectedDate, setSelectedDate] = useState('');
+    const [revisionFilter, setRevisionFilter] = useState('all');
     const [showFilters, setShowFilters] = useState(true);
 
     // UI State
@@ -440,7 +441,7 @@ const Revision = () => {
 
     useEffect(() => {
         applyFilters();
-    }, [searchTerm, selectedProject, selectedParent, sortBy, selectedDate, tasks]);
+    }, [searchTerm, selectedProject, selectedParent, sortBy, selectedDate, revisionFilter, tasks]);
 
     const applyFilters = () => {
         let result = [...tasks];
@@ -468,6 +469,12 @@ const Revision = () => {
                 const hasRevisionOnDate = t.revisionLogs?.some(log => moment(log.revisionDate).format('YYYY-MM-DD') === selectedDate);
                 return isCompletedOnDate || hasRevisionOnDate;
             });
+        }
+
+        if (revisionFilter === 'revised') {
+            result = result.filter(t => t.revisionLogs && t.revisionLogs.length > 0);
+        } else if (revisionFilter === 'unrevised') {
+            result = result.filter(t => !t.revisionLogs || t.revisionLogs.length === 0);
         }
 
         // Sorting
@@ -780,6 +787,12 @@ const Revision = () => {
     const sortOptions = [
         { value: 'newest', label: 'Newest First' },
         { value: 'oldest', label: 'Oldest First' }
+    ];
+
+    const revisionStatusOptions = [
+        { value: 'all', label: 'All Status' },
+        { value: 'revised', label: 'Revised' },
+        { value: 'unrevised', label: 'Unrevised' }
     ];
 
     const completedCountOnDate = selectedDate ? tasks.filter(t => {
@@ -1512,59 +1525,71 @@ const Revision = () => {
 
             {/* Filter Section - Collapsible */}
             {showFilters && (
-                <div className="bg-white border-b border-slate-200 px-6 py-1 animate-in slide-in-from-top duration-300 z-40 relative">
-                    <div className="flex flex-wrap items-center gap-3">
+                <div className="bg-white border-b border-slate-200 px-6 py-2 animate-in slide-in-from-top duration-300 z-40 relative">
+                    <div className="flex flex-wrap items-center gap-2">
                         {/* Search Bar */}
-                        <div className="w-64 relative">
+                        <div className="w-44 sm:w-52 relative shrink-0">
                             <IoSearchOutline className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
                             <input
                                 type="text"
                                 placeholder="Find a task..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full bg-slate-50 border border-slate-100 rounded-xl pl-10 pr-4 py-2 text-xs font-bold text-slate-700 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all"
+                                className="w-full bg-slate-50 border border-slate-100 rounded-xl pl-10 pr-3 py-1.5 text-xs font-bold text-slate-700 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all"
                             />
                         </div>
 
                         {/* Dropdowns */}
-                        <div className="">
+                        <div className="shrink-0">
                             <InputField
                                 type="select"
                                 options={projectOptions}
                                 value={selectedProject}
                                 onChange={(e) => setSelectedProject(e.target.value)}
-                                className="!py-1 !rounded-xl !text-[10px] !font-bold shadow-none"
+                                className="!py-1 !rounded-xl !text-[10px] !font-bold shadow-none min-w-[110px]"
                                 menuPortalTarget={document.body}
                                 styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
                             />
                         </div>
 
-                        <div className="">
+                        <div className="shrink-0">
                             <InputField
                                 type="select"
                                 options={parentOptions}
                                 value={selectedParent}
                                 onChange={(e) => setSelectedParent(e.target.value)}
-                                className="!py-1 !rounded-xl !text-[10px] !font-bold shadow-none min-w-[15rem]"
+                                className="!py-1 !rounded-xl !text-[10px] !font-bold shadow-none min-w-[11rem]"
                                 menuPortalTarget={document.body}
                                 styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
                             />
                         </div>
 
-                        <div className="">
+                        <div className="shrink-0">
+                            <InputField
+                                type="select"
+                                options={revisionStatusOptions}
+                                value={revisionFilter}
+                                onChange={(e) => setRevisionFilter(e.target.value)}
+                                className="!py-1 !rounded-xl !text-[10px] !font-bold shadow-none min-w-[110px]"
+                                menuPortalTarget={document.body}
+                                styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                            />
+                        </div>
+
+                        <div className="shrink-0">
                             <InputField
                                 type="select"
                                 options={sortOptions}
                                 value={sortBy}
                                 onChange={(e) => setSortBy(e.target.value)}
-                                className="!py-1 !rounded-xl !text-[10px] !font-bold shadow-none min-w-[120px]"
+                                className="!py-1 !rounded-xl !text-[10px] !font-bold shadow-none min-w-[110px]"
                                 menuPortalTarget={document.body}
                                 styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
                             />
                         </div>
 
                         {/* Date Picker */}
-                        <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-xl px-3 py-1.5 mb-2 hover:border-slate-200 transition-all">
+                        <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-xl px-3 py-1.5 hover:border-slate-200 transition-all shrink-0 h-[34px]">
                             <IoCalendarOutline className="text-slate-400 shrink-0" size={14} />
                             <input
                                 type="date"
@@ -1575,11 +1600,11 @@ const Revision = () => {
                         </div>
 
                         <button
-                            onClick={() => { setSearchTerm(''); setSelectedProject('all'); setSelectedParent('all'); setSortBy('newest'); setSelectedDate(''); }}
-                            className="p-2 mb-2 rounded-xl bg-slate-50 border border-slate-100 text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-100 transition-all shadow-sm"
-                            title="Reset"
+                            onClick={() => { setSearchTerm(''); setSelectedProject('all'); setSelectedParent('all'); setSortBy('newest'); setSelectedDate(''); setRevisionFilter('all'); }}
+                            className="h-[34px] w-[34px] flex items-center justify-center rounded-xl bg-slate-50 border border-slate-100 text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-100 transition-all shadow-sm shrink-0"
+                            title="Reset Filters"
                         >
-                            <IoFilterOutline size={16} />
+                            <IoFilterOutline size={15} />
                         </button>
                     </div>
                 </div>

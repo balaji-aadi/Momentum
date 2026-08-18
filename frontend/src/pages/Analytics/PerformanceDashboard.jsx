@@ -27,6 +27,7 @@ import {
 } from 'recharts';
 import TrollingEmptyState from '../../components/analytics/TrollingEmptyState';
 import { IoCalendarOutline, IoFlaskOutline } from 'react-icons/io5';
+import DsaPamphletWidget from '../../components/analytics/DsaPamphletWidget';
 
 const PerformanceDashboard = () => {
     const { currentUser, activeBranch } = useSelector((state) => state.store);
@@ -531,6 +532,9 @@ const PerformanceDashboard = () => {
                 </div>
             </div>
 
+            {/* FAANG DSA Interview Pamphlet & Multi-Arena Pattern Roadmap Widget */}
+            <DsaPamphletWidget />
+
             {/* Quick Stats Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
                 <StatCard
@@ -793,29 +797,29 @@ const PerformanceDashboard = () => {
 
 const StatCard = ({ icon, label, value, subtext, color, trend }) => {
     const colors = {
-        indigo: 'text-primary bg-vermilion-50 border-vermilion-100',
+        indigo: 'text-primary bg-primary/10 border-primary/20',
         emerald: 'text-emerald-600 bg-emerald-50 border-emerald-100',
         rose: 'text-rose-600 bg-rose-50 border-rose-100',
-        blue: 'text-slate-600 bg-slate-50 border-slate-100',
+        blue: 'text-blue-600 bg-blue-50 border-blue-100',
         amber: 'text-amber-600 bg-amber-50 border-amber-100',
     };
 
     return (
-        <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-100/50 hover:shadow-2xl hover:-translate-y-1 transition-all group overflow-hidden relative min-h-[180px] flex flex-col justify-between">
-            <div className="flex justify-between items-start mb-4">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform border ${colors[color] || colors.indigo}`}>
-                    <span className="text-xl">{icon}</span>
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md hover:border-slate-300 transition-all group overflow-hidden relative min-h-[150px] flex flex-col justify-between">
+            <div className="flex justify-between items-start mb-3">
+                <div className={`w-11 h-11 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform border ${colors[color] || colors.indigo}`}>
+                    <span className="text-lg">{icon}</span>
                 </div>
                 {trend && (
-                    <div className={`text-[10px] font-black px-2.5 py-1 rounded-full ${trend.startsWith('+') ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'} border border-current/10`}>
+                    <div className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${trend.startsWith('+') ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'} border border-current/10`}>
                         {trend}
                     </div>
                 )}
             </div>
             <div>
-                <p className="text-[10px] font-black uppercase tracking-widest mb-1 leading-none" style={{ color: '#94a3b8' }}>{label}</p>
-                <h2 className="text-3xl font-black mb-2 truncate" style={{ color: '#1e293b' }}>{value}</h2>
-                <p className="text-[10px] font-bold transition-colors uppercase tracking-widest truncate" style={{ color: '#94a3b8' }}>{subtext}</p>
+                <p className="text-xs font-semibold text-slate-500 mb-1 leading-none">{label}</p>
+                <h2 className="text-2xl font-black text-slate-900 mb-1 truncate">{value}</h2>
+                <p className="text-xs font-medium text-slate-400 truncate">{subtext}</p>
             </div>
         </div>
     );

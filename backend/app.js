@@ -14,6 +14,7 @@ import { socketService } from "./socket-instance.js";
 import "./models/permission.model.js";
 import { initSprintActivationJob } from "./services/sprint-service/sprintActivation.job.js";
 import { initTaskTransitionJob } from "./services/task-service/taskTransition.job.js";
+import { initPamphletSyncJob } from "./services/pamphlet-service/pamphletSync.job.js";
 import { repairAllProgress } from "./services/progress-service/repairProgress.js";
 
 const app = express();
@@ -42,20 +43,15 @@ app.use("/api/v1", router);
 
 const httpServer = http.createServer(app);
 
-// function init() {
-//   socketService._io.attach(httpServer);
+// Initialize background cron jobs
+try {
+  initSprintActivationJob();
+  initTaskTransitionJob();
+  initPamphletSyncJob();
+} catch (cronErr) {
+  console.error('[App] Error starting background jobs:', cronErr);
+}
 
-//   socketService.initListeners();
-
-//   // Initialize background jobs
-//   initSprintActivationJob();
-//   initTaskTransitionJob();
-
-//   // Run data repairs
-//   repairAllProgress();
-// }
-
-// init();
 socketService._io.attach(httpServer);
 
 export default httpServer;

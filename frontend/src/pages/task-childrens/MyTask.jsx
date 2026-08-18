@@ -36,7 +36,42 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
   const [id, setId] = useState();
   const [tasks, setTasks] = useState([]);
   const [selectedTaskData, setSelectedTaskData] = useState(null);
-  const { currentUser } = useSelector((state) => state.store);
+  const { currentUser, globalSearch } = useSelector((state) => state.store);
+  const searchFromUrl = searchParams.get("search");
+  const activeSearch = externalSearch || searchFromUrl || globalSearch || "";
+
+  const applySearchAndFilter = (taskList) => {
+    let filtered = taskList || [];
+    if (activeSearch) {
+      const q = activeSearch.toLowerCase();
+      filtered = filtered.filter(t => 
+        t.taskName?.toLowerCase().includes(q) ||
+        t.taskId?.toLowerCase().includes(q) ||
+        (typeof t.description === 'string' && t.description.toLowerCase().includes(q))
+      );
+    }
+    if (externalParentId) {
+      filtered = filtered.filter(t => t.parentTask?._id === externalParentId || t.parentTask === externalParentId);
+    }
+    if (externalSort) {
+      filtered = [...filtered].sort((a, b) => {
+        if (externalSort === 'newest') return new Date(b.createdAt) - new Date(a.createdAt);
+        if (externalSort === 'oldest') return new Date(a.createdAt) - new Date(b.createdAt);
+        if (externalSort === 'deadlineSoon') {
+          const dateA = new Date(a.taskDueDate || a.dueDate || '9999-12-31');
+          const dateB = new Date(b.taskDueDate || b.dueDate || '9999-12-31');
+          return dateA - dateB;
+        }
+        if (externalSort === 'deadlineLate') {
+          const dateA = new Date(a.taskDueDate || a.dueDate || '1970-01-01');
+          const dateB = new Date(b.taskDueDate || b.dueDate || '1970-01-01');
+          return dateB - dateA;
+        }
+        return 0;
+      });
+    }
+    return filtered;
+  };
   const isManager = currentUser?.userRole?.name === "projectmanager";
   
   const [isTesting, setIsTesting] = useState(false);
@@ -399,32 +434,7 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
           <div className={`flex-1 ${currentViewMode === 'board' ? 'p-0 sm:p-1' : 'p-4'} ${currentViewMode === 'spreadsheet' ? 'overflow-x-auto' : 'flex flex-col min-h-0'}`}>
              {currentViewMode === 'spreadsheet' ? (
                 <TaskTable 
-                    tasks={(() => {
-                        let filtered = projectTasks || [];
-                        if (externalSearch) filtered = filtered.filter(t => t.taskName?.toLowerCase().includes(externalSearch.toLowerCase()));
-                        if (externalParentId) {
-                            filtered = filtered.filter(t => t.parentTask?._id === externalParentId || t.parentTask === externalParentId);
-                        }
-
-                        if (externalSort) {
-                            filtered = [...filtered].sort((a, b) => {
-                                if (externalSort === 'newest') return new Date(b.createdAt) - new Date(a.createdAt);
-                                if (externalSort === 'oldest') return new Date(a.createdAt) - new Date(b.createdAt);
-                                if (externalSort === 'deadlineSoon') {
-                                    const dateA = new Date(a.taskDueDate || a.dueDate || '9999-12-31');
-                                    const dateB = new Date(b.taskDueDate || b.dueDate || '9999-12-31');
-                                    return dateA - dateB;
-                                }
-                                if (externalSort === 'deadlineLate') {
-                                    const dateA = new Date(a.taskDueDate || a.dueDate || '1970-01-01');
-                                    const dateB = new Date(b.taskDueDate || b.dueDate || '1970-01-01');
-                                    return dateB - dateA;
-                                }
-                                return 0;
-                            });
-                        }
-                        return filtered;
-                    })()}
+                    tasks={applySearchAndFilter(projectTasks)}
                     isLoading={false}
                     projects={projects}
                     members={teamMember}
@@ -436,32 +446,7 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
              ) : projectTasks ? (
                isTesting ? (
                  <TBoard
-                   tasks={(() => {
-                        let filtered = projectTasks || [];
-                        if (externalSearch) filtered = filtered.filter(t => t.taskName?.toLowerCase().includes(externalSearch.toLowerCase()));
-                        if (externalParentId) {
-                            filtered = filtered.filter(t => t.parentTask?._id === externalParentId || t.parentTask === externalParentId);
-                        }
-
-                        if (externalSort) {
-                            filtered = [...filtered].sort((a, b) => {
-                                if (externalSort === 'newest') return new Date(b.createdAt) - new Date(a.createdAt);
-                                if (externalSort === 'oldest') return new Date(a.createdAt) - new Date(b.createdAt);
-                                if (externalSort === 'deadlineSoon') {
-                                    const dateA = new Date(a.taskDueDate || a.dueDate || '9999-12-31');
-                                    const dateB = new Date(b.taskDueDate || b.dueDate || '9999-12-31');
-                                    return dateA - dateB;
-                                }
-                                if (externalSort === 'deadlineLate') {
-                                    const dateA = new Date(a.taskDueDate || a.dueDate || '1970-01-01');
-                                    const dateB = new Date(b.taskDueDate || b.dueDate || '1970-01-01');
-                                    return dateB - dateA;
-                                }
-                                return 0;
-                            });
-                        }
-                        return filtered;
-                   })()}
+                   tasks={applySearchAndFilter(projectTasks)}
                    setTasks={setProjectTasks}
                    selectedProject={selectedProject}
                    handleClick={handleClickTesting}
@@ -471,32 +456,7 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
                  />
                ) : (
                  <Board
-                   tasks={(() => {
-                        let filtered = projectTasks || [];
-                        if (externalSearch) filtered = filtered.filter(t => t.taskName?.toLowerCase().includes(externalSearch.toLowerCase()));
-                        if (externalParentId) {
-                            filtered = filtered.filter(t => t.parentTask?._id === externalParentId || t.parentTask === externalParentId);
-                        }
-
-                        if (externalSort) {
-                            filtered = [...filtered].sort((a, b) => {
-                                if (externalSort === 'newest') return new Date(b.createdAt) - new Date(a.createdAt);
-                                if (externalSort === 'oldest') return new Date(a.createdAt) - new Date(b.createdAt);
-                                if (externalSort === 'deadlineSoon') {
-                                    const dateA = new Date(a.taskDueDate || a.dueDate || '9999-12-31');
-                                    const dateB = new Date(b.taskDueDate || b.dueDate || '9999-12-31');
-                                    return dateA - dateB;
-                                }
-                                if (externalSort === 'deadlineLate') {
-                                    const dateA = new Date(a.taskDueDate || a.dueDate || '1970-01-01');
-                                    const dateB = new Date(b.taskDueDate || b.dueDate || '1970-01-01');
-                                    return dateB - dateA;
-                                }
-                                return 0;
-                            });
-                        }
-                        return filtered;
-                   })()}
+                   tasks={applySearchAndFilter(projectTasks)}
                    setTasks={setProjectTasks}
                    selectedProject={selectedProject}
                    handleClick={handleClick}

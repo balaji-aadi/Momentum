@@ -22,6 +22,7 @@ import subscriptionRouter from "../services/subscription-service/subscription.ro
 import noteRouter from "../services/note-service/note.router.js";
 import problemRouter from "../services/problem-service/problem.router.js";
 import judgeRouter from "../services/judge-service/judge.router.js";
+import pamphletRouter from "../services/pamphlet-service/pamphlet.router.js";
 
 const router = Router();
 
@@ -48,5 +49,6 @@ router.use("/subscription", subscriptionRouter);
 router.use("/note", noteRouter);
 router.use("/problem", problemRouter);
 router.use("/judge", judgeRouter);
+router.use("/pamphlet", pamphletRouter);
 
 export default router;

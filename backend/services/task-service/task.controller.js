@@ -1417,7 +1417,7 @@ tc.getDailyRevision = asyncHandler(async (req, res) => {
                 filter.createdBy = req.user._id;
             }
 
-            const allEligibleTasks = await Task.find(filter).select("_id taskName").lean();
+            const allEligibleTasks = await Task.find(filter).select("_id taskName revisionLogs").lean();
 
             // Fetch past 5 days of selections to prevent duplicates
             const pastRevisions = await DailyRevision.find({ userId: req.user._id })
@@ -1463,14 +1463,48 @@ tc.getDailyRevision = asyncHandler(async (req, res) => {
             const activePins = reviseTomorrowIds.slice(0, 4);
             const randomCountNeeded = Math.max(0, 4 - activePins.length);
 
-            // Pick remaining tasks from availableTasks
+            // Pick remaining tasks from availableTasks (Balancing 50% Revised & 50% Unrevised)
             const selectedTasks = [];
             if (randomCountNeeded > 0) {
-                if (availableTasks.length <= randomCountNeeded) {
-                    selectedTasks.push(...availableTasks);
-                } else {
-                    const shuffled = [...availableTasks].sort(() => 0.5 - Math.random());
-                    selectedTasks.push(...shuffled.slice(0, randomCountNeeded));
+                const unrevisedPool = availableTasks.filter(t => !t.revisionLogs || t.revisionLogs.length === 0);
+                const revisedPool = availableTasks.filter(t => t.revisionLogs && t.revisionLogs.length > 0);
+
+                // Target half unrevised, half revised
+                let targetUnrevised = Math.ceil(randomCountNeeded / 2);
+                let targetRevised = Math.floor(randomCountNeeded / 2);
+
+                // Adjust targets if one pool doesn't have enough items
+                if (unrevisedPool.length < targetUnrevised) {
+                    targetRevised += (targetUnrevised - unrevisedPool.length);
+                    targetUnrevised = unrevisedPool.length;
+                }
+                if (revisedPool.length < targetRevised) {
+                    targetUnrevised += (targetRevised - revisedPool.length);
+                    targetUnrevised = Math.min(unrevisedPool.length, targetUnrevised);
+                    targetRevised = revisedPool.length;
+                }
+
+                // Pick from unrevised (shuffled randomly)
+                const shuffledUnrevised = [...unrevisedPool].sort(() => 0.5 - Math.random());
+                const chosenUnrevised = shuffledUnrevised.slice(0, targetUnrevised);
+
+                // Pick from revised (prioritize lower revision count / spaced repetition, with random shuffle for ties)
+                const sortedRevised = [...revisedPool].sort((a, b) => {
+                    const countA = a.revisionLogs ? a.revisionLogs.length : 0;
+                    const countB = b.revisionLogs ? b.revisionLogs.length : 0;
+                    if (countA !== countB) return countA - countB;
+                    return 0.5 - Math.random();
+                });
+                const chosenRevised = sortedRevised.slice(0, targetRevised);
+
+                selectedTasks.push(...chosenUnrevised, ...chosenRevised);
+
+                // Ultimate fallback if still short of randomCountNeeded
+                if (selectedTasks.length < randomCountNeeded) {
+                    const chosenIds = new Set(selectedTasks.map(t => t._id.toString()));
+                    const remainingFallback = availableTasks.filter(t => !chosenIds.has(t._id.toString()));
+                    const shuffledFallback = [...remainingFallback].sort(() => 0.5 - Math.random());
+                    selectedTasks.push(...shuffledFallback.slice(0, randomCountNeeded - selectedTasks.length));
                 }
             }
 

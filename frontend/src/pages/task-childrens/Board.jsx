@@ -305,16 +305,28 @@ const Board = ({
 
   const nonBacklogTasks = sortedBoardTasks.filter((t) => !backlogTasks.includes(t));
 
-  const parentTasksOnly = nonBacklogTasks.filter((t) => !t.parentTask && (selectedParentId ? t._id === selectedParentId : true));
+  const parentTasksOnly = nonBacklogTasks.filter((t) => !t.parentTask && (selectedParentId ? t._id?.toString() === selectedParentId.toString() : true));
   const allSubtasks = nonBacklogTasks.filter((t) => t.parentTask);
+  const allSubtasksInBoard = sortedBoardTasks.filter((t) => t.parentTask);
 
-  // Derive unique Parent Tasks dynamically from the subtasks available
-  const uniqueParents = Array.from(new Set(allSubtasks.map(t => {
+  const matchesStatus = (taskStatus, target) => {
+    if (!taskStatus) return false;
+    const s = taskStatus.toString().toLowerCase();
+    if (target === 'done') return s === 'done' || s === 'completed';
+    if (target === 'inprogress') return s === 'inprogress' || s === 'in progress' || s === 'in_progress';
+    if (target === 'todo') return s === 'todo' || s === 'to do' || s === 'to_do';
+    if (target === 'hold') return s === 'hold' || s === 'on hold' || s === 'on_hold';
+    if (target === 'backlog') return s === 'backlog';
+    return s === target.toLowerCase();
+  };
+
+  // Derive unique Parent Tasks dynamically from all subtasks available
+  const uniqueParents = Array.from(new Set(allSubtasksInBoard.map(t => {
       const pid = typeof t.parentTask === 'object' ? t.parentTask?._id : t.parentTask;
       return pid ? pid.toString() : null;
   }).filter(Boolean)))
       .map(id => {
-          const sample = allSubtasks.find(t => {
+          const sample = allSubtasksInBoard.find(t => {
               const pid = typeof t.parentTask === 'object' ? t.parentTask?._id : t.parentTask;
               return pid && pid.toString() === id;
           });
@@ -330,9 +342,14 @@ const Board = ({
     let combinedTasks = [];
 
     if (column.id === "backlog") {
-      combinedTasks = backlogTasks;
+      combinedTasks = selectedParentId 
+        ? backlogTasks.filter(t => {
+            const pId = typeof t.parentTask === 'object' ? t.parentTask?._id : t.parentTask;
+            return (t._id?.toString() === selectedParentId.toString()) || (pId && pId.toString() === selectedParentId.toString());
+          })
+        : backlogTasks;
     } else if (column.id === "todo-parent") {
-      combinedTasks = parentTasksOnly.filter((task) => task.status === "todo");
+      combinedTasks = parentTasksOnly.filter((task) => matchesStatus(task.status, "todo"));
     } else if (column.id === "todo-subtask") {
       const filteredSubtasks = selectedParentId
         ? allSubtasks.filter(
@@ -342,9 +359,16 @@ const Board = ({
             }
           )
         : allSubtasks;
-      combinedTasks = filteredSubtasks.filter((task) => task.status === "todo");
+      combinedTasks = filteredSubtasks.filter((task) => matchesStatus(task.status, "todo"));
     } else if (column.id === "done") {
-        const doneTasks = sortedBoardTasks.filter(t => t.status === "done");
+        let doneTasks = sortedBoardTasks.filter(t => matchesStatus(t.status, "done"));
+        
+        if (selectedParentId) {
+            doneTasks = doneTasks.filter(t => {
+                const pId = typeof t.parentTask === 'object' ? t.parentTask?._id : t.parentTask;
+                return (t._id?.toString() === selectedParentId.toString()) || (pId && pId.toString() === selectedParentId.toString());
+            });
+        }
         
         if (!isDoneReorganized) {
             combinedTasks = doneTasks;
@@ -359,7 +383,7 @@ const Board = ({
                     return pId && pId.toString() === parent._id.toString();
                 });
                 
-                const finishDate = parent.activityLogs?.find(log => log.currentStatus === 'done')?.date || parent.updatedAt;
+                const finishDate = parent.activityLogs?.find(log => matchesStatus(log.currentStatus, 'done'))?.date || parent.updatedAt;
                 
                 return {
                     ...parent,
@@ -390,8 +414,8 @@ const Board = ({
         : allSubtasks;
 
       combinedTasks = [
-        ...parentTasksOnly.filter((task) => task.status === column.id),
-        ...filteredSubtasks.filter((task) => task.status === column.id),
+        ...parentTasksOnly.filter((task) => matchesStatus(task.status, column.id)),
+        ...filteredSubtasks.filter((task) => matchesStatus(task.status, column.id)),
       ];
     }
 

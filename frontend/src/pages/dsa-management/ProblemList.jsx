@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { 
   LuPlus, 
   LuCode2, 
@@ -20,6 +20,7 @@ import moment from 'moment';
 
 export default function ProblemList() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   // State Management
   const [problems, setProblems] = useState([]);
@@ -27,10 +28,17 @@ export default function ProblemList() {
   const [topics, setTopics] = useState([]);
   
   // Filter States
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(() => searchParams.get('search') || '');
   const [difficulty, setDifficulty] = useState('');
   const [status, setStatus] = useState('');
   const [selectedTopic, setSelectedTopic] = useState('');
+
+  useEffect(() => {
+    const q = searchParams.get('search');
+    if (q !== null) {
+      setSearch(q);
+    }
+  }, [searchParams]);
 
   // Pagination State
   const [page, setPage] = useState(1);
