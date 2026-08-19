@@ -12,5 +12,9 @@ router.route("/get-projects/:projectId").get(verifyJWT, verifyBranchAccess, chec
 router.route("/get-all-projects").post(verifyJWT, verifyBranchAccess, projectController.getAllProject)
 router.route("/delete-project/:projectId").delete(verifyJWT, verifyBranchAccess, checkPermission("DELETE_PROJECT"), projectController.deleteProject)
 
+// User-Specific Arena Scheduler Routes
+router.route("/:projectId/schedule").post(verifyJWT, verifyBranchAccess, projectController.scheduleArena)
+router.route("/:projectId/schedule").get(verifyJWT, verifyBranchAccess, projectController.getArenaSchedule)
+router.route("/:projectId/schedule").delete(verifyJWT, verifyBranchAccess, projectController.resetArenaSchedule)
 
 export default router;

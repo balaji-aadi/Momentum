@@ -4,6 +4,7 @@ import moment from "moment";
 import { FocusApi } from "./services/api/Focus.api";
 import { TaskApi } from "./services/api/Task.api";
 import { IoTimeOutline } from "react-icons/io5";
+import { getScopedItem, setScopedItem, removeScopedItem } from "./utils/userStorage";
 
 
 import {
@@ -103,8 +104,8 @@ function App() {
        // If we are already on the Focus Timer page, let it handle its own logic
        if (window.location.pathname === '/focus-timer') return;
 
-       const timerStateStr = localStorage.getItem("focus_timer_state");
-       const bindingObjStr = localStorage.getItem("focus_timer_task_binding");
+       const timerStateStr = getScopedItem("focus_timer_state");
+       const bindingObjStr = getScopedItem("focus_timer_task_binding");
        const activeBranchStr = localStorage.getItem("activeBranch");
        if (!timerStateStr || !bindingObjStr || !activeBranchStr) return;
        
@@ -155,7 +156,7 @@ function App() {
                             accumulatedTime: 0,
                             selectedDuration: 20
                         };
-                        localStorage.setItem("focus_timer_state", JSON.stringify(newTimerState));
+                        setScopedItem("focus_timer_state", newTimerState);
                         toast.success("AI Challenge block completed. Automatically extended by 20 minutes.");
                         return;
                     }
@@ -168,7 +169,7 @@ function App() {
                              selectedDuration: timerState.selectedDuration + 30,
                              autoExtensions: extensions + 1
                          };
-                         localStorage.setItem("focus_timer_state", JSON.stringify(newTimerState));
+                         setScopedItem("focus_timer_state", newTimerState);
                          toast.success("Background focus block ended. Automatically extended by 30 minutes.");
                          return;
                      }
@@ -195,9 +196,9 @@ function App() {
                      await FocusApi.createSession(sessionData);
                      await TaskApi.taskLogs(bindingObj.taskId, { status: "backlog" });
                      
-                     localStorage.removeItem("focus_timer_task_binding");
-                     localStorage.removeItem("focus_timer_state");
-                     localStorage.removeItem("focus_timer_retrievable");
+                     removeScopedItem("focus_timer_task_binding");
+                     removeScopedItem("focus_timer_state");
+                     removeScopedItem("focus_timer_retrievable");
                      
                      // setShowGlobalBacklogModal(true); // Disabled to prevent user disturbance
                  }

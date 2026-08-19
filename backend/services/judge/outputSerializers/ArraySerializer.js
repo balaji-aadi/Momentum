@@ -1,8 +1,7 @@
 /**
- * 1D / 2D Array Output Serializer
- * Converts native arrays into canonical JSON array representations.
+ * 1D / 2D Array & Matrix Output Serializer (Phase 4)
+ * Converts native array results into canonical JSON array representations.
  */
-
 export class ArraySerializer {
   static serialize(val) {
     if (val === null || val === undefined) return [];

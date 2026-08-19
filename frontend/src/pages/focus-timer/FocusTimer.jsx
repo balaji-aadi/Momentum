@@ -15,6 +15,7 @@ import moment from "moment";
 import { FocusApi } from "../../services/api/Focus.api";
 import { TaskApi } from "../../services/api/Task.api";
 import { toast } from "react-hot-toast";
+import { getScopedItem, setScopedItem, removeScopedItem } from "../../utils/userStorage";
 import "./FocusTimer.style.css";
 
 const themes = [
@@ -78,7 +79,7 @@ const FocusTimer = () => {
 
   const getBindingObj = () => {
     try {
-      const val = localStorage.getItem("focus_timer_task_binding");
+      const val = getScopedItem("focus_timer_task_binding");
       return val ? JSON.parse(val) : null;
     } catch (e) {
       return null;
@@ -123,7 +124,7 @@ const FocusTimer = () => {
   useEffect(() => {
     fetchSessions();
     fetchAvailableTasks();
-    const savedState = localStorage.getItem("focus_timer_state");
+    const savedState = getScopedItem("focus_timer_state");
     if (savedState) {
       const { timeLeft: sTime, isActive: sActive, startTime: sStart, selectedDuration: sDur, currentTheme: sTheme, accumulatedTime: sAccum, autoExtensions: sExt } = JSON.parse(savedState);
       
@@ -159,13 +160,13 @@ const FocusTimer = () => {
     if (sCustomHeading) setCustomHeading(sCustomHeading);
     if (sCustomActive) setIsCustomSessionActive(sCustomActive);
     
-    setIsBindingActive(!!localStorage.getItem("focus_timer_task_binding"));
+    setIsBindingActive(!!getScopedItem("focus_timer_task_binding"));
     
     if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
         Notification.requestPermission();
     }
 
-    const savedRetObj = localStorage.getItem("focus_timer_retrievable");
+    const savedRetObj = getScopedItem("focus_timer_retrievable");
     if (savedRetObj) {
       setRetrievableObj(JSON.parse(savedRetObj));
     }
@@ -187,7 +188,7 @@ const FocusTimer = () => {
       isCustomSessionActive,
       autoExtensions
     };
-    localStorage.setItem("focus_timer_state", JSON.stringify(state));
+    setScopedItem("focus_timer_state", state);
   }, [timeLeft, isActive, startTime, accumulatedTime, selectedDuration, currentTheme, customHeading, isCustomSessionActive, autoExtensions]);
 
   const handleAiChallengeAutoExtend = React.useCallback(async () => {
@@ -197,7 +198,7 @@ const FocusTimer = () => {
       const endTime = new Date();
       const actualDuration = selectedDuration;
       
-      const bindingObjStr = localStorage.getItem("focus_timer_task_binding");
+      const bindingObjStr = getScopedItem("focus_timer_task_binding");
       if (!bindingObjStr) return;
       const bindingObj = JSON.parse(bindingObjStr);
       
@@ -240,7 +241,7 @@ const FocusTimer = () => {
           customHeading: bindingObj.taskName,
           isCustomSessionActive: false
       };
-      localStorage.setItem("focus_timer_state", JSON.stringify(timerState));
+      setScopedItem("focus_timer_state", timerState);
   }, [startTime, selectedDuration, currentTheme]);
 
   useEffect(() => {
@@ -254,7 +255,7 @@ const FocusTimer = () => {
           const remaining = (selectedDuration * 60) - totalSpent;
           
           if (remaining <= 0) {
-              const bindingObjStr = localStorage.getItem("focus_timer_task_binding");
+              const bindingObjStr = getScopedItem("focus_timer_task_binding");
               const bindingObj = bindingObjStr ? JSON.parse(bindingObjStr) : null;
               const hasTask = !!bindingObj;
               
@@ -328,7 +329,7 @@ const FocusTimer = () => {
              isBacklog: isTaskBacklog,
              taskType: taskObj.taskType
          };
-         localStorage.setItem("focus_timer_task_binding", JSON.stringify(focusTimerBinding));
+         setScopedItem("focus_timer_task_binding", focusTimerBinding);
          setIsBindingActive(true);
          if (durationMins > 0) {
              setSelectedDuration(durationMins);
@@ -368,8 +369,8 @@ const FocusTimer = () => {
     setSelectedTask("");
     setCustomHeading("");
     setCustomMinutes("");
-    localStorage.removeItem("focus_timer_task_binding");
-    localStorage.removeItem("focus_timer_state");
+    removeScopedItem("focus_timer_task_binding");
+    removeScopedItem("focus_timer_state");
     toast.success("Timer reset to default");
   };
 
@@ -407,7 +408,7 @@ const FocusTimer = () => {
     
     let taskMeta = {};
     let activeBinding = null;
-    const bindingObjStr = localStorage.getItem("focus_timer_task_binding");
+    const bindingObjStr = getScopedItem("focus_timer_task_binding");
     
     if (bindingObjStr) {
        activeBinding = JSON.parse(bindingObjStr);
@@ -472,13 +473,13 @@ const FocusTimer = () => {
             selectedDuration: selectedDuration,
             endTime: endTime.getTime()
           };
-          localStorage.setItem("focus_timer_retrievable", JSON.stringify(retObj));
+          setScopedItem("focus_timer_retrievable", retObj);
           setRetrievableObj(retObj);
       }
 
       fetchSessions();
-      localStorage.removeItem("focus_timer_state");
-      localStorage.removeItem("focus_timer_task_binding");
+      removeScopedItem("focus_timer_state");
+      removeScopedItem("focus_timer_task_binding");
       setIsBindingActive(false);
       setIsCustomSessionActive(false);
       setSelectedTask("");
@@ -509,7 +510,7 @@ const FocusTimer = () => {
     showNotification();
     
     const endTime = new Date();
-    const bindingObjStr = localStorage.getItem("focus_timer_task_binding");
+    const bindingObjStr = getScopedItem("focus_timer_task_binding");
     if (bindingObjStr) {
       try {
         const bindingObj = JSON.parse(bindingObjStr);
@@ -536,8 +537,8 @@ const FocusTimer = () => {
         toast.success("Revision and Focus session logged successfully!");
 
         // Reset everything ONLY on success
-        localStorage.removeItem("focus_timer_state");
-        localStorage.removeItem("focus_timer_task_binding");
+        removeScopedItem("focus_timer_state");
+        removeScopedItem("focus_timer_task_binding");
         setIsBindingActive(false);
         setIsCustomSessionActive(false);
         setSelectedTask("");
@@ -564,7 +565,7 @@ const FocusTimer = () => {
           fetchSessions();
           if (retrievableObj?.id === sessionId) {
              setRetrievableObj(null);
-             localStorage.removeItem("focus_timer_retrievable");
+             removeScopedItem("focus_timer_retrievable");
           }
         } catch (err) {
           console.error("Failed to delete session", err);
@@ -584,7 +585,7 @@ const FocusTimer = () => {
          newSelectedDuration = retrievableObj.selectedDuration;
          newTimeLeft = retrievableObj.timeLeftAtStop;
          setRetrievableObj(null);
-         localStorage.removeItem("focus_timer_retrievable");
+         removeScopedItem("focus_timer_retrievable");
       } else {
          if (newSelectedDuration < 15) newSelectedDuration = 15;
       }

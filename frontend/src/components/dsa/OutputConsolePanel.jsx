@@ -13,7 +13,8 @@ import {
   LuTrophy,
   LuCheckSquare,
   LuChevronDown,
-  LuChevronUp
+  LuChevronUp,
+  LuAlertTriangle
 } from 'react-icons/lu';
 
 export function OutputConsolePanel() {
@@ -38,9 +39,16 @@ export function OutputConsolePanel() {
   } = useCodingArena();
 
   const [selectedResultCaseIdx, setSelectedResultCaseIdx] = useState(0);
+  const [selectedCaseIdx, setSelectedCaseIdx] = useState(0);
 
-  const resultsList = runResult?.results || runResult?.testResults || [];
+  const resultsList = runResult?.testCases || runResult?.results || runResult?.testResults || [];
   const parameters = problem?.functionDefinition?.parameters || [];
+  const isRunPassed = runResult?.status === 'PASSED' || runResult?.status === 'Accepted' || runResult?.status === 'ACCEPTED';
+  const isSubmitAccepted = 
+    submitResult?.status === 'Accepted' || 
+    submitResult?.status === 'ACCEPTED' || 
+    submitResult?.verdict === 'Accepted' || 
+    submitResult?.verdict === 'ACCEPTED';
 
   return (
     <div className={`flex flex-col bg-[#1a1a1a] text-slate-200 overflow-hidden select-none border-t border-[#2d2d2d] transition-all duration-300 ${isConsoleCollapsed ? 'h-10' : 'h-full'}`}>
@@ -78,7 +86,7 @@ export function OutputConsolePanel() {
             <LuTerminal size={14} className="text-emerald-500" />
             <span>Test Result</span>
             {runResult && (
-              <span className={`w-2 h-2 rounded-full ${runResult.status === 'Accepted' ? 'bg-emerald-400' : 'bg-rose-500'}`} />
+              <span className={`w-2 h-2 rounded-full ${isRunPassed ? 'bg-emerald-400' : 'bg-rose-500'}`} />
             )}
           </button>
 
@@ -98,6 +106,7 @@ export function OutputConsolePanel() {
               >
                 <LuTrophy size={14} className="text-amber-400" />
                 <span>Submission Result</span>
+                <span className={`w-2 h-2 rounded-full ${isSubmitAccepted ? 'bg-emerald-400' : 'bg-rose-500'}`} />
               </button>
             </>
           )}
@@ -118,72 +127,69 @@ export function OutputConsolePanel() {
       {/* Console Content Area */}
       {!isConsoleCollapsed && (
         <div className="flex-1 overflow-y-auto p-4 space-y-4 font-sans text-xs">
-          {/* TAB 1: TESTCASE EDITING */}
+          {/* TAB 1: TESTCASE INPUT VIEW */}
           {activeConsoleTab === 'testcase' && (
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none border-b border-slate-800">
-                {testCases.map((_, idx) => (
-                  <div key={idx} className="flex items-center gap-1">
-                    <button
-                      onClick={() => setActiveTestCaseIndex(idx)}
-                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                        activeTestCaseIndex === idx
-                          ? 'bg-[#262626] text-white border border-slate-700'
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-[#262626]/40'
-                      }`}
-                    >
-                      Case {idx + 1}
-                    </button>
-                    {testCases.length > 1 && activeTestCaseIndex === idx && (
-                      <button
-                        onClick={() => removeTestCase(idx)}
-                        className="text-slate-500 hover:text-rose-400 p-1 rounded hover:bg-rose-500/10 cursor-pointer"
-                        title="Delete Case"
-                      >
-                        <LuX size={12} />
-                      </button>
-                    )}
-                  </div>
+            <div className="space-y-4 font-mono">
+              <div className="flex items-center gap-2 overflow-x-auto border-b border-slate-800 pb-1">
+                {testCases.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedCaseIdx(i)}
+                    className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      selectedCaseIdx === i
+                        ? 'bg-[#262626] text-white border border-slate-700'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-[#262626]/40'
+                    }`}
+                  >
+                    <span>Case {i + 1}</span>
+                  </button>
                 ))}
-
-                <button
-                  onClick={addTestCase}
-                  className="flex items-center gap-1 px-2.5 py-1 text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded-lg font-bold text-xs border border-dashed border-slate-700 transition-all cursor-pointer ml-1 shrink-0"
-                >
-                  <LuPlus size={13} />
-                  <span>Add Case</span>
-                </button>
               </div>
 
-              {/* Selected Test Case Editable Details via ExecutionProfileRegistry */}
-              {testCases[activeTestCaseIndex] && (() => {
-                const currentCase = testCases[activeTestCaseIndex];
-                const profileId = problem?.executionProfile?.runtimeType || 'FUNCTION';
-                const profilePlugin = ExecutionProfileRegistry.get(profileId);
-
+              {testCases[selectedCaseIdx] && (() => {
+                const currentCase = testCases[selectedCaseIdx];
                 return (
-                  <div className="space-y-3 pt-1">
-                    {profilePlugin.renderTestCaseInput({
-                      testCase: currentCase,
-                      parameters,
-                      onUpdateInput: (newInput) => updateTestCase(activeTestCaseIndex, { input: newInput })
-                    })}
+                  <div className="space-y-3 bg-[#141414] p-4 rounded-xl border border-slate-800">
+                    <div className="space-y-2">
+                      <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-sans">Input</div>
+                      {parameters.length > 0 ? (
+                        parameters.map((param) => {
+                          let parsedInput = currentCase.input;
+                          if (typeof parsedInput === 'string') {
+                            try {
+                              parsedInput = JSON.parse(parsedInput);
+                            } catch (e) {}
+                          }
 
-                    {/* Expected Output Field */}
+                          let val = (typeof parsedInput === 'object' && parsedInput !== null && !Array.isArray(parsedInput))
+                            ? parsedInput[param.name]
+                            : parsedInput;
+
+                          if (val === undefined && typeof currentCase.input === 'object' && currentCase.input !== null) {
+                            val = currentCase.input[param.name] ?? currentCase.input;
+                          }
+
+                          return (
+                            <div key={param.name} className="space-y-1">
+                              <span className="text-slate-400 font-mono font-bold">{param.name} =</span>
+                              <div className="p-2.5 rounded-lg bg-[#262626] border border-slate-800 text-slate-200 font-mono text-xs">
+                                {typeof val === 'object' ? JSON.stringify(val) : String(val ?? '')}
+                              </div>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <div className="p-2.5 rounded-lg bg-[#262626] border border-slate-800 text-slate-200 font-mono text-xs">
+                          {typeof currentCase.input === 'object' ? JSON.stringify(currentCase.input) : String(currentCase.input || '')}
+                        </div>
+                      )}
+                    </div>
+
                     <div className="space-y-1 pt-1">
-                      <label className="text-xs font-mono font-bold text-slate-300">
-                        Expected Output =
-                      </label>
-                      <input
-                        type="text"
-                        value={
-                          typeof currentCase.expectedOutput === 'object'
-                            ? JSON.stringify(currentCase.expectedOutput)
-                            : (currentCase.expectedOutput || '')
-                        }
-                        onChange={(e) => updateTestCase(activeTestCaseIndex, { expectedOutput: e.target.value })}
-                        className="w-full p-3 rounded-xl bg-[#262626] border border-slate-700/80 text-emerald-400 font-mono font-semibold text-xs focus:outline-none focus:border-slate-500 transition-colors shadow-inner"
-                      />
+                      <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-sans">Expected Output</div>
+                      <div className="p-2.5 rounded-lg bg-[#262626] border border-slate-800 text-emerald-400 font-bold">
+                        {typeof currentCase.expectedOutput === 'object' ? JSON.stringify(currentCase.expectedOutput) : String(currentCase.expectedOutput || '')}
+                      </div>
                     </div>
                   </div>
                 );
@@ -191,7 +197,7 @@ export function OutputConsolePanel() {
             </div>
           )}
 
-          {/* TAB 2: TEST RESULT BREAKDOWN (LeetCode Images 1 & 2 Format) */}
+          {/* TAB 2: TEST RESULT BREAKDOWN */}
           {activeConsoleTab === 'result' && (
             <div className="space-y-4">
               {!runResult ? (
@@ -203,44 +209,61 @@ export function OutputConsolePanel() {
                   {/* Result Status Banner */}
                   <div className="flex items-center justify-between p-3 rounded-xl bg-[#141414] border border-slate-800">
                     <div className="flex items-center gap-2.5">
-                      {runResult.status === 'Accepted' ? (
+                      {isRunPassed ? (
                         <LuCheckCircle2 size={20} className="text-emerald-400" />
                       ) : (
                         <LuXCircle size={20} className="text-rose-400" />
                       )}
-                      <span className={`font-extrabold text-base ${runResult.status === 'Accepted' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                      <span className={`font-extrabold text-base ${isRunPassed ? 'text-emerald-400' : 'text-rose-400'}`}>
                         {runResult.status}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-3 text-slate-400 text-xs font-mono">
-                      <span>Runtime: <strong className="text-white">{runResult.executionTimeMs ?? 0.05} ms</strong></span>
+                      <span>Runtime: <strong className="text-white">{runResult.executionTimeMs ?? 0} ms</strong></span>
                     </div>
                   </div>
+
+                  {/* Top-Level Error or Diagnostic Alert Banner */}
+                  {runResult.error && (
+                    <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/25 space-y-1.5 font-mono text-xs">
+                      <div className="flex items-center gap-2 text-rose-400 font-bold font-sans text-xs">
+                        <LuAlertTriangle size={15} />
+                        <span>{runResult.errorType || runResult.status || 'Execution Error'}</span>
+                      </div>
+                      <pre className="text-rose-300 whitespace-pre-wrap leading-relaxed overflow-x-auto text-[11px]">
+                        {runResult.error}
+                      </pre>
+                    </div>
+                  )}
 
                   {/* Per Case Tab Bar */}
                   {resultsList.length > 0 && (
                     <div className="space-y-3">
                       <div className="flex items-center gap-2 overflow-x-auto border-b border-slate-800 pb-1">
-                        {resultsList.map((res, i) => (
-                          <button
-                            key={i}
-                            onClick={() => setSelectedResultCaseIdx(i)}
-                            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                              selectedResultCaseIdx === i
-                                ? 'bg-[#262626] text-white border border-slate-700'
-                                : 'text-slate-400 hover:text-slate-200 hover:bg-[#262626]/40'
-                            }`}
-                          >
-                            <span>Case {i + 1}</span>
-                            <span className={`w-2 h-2 rounded-full ${res.passed ? 'bg-emerald-400' : 'bg-rose-500'}`} />
-                          </button>
-                        ))}
+                        {resultsList.map((res, i) => {
+                          const isCasePass = res.status === 'PASSED' || res.passed === true;
+                          return (
+                            <button
+                              key={i}
+                              onClick={() => setSelectedResultCaseIdx(i)}
+                              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                                selectedResultCaseIdx === i
+                                  ? 'bg-[#262626] text-white border border-slate-700'
+                                  : 'text-slate-400 hover:text-slate-200 hover:bg-[#262626]/40'
+                              }`}
+                            >
+                              <span>Case {i + 1}</span>
+                              <span className={`w-2 h-2 rounded-full ${isCasePass ? 'bg-emerald-400' : 'bg-rose-500'}`} />
+                            </button>
+                          );
+                        })}
                       </div>
 
                       {/* Selected Case Breakdown */}
                       {resultsList[selectedResultCaseIdx] && (() => {
                         const curRes = resultsList[selectedResultCaseIdx];
+                        const isCurPass = curRes.status === 'PASSED' || curRes.passed === true;
                         const inputCase = testCases[selectedResultCaseIdx] || {};
 
                         return (
@@ -250,7 +273,7 @@ export function OutputConsolePanel() {
                               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-sans">Input</div>
                               {parameters.length > 0 ? (
                                 parameters.map((param) => {
-                                  let parsedInput = inputCase.input;
+                                  let parsedInput = curRes.input || inputCase.input;
                                   if (typeof parsedInput === 'string') {
                                     try {
                                       parsedInput = JSON.parse(parsedInput);
@@ -261,8 +284,8 @@ export function OutputConsolePanel() {
                                     ? parsedInput[param.name]
                                     : parsedInput;
 
-                                  if (val === undefined && typeof inputCase.input === 'object' && inputCase.input !== null) {
-                                    val = inputCase.input[param.name] ?? inputCase.input;
+                                  if (val === undefined && typeof (curRes.input || inputCase.input) === 'object') {
+                                    val = (curRes.input || inputCase.input)?.[param.name] ?? (curRes.input || inputCase.input);
                                   }
 
                                   return (
@@ -276,19 +299,7 @@ export function OutputConsolePanel() {
                                 })
                               ) : (
                                 <div className="p-2.5 rounded-lg bg-[#262626] border border-slate-800 text-slate-200 font-mono text-xs">
-                                  {(() => {
-                                    let rawInp = inputCase.input;
-                                    if (typeof rawInp === 'string') {
-                                      try {
-                                        const parsed = JSON.parse(rawInp);
-                                        if (typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
-                                          const firstVal = Object.values(parsed)[0];
-                                          return typeof firstVal === 'object' ? JSON.stringify(firstVal) : String(firstVal ?? '');
-                                        }
-                                      } catch (e) {}
-                                    }
-                                    return typeof rawInp === 'object' ? JSON.stringify(rawInp) : String(rawInp || '');
-                                  })()}
+                                  {typeof curRes.input === 'object' ? JSON.stringify(curRes.input) : String(curRes.input || '')}
                                 </div>
                               )}
                             </div>
@@ -296,7 +307,7 @@ export function OutputConsolePanel() {
                             {/* Output */}
                             <div className="space-y-1 pt-1">
                               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-sans">Output</div>
-                              <div className={`p-2.5 rounded-lg border ${curRes.passed ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-bold' : 'bg-rose-500/10 border-rose-500/20 text-rose-400 font-bold'}`}>
+                              <div className={`p-2.5 rounded-lg border ${isCurPass ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 font-bold' : 'bg-rose-500/10 border-rose-500/20 text-rose-400 font-bold'}`}>
                                 {curRes.actualOutput === null || curRes.actualOutput === undefined ? 'null' : (typeof curRes.actualOutput === 'object' ? JSON.stringify(curRes.actualOutput) : String(curRes.actualOutput))}
                               </div>
                             </div>
@@ -309,12 +320,22 @@ export function OutputConsolePanel() {
                               </div>
                             </div>
 
-                            {/* Compiler / Error Message */}
-                            {curRes.message && (
+                            {/* Diagnostic Diff Reason / Error */}
+                            {curRes.reason && !isCurPass && (
                               <div className="space-y-1 pt-1">
-                                <div className="text-[11px] font-bold text-amber-400 uppercase tracking-wider font-sans">Compiler Message</div>
+                                <div className="text-[11px] font-bold text-amber-400 uppercase tracking-wider font-sans">Diff Reason</div>
                                 <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 font-mono leading-relaxed">
-                                  {curRes.message}
+                                  {curRes.reason}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Runtime Error inside Case */}
+                            {curRes.error && (
+                              <div className="space-y-1 pt-1">
+                                <div className="text-[11px] font-bold text-rose-400 uppercase tracking-wider font-sans">Exception Details</div>
+                                <div className="p-2.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-300 font-mono leading-relaxed">
+                                  {curRes.error}
                                 </div>
                               </div>
                             )}
@@ -334,13 +355,13 @@ export function OutputConsolePanel() {
               <div className="p-5 rounded-2xl bg-[#141414] border border-slate-800 space-y-4">
                 <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                   <div className="flex items-center gap-3">
-                    {submitResult.status === 'Accepted' || submitResult.verdict === 'Accepted' ? (
+                    {isSubmitAccepted ? (
                       <LuCheckCircle2 size={24} className="text-emerald-400" />
                     ) : (
                       <LuXCircle size={24} className="text-rose-400" />
                     )}
                     <div>
-                      <h2 className={`text-xl font-black ${submitResult.status === 'Accepted' || submitResult.verdict === 'Accepted' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                      <h2 className={`text-xl font-black ${isSubmitAccepted ? 'text-emerald-400' : 'text-rose-400'}`}>
                         {submitResult.verdict || submitResult.status}
                       </h2>
                       {submitResult.passedTestCases !== undefined && (

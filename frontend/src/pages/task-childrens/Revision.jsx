@@ -7,6 +7,7 @@ import { ProjectApi } from '../../services/api/Project.api';
 import { FocusApi } from '../../services/api/Focus.api';
 import { NoteApi } from '../../services/api/Note.api';
 import { useLoading } from '../../components/loader/LoaderContext';
+import { getScopedItem, setScopedItem, removeScopedItem } from '../../utils/userStorage';
 import moment from 'moment';
 import {
     IoSearchOutline,
@@ -173,8 +174,8 @@ const Revision = () => {
     const [showHint, setShowHint] = useState(false);
 
     const updateActiveTimer = () => {
-        const timerStateStr = localStorage.getItem("focus_timer_state");
-        const bindingObjStr = localStorage.getItem("focus_timer_task_binding");
+        const timerStateStr = getScopedItem("focus_timer_state");
+        const bindingObjStr = getScopedItem("focus_timer_task_binding");
         if (timerStateStr && bindingObjStr) {
             try {
                 const timerState = JSON.parse(timerStateStr);
@@ -217,7 +218,7 @@ const Revision = () => {
     }, [stats]);
 
     const handleTogglePlayPause = () => {
-        const timerStateStr = localStorage.getItem("focus_timer_state");
+        const timerStateStr = getScopedItem("focus_timer_state");
         if (timerStateStr) {
             try {
                 const timerState = JSON.parse(timerStateStr);
@@ -239,7 +240,7 @@ const Revision = () => {
                     timerState.isActive = true;
                     timerState.startTime = new Date().toISOString();
                 }
-                localStorage.setItem("focus_timer_state", JSON.stringify(timerState));
+                setScopedItem("focus_timer_state", timerState);
                 toast.success(timerState.isActive ? "Timer resumed" : "Timer paused");
                 updateActiveTimer();
             } catch (e) { console.error("Error toggling timer state", e); }
@@ -258,9 +259,9 @@ const Revision = () => {
 
     const handleCancelActiveTimer = () => {
         if (window.confirm("Are you sure you want to cancel the active revision timer? Your progress will not be saved.")) {
-            localStorage.removeItem("focus_timer_task_binding");
-            localStorage.removeItem("focus_timer_state");
-            localStorage.removeItem("focus_timer_retrievable");
+            removeScopedItem("focus_timer_task_binding");
+            removeScopedItem("focus_timer_state");
+            removeScopedItem("focus_timer_retrievable");
             setActiveTimer(null);
             toast.success("Revision timer cancelled.");
         }
@@ -309,8 +310,8 @@ const Revision = () => {
                 setTimerIsActive(dailyRev.timerIsActive);
                 dispatch(setDailyRevision(dailyRev)); // Sync with global store
                 
-                if (dailyRev.isCompleted) {
-                    const hasSeenKey = `seen_revision_summary_${dailyRev.dateStr}`;
+                if (dailyRev && dailyRev.isEligible === true && dailyRev.questions?.length > 0 && dailyRev.isCompleted) {
+                    const hasSeenKey = `seen_revision_summary_${currentUser?._id || 'user'}_${dailyRev.dateStr}`;
                     if (!localStorage.getItem(hasSeenKey)) {
                         setShowCompletionModal(true);
                     }
@@ -536,14 +537,14 @@ const Revision = () => {
     };
 
     const handleReviseWithTimer = (task) => {
-        // Check if there is already a focus timer task binding in localStorage
-        const existingBinding = localStorage.getItem("focus_timer_task_binding");
+        // Check if there is already a focus timer task binding in scoped storage
+        const existingBinding = getScopedItem("focus_timer_task_binding");
         if (existingBinding) {
             const confirmed = window.confirm("A focus timer is already running. Start a new revision timer and discard the current one?");
             if (!confirmed) return;
         }
 
-        // 1. Set the focus timer task binding in localStorage
+        // 1. Set the focus timer task binding in scoped storage
         const focusTimerBinding = {
             taskId: task._id,
             taskName: `Revision: ${task.taskName}`,
@@ -553,7 +554,7 @@ const Revision = () => {
             isBacklog: false,
             isRevision: true
         };
-        localStorage.setItem("focus_timer_task_binding", JSON.stringify(focusTimerBinding));
+        setScopedItem("focus_timer_task_binding", focusTimerBinding);
 
         // 2. Set the focus timer state to active, 30 minutes (1800s)
         const timerState = {
@@ -566,7 +567,7 @@ const Revision = () => {
             customHeading: `Revision: ${task.taskName}`,
             isCustomSessionActive: false
         };
-        localStorage.setItem("focus_timer_state", JSON.stringify(timerState));
+        setScopedItem("focus_timer_state", timerState);
 
         toast.success(`Starting 30-minute revision timer for: ${task.taskName}`);
 
@@ -596,20 +597,20 @@ const Revision = () => {
                 setTimerTimeLeft(dailyRev.timeLeft);
                 setTimerIsActive(dailyRev.timerIsActive);
                 dispatch(setDailyRevision(dailyRev));
-                if (dailyRev.isCompleted) {
+                if (dailyRev && dailyRev.isEligible === true && dailyRev.questions?.length > 0 && dailyRev.isCompleted) {
                     toast.success("🎉 Daily revision complete! Sarthi is fully unlocked!");
                     setShowCompletionModal(true);
                 }
             }
 
             // Check if there is an active focus timer for this exact task
-            const bindingObjStr = localStorage.getItem("focus_timer_task_binding");
+            const bindingObjStr = getScopedItem("focus_timer_task_binding");
             if (bindingObjStr) {
                 try {
                     const bindingObj = JSON.parse(bindingObjStr);
                     if (bindingObj.taskId === selectedTask._id) {
                         // Compute duration and save the focus session!
-                        const timerStateStr = localStorage.getItem("focus_timer_state");
+                        const timerStateStr = getScopedItem("focus_timer_state");
                         if (timerStateStr) {
                             const timerState = JSON.parse(timerStateStr);
                             const startTimeMs = timerState.startTime ? new Date(timerState.startTime).getTime() : Date.now();
@@ -641,9 +642,9 @@ const Revision = () => {
                         }
 
                         // Clear/reset the focus timer state
-                        localStorage.removeItem("focus_timer_task_binding");
-                        localStorage.removeItem("focus_timer_state");
-                        localStorage.removeItem("focus_timer_retrievable");
+                        removeScopedItem("focus_timer_task_binding");
+                        removeScopedItem("focus_timer_state");
+                        removeScopedItem("focus_timer_retrievable");
                     }
                 } catch (timerErr) {
                     console.error("Failed to auto-log focus timer from revision page", timerErr);
@@ -740,7 +741,7 @@ const Revision = () => {
                     isBacklog: false,
                     taskType: "AI Challenge"
                 };
-                localStorage.setItem("focus_timer_task_binding", JSON.stringify(focusTimerBinding));
+                setScopedItem("focus_timer_task_binding", focusTimerBinding);
 
                 const timerState = {
                     timeLeft: 40 * 60,
@@ -752,7 +753,7 @@ const Revision = () => {
                     customHeading: createdTask.taskName,
                     isCustomSessionActive: false
                 };
-                localStorage.setItem("focus_timer_state", JSON.stringify(timerState));
+                setScopedItem("focus_timer_state", timerState);
 
                 toast.success("AI Challenge accepted, added to tasks, and 40-minute timer started!");
             } else {
@@ -807,7 +808,12 @@ const Revision = () => {
     const selectedProjObj = projects.find(p => p._id === selectedProject);
     const isAiEligible = selectedProject !== 'all' && selectedProjObj && selectedProjObj.key !== 'ESP';
 
-    const isLockedMode = dailyRevisionState && dailyRevisionState.isStarted && !dailyRevisionState.isCompleted;
+    const isLockedMode =
+        dailyRevisionState &&
+        dailyRevisionState.isEligible === true &&
+        dailyRevisionState.questions?.length > 0 &&
+        dailyRevisionState.isStarted &&
+        !dailyRevisionState.isCompleted;
 
     if (!dailyRevisionState) {
         return (
@@ -822,7 +828,7 @@ const Revision = () => {
         );
     }
 
-    if (dailyRevisionState && !dailyRevisionState.isStarted) {
+    if (dailyRevisionState && dailyRevisionState.isEligible === true && dailyRevisionState.questions?.length > 0 && !dailyRevisionState.isStarted && !dailyRevisionState.isCompleted) {
         return (
             <div className="flex items-center justify-center min-h-[75vh] bg-[#F8FAFC] p-6 animate-in fade-in duration-500">
                 <div className="bg-white border border-slate-200 shadow-xl rounded-[2.5rem] p-8 max-w-lg w-full text-center relative overflow-hidden">
@@ -1406,7 +1412,46 @@ const Revision = () => {
                 </div>
             </div>
 
-{/* Stats Dashboard Grid */}
+            {/* Milestone Banner for Below Threshold Users */}
+            {dailyRevisionState?.isEligible === false && (
+                <div className="mx-6 mt-6 p-6 bg-gradient-to-r from-amber-500/10 via-primary/5 to-accent/10 border border-amber-200/60 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm animate-in fade-in duration-300">
+                    <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 text-2xl shrink-0">
+                            🎯
+                        </div>
+                        <div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-amber-600 bg-amber-100/60 px-2.5 py-0.5 rounded-full">
+                                    Milestone in Progress
+                                </span>
+                                <span className="text-xs font-bold text-slate-500">
+                                    {dailyRevisionState.completedCount || 0} / {dailyRevisionState.threshold || 50} completed
+                                </span>
+                            </div>
+                            <h3 className="text-base font-black text-slate-800 tracking-tight mt-1">
+                                Daily Revision Protocol Unlocks at 50 Solved Problems
+                            </h3>
+                            <p className="text-xs text-slate-500 font-medium mt-0.5">
+                                Solve {Math.max(0, (dailyRevisionState.threshold || 50) - (dailyRevisionState.completedCount || 0))} more qualifying DSA/DSAP2 problems to activate the automated Daily Revision Protocol.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="w-full md:w-48 shrink-0">
+                        <div className="flex justify-between text-[11px] font-bold mb-1.5 text-slate-600">
+                            <span>Progress</span>
+                            <span>{Math.round(((dailyRevisionState.completedCount || 0) / (dailyRevisionState.threshold || 50)) * 100)}%</span>
+                        </div>
+                        <div className="w-full h-2.5 bg-slate-200/60 rounded-full overflow-hidden border border-slate-200/50">
+                            <div 
+                                className="h-full bg-gradient-to-r from-amber-500 to-primary rounded-full transition-all duration-500"
+                                style={{ width: `${Math.min(100, Math.round(((dailyRevisionState.completedCount || 0) / (dailyRevisionState.threshold || 50)) * 100))}%` }}
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Stats Dashboard Grid */}
             <div className="px-6 pt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
                 <div className="bg-white border border-slate-200 rounded-3xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all">
                     <div className="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 shrink-0">
@@ -2283,14 +2328,14 @@ const Revision = () => {
                 </div>
             )}
 
-            {showCompletionModal && dailyRevisionState && (
+            {showCompletionModal && dailyRevisionState && dailyRevisionState.isEligible === true && dailyRevisionState.questions?.length > 0 && (
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
                     {/* Backdrop */}
                     <div 
                         className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-500"
                         onClick={() => {
                             const dateStr = dailyRevisionState.dateStr;
-                            localStorage.setItem(`seen_revision_summary_${dateStr}`, "true");
+                            localStorage.setItem(`seen_revision_summary_${currentUser?._id || 'user'}_${dateStr}`, "true");
                             setShowCompletionModal(false);
                         }}
                     ></div>
@@ -2312,7 +2357,7 @@ const Revision = () => {
                             <button
                                 onClick={() => {
                                     const dateStr = dailyRevisionState.dateStr;
-                                    localStorage.setItem(`seen_revision_summary_${dateStr}`, "true");
+                                    localStorage.setItem(`seen_revision_summary_${currentUser?._id || 'user'}_${dateStr}`, "true");
                                     setShowCompletionModal(false);
                                 }}
                                 className="relative z-10 w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full transition-all border border-white/5 text-white"
@@ -2410,7 +2455,7 @@ const Revision = () => {
                             <button
                                 onClick={() => {
                                     const dateStr = dailyRevisionState.dateStr;
-                                    localStorage.setItem(`seen_revision_summary_${dateStr}`, "true");
+                                    localStorage.setItem(`seen_revision_summary_${currentUser?._id || 'user'}_${dateStr}`, "true");
                                     setShowCompletionModal(false);
                                 }}
                                 className="w-full py-4 rounded-xl text-[10px] font-black text-white bg-gradient-to-r from-primary to-vermilion-500 hover:from-primary-dark hover:to-vermilion-600 shadow-lg shadow-primary/20 transition-all active:scale-95 text-center uppercase tracking-widest"

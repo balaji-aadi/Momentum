@@ -18,7 +18,7 @@ import { MdFilterAltOff } from "react-icons/md";
 import TaskTable from "../../components/tasks/TaskTable";
 import moment from "moment";
 
-const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, externalSearch, externalSort, externalParentId, onEditStateChange, externalTasks, externalLoading }) => {
+const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, externalSearch, externalSort, externalParentId, onEditStateChange, externalTasks, externalLoading, onOpenSchedule }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const urlProjectId = searchParams.get("projectId");
@@ -279,8 +279,8 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
   }
 
   const fetchProjectTasks = (projectId, assignee, milestoneId) => {
-    const filter = { projectId, ...(assignee && { assignee }) };
-    const filter2 = milestoneId && { projectId, ...(assignee && { assignee }), "milestone": milestoneId };
+    const filter = { projectName: projectId, ...(assignee && { assignee }) };
+    const filter2 = milestoneId && { projectName: projectId, ...(assignee && { assignee }), "milestone": milestoneId };
 
     if (!isTesting && !milestoneId) {
       return TaskApi.getAllTasks({
@@ -462,6 +462,7 @@ const MyTask = ({ viewMode, setViewMode, externalProjectId, externalMemberId, ex
                    handleClick={handleClick}
                    selectedMember={selectedMember}
                    milestoneId={milestoneId}
+                   onOpenSchedule={onOpenSchedule}
                  />
                )
               ) : isInitialLoading ? (

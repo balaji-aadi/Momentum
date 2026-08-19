@@ -1,55 +1,37 @@
 import Problem from "../../models/problem.model.js";
-import { executePythonJudge } from "../judge/pythonJudgeRunner.js";
+import { RunCodeService } from "./runCode.service.js";
+import { SubmitCodeService } from "./submitCode.service.js";
 
-// ==================== EXECUTE CODE (RUN API) ====================
+// ==================== EXECUTE CODE (RUN API - PHASE 8) ====================
 export const runCode = async (req, res) => {
   try {
-    const { problemId, language = 'python', code, customTestCases } = req.body;
+    const { problemId, language = 'javascript', code, customTestCases } = req.body;
 
-    if (!code || !code.trim()) {
-      return res.status(400).json({ success: false, message: "Code parameter cannot be empty." });
+    if (!code || typeof code !== 'string' || !code.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Code parameter cannot be empty."
+      });
     }
 
     let problem = null;
     if (problemId) {
-      const isObjectId = problemId.match(/^[0-9a-fA-F]{24}$/);
-      const query = isObjectId ? { _id: problemId } : { slug: problemId.toLowerCase() };
+      const isObjectId = typeof problemId === 'string' && problemId.match(/^[0-9a-fA-F]{24}$/);
+      const query = isObjectId ? { _id: problemId } : { slug: String(problemId).toLowerCase() };
       problem = await Problem.findOne(query);
     }
 
-    const functionDefinition = problem?.functionDefinition || {
-      functionName: 'twoSum',
-      parameters: [{ name: 'nums', type: 'number[]' }, { name: 'target', type: 'number' }],
-      returnType: 'number[]'
-    };
-
-    const executionProfile = problem?.executionProfile || {
-      runtimeType: 'FUNCTION',
-      inputParser: 'ArrayParser',
-      outputSerializer: 'ArraySerializer',
-      comparator: 'UnorderedArrayMatch'
-    };
-
-    // Use custom test cases if provided by student, otherwise default to problem visible testcases
-    const testCases = (customTestCases && customTestCases.length > 0)
-      ? customTestCases
-      : (problem?.visibleTestCases || [
-          { input: { nums: [2, 7, 11, 15], target: 9 }, expectedOutput: [0, 1] },
-          { input: { nums: [3, 2, 4], target: 6 }, expectedOutput: [1, 2] }
-        ]);
-
-    const executionResult = await executePythonJudge({
-      studentCode: code,
-      functionDefinition,
-      executionProfile,
-      testCases,
-      timeLimitMs: problem?.executionLimits?.timeLimitMs || 2000
+    const runResult = await RunCodeService.run({
+      problem,
+      language,
+      code,
+      customTestCases
     });
 
     return res.status(200).json({
-      success: true,
-      message: `Execution completed with status: ${executionResult.status}`,
-      data: executionResult
+      success: runResult.success,
+      message: `Execution completed with status: ${runResult.status}`,
+      data: runResult
     });
   } catch (error) {
     console.error("Run Code API Error:", error);
@@ -60,55 +42,37 @@ export const runCode = async (req, res) => {
   }
 };
 
-// ==================== SUBMIT CODE (SUBMIT API) ====================
+// ==================== SUBMIT CODE (SUBMIT API - PHASE 9) ====================
 export const submitCode = async (req, res) => {
   try {
-    const { problemId, language = 'python', code } = req.body;
+    const { problemId, language = 'javascript', code } = req.body;
+    const userId = req.user?._id || req.user?.id || null;
 
-    if (!code || !code.trim()) {
-      return res.status(400).json({ success: false, message: "Code parameter cannot be empty." });
+    if (!code || typeof code !== 'string' || !code.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Code parameter cannot be empty."
+      });
     }
 
     let problem = null;
     if (problemId) {
-      const isObjectId = problemId.match(/^[0-9a-fA-F]{24}$/);
-      const query = isObjectId ? { _id: problemId } : { slug: problemId.toLowerCase() };
+      const isObjectId = typeof problemId === 'string' && problemId.match(/^[0-9a-fA-F]{24}$/);
+      const query = isObjectId ? { _id: problemId } : { slug: String(problemId).toLowerCase() };
       problem = await Problem.findOne(query);
     }
 
-    const functionDefinition = problem?.functionDefinition || {
-      functionName: 'twoSum',
-      parameters: [{ name: 'nums', type: 'number[]' }, { name: 'target', type: 'number' }],
-      returnType: 'number[]'
-    };
-
-    const executionProfile = problem?.executionProfile || {
-      runtimeType: 'FUNCTION',
-      inputParser: 'ArrayParser',
-      outputSerializer: 'ArraySerializer',
-      comparator: 'UnorderedArrayMatch'
-    };
-
-    // Combine all test cases: visible + hidden
-    const visible = problem?.visibleTestCases || [
-      { input: { nums: [2, 7, 11, 15], target: 9 }, expectedOutput: [0, 1] },
-      { input: { nums: [3, 2, 4], target: 6 }, expectedOutput: [1, 2] }
-    ];
-    const hidden = problem?.hiddenTestCases || [];
-    const allTestCases = [...visible, ...hidden];
-
-    const executionResult = await executePythonJudge({
-      studentCode: code,
-      functionDefinition,
-      executionProfile,
-      testCases: allTestCases,
-      timeLimitMs: problem?.executionLimits?.timeLimitMs || 2000
+    const submitResult = await SubmitCodeService.submit({
+      problem,
+      language,
+      code,
+      userId
     });
 
     return res.status(200).json({
-      success: true,
-      message: `Submission evaluated with verdict: ${executionResult.verdict}`,
-      data: executionResult
+      success: submitResult.success,
+      message: `Submission evaluated with verdict: ${submitResult.verdict}`,
+      data: submitResult
     });
   } catch (error) {
     console.error("Submit Code API Error:", error);

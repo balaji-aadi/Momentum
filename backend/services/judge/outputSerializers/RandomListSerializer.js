@@ -1,29 +1,39 @@
+import { CycleDetectedError } from './SerializerErrors.js';
+
 /**
- * RandomListSerializer - Serializer for Linked Lists with Random Pointers
- * Serializes node objects or node arrays into 2D pair arrays [[val, random_index], ...]
+ * Random List Output Serializer (Phase 4)
+ * Serializes `RandomListNode` chain into canonical 2D pair array `[[val, random_index], ...]`.
+ * Enforces strict CycleDetectedError on unexpected cycles during linear .next traversal.
  */
 export class RandomListSerializer {
   static serialize(rawOutput) {
-    if (rawOutput === null || rawOutput === undefined) return null;
-    let data = rawOutput;
+    if (rawOutput === null || rawOutput === undefined) return [];
 
+    let data = rawOutput;
     if (typeof rawOutput === 'string') {
       try {
         data = JSON.parse(rawOutput);
       } catch (e) {
-        return rawOutput;
+        return [];
       }
     }
 
     if (Array.isArray(data)) return data;
 
-    // Traverses heap object if rawOutput is a Node object with .next and .random
+    // Two-pass serialization from Node object graph
     const nodes = [];
     const nodeToIndexMap = new Map();
+    const visited = new Set();
     let curr = data;
     let idx = 0;
+    const MAX_STEPS = 100000;
 
     while (curr && typeof curr === 'object') {
+      if (visited.has(curr) || idx > MAX_STEPS) {
+        throw new CycleDetectedError('RandomListNode', `Cycle encountered on .next pointer at node with val '${curr?.val}'`);
+      }
+      visited.add(curr);
+
       nodes.push(curr);
       nodeToIndexMap.set(curr, idx);
       curr = curr.next;

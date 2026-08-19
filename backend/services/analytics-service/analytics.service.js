@@ -1,5 +1,6 @@
 import { PerformanceStat } from "../../models/performanceStat.model.js";
 import { Task } from "../../models/task.model.js";
+import { UserTaskProgress } from "../../models/userTaskProgress.model.js";
 import { FocusSession } from "../../models/focusSession.model.js";
 import { DailyAccountability } from "../../models/dailyAccountability.model.js";
 import mongoose from "mongoose";
@@ -403,55 +404,78 @@ class AnalyticsService {
 
   /**
    * Dynamic fetching for project consistency stats with revisions tracking & UTC date grouping
+   * STRICTLY SCOPED TO AUTHENTICATED USER (userId) via UserTaskProgress & FocusSession
    */
-  async getProjectConsistencyStats(projectId) {
-    if (!projectId) return [];
+  async getProjectConsistencyStats(projectId, userId) {
+    if (!projectId || !userId) return [];
     try {
       const pId = new mongoose.Types.ObjectId(projectId);
+      const uId = new mongoose.Types.ObjectId(userId);
       const dateMap = {};
 
-      const tasks = await Task.find({ projectName: pId });
+      // 1. Resolve canonical tasks for the project to ensure relational integrity
+      const projectTasks = await Task.find({ projectName: pId }).select("_id storyPoints").lean();
+      const taskIds = projectTasks.map(t => t._id);
+      const taskStoryPointsMap = projectTasks.reduce((acc, t) => {
+        acc[t._id.toString()] = t.storyPoints || 0;
+        return acc;
+      }, {});
 
-      tasks.forEach(t => {
-        // Done tasks
-        if (t.status === "done") {
-          let doneDate = t.createdAt;
-          if (t.activityLogs && t.activityLogs.length > 0) {
-            const doneLog = [...t.activityLogs].reverse().find(l => l.currentStatus === "done");
-            if (doneLog && doneLog.date) {
-              doneDate = doneLog.date;
-            }
-          }
-          const dStr = moment.utc(doneDate).format("YYYY-MM-DD");
-          if (!dateMap[dStr]) {
-            dateMap[dStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
-          }
-          dateMap[dStr].tasksCompleted += 1;
-          dateMap[dStr].storyPointsDone += (t.storyPoints || 0);
-        }
+      if (taskIds.length === 0) return [];
 
-        // Revision logs
-        if (t.revisionLogs && t.revisionLogs.length > 0) {
-          t.revisionLogs.forEach(rl => {
-            if (rl.revisionDate) {
-              const rStr = moment.utc(rl.revisionDate).format("YYYY-MM-DD");
-              if (!dateMap[rStr]) {
-                dateMap[rStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
-              }
-              dateMap[rStr].revisionsCount += 1;
-            }
-          });
+      // 2. Fetch authenticated user's completed tasks from UserTaskProgress
+      const userProgress = await UserTaskProgress.find({
+        userId: uId,
+        taskId: { $in: taskIds },
+        status: "done"
+      }).lean();
+
+      userProgress.forEach(p => {
+        let doneDate = p.completedAt || p.updatedAt;
+        if (p.activityLogs && p.activityLogs.length > 0) {
+          const doneLog = [...p.activityLogs].reverse().find(l => l.currentStatus === "done");
+          if (doneLog && doneLog.date) {
+            doneDate = doneLog.date;
+          }
         }
+        if (!doneDate) doneDate = new Date();
+
+        const dStr = moment.utc(doneDate).format("YYYY-MM-DD");
+        if (!dateMap[dStr]) {
+          dateMap[dStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
+        }
+        dateMap[dStr].tasksCompleted += 1;
+        const sp = taskStoryPointsMap[p.taskId.toString()] || 0;
+        dateMap[dStr].storyPointsDone += sp;
       });
 
-      // Focus Sessions
-      const sessions = await FocusSession.find({}).populate({
-        path: "task",
-        match: { projectName: pId }
+      // 3. Revision logs from UserTaskProgress
+      const userRevisions = await UserTaskProgress.find({
+        userId: uId,
+        taskId: { $in: taskIds },
+        "revisionLogs.0": { $exists: true }
+      }).lean();
+
+      userRevisions.forEach(p => {
+        (p.revisionLogs || []).forEach(rl => {
+          if (rl.revisionDate) {
+            const rStr = moment.utc(rl.revisionDate).format("YYYY-MM-DD");
+            if (!dateMap[rStr]) {
+              dateMap[rStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
+            }
+            dateMap[rStr].revisionsCount += 1;
+          }
+        });
       });
+
+      // 4. Focus Sessions strictly for this user on tasks belonging to this project
+      const sessions = await FocusSession.find({
+        user: uId,
+        task: { $in: taskIds }
+      }).lean();
 
       sessions.forEach(s => {
-        if (s.task && s.duration) {
+        if (s.duration) {
           const dStr = moment.utc(s.date || s.startTime).format("YYYY-MM-DD");
           if (!dateMap[dStr]) {
             dateMap[dStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
@@ -474,7 +498,7 @@ class AnalyticsService {
   }
 
   /**
-   * Dynamic fetching for user global consistency stats with revisions tracking & UTC date grouping
+   * Dynamic fetching for user global consistency stats strictly scoped to UserTaskProgress & FocusSession
    */
   async getUserConsistencyStats(userId) {
     if (!userId) return [];
@@ -482,42 +506,51 @@ class AnalyticsService {
       const uId = new mongoose.Types.ObjectId(userId);
       const dateMap = {};
 
-      const tasks = await Task.find({ assignee: uId });
+      // 1. Authenticated user's completed tasks across all projects
+      const userProgress = await UserTaskProgress.find({
+        userId: uId,
+        status: "done"
+      }).populate("taskId", "storyPoints").lean();
 
-      tasks.forEach(t => {
-        // Done tasks
-        if (t.status === "done") {
-          let doneDate = t.createdAt;
-          if (t.activityLogs && t.activityLogs.length > 0) {
-            const doneLog = [...t.activityLogs].reverse().find(l => l.currentStatus === "done");
-            if (doneLog && doneLog.date) {
-              doneDate = doneLog.date;
-            }
+      userProgress.forEach(p => {
+        let doneDate = p.completedAt || p.updatedAt;
+        if (p.activityLogs && p.activityLogs.length > 0) {
+          const doneLog = [...p.activityLogs].reverse().find(l => l.currentStatus === "done");
+          if (doneLog && doneLog.date) {
+            doneDate = doneLog.date;
           }
-          const dStr = moment.utc(doneDate).format("YYYY-MM-DD");
-          if (!dateMap[dStr]) {
-            dateMap[dStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
-          }
-          dateMap[dStr].tasksCompleted += 1;
-          dateMap[dStr].storyPointsDone += (t.storyPoints || 0);
         }
+        if (!doneDate) doneDate = new Date();
 
-        // Revision logs
-        if (t.revisionLogs && t.revisionLogs.length > 0) {
-          t.revisionLogs.forEach(rl => {
-            if (rl.revisionDate) {
-              const rStr = moment.utc(rl.revisionDate).format("YYYY-MM-DD");
-              if (!dateMap[rStr]) {
-                dateMap[rStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
-              }
-              dateMap[rStr].revisionsCount += 1;
-            }
-          });
+        const dStr = moment.utc(doneDate).format("YYYY-MM-DD");
+        if (!dateMap[dStr]) {
+          dateMap[dStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
         }
+        dateMap[dStr].tasksCompleted += 1;
+        const sp = p.taskId?.storyPoints || 0;
+        dateMap[dStr].storyPointsDone += sp;
       });
 
-      // Focus Sessions
-      const sessions = await FocusSession.find({ user: uId });
+      // 2. Revision logs from UserTaskProgress
+      const userRevisions = await UserTaskProgress.find({
+        userId: uId,
+        "revisionLogs.0": { $exists: true }
+      }).lean();
+
+      userRevisions.forEach(p => {
+        (p.revisionLogs || []).forEach(rl => {
+          if (rl.revisionDate) {
+            const rStr = moment.utc(rl.revisionDate).format("YYYY-MM-DD");
+            if (!dateMap[rStr]) {
+              dateMap[rStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
+            }
+            dateMap[rStr].revisionsCount += 1;
+          }
+        });
+      });
+
+      // 3. Focus Sessions strictly for this user
+      const sessions = await FocusSession.find({ user: uId }).lean();
       sessions.forEach(s => {
         if (s.duration) {
           const dStr = moment.utc(s.date || s.startTime).format("YYYY-MM-DD");
@@ -528,8 +561,8 @@ class AnalyticsService {
         }
       });
 
-      // Daily Accountability
-      const board = await DailyAccountability.findOne({ userId: uId });
+      // 4. Daily Accountability strictly for this user
+      const board = await DailyAccountability.findOne({ userId: uId }).lean();
       if (board && board.sections) {
         board.sections.forEach(sec => {
           (sec.rows || []).forEach(row => {
@@ -558,97 +591,120 @@ class AnalyticsService {
   }
 
   /**
-   * Fetch detailed activity breakdown (solved problems, revisions, focus time) for a specific date
+   * Fetch detailed activity breakdown for a specific date strictly from UserTaskProgress & FocusSession
    */
   async getDayDetails(userId, dateStr, projectId = null, branchId = null) {
-    // 1. Completed tasks / problems solved for this day
-    const taskQuery = { status: "done" };
-    if (projectId) {
-      taskQuery.projectName = new mongoose.Types.ObjectId(projectId);
-    }
-    if (branchId) {
-      taskQuery.branchId = branchId;
+    const uId = new mongoose.Types.ObjectId(userId);
+
+    // 1. Resolve canonical tasks for the project / branch if specified
+    let taskFilter = {};
+    if (projectId) taskFilter.projectName = new mongoose.Types.ObjectId(projectId);
+    if (branchId) taskFilter.branchId = branchId;
+    const canonicalTasks = await Task.find(taskFilter).select("_id").lean();
+    const taskIds = canonicalTasks.map(t => t._id);
+
+    // 2. Completed tasks for this user on this day from UserTaskProgress
+    const progressFilter = {
+      userId: uId,
+      status: "done"
+    };
+    if (taskIds.length > 0) {
+      progressFilter.taskId = { $in: taskIds };
     }
 
-    const allDoneTasks = await Task.find(taskQuery)
-      .populate("projectName", "name key")
-      .populate("assignee", "firstName lastName profileImage");
+    const allDoneProgress = await UserTaskProgress.find(progressFilter)
+      .populate({
+        path: "taskId",
+        populate: [
+          { path: "projectName", select: "name key" },
+          { path: "assignee", select: "firstName lastName profileImage" }
+        ]
+      })
+      .lean();
 
     const completedTasks = [];
-    allDoneTasks.forEach(t => {
-      let doneDate = t.createdAt;
-      if (t.activityLogs && t.activityLogs.length > 0) {
-        const doneLog = [...t.activityLogs].reverse().find(l => l.currentStatus === "done");
+    allDoneProgress.forEach(p => {
+      let doneDate = p.completedAt || p.updatedAt;
+      if (p.activityLogs && p.activityLogs.length > 0) {
+        const doneLog = [...p.activityLogs].reverse().find(l => l.currentStatus === "done");
         if (doneLog && doneLog.date) {
           doneDate = doneLog.date;
         }
       }
       const doneStr = moment.utc(doneDate).format("YYYY-MM-DD");
-      if (doneStr === dateStr) {
+      if (doneStr === dateStr && p.taskId) {
         completedTasks.push({
-          _id: t._id,
-          taskId: t.taskId,
-          taskName: t.taskName,
-          taskType: t.taskType,
-          taskPriority: t.taskPriority,
-          storyPoints: t.storyPoints || 0,
-          estimatedHours: t.estimatedHours || 0,
+          _id: p.taskId._id,
+          taskId: p.taskId.taskId,
+          taskName: p.taskId.taskName,
+          taskType: p.taskId.taskType,
+          taskPriority: p.taskId.taskPriority,
+          storyPoints: p.taskId.storyPoints || 0,
+          estimatedHours: p.taskId.estimatedHours || 0,
           completedAt: doneDate,
-          projectName: t.projectName,
-          assignee: t.assignee
+          projectName: p.taskId.projectName,
+          assignee: p.taskId.assignee
         });
       }
     });
 
-    // 2. Revised tasks / problems revised for this day
-    const revisionQuery = projectId ? { projectName: new mongoose.Types.ObjectId(projectId) } : {};
-    if (branchId) {
-      revisionQuery.branchId = branchId;
+    // 3. Revised tasks for this user on this day from UserTaskProgress
+    const revisionFilter = {
+      userId: uId,
+      "revisionLogs.0": { $exists: true }
+    };
+    if (taskIds.length > 0) {
+      revisionFilter.taskId = { $in: taskIds };
     }
 
-    const revisedTasksRaw = await Task.find(revisionQuery)
-      .populate("projectName", "name key")
-      .populate("assignee", "firstName lastName profileImage");
+    const allRevisionProgress = await UserTaskProgress.find(revisionFilter)
+      .populate({
+        path: "taskId",
+        populate: [
+          { path: "projectName", select: "name key" },
+          { path: "assignee", select: "firstName lastName profileImage" }
+        ]
+      })
+      .lean();
 
     const revisedTasks = [];
-    revisedTasksRaw.forEach(t => {
-      (t.revisionLogs || []).forEach(rl => {
+    allRevisionProgress.forEach(p => {
+      (p.revisionLogs || []).forEach(rl => {
         if (rl.revisionDate) {
           const revStr = moment.utc(rl.revisionDate).format("YYYY-MM-DD");
-          if (revStr === dateStr) {
+          if (revStr === dateStr && p.taskId) {
             revisedTasks.push({
-              _id: t._id,
-              taskId: t.taskId,
-              taskName: t.taskName,
-              taskType: t.taskType,
+              _id: p.taskId._id,
+              taskId: p.taskId.taskId,
+              taskName: p.taskId.taskName,
+              taskType: p.taskId.taskType,
               notes: rl.notes,
               revisionDate: rl.revisionDate,
-              projectName: t.projectName
+              projectName: p.taskId.projectName
             });
           }
         }
       });
     });
 
-    // 3. Focus Sessions for this day
-    const sessionQuery = { user: new mongoose.Types.ObjectId(userId) };
-    const focusSessionsRaw = await FocusSession.find(sessionQuery)
+    // 4. Focus Sessions strictly for this user on this day
+    const sessionFilter = { user: uId };
+    if (taskIds.length > 0) {
+      sessionFilter.task = { $in: taskIds };
+    }
+    const focusSessionsRaw = await FocusSession.find(sessionFilter)
       .populate({
         path: "task",
         select: "taskName taskId taskType projectName",
         populate: { path: "projectName", select: "name key" }
-      });
+      })
+      .lean();
 
     const focusSessions = focusSessionsRaw.filter(s => {
       const sDate = s.date || s.startTime;
       if (!sDate) return false;
       const sessionStr = moment.utc(sDate).format("YYYY-MM-DD");
-      if (sessionStr !== dateStr) return false;
-      if (projectId && s.task && s.task.projectName) {
-        const pIdStr = s.task.projectName._id ? s.task.projectName._id.toString() : s.task.projectName.toString();
-        return pIdStr === projectId.toString();
-      }
-      return true;
+      return sessionStr === dateStr;
     }).map(s => ({
       _id: s._id,
       durationMinutes: s.duration || 0,
@@ -657,10 +713,10 @@ class AnalyticsService {
       task: s.task
     }));
 
-    // 4. Daily Accountability logs for this day
+    // 5. Daily Accountability logs for this day
     let accountabilityLogsCount = 0;
     if (!projectId) {
-      const board = await DailyAccountability.findOne({ userId: new mongoose.Types.ObjectId(userId) });
+      const board = await DailyAccountability.findOne({ userId: uId }).lean();
       if (board) {
         (board.sections || []).forEach(sec => {
           (sec.rows || []).forEach(row => {

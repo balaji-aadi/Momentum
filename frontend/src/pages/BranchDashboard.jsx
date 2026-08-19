@@ -62,7 +62,7 @@ const PamphletFrame = ({ htmlContent, className = "w-full h-[520px]" }) => {
             srcDoc={docSrc}
             title="Module Pamphlet Showcase"
             className={`${className} border-0 rounded-xl bg-white w-full`}
-            sandbox="allow-same-origin allow-popups"
+            sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"
         />
     );
 };
@@ -114,6 +114,7 @@ const BranchDashboard = () => {
 
     // Handle Module Entry
     const handleModuleClick = (module) => {
+        if (!module) return;
         const hasDescription = module.description && module.description.trim().length > 0;
         const hasSeenPamphlet = localStorage.getItem(`pamphlet_seen_${module._id}`) === 'true';
 
@@ -126,17 +127,19 @@ const BranchDashboard = () => {
     };
 
     const enterModule = (module) => {
+        if (!module) return;
         dispatch(setActiveBranch(module));
         navigate('/');
     };
 
     const handleConfirmPamphletEntry = () => {
         if (pamphletModalModule) {
+            const target = pamphletModalModule;
             if (dontShowAgain) {
-                localStorage.setItem(`pamphlet_seen_${pamphletModalModule._id}`, 'true');
+                localStorage.setItem(`pamphlet_seen_${target._id}`, 'true');
             }
-            enterModule(pamphletModalModule);
             setPamphletModalModule(null);
+            enterModule(target);
         }
     };
 
@@ -444,10 +447,10 @@ const BranchDashboard = () => {
                             initial={{ opacity: 0, scale: 0.98, y: 10 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.98, y: 10 }}
-                            className="relative bg-white rounded-[1.75rem] shadow-2xl w-full flex flex-col overflow-hidden border border-slate-200"
+                            className="relative bg-white rounded-[1.75rem] shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden border border-slate-200 z-10 my-auto"
                         >
                             {/* Modal Header */}
-                            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50 shrink-0">
                                 <div className="flex items-center gap-3">
                                     <div className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
                                         {pamphletModalModule.logo ? (
@@ -464,29 +467,30 @@ const BranchDashboard = () => {
                                 </div>
 
                                 <button
+                                    type="button"
                                     onClick={() => setPamphletModalModule(null)}
-                                    className="p-1.5 text-slate-400 hover:text-slate-700 transition-colors rounded-lg hover:bg-slate-200/60"
+                                    className="p-1.5 text-slate-400 hover:text-slate-700 transition-colors rounded-lg hover:bg-slate-200/60 cursor-pointer"
                                 >
                                     <IoCloseOutline size={20} />
                                 </button>
                             </div>
 
                             {/* Modal Body: High Fidelity HTML/CSS Iframe Renderer */}
-                            <div className="p-4 flex-1 bg-slate-100 overflow-hidden flex flex-col min-h-[480px]">
+                            <div className="p-4 flex-1 bg-slate-100 overflow-hidden flex flex-col min-h-0">
                                 <PamphletFrame
                                     htmlContent={pamphletModalModule.description}
-                                    className="w-full flex-1 min-h-[600px] rounded-xl shadow-inner"
+                                    className="w-full flex-1 min-h-[380px] h-full rounded-xl shadow-inner"
                                 />
                             </div>
 
                             {/* Modal Footer */}
-                            <div className="px-6 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-4">
+                            <div className="px-6 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-4 shrink-0">
                                 <label className="flex items-center gap-2 cursor-pointer">
                                     <input
                                         type="checkbox"
                                         checked={dontShowAgain}
                                         onChange={(e) => setDontShowAgain(e.target.checked)}
-                                        className="w-4 h-4 rounded text-black focus:ring-black border-slate-300"
+                                        className="w-4 h-4 rounded text-black focus:ring-black border-slate-300 cursor-pointer"
                                     />
                                     <span className="text-xs text-slate-600 font-medium">
                                         Don't show this pamphlet automatically on entry
@@ -494,8 +498,9 @@ const BranchDashboard = () => {
                                 </label>
 
                                 <button
+                                    type="button"
                                     onClick={handleConfirmPamphletEntry}
-                                    className="px-6 py-2.5 bg-black hover:bg-slate-800 text-white font-bold rounded-xl shadow-xs transition-all flex items-center gap-1.5 text-xs cursor-pointer active:scale-95"
+                                    className="px-6 py-2.5 bg-black hover:bg-slate-800 text-white font-bold rounded-xl shadow-xs transition-all flex items-center gap-1.5 text-xs cursor-pointer active:scale-95 z-20"
                                 >
                                     <span>Enter Module</span>
                                     <IoArrowForwardOutline size={14} />

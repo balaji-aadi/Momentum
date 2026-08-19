@@ -12,6 +12,7 @@ import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Sprints from './project-childrens/Sprints';
 import TaskDetailDrawer from '../components/tasks/TaskDetailDrawer';
+import ArenaScheduleModal from '../components/tasks/ArenaScheduleModal';
 import { setGlobalSearch } from '../store/slices/storeSlice';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoChevronDownOutline, IoFilterOutline } from 'react-icons/io5';
@@ -31,8 +32,9 @@ const Dashboard = () => {
   const [viewMode, setViewMode] = useState(searchParams.get('view') || 'board');
   const [isEditingTask, setIsEditingTask] = useState(false);
 
-  // Controls visibility toggle for Arena views (collapsed by default as shown in Image 2)
-  const [isControlsVisible, setIsControlsVisible] = useState(false);
+  // Controls visibility toggle for Arena views (visible by default)
+  const [isControlsVisible, setIsControlsVisible] = useState(true);
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
 
   // Global Filters
   const [projectId, setProjectId] = useState('');
@@ -67,7 +69,7 @@ const Dashboard = () => {
       let currentProjects = projectsCacheRef.current;
 
       // 1. Fetch projects in parallel if not cached
-      if (!currentProjects) {
+      if (!currentProjects || currentProjects.length === 0) {
         try {
           const [pRes, uRes] = await Promise.all([
             ProjectApi.getAllProjects(),
@@ -76,9 +78,13 @@ const Dashboard = () => {
           currentProjects = pRes.data?.data?.map(p => ({
             value: p._id,
             label: p.name,
-            slug: p.key?.toLowerCase() || p.name.toLowerCase().replace(/\s+/g, '-')
+            slug: (p.key?.trim() || p.name?.trim().replace(/\s+/g, '-')).toLowerCase(),
+            name: p.name?.trim(),
+            key: p.key?.trim()
           })) || [];
-          projectsCacheRef.current = currentProjects;
+          if (currentProjects.length > 0) {
+            projectsCacheRef.current = currentProjects;
+          }
           if (isMounted) {
             setProjects(currentProjects);
             setMembers(uRes.data?.data?.map(u => ({ value: u._id, label: `${u.firstName} ${u.lastName}` })) || []);
@@ -88,8 +94,44 @@ const Dashboard = () => {
         }
       }
 
-      // 2. Instant project resolution from slug
-      const matched = (currentProjects || []).find(p => p.slug === slug);
+      // 2. Instant project resolution from slug (supporting slug, key, name, or id)
+      const slugLower = slug?.trim().toLowerCase();
+      let matched = (currentProjects || []).find(p => 
+        p.slug === slugLower ||
+        p.key?.toLowerCase() === slugLower ||
+        p.value === slug ||
+        p.name?.toLowerCase() === slugLower ||
+        p.name?.toLowerCase().replace(/\s+/g, '-') === slugLower
+      );
+
+      // If not matched, try a fresh fetch to prevent stale cache lock
+      if (!matched) {
+        try {
+          const pRes = await ProjectApi.getAllProjects();
+          const freshProjects = pRes.data?.data?.map(p => ({
+            value: p._id,
+            label: p.name,
+            slug: (p.key?.trim() || p.name?.trim().replace(/\s+/g, '-')).toLowerCase(),
+            name: p.name?.trim(),
+            key: p.key?.trim()
+          })) || [];
+          if (freshProjects.length > 0) {
+            currentProjects = freshProjects;
+            projectsCacheRef.current = freshProjects;
+            if (isMounted) setProjects(freshProjects);
+            matched = freshProjects.find(p => 
+              p.slug === slugLower ||
+              p.key?.toLowerCase() === slugLower ||
+              p.value === slug ||
+              p.name?.toLowerCase() === slugLower ||
+              p.name?.toLowerCase().replace(/\s+/g, '-') === slugLower
+            );
+          }
+        } catch (e) {
+          console.error("Fresh project fetch error", e);
+        }
+      }
+
       const targetProjectId = matched ? matched.value : null;
 
       if (!targetProjectId) {
@@ -167,6 +209,10 @@ const Dashboard = () => {
     return matchesSearch && (pId?.toString() === projectId?.toString());
   });
 
+  const isArenaScheduled = Boolean(
+    tasks && tasks.length > 0 && tasks.some(t => t.taskStartDate || t.taskDueDate)
+  );
+
   const handleCreateTask = () => {
     navigate('/task/create-task');
   };
@@ -209,44 +255,37 @@ const Dashboard = () => {
 
       {/* Expandable Header Controls (Image 3 style) */}
       <AnimatePresence>
-        {isControlsVisible && !isEditingTask && (
+        {isControlsVisible && (
           <motion.div
-            initial={{ height: 0, opacity: 0, y: -15 }}
-            animate={{ height: 'auto', opacity: 1, y: 0 }}
-            exit={{ height: 0, opacity: 0, y: -15 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-            className="z-40 bg-bgLight border-b border-borderLight shadow-sm"
+            initial={{ opacity: 0, y: -20, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: 'auto' }}
+            exit={{ opacity: 0, y: -20, height: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="w-full shrink-0 z-20 border-b border-borderLight bg-white shadow-sm overflow-hidden"
           >
             <DashboardHeader
               viewMode={viewMode}
-              setViewMode={(mode) => {
-                setViewMode(mode);
-                const newParams = new URLSearchParams(searchParams);
-                newParams.set('view', mode);
-                setSearchParams(newParams);
-              }}
+              setViewMode={setViewMode}
               projects={projects}
               members={members}
               selectedProject={projectId}
               onProjectChange={(id) => {
                 const selected = projects.find(p => p.value === id);
-                if (selected) {
+                if (selected?.slug) {
                   navigate(`/arena/${selected.slug}`);
-                } else {
-                  navigate('/');
+                } else if (id) {
+                  navigate(`/arena/${id}`);
                 }
               }}
               selectedMember={memberId}
               onMemberChange={setMemberId}
               search={globalSearch}
-              onSearchChange={(val) => dispatch(setGlobalSearch(val))}
+              onSearchChange={setGlobalSearch}
               onResetFilters={() => {
-                setProjectId('');
+                setGlobalSearch('');
                 setMemberId('');
-                dispatch(setGlobalSearch(''));
-                setSortBy('');
                 setParentId('');
-                setSearchParams({});
+                setSortBy('newest');
               }}
               onCreateTask={handleCreateTask}
               isManager={isManager}
@@ -258,6 +297,9 @@ const Dashboard = () => {
               onParentChange={setParentId}
               parentTasks={parentTasks}
               onHideControls={() => setIsControlsVisible(false)}
+              onOpenSchedule={!isArenaScheduled ? () => setIsScheduleModalOpen(true) : null}
+              hasProjectSelected={!!projectId}
+              isArenaScheduled={isArenaScheduled}
             />
           </motion.div>
         )}
@@ -277,6 +319,7 @@ const Dashboard = () => {
             externalTasks={tasks}
             externalLoading={loading}
             onEditStateChange={(editing) => setIsEditingTask(editing)}
+            onOpenSchedule={!isArenaScheduled ? () => setIsScheduleModalOpen(true) : null}
           />
         )}
 
@@ -307,6 +350,33 @@ const Dashboard = () => {
       </div>
 
       <TaskDetailDrawer />
+
+      {/* User-Specific Arena Schedule Modal */}
+      <ArenaScheduleModal
+        isOpen={isScheduleModalOpen}
+        onClose={() => setIsScheduleModalOpen(false)}
+        projectId={projectId}
+        projectName={projects.find(p => p.value === projectId)?.label}
+        tasks={tasks || []}
+        onScheduleApplied={async () => {
+          if (projectId) {
+            delete taskCacheRef.current[projectId];
+            try {
+              setLoading(true);
+              const filter = { projectName: projectId };
+              if (memberId) filter.assignee = memberId;
+              const res = await TaskApi.getAllTasks({ filter });
+              const fetchedTasks = res.data?.data || [];
+              taskCacheRef.current[projectId] = fetchedTasks;
+              setTasks(fetchedTasks);
+            } catch (err) {
+              console.error("Failed to refresh tasks after schedule applied", err);
+            } finally {
+              setLoading(false);
+            }
+          }
+        }}
+      />
     </div>
   );
 };

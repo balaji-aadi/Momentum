@@ -1,0 +1,182 @@
+{
+  "databaseName": "task-management",
+  "backupCreatedAt": "2026-08-15T18:37:45.302Z",
+  "totalCollections": 29,
+  "totalDocuments": 2799,
+  "collections": [
+    {
+      "collection": "globalsettings",
+      "documentCount": 1,
+      "fileSizeKb": "0.37",
+      "indexesCount": 1
+    },
+    {
+      "collection": "bugs",
+      "documentCount": 0,
+      "fileSizeKb": "0.00",
+      "indexesCount": 1
+    },
+    {
+      "collection": "focussessions",
+      "documentCount": 327,
+      "fileSizeKb": "216.98",
+      "indexesCount": 2
+    },
+    {
+      "collection": "activities",
+      "documentCount": 0,
+      "fileSizeKb": "0.00",
+      "indexesCount": 1
+    },
+    {
+      "collection": "tasks",
+      "documentCount": 1390,
+      "fileSizeKb": "1377.40",
+      "indexesCount": 10
+    },
+    {
+      "collection": "milestones",
+      "documentCount": 0,
+      "fileSizeKb": "0.00",
+      "indexesCount": 2
+    },
+    {
+      "collection": "dailyrevisions",
+      "documentCount": 35,
+      "fileSizeKb": "54.37",
+      "indexesCount": 3
+    },
+    {
+      "collection": "notifications",
+      "documentCount": 262,
+      "fileSizeKb": "100.92",
+      "indexesCount": 1
+    },
+    {
+      "collection": "problems",
+      "documentCount": 6,
+      "fileSizeKb": "1263.31",
+      "indexesCount": 6
+    },
+    {
+      "collection": "companies",
+      "documentCount": 22,
+      "fileSizeKb": "5.52",
+      "indexesCount": 3
+    },
+    {
+      "collection": "testcases",
+      "documentCount": 0,
+      "fileSizeKb": "0.00",
+      "indexesCount": 1
+    },
+    {
+      "collection": "sprints",
+      "documentCount": 0,
+      "fileSizeKb": "0.00",
+      "indexesCount": 4
+    },
+    {
+      "collection": "languages",
+      "documentCount": 5,
+      "fileSizeKb": "1.51",
+      "indexesCount": 2
+    },
+    {
+      "collection": "userarenaschedules",
+      "documentCount": 12,
+      "fileSizeKb": "6.31",
+      "indexesCount": 5
+    },
+    {
+      "collection": "payments",
+      "documentCount": 2,
+      "fileSizeKb": "0.67",
+      "indexesCount": 2
+    },
+    {
+      "collection": "performancestats",
+      "documentCount": 287,
+      "fileSizeKb": "203.42",
+      "indexesCount": 8
+    },
+    {
+      "collection": "users",
+      "documentCount": 2,
+      "fileSizeKb": "2.14",
+      "indexesCount": 3
+    },
+    {
+      "collection": "epics",
+      "documentCount": 0,
+      "fileSizeKb": "0.00",
+      "indexesCount": 1
+    },
+    {
+      "collection": "fcmdevices",
+      "documentCount": 0,
+      "fileSizeKb": "0.00",
+      "indexesCount": 1
+    },
+    {
+      "collection": "usertaskprogresses",
+      "documentCount": 100,
+      "fileSizeKb": "59.89",
+      "indexesCount": 9
+    },
+    {
+      "collection": "patterns",
+      "documentCount": 22,
+      "fileSizeKb": "6.54",
+      "indexesCount": 3
+    },
+    {
+      "collection": "notes",
+      "documentCount": 208,
+      "fileSizeKb": "5088.49",
+      "indexesCount": 2
+    },
+    {
+      "collection": "dsapamphlets",
+      "documentCount": 31,
+      "fileSizeKb": "66.08",
+      "indexesCount": 5
+    },
+    {
+      "collection": "projects",
+      "documentCount": 15,
+      "fileSizeKb": "14.12",
+      "indexesCount": 3
+    },
+    {
+      "collection": "userroles",
+      "documentCount": 4,
+      "fileSizeKb": "2.43",
+      "indexesCount": 2
+    },
+    {
+      "collection": "dailyaccountabilities",
+      "documentCount": 1,
+      "fileSizeKb": "0.35",
+      "indexesCount": 2
+    },
+    {
+      "collection": "permissions",
+      "documentCount": 22,
+      "fileSizeKb": "4.91",
+      "indexesCount": 2
+    },
+    {
+      "collection": "topics",
+      "documentCount": 31,
+      "fileSizeKb": "7.52",
+      "indexesCount": 3
+    },
+    {
+      "collection": "branches",
+      "documentCount": 14,
+      "fileSizeKb": "14.60",
+      "indexesCount": 3
+    }
+  ]
+}

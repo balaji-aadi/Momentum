@@ -2,9 +2,21 @@ import { asyncHandler } from "../../utils/asyncHandler.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
 import { Project } from "../../models/project.model.js";
+import { UserTaskProgress } from "../../models/userTaskProgress.model.js";
+import { UserArenaSchedule } from "../../models/userArenaSchedule.model.js";
 import mongoose from "mongoose";
-import { Milestone } from "../../models/milestone.model.js"
-import { Task } from "../../models/task.model.js"
+import moment from "moment";
+import { Milestone } from "../../models/milestone.model.js";
+import { Task } from "../../models/task.model.js";
+
+const isUserAdmin = (user) => {
+  if (!user) return false;
+  if (user.email === "balajiaadi2000@gmail.com") return true;
+  if (user.role === "admin") return true;
+  if (user.userRole?.name?.toLowerCase() === "admin") return true;
+  if (Array.isArray(user.userRoles) && user.userRoles.some(r => r.name?.toLowerCase() === "admin" || (r.active && r.permissions?.some(p => ["CREATE_PROJECT", "UPDATE_PROJECT", "DELETE_PROJECT"].includes(p.name))))) return true;
+  return false;
+};
 
 const pc = {}
 
@@ -13,6 +25,10 @@ pc.createProject = asyncHandler(async (req, res) => {
   console.log("Req.body", req.body);
 
   try {
+    if (!isUserAdmin(req.user)) {
+      return res.status(403).json(new ApiError(403, "Forbidden: Only administrators can create canonical Projects/Arenas."));
+    }
+
     const { name, access, key, description, startDate, endDate, priority, clientName, budget, projectManager,
       teamMembers, rolesAndResponsibilities, milestones, status, githubRepository
     } = req.body;
@@ -71,12 +87,16 @@ pc.updateProject = asyncHandler(async (req, res) => {
   console.log("Github Repo in body:", req.body.githubRepository);
 
   try {
+    if (!isUserAdmin(req.user)) {
+      return res.status(403).json(new ApiError(403, "Forbidden: Only administrators can update canonical Projects/Arenas."));
+    }
+
     if (req.params.projectId == "undefined" || !req.params.projectId) {
       return res.status(400).json(new ApiError(400, "id not provided"));
     }
 
     if (Object.keys(req.body).length === 0) {
-      return res.status(400).json(new ApiError(400, "No data provided to update"))
+      return res.status(400).json(new ApiError(400, "No data provided to update"));
     }
 
     const { name, access, key, description, startDate, endDate, priority, clientName, budget, projectManager,
@@ -119,7 +139,7 @@ pc.updateProject = asyncHandler(async (req, res) => {
         completedAt,
         settings,
         updatedBy: req.user?._id
-        },
+      },
       { new: true }
     );
 
@@ -131,7 +151,7 @@ pc.updateProject = asyncHandler(async (req, res) => {
       .status(200)
       .json(new ApiResponse(200, updatedProject, "Project updated successfully"));
   } catch (error) {
-    console.log("Error------", error)
+    console.log("Error------", error);
     return res.status(400).json(new ApiError(404, error, "Error"));
   }
 
@@ -168,10 +188,6 @@ pc.getProjectById = asyncHandler(async (req, res) => {
   }
 });
 
-
-
-
-// ... existing imports ...
 
 // Get all active project
 pc.getAllProject = asyncHandler(async (req, res) => {
@@ -218,30 +234,7 @@ pc.getAllProject = asyncHandler(async (req, res) => {
       filterQuery.status = "active";
     }
 
-    console.log("DEBUG: Received Branch ID from Headers:", req.branchId);
-
-    // 1. Ownership isolation: Non-admins only see their own projects
-    let ownershipQuery = req.user?.email === "balajiaadi2000@gmail.com" ? {} : { createdBy: req.user._id };
-    
-    
-    // Merge filterQuery (branchId, search, etc.) with ownershipQuery
-    let finalQuery = {};
-    const hasFilter = Object.keys(filterQuery).length > 0;
-    const hasOwnership = Object.keys(ownershipQuery).length > 0;
-
-    if (hasFilter && hasOwnership) {
-        finalQuery = { $and: [filterQuery, ownershipQuery] };
-    } else if (hasFilter) {
-        finalQuery = filterQuery;
-    } else if (hasOwnership) {
-        finalQuery = ownershipQuery;
-    }
-
-    console.log("DEBUG: Final Filter Query:", JSON.stringify(finalQuery, null, 2));
-
-    let query = Project.find(finalQuery);
-
-    let projects = await query
+    let projects = await Project.find(filterQuery)
       .populate("projectManager teamMembers rolesAndResponsibilities.teamMember")
       .sort({ _id: sortOrder });
 
@@ -252,25 +245,43 @@ pc.getAllProject = asyncHandler(async (req, res) => {
     const projectIds = projects.map(p => p._id);
     const allMilestones = await Milestone.find({ project: { $in: projectIds } });
 
-    // Aggregating task stats
-    const taskStats = await Task.aggregate([
+    // Canonical total task counts per project
+    const canonicalTaskStats = await Task.aggregate([
       { $match: { projectName: { $in: projectIds } } },
       {
         $group: {
           _id: "$projectName",
-          totalTasks: { $sum: 1 },
-          completedTasks: {
-            $sum: { $cond: [{ $eq: ["$status", "done"] }, 1, 0] }
-          }
+          totalTasks: { $sum: 1 }
         }
       }
     ]);
 
-    const taskStatsMap = taskStats.reduce((acc, stat) => {
-      acc[stat._id.toString()] = stat;
+    const totalTasksMap = canonicalTaskStats.reduce((acc, stat) => {
+      acc[stat._id.toString()] = stat.totalTasks;
       return acc;
     }, {});
 
+    // Authenticated user's completed tasks per project from UserTaskProgress
+    const userCompletedStats = await UserTaskProgress.aggregate([
+      {
+        $match: {
+          userId: req.user?._id,
+          projectName: { $in: projectIds },
+          status: "done"
+        }
+      },
+      {
+        $group: {
+          _id: "$projectName",
+          completedTasks: { $sum: 1 }
+        }
+      }
+    ]);
+
+    const userCompletedMap = userCompletedStats.reduce((acc, stat) => {
+      acc[stat._id.toString()] = stat.completedTasks;
+      return acc;
+    }, {});
 
     const formattedProjects = projects.map((project) => {
       const teamMembers = project.teamMembers.map((member) => {
@@ -288,18 +299,20 @@ pc.getAllProject = asyncHandler(async (req, res) => {
         .filter(m => m.project.toString() === project._id.toString())
         .map(m => m.toObject());
 
-      const stats = taskStatsMap[project._id.toString()] || { totalTasks: 0, completedTasks: 0 };
+      const total = totalTasksMap[project._id.toString()] || 0;
+      const completed = userCompletedMap[project._id.toString()] || 0;
+      const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
 
-        return {
-          ...project.toObject(),
-          teamMembers,
-          milestones: projectMilestones,
-          taskStats: {
-            total: stats.totalTasks,
-            completed: stats.completedTasks,
-            percentage: project.progress || 0
-          }
-        };
+      return {
+        ...project.toObject(),
+        teamMembers,
+        milestones: projectMilestones,
+        taskStats: {
+          total,
+          completed,
+          percentage
+        }
+      };
     });
 
     return res.status(200).json(new ApiResponse(200, formattedProjects, "Projects fetched successfully"));
@@ -312,13 +325,15 @@ pc.getAllProject = asyncHandler(async (req, res) => {
 
 import { Sprint } from "../../models/sprint.model.js";
 
-// ... [existing imports]
-
 //delete Project
 pc.deleteProject = asyncHandler(async (req, res) => {
   console.log("Req.params", req.params);
 
   try {
+    if (!isUserAdmin(req.user)) {
+      return res.status(403).json(new ApiError(403, "Forbidden: Only administrators can delete canonical Projects/Arenas."));
+    }
+
     const { projectId } = req.params;
 
     if (!projectId || projectId === "undefined") {
@@ -350,5 +365,297 @@ pc.deleteProject = asyncHandler(async (req, res) => {
   }
 });
 
+// Schedule Arena / Timeline Generator
+pc.scheduleArena = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { projectId } = req.params;
+    const { startDate, tasksPerDay = 4, revisionDaysPerParent = 2, targetMonths } = req.body;
+
+    if (!projectId || projectId === "undefined") {
+      return res.status(400).json(new ApiError(400, "Project ID is required"));
+    }
+
+    if (!startDate) {
+      return res.status(400).json(new ApiError(400, "Start date is required"));
+    }
+
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json(new ApiError(404, "Arena/Project not found"));
+    }
+
+    // 0. Enforce One-Time Scheduling Rule
+    const existingSchedule = await UserArenaSchedule.findOne({ userId, projectId }).lean();
+    if (existingSchedule) {
+      return res.status(400).json(
+        new ApiError(
+          400,
+          "This Arena is already scheduled. Arena timeline scheduling is a one-time setup and cannot be rescheduled."
+        )
+      );
+    }
+
+    const numTasksPerDay = Math.max(1, parseInt(tasksPerDay) || 4);
+    const numRevisionDays = Math.max(0, parseInt(revisionDaysPerParent) || 0);
+
+    // 1. Fetch canonical parent tasks (topics)
+    const parentTasks = await Task.find({
+      projectName: projectId,
+      $or: [{ parentTask: null }, { parentTask: { $exists: false } }]
+    }).sort({ order: 1, createdAt: 1 }).lean();
+
+    // 2. Fetch canonical child tasks
+    const childTasks = await Task.find({
+      projectName: projectId,
+      parentTask: { $ne: null, $exists: true }
+    }).sort({ order: 1, createdAt: 1 }).lean();
+
+    if (childTasks.length === 0 && parentTasks.length === 0) {
+      return res.status(400).json(new ApiError(400, "Cannot schedule an empty Arena with no tasks."));
+    }
+
+    // 3. Group child tasks by parent
+    const childrenByParent = new Map();
+    parentTasks.forEach(p => childrenByParent.set(p._id.toString(), []));
+
+    const orphanChildren = [];
+    childTasks.forEach(c => {
+      const pId = c.parentTask ? (typeof c.parentTask === 'object' ? c.parentTask._id : c.parentTask).toString() : null;
+      if (pId && childrenByParent.has(pId)) {
+        childrenByParent.get(pId).push(c);
+      } else {
+        orphanChildren.push(c);
+      }
+    });
+
+    // 4. Run schedule timeline algorithm
+    let currentDate = moment.utc(startDate).startOf('day');
+    const startCalendarDate = currentDate.clone();
+    const childUpdates = [];
+    const parentUpdates = [];
+    let totalScheduledChildTasks = 0;
+    let totalScheduledParents = 0;
+
+    // Schedule parents with their children
+    parentTasks.forEach((parent, pIndex) => {
+      const children = childrenByParent.get(parent._id.toString()) || [];
+      if (children.length === 0) return;
+
+      totalScheduledParents++;
+      const parentStart = currentDate.clone().toDate();
+
+      for (let i = 0; i < children.length; i += numTasksPerDay) {
+        const chunk = children.slice(i, i + numTasksPerDay);
+        const dayStart = currentDate.clone().toDate();
+        const dayEnd = currentDate.clone().endOf('day').toDate();
+
+        chunk.forEach(child => {
+          childUpdates.push({
+            taskId: child._id,
+            startDate: dayStart,
+            dueDate: dayEnd,
+            projectName: projectId
+          });
+          totalScheduledChildTasks++;
+        });
+
+        // If there are more tasks for this parent topic, advance date by 1 day
+        if (i + numTasksPerDay < children.length) {
+          currentDate.add(1, 'days');
+        }
+      }
+
+      const parentDue = currentDate.clone().endOf('day').toDate();
+      parentUpdates.push({
+        taskId: parent._id,
+        startDate: parentStart,
+        dueDate: parentDue,
+        projectName: projectId
+      });
+
+      // Add revision buffer days after parent completes (if not the last parent)
+      const isLastParent = pIndex === parentTasks.length - 1 && orphanChildren.length === 0;
+      if (!isLastParent && numRevisionDays > 0) {
+        currentDate.add(numRevisionDays + 1, 'days');
+      } else if (!isLastParent) {
+        currentDate.add(1, 'days');
+      }
+    });
+
+    // Schedule any orphan child tasks
+    if (orphanChildren.length > 0) {
+      for (let i = 0; i < orphanChildren.length; i += numTasksPerDay) {
+        const chunk = orphanChildren.slice(i, i + numTasksPerDay);
+        const dayStart = currentDate.clone().toDate();
+        const dayEnd = currentDate.clone().endOf('day').toDate();
+
+        chunk.forEach(child => {
+          childUpdates.push({
+            taskId: child._id,
+            startDate: dayStart,
+            dueDate: dayEnd,
+            projectName: projectId
+          });
+          totalScheduledChildTasks++;
+        });
+
+        if (i + numTasksPerDay < orphanChildren.length) {
+          currentDate.add(1, 'days');
+        }
+      }
+    }
+
+    const arenaEndDate = currentDate.clone().endOf('day').toDate();
+    const calculatedTotalDays = moment.utc(arenaEndDate).diff(startCalendarDate, 'days') + 1;
+
+    // 5. Target Duration Validation
+    if (targetMonths !== undefined && targetMonths !== null && targetMonths !== "") {
+      const parsedMonths = parseInt(targetMonths);
+      if (parsedMonths > 0) {
+        const maxAllowedEndDate = startCalendarDate.clone().add(parsedMonths, 'months').endOf('day');
+        const maxAllowedDays = maxAllowedEndDate.diff(startCalendarDate, 'days') + 1;
+
+        if (calculatedTotalDays > maxAllowedDays) {
+          return res.status(400).json(
+            new ApiError(
+              400,
+              `Target duration of ${parsedMonths} month(s) (${maxAllowedDays} days) is insufficient. ` +
+              `The calculated schedule requires ${calculatedTotalDays} days (${totalScheduledChildTasks} tasks at ${numTasksPerDay}/day + ${numRevisionDays} revision buffer days per topic). ` +
+              `Please adjust your start date, increase tasks per day, or choose a longer target duration.`
+            )
+          );
+        }
+      }
+    }
+
+    // 6. Upsert UserArenaSchedule (Idempotent)
+    const schedule = await UserArenaSchedule.findOneAndUpdate(
+      { userId: userId, projectId: projectId },
+      {
+        userId: userId,
+        projectId: projectId,
+        branchId: req.branchId ? new mongoose.Types.ObjectId(req.branchId) : (project.branchId || null),
+        startDate: startCalendarDate.toDate(),
+        endDate: arenaEndDate,
+        tasksPerDay: numTasksPerDay,
+        revisionDaysPerParent: numRevisionDays,
+        totalTasks: totalScheduledChildTasks,
+        totalParentTasks: totalScheduledParents,
+        calculatedTotalDays: calculatedTotalDays
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+
+    // 7. Bulk update UserTaskProgress records for userId
+    const bulkOps = [
+      ...childUpdates.map(u => ({
+        updateOne: {
+          filter: { userId: userId, taskId: u.taskId },
+          update: {
+            $set: {
+              taskStartDate: u.startDate,
+              taskDueDate: u.dueDate
+            },
+            $setOnInsert: {
+              status: "todo",
+              progress: 0,
+              projectName: u.projectName,
+              branchId: req.branchId ? new mongoose.Types.ObjectId(req.branchId) : (project.branchId || null)
+            }
+          },
+          upsert: true
+        }
+      })),
+      ...parentUpdates.map(u => ({
+        updateOne: {
+          filter: { userId: userId, taskId: u.taskId },
+          update: {
+            $set: {
+              taskStartDate: u.startDate,
+              taskDueDate: u.dueDate
+            },
+            $setOnInsert: {
+              status: "todo",
+              progress: 0,
+              projectName: u.projectName,
+              branchId: req.branchId ? new mongoose.Types.ObjectId(req.branchId) : (project.branchId || null)
+            }
+          },
+          upsert: true
+        }
+      }))
+    ];
+
+    if (bulkOps.length > 0) {
+      await UserTaskProgress.bulkWrite(bulkOps);
+    }
+
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        {
+          schedule,
+          calculatedTotalDays,
+          totalTasks: totalScheduledChildTasks,
+          totalParentTasks: totalScheduledParents,
+          startDate: startCalendarDate.toDate(),
+          endDate: arenaEndDate
+        },
+        "Arena schedule generated and applied successfully"
+      )
+    );
+  } catch (error) {
+    console.error("Error scheduling arena:", error);
+    return res.status(error.statusCode || 500).json(new ApiError(error.statusCode || 500, error.message || "Error scheduling arena"));
+  }
+});
+
+// Get User's Arena Schedule
+pc.getArenaSchedule = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { projectId } = req.params;
+
+    if (!projectId || projectId === "undefined") {
+      return res.status(400).json(new ApiError(400, "Project ID is required"));
+    }
+
+    const schedule = await UserArenaSchedule.findOne({ userId: userId, projectId: projectId });
+
+    return res.status(200).json(
+      new ApiResponse(200, { isScheduled: !!schedule, schedule }, "Arena schedule retrieved successfully")
+    );
+  } catch (error) {
+    console.error("Error retrieving arena schedule:", error);
+    return res.status(error.statusCode || 500).json(new ApiError(error.statusCode || 500, error.message || "Error retrieving arena schedule"));
+  }
+});
+
+// Reset User's Arena Schedule
+pc.resetArenaSchedule = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { projectId } = req.params;
+
+    if (!projectId || projectId === "undefined") {
+      return res.status(400).json(new ApiError(400, "Project ID is required"));
+    }
+
+    await UserArenaSchedule.findOneAndDelete({ userId: userId, projectId: projectId });
+
+    await UserTaskProgress.updateMany(
+      { userId: userId, projectName: projectId },
+      { $unset: { taskStartDate: "", taskDueDate: "" } }
+    );
+
+    return res.status(200).json(
+      new ApiResponse(200, null, "Arena schedule reset successfully")
+    );
+  } catch (error) {
+    console.error("Error resetting arena schedule:", error);
+    return res.status(error.statusCode || 500).json(new ApiError(error.statusCode || 500, error.message || "Error resetting arena schedule"));
+  }
+});
 
 export default pc

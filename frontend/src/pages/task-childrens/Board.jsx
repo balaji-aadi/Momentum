@@ -9,6 +9,7 @@ import { toast } from "react-hot-toast";
 import TaskDetailDrawer from "./TaskDetailDrawer";
 import CreateTask from "./CreateTask";
 import { IoClose, IoCalendarOutline } from "react-icons/io5";
+import { getScopedItem, setScopedItem, removeScopedItem } from "../../utils/userStorage";
 
 const Board = ({
   tasks,
@@ -17,7 +18,8 @@ const Board = ({
   handleClick,
   selectedMember,
   milestoneId,
-  sprintStarted = true // Default to true for non-sprint boards
+  sprintStarted = true, // Default to true for non-sprint boards
+  onOpenSchedule
 }) => {
   const [showToast, setShowToast] = useState(false);
   const [taskToMove, setTaskToMove] = useState(null);
@@ -93,12 +95,12 @@ const Board = ({
   };
 
   const stopActiveTimerIfMatching = (targetTaskId, associatedChildIds = []) => {
-     const bindingObjStr = localStorage.getItem("focus_timer_task_binding");
+     const bindingObjStr = getScopedItem("focus_timer_task_binding");
      if (bindingObjStr) {
         const bindingObj = JSON.parse(bindingObjStr);
         const activeTaskId = bindingObj.taskId;
         if (activeTaskId === targetTaskId || associatedChildIds.includes(activeTaskId)) {
-            const timerStateStr = localStorage.getItem("focus_timer_state");
+            const timerStateStr = getScopedItem("focus_timer_state");
             if (timerStateStr) {
                 const timerState = JSON.parse(timerStateStr);
                 if (timerState.isActive) {
@@ -124,9 +126,9 @@ const Board = ({
                      };
                      
                      FocusApi.createSession(sData).catch(e => console.error(e));
-                     localStorage.removeItem("focus_timer_task_binding");
-                     localStorage.removeItem("focus_timer_state");
-                     localStorage.removeItem("focus_timer_retrievable");
+                     removeScopedItem("focus_timer_task_binding");
+                     removeScopedItem("focus_timer_state");
+                     removeScopedItem("focus_timer_retrievable");
                      
                      toast.success("Timer paused and logged. Task was put on hold!");
                 }
@@ -564,7 +566,7 @@ const Board = ({
               isBacklog: isTaskBacklog,
               taskType: taskToMove.taskType
           };
-         localStorage.setItem("focus_timer_task_binding", JSON.stringify(focusTimerBinding));
+         setScopedItem("focus_timer_task_binding", focusTimerBinding);
          
          const state = {
             timeLeft: Math.max((durationMins * 60) - accumulatedSecs, 0),
@@ -574,7 +576,7 @@ const Board = ({
             selectedDuration: durationMins,
             currentTheme: { name: 'Vermilion', color: '#E34234', bg: 'rgba(227, 66, 52, 0.05)', shadow: 'rgba(227, 66, 52, 0.4)' }
          };
-         localStorage.setItem("focus_timer_state", JSON.stringify(state));
+         setScopedItem("focus_timer_state", state);
          
          if (Math.round(spentMins) > 0) {
             toast.success(`Focus timer resumed at ${Math.round(spentMins)}m spent!`);
@@ -603,11 +605,11 @@ const Board = ({
     
     // Stop the timer automatically if moved out of inprogress
     if (oldStatus === "inprogress" && newStatus !== "inprogress") {
-      const bindingObjStr = localStorage.getItem("focus_timer_task_binding");
+      const bindingObjStr = getScopedItem("focus_timer_task_binding");
       if (bindingObjStr) {
          const bindingObj = JSON.parse(bindingObjStr);
          if (bindingObj.taskId === taskToMove._id) {
-             const timerStateStr = localStorage.getItem("focus_timer_state");
+             const timerStateStr = getScopedItem("focus_timer_state");
              if (timerStateStr) {
                  const timerState = JSON.parse(timerStateStr);
                  if (timerState.isActive) {
@@ -633,9 +635,9 @@ const Board = ({
                       };
                       
                       FocusApi.createSession(sData).catch(e => console.error(e));
-                     localStorage.removeItem("focus_timer_task_binding");
-                     localStorage.removeItem("focus_timer_state");
-                     localStorage.removeItem("focus_timer_retrievable"); // prevent undo context conflicts out of boundary
+                     removeScopedItem("focus_timer_task_binding");
+                     removeScopedItem("focus_timer_state");
+                     removeScopedItem("focus_timer_retrievable"); // prevent undo context conflicts out of boundary
                      
                      toast.success(`Session automatically logged as ${newStatus === "done" ? "completed" : "incompleted"}!`);
                  }
@@ -729,11 +731,11 @@ const Board = ({
   const handleAutoMoveToInProgress = async (currentInProgressTask, newTask) => {
     
     // Evaluate if there is an active timer to stop for currentInProgressTask
-    const bindingObjStr = localStorage.getItem("focus_timer_task_binding");
+    const bindingObjStr = getScopedItem("focus_timer_task_binding");
     if (bindingObjStr) {
        const bindingObj = JSON.parse(bindingObjStr);
        if (bindingObj.taskId === currentInProgressTask._id) {
-           const timerStateStr = localStorage.getItem("focus_timer_state");
+           const timerStateStr = getScopedItem("focus_timer_state");
            if (timerStateStr) {
                const timerState = JSON.parse(timerStateStr);
                if (timerState.isActive) {
@@ -757,8 +759,8 @@ const Board = ({
                    };
                    
                    FocusApi.createSession(sessionData).catch(e => console.error(e));
-                   localStorage.removeItem("focus_timer_task_binding");
-                   localStorage.removeItem("focus_timer_state");
+                   removeScopedItem("focus_timer_task_binding");
+                   removeScopedItem("focus_timer_state");
                }
            }
        }
@@ -778,7 +780,7 @@ const Board = ({
        dueDate: newTask.taskDueDate,
        isBacklog: isTaskBacklog
     };
-    localStorage.setItem("focus_timer_task_binding", JSON.stringify(focusTimerBinding));
+    setScopedItem("focus_timer_task_binding", focusTimerBinding);
     
     const state = {
        timeLeft: Math.max((durationMins * 60) - accumulatedSecs, 0),
@@ -788,7 +790,7 @@ const Board = ({
        selectedDuration: durationMins,
        currentTheme: { name: 'Vermilion', color: '#E34234', bg: 'rgba(227, 66, 52, 0.05)', shadow: 'rgba(227, 66, 52, 0.4)' }
     };
-    localStorage.setItem("focus_timer_state", JSON.stringify(state));
+    setScopedItem("focus_timer_state", state);
     
     if (Math.round(spentMins) > 0) {
         toast.success(`Timer logged for held task. Automatically resumed for ${newTask.taskName} at ${Math.round(spentMins)}m spent!`);
@@ -877,6 +879,32 @@ const Board = ({
       )}
 
 
+
+      {/* Unscheduled Arena Notification Banner */}
+      {onOpenSchedule && sortedBoardTasks?.length > 0 && !sortedBoardTasks.some(t => t.taskStartDate || t.taskDueDate) && (
+        <div className="mx-4 my-2 px-4 py-2.5 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-950/40 dark:via-purple-950/40 dark:to-pink-950/40 border border-indigo-200/70 dark:border-indigo-800/40 rounded-xl flex items-center justify-between shadow-xs shrink-0">
+          <div className="flex items-center gap-3">
+            <span className="p-1.5 bg-indigo-600 text-white rounded-lg shadow-sm">
+              <IoCalendarOutline size={16} />
+            </span>
+            <div>
+              <h4 className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-100">
+                Arena Not Scheduled
+              </h4>
+              <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                Set your daily study pace, topic revision buffers, and target timeline.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onOpenSchedule}
+            className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black uppercase tracking-wider rounded-lg shadow-sm transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer shrink-0"
+          >
+            <IoCalendarOutline size={13} />
+            <span>Schedule Arena</span>
+          </button>
+        </div>
+      )}
 
       <DragDropContext onDragEnd={handleDragEnd} onDragStart={() => setIsDragging(true)}>
         <div 

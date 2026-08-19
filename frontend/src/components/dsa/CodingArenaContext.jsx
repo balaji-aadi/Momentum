@@ -278,18 +278,20 @@ export function CodingArenaProvider({ problem, task, onClose, onSolveSuccess, ch
         customTestCases: testCases
       });
 
-      if (res.data?.success) {
+      if (res.data?.data) {
         setRunResult(res.data.data);
       } else {
         setRunResult({
           success: false,
+          status: 'EXECUTION_ERROR',
           error: res.data?.message || 'Code execution failed.'
         });
       }
     } catch (err) {
       setRunResult({
         success: false,
-        error: err.response?.data?.message || err.message || 'Code execution failed.'
+        status: 'NETWORK_ERROR',
+        error: err.response?.data?.data?.error || err.response?.data?.message || err.message || 'Code execution failed.'
       });
     } finally {
       setIsRunning(false);
@@ -308,11 +310,11 @@ export function CodingArenaProvider({ problem, task, onClose, onSolveSuccess, ch
         code
       });
 
-      if (res.data?.success) {
+      if (res.data?.data) {
         const data = res.data.data;
         setSubmitResult(data);
 
-        const isAcc = data.verdict === 'Accepted';
+        const isAcc = data.verdict === 'Accepted' || data.verdict === 'ACCEPTED';
         const newSub = {
           id: Date.now().toString(),
           status: data.verdict || (isAcc ? 'Accepted' : 'Wrong Answer'),

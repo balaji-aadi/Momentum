@@ -57,6 +57,10 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
     const [subtasks, setSubtasks] = useState([]);
     const [activeTab, setActiveTab] = useState('subtasks'); // 'subtasks', 'activity', 'attachments'
     const { currentUser } = useSelector(state => state.store);
+    const isAdmin = currentUser?.userRole?.name?.toLowerCase() === 'admin' ||
+                    currentUser?.role === 'admin' ||
+                    currentUser?.email === 'balajiaadi2000@gmail.com' ||
+                    (currentUser?.userRoles && currentUser.userRoles.some(r => r.name?.toLowerCase() === 'admin'));
     const [notes, setNotes] = useState([]);
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const [isReaderOpen, setIsReaderOpen] = useState(false);
@@ -617,13 +621,15 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                         <div className="mt-6">
                                             <div className="flex items-center justify-between mb-4">
                                                 <h3 className="text-[11px] font-black text-textSub uppercase tracking-[0.2em]">Linked Notes</h3>
-                                                <button
-                                                    type="button"
-                                                    onClick={handleCreateNote}
-                                                    className="px-2 py-1 bg-yellow-450 hover:bg-yellow-500 text-slate-800 text-[10px] font-bold rounded-lg transition-all cursor-pointer select-none"
-                                                >
-                                                    + Add Note
-                                                </button>
+                                                {isAdmin && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleCreateNote}
+                                                        className="px-2 py-1 bg-yellow-450 hover:bg-yellow-500 text-slate-800 text-[10px] font-bold rounded-lg transition-all cursor-pointer select-none"
+                                                    >
+                                                        + Add Note
+                                                    </button>
+                                                )}
                                             </div>
 
                                             {linkedNotes.length === 0 ? (
@@ -1105,7 +1111,7 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                                                         </button>
                                                                     )}
                                                                 </div>
-                                                            ) : (
+                                                            ) : isAdmin ? (
                                                                 <>
                                                                     <button
                                                                         onClick={() => {
@@ -1121,6 +1127,7 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                                                                 const isHtml = isHtmlNote(activeNote.content);
                                                                                 const rawContent = isHtml ? decodeHtmlEntities(activeNote.content) : (activeNote.content || "");
                                                                                 setEditedContent(rawContent);
+                                                                                setEditorMode(isHtml ? "code" : "rich");
                                                                             }
                                                                             setIsEditingNote(true);
                                                                         }}
@@ -1135,6 +1142,10 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                                                         Delete
                                                                     </button>
                                                                 </>
+                                                            ) : (
+                                                                <span className="text-[10px] font-black text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-xl uppercase tracking-wider select-none">
+                                                                    📖 Read-Only
+                                                                </span>
                                                             )
                                                         )}
                                                     </div>

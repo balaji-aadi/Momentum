@@ -64,7 +64,10 @@ const TaskDetailDrawer = () => {
     const [showCodingModal, setShowCodingModal] = useState(false);
 
     // Role Permissions
-    const isAdmin = currentUser?.userRole?.name === 'admin';
+    const isAdmin = currentUser?.userRole?.name?.toLowerCase() === 'admin' ||
+                    currentUser?.role === 'admin' ||
+                    currentUser?.email === 'balajiaadi2000@gmail.com' ||
+                    (currentUser?.userRoles && currentUser.userRoles.some(r => r.name?.toLowerCase() === 'admin'));
     const isManager = currentUser?.userRole?.name === 'projectmanager';
     const isHR = currentUser?.userRole?.name === 'hr';
     const canEditDates = isAdmin || isManager || isHR;
@@ -636,13 +639,15 @@ const TaskDetailDrawer = () => {
                                     <label className="text-[10px] font-black text-textSub uppercase tracking-widest flex items-center gap-1">
                                         Linked Notes
                                     </label>
-                                    <button
-                                        type="button"
-                                        onClick={handleCreateNote}
-                                        className="px-2 py-1 bg-yellow-450 hover:bg-yellow-500 text-slate-800 text-[10px] font-bold rounded-lg transition-all cursor-pointer select-none"
-                                    >
-                                        + Add Note
-                                    </button>
+                                    {isAdmin && (
+                                        <button
+                                            type="button"
+                                            onClick={handleCreateNote}
+                                            className="px-2 py-1 bg-yellow-450 hover:bg-yellow-500 text-slate-800 text-[10px] font-bold rounded-lg transition-all cursor-pointer select-none"
+                                        >
+                                            + Add Note
+                                        </button>
+                                    )}
                                 </div>
 
                                 {linkedNotes.length === 0 ? (
@@ -1064,7 +1069,7 @@ const TaskDetailDrawer = () => {
                                                                         </button>
                                                                     )}
                                                                 </div>
-                                                            ) : (
+                                                            ) : isAdmin ? (
                                                                 <>
                                                                     <button
                                                                         onClick={() => {
@@ -1095,6 +1100,10 @@ const TaskDetailDrawer = () => {
                                                                         Delete
                                                                     </button>
                                                                 </>
+                                                            ) : (
+                                                                <span className="text-[10px] font-black text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-xl uppercase tracking-wider select-none">
+                                                                    📖 Read-Only
+                                                                </span>
                                                             )
                                                         )}
                                                     </div>

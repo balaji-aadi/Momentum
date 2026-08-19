@@ -3,7 +3,9 @@ import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ element }) => {
   const { isAuthenticated, currentUser, globalSettings } = useSelector((state) => state.store);
-  const isAdmin = currentUser?.email === "balajiaadi2000@gmail.com";
+  const isAdmin = currentUser?.email === "balajiaadi2000@gmail.com" || 
+                  currentUser?.userRole?.name?.toLowerCase() === "admin" ||
+                  currentUser?.role === "admin";
   const isPaidUser = currentUser?.subscriptionType !== 'free';
 
   if (!isAuthenticated) {

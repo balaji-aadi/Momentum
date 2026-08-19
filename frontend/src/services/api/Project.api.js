@@ -14,6 +14,8 @@ export const ProjectApi = {
   getAllmileStones: (projectId) => Api.get(`project/get-projects/${projectId}`),
   getmileStones: () => Api.post(`/milestone/find-all-milestone`),
   createMileStone: (projectId, payload) => Api.post(`milestone/create-milestone/${projectId}`, payload),
-  updateMileStones: (milestoneId, payload) => Api.put(`milestone/update-milestone/${milestoneId}`, payload),
-  deletemileStone: (milestoneId) => Api.delete(`milestone/delete-milestone/${milestoneId}`),
+  // Arena Scheduling apis
+  scheduleArena: (projectId, payload) => Api.post(`project/${projectId}/schedule`, payload),
+  getArenaSchedule: (projectId) => Api.get(`project/${projectId}/schedule`),
+  resetArenaSchedule: (projectId) => Api.delete(`project/${projectId}/schedule`),
 };

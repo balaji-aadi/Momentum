@@ -473,7 +473,7 @@ const Task = ({ key, task, index, handleClick, onReleaseHold }) => {
                   </span>
                   <span className={`flex items-center gap-1 ${task.status === 'hold' ? 'text-slate-300 dark:text-slate-600 line-through' : ''}`} title={task.status === 'hold' ? "Inactive - Task on Hold" : "Due Date"}>
                     <FaCalendar size={12} className={task.status === 'hold' ? 'text-slate-300 dark:text-slate-600' : 'text-slate-400'} />
-                    {moment(task.taskDueDate).format("MMM DD")}
+                    {task?.taskDueDate ? moment(task.taskDueDate).format("MMM DD") : "Not scheduled"}
                   </span>
                 </div>
 
@@ -566,7 +566,7 @@ const Task = ({ key, task, index, handleClick, onReleaseHold }) => {
                       <div className="flex items-center gap-3 text-[10px] text-slate-400 italic">
                         <span>{dep.assignee?.firstName} {dep.assignee?.lastName}</span>
                         <span>•</span>
-                        <span>{moment(dep.taskDueDate).format("MMM DD")}</span>
+                        <span>{dep.taskDueDate ? moment(dep.taskDueDate).format("MMM DD") : "Not scheduled"}</span>
                       </div>
                     </div>
                   ))}

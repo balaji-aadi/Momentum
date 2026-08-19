@@ -1,40 +1,40 @@
-import { ListNode } from './nodes.js';
+import { InputParserError, validateIR } from './IRValidator.js';
 
 /**
  * Linked List Input Parser
- * Converts JSON array `[1, 2, 3, 4]` into a head pointer of `ListNode(1) -> ListNode(2) -> ListNode(3) -> ListNode(4)`.
+ * Produces LinkedListIR: { kind: 'linked_list', nodeType: 'ListNode', values: [...], length: ... }
  */
-
 export class LinkedListParser {
-  static parse(val) {
-    if (val === null || val === undefined) return null;
+  static parse(val, targetType = 'ListNode', paramName = 'head') {
+    if (val === null || val === undefined) {
+      return validateIR({
+        kind: 'linked_list',
+        nodeType: 'ListNode',
+        values: [],
+        length: 0
+      });
+    }
 
     let arrayVal = val;
     if (typeof val === 'string') {
       try {
         arrayVal = JSON.parse(val);
       } catch (e) {
-        throw new Error(`LinkedListParser: Unable to parse JSON array string '${val}'`);
+        throw new InputParserError('LinkedListParser', paramName, val, 'JSON Array of values', e.message);
       }
     }
 
     if (!Array.isArray(arrayVal)) {
-      if (typeof arrayVal === 'object' && arrayVal !== null && 'val' in arrayVal) {
-        return arrayVal; // Already a ListNode structure
-      }
-      throw new Error(`LinkedListParser: Expected array to convert to ListNode, received ${typeof arrayVal}`);
+      throw new InputParserError('LinkedListParser', paramName, val, 'Array of values e.g. [1, 2, 3]');
     }
 
-    if (arrayVal.length === 0) return null;
+    const ir = {
+      kind: 'linked_list',
+      nodeType: 'ListNode',
+      values: arrayVal,
+      length: arrayVal.length
+    };
 
-    const dummy = new ListNode(0);
-    let current = dummy;
-
-    for (const item of arrayVal) {
-      current.next = new ListNode(item);
-      current = current.next;
-    }
-
-    return dummy.next;
+    return validateIR(ir);
   }
 }

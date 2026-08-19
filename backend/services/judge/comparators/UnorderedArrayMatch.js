@@ -1,45 +1,84 @@
+import { createComparisonResult } from './ComparatorErrors.js';
+
 /**
- * Unordered Array Match Comparator
- * Order-insensitive array comparison (e.g., Two Sum returned index pair [0, 1] vs expected [1, 0], 3Sum triplets in any order).
+ * Unordered Array Match Comparator (Phase 5)
+ * 
+ * Order-insensitive collection comparator with explicit depth semantics and strict multiset frequency awareness.
+ * 
+ * Semantics:
+ * - depth = 1 (Default): Outer collection is order-insensitive; nested elements are compared with ordered/deep equality.
+ * - Frequency/multiset aware: [1, 1, 2] strictly does NOT equal [1, 2].
  */
-
 export class UnorderedArrayMatch {
-  static compare(actual, expected) {
-    let normActual = actual;
-    let normExpected = expected;
+  static compare(actual, expected, options = {}) {
+    const COMP_NAME = 'UnorderedArrayMatch';
+    const depth = options.depth !== undefined ? options.depth : 1;
 
-    if (typeof normActual === 'string') {
-      try { normActual = JSON.parse(normActual.trim()); } catch (e) {}
+    // 1. Null Checks
+    if (actual === null && expected !== null) {
+      return createComparisonResult(false, COMP_NAME, 'NULL_MISMATCH', 'Expected array, received null.', expected, actual);
     }
-    if (typeof normExpected === 'string') {
-      try { normExpected = JSON.parse(normExpected.trim()); } catch (e) {}
+    if (actual !== null && expected === null) {
+      return createComparisonResult(false, COMP_NAME, 'NULL_MISMATCH', 'Expected null, received array.', expected, actual);
+    }
+    if (actual === null && expected === null) {
+      return createComparisonResult(true, COMP_NAME, 'MATCH', 'Both outputs are null.', expected, actual);
     }
 
-    if (normActual === null || normActual === undefined) {
-      return { match: false, message: "Function returned None / null instead of array output." };
+    // 2. Array Validation
+    if (!Array.isArray(actual) || !Array.isArray(expected)) {
+      return createComparisonResult(
+        false,
+        COMP_NAME,
+        'TYPE_MISMATCH',
+        `Expected array format, received actual (${typeof actual}) vs expected (${typeof expected}).`,
+        expected,
+        actual
+      );
     }
-    if (!Array.isArray(normActual) || !Array.isArray(normExpected)) {
-      if (normActual === normExpected || JSON.stringify(normActual) === JSON.stringify(normExpected)) {
-        return { match: true };
+
+    // 3. Length Validation
+    if (actual.length !== expected.length) {
+      return createComparisonResult(
+        false,
+        COMP_NAME,
+        'LENGTH_MISMATCH',
+        `Array length mismatch: expected length ${expected.length}, received ${actual.length}.`,
+        expected,
+        actual,
+        { expectedLength: expected.length, actualLength: actual.length }
+      );
+    }
+
+    // 4. Multiset Frequency Mapping
+    const buildFrequencyMap = (arr) => {
+      const map = new Map();
+      for (const item of arr) {
+        // At depth 1: inner array items are serialized with ordered JSON representation
+        const key = JSON.stringify(item);
+        map.set(key, (map.get(key) || 0) + 1);
       }
-      return { match: false, message: `Expected ${JSON.stringify(normExpected)}, received ${JSON.stringify(normActual)}` };
-    }
-
-    if (normActual.length !== normExpected.length) {
-      return { match: false, message: `Length mismatch. Expected length ${normExpected.length}, received ${normActual.length}` };
-    }
-
-    // Clone and sort primitive arrays
-    const sortedActual = [...normActual].map(item => Array.isArray(item) ? [...item].sort() : item).sort();
-    const sortedExpected = [...normExpected].map(item => Array.isArray(item) ? [...item].sort() : item).sort();
-
-    if (JSON.stringify(sortedActual) === JSON.stringify(sortedExpected)) {
-      return { match: true };
-    }
-
-    return {
-      match: false,
-      message: `Unordered array mismatch. Expected ${JSON.stringify(normExpected)}, received ${JSON.stringify(normActual)}`
+      return map;
     };
+
+    const actualFreq = buildFrequencyMap(actual);
+    const expectedFreq = buildFrequencyMap(expected);
+
+    for (const [key, expCount] of expectedFreq.entries()) {
+      const actCount = actualFreq.get(key) || 0;
+      if (actCount !== expCount) {
+        return createComparisonResult(
+          false,
+          COMP_NAME,
+          'FREQUENCY_MISMATCH',
+          `Element frequency mismatch for ${key}: expected count ${expCount}, received count ${actCount}.`,
+          expected,
+          actual,
+          { element: JSON.parse(key), expectedCount: expCount, actualCount: actCount }
+        );
+      }
+    }
+
+    return createComparisonResult(true, COMP_NAME, 'MATCH', 'Unordered array outputs match with equal element frequencies.', expected, actual);
   }
 }

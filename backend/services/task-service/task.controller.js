@@ -6,6 +6,7 @@ import { Project } from "../../models/project.model.js";
 import { Sprint } from "../../models/sprint.model.js";
 import { DailyRevision } from "../../models/dailyRevision.model.js";
 import { FocusSession } from "../../models/focusSession.model.js";
+import { UserTaskProgress } from "../../models/userTaskProgress.model.js";
 import mongoose from "mongoose";
 import { calculateStatusDuration } from "../../utils/calculateStatusDuration.js";
 import { Notification } from "../../models/notification.model.js";
@@ -14,6 +15,149 @@ import { socketService } from "../../socket-instance.js";
 import { ProgressService } from "../progress-service/progress.service.js";
 import AnalyticsService from "../analytics-service/analytics.service.js";
 import axios from "axios";
+
+const checkIsAdmin = (user) => {
+  return (
+    user?.email === "balajiaadi2000@gmail.com" ||
+    user?.userRole?.name?.toLowerCase() === "admin" ||
+    user?.role === "admin" ||
+    (user?.userRoles && user.userRoles.some(r => r.name?.toLowerCase() === "admin"))
+  );
+};
+
+/**
+ * Projects individual user execution state from UserTaskProgress onto canonical master tasks.
+ * For Admin: Preserves Admin's historical task completion, progress, and logs directly from Task model if no UserTaskProgress exists.
+ * For Non-Admin: If no UserTaskProgress record exists, clean defaults are applied: status = 'todo', progress = 0, dates = null, logs = [].
+ */
+const projectUserTaskProgress = async (tasks, userId, user = null) => {
+  if (!tasks || tasks.length === 0) return [];
+
+  const isAdmin = user ? checkIsAdmin(user) : (userId?.toString() === "6993047f16e85ff3e4efd9a3");
+
+  const taskIds = tasks.map(t => t._id);
+  tasks.forEach(t => {
+    if (t.parentTask) {
+      const pid = typeof t.parentTask === "object" ? (t.parentTask._id || t.parentTask.id) : t.parentTask;
+      if (pid) taskIds.push(pid);
+    }
+  });
+
+  const userProgressList = await UserTaskProgress.find({
+    userId: new mongoose.Types.ObjectId(userId),
+    taskId: { $in: taskIds }
+  }).lean();
+
+  const progressMap = new Map(
+    userProgressList.map(p => [p.taskId.toString(), p])
+  );
+
+  const projectedList = tasks.map(task => {
+    const taskObj = task.toObject ? task.toObject() : { ...task };
+    const userProgress = progressMap.get(taskObj._id.toString());
+
+    if (userProgress) {
+      taskObj.status = userProgress.status || "todo";
+      taskObj.progress = userProgress.progress ?? (userProgress.status === "done" ? 100 : 0);
+      taskObj.taskStartDate = userProgress.taskStartDate || null;
+      taskObj.taskDueDate = userProgress.taskDueDate || null;
+      taskObj.holdDate = userProgress.holdDate || null;
+      taskObj.completedAt = userProgress.completedAt || null;
+      taskObj.activityLogs = userProgress.activityLogs || [];
+      taskObj.revisionLogs = userProgress.revisionLogs || [];
+    } else if (isAdmin) {
+      // For Admin: preserve Admin's historical task status, progress, dates, and logs directly from Task model
+      taskObj.status = taskObj.status || "todo";
+      taskObj.progress = taskObj.progress ?? (taskObj.status === "done" ? 100 : 0);
+      taskObj.taskStartDate = taskObj.taskStartDate || null;
+      taskObj.taskDueDate = taskObj.taskDueDate || null;
+      taskObj.holdDate = taskObj.holdDate || null;
+      taskObj.completedAt = taskObj.completedAt || null;
+      taskObj.activityLogs = taskObj.activityLogs || [];
+      taskObj.revisionLogs = taskObj.revisionLogs || [];
+    } else {
+      // For Non-Admin: fresh, clean execution state
+      taskObj.status = "todo";
+      taskObj.progress = 0;
+      taskObj.taskStartDate = null;
+      taskObj.taskDueDate = null;
+      taskObj.holdDate = null;
+      taskObj.completedAt = null;
+      taskObj.activityLogs = [];
+      taskObj.revisionLogs = [];
+    }
+
+    // Also overlay user execution state on populated parentTask sub-document if present
+    if (taskObj.parentTask && typeof taskObj.parentTask === "object") {
+      const parentId = (taskObj.parentTask._id || taskObj.parentTask.id)?.toString();
+      if (parentId) {
+        const parentProgress = progressMap.get(parentId);
+        if (parentProgress) {
+          taskObj.parentTask = {
+            ...taskObj.parentTask,
+            status: parentProgress.status || "todo",
+            taskStartDate: parentProgress.taskStartDate || null,
+            taskDueDate: parentProgress.taskDueDate || null,
+            holdDate: parentProgress.holdDate || null
+          };
+        } else if (isAdmin) {
+          taskObj.parentTask = {
+            ...taskObj.parentTask,
+            status: taskObj.parentTask.status || "todo",
+            taskStartDate: taskObj.parentTask.taskStartDate || null,
+            taskDueDate: taskObj.parentTask.taskDueDate || null,
+            holdDate: taskObj.parentTask.holdDate || null
+          };
+        } else {
+          taskObj.parentTask = {
+            ...taskObj.parentTask,
+            status: "todo",
+            taskStartDate: null,
+            taskDueDate: null,
+            holdDate: null
+          };
+        }
+      }
+    }
+
+    // Pre-calculate status duration based on user's activity logs
+    taskObj.duration = calculateStatusDuration(taskObj.activityLogs || []);
+    return taskObj;
+  });
+
+  // Dynamically calculate user-scoped subtaskStats & progress for Parent Topics
+  const childrenByParent = new Map();
+  projectedList.forEach(t => {
+    if (t.parentTask) {
+      const pid = (typeof t.parentTask === "object" ? (t.parentTask._id || t.parentTask.id) : t.parentTask)?.toString();
+      if (pid) {
+        if (!childrenByParent.has(pid)) {
+          childrenByParent.set(pid, []);
+        }
+        childrenByParent.get(pid).push(t);
+      }
+    }
+  });
+
+  return projectedList.map(taskObj => {
+    const taskIdStr = taskObj._id.toString();
+    if (childrenByParent.has(taskIdStr)) {
+      const children = childrenByParent.get(taskIdStr);
+      const total = children.length;
+      const completed = children.filter(c => c.status === "done").length;
+      taskObj.subtaskStats = { total, completed };
+      taskObj.progress = total > 0 ? Math.round((completed / total) * 100) : (taskObj.progress || 0);
+      if (completed === total && total > 0) {
+        taskObj.status = "done";
+      }
+    } else if (!taskObj.parentTask) {
+      taskObj.subtaskStats = { total: 0, completed: 0 };
+    } else {
+      taskObj.subtaskStats = { total: 0, completed: 0 };
+    }
+    return taskObj;
+  });
+};
 
 const tc = {};
 
@@ -72,14 +216,14 @@ tc.createTask = asyncHandler(async (req, res) => {
 
     // Data Integrity: Check Parent Task Project
     if (parentTask) {
-        const parent = await Task.findById(parentTask);
-        if (!parent) {
-             return res.status(400).json(new ApiError(400, "Parent Task not found"));
-        }
-        // Ensure subtask belongs to same project (handling ObjectId comparison)
-        if (projectName && parent.projectName && parent.projectName.toString() !== projectName.toString()) {
-            return res.status(400).json(new ApiError(400, "Subtask must belong to the same project as Parent Task"));
-        }
+      const parent = await Task.findById(parentTask);
+      if (!parent) {
+        return res.status(400).json(new ApiError(400, "Parent Task not found"));
+      }
+      // Ensure subtask belongs to same project (handling ObjectId comparison)
+      if (projectName && parent.projectName && parent.projectName.toString() !== projectName.toString()) {
+        return res.status(400).json(new ApiError(400, "Subtask must belong to the same project as Parent Task"));
+      }
     }
 
     // Generate Readable Task ID (e.g., MOM-101)
@@ -90,13 +234,13 @@ tc.createTask = asyncHandler(async (req, res) => {
         const lastTask = await Task.findOne({ projectName }).sort({ createdAt: -1 });
         let nextNum = 1;
         if (lastTask && lastTask.taskId) {
-           const parts = lastTask.taskId.split('-');
-           const lastNum = parseInt(parts[parts.length - 1]);
-           if (!isNaN(lastNum)) nextNum = lastNum + 1;
+          const parts = lastTask.taskId.split('-');
+          const lastNum = parseInt(parts[parts.length - 1]);
+          if (!isNaN(lastNum)) nextNum = lastNum + 1;
         } else {
-           // Fallback/Init: Count existing tasks to be safe or start at 1
-           const count = await Task.countDocuments({ projectName });
-           nextNum = count + 1;
+          // Fallback/Init: Count existing tasks to be safe or start at 1
+          const count = await Task.countDocuments({ projectName });
+          nextNum = count + 1;
         }
         taskId = `${project.key}-${nextNum}`;
       }
@@ -104,20 +248,20 @@ tc.createTask = asyncHandler(async (req, res) => {
 
     // Date Validation for Subtasks
     if (parentTask) {
-        const parent = await Task.findById(parentTask);
-        if (parent) {
-            const start = new Date(taskStartDate);
-            const due = new Date(taskDueDate);
-            const pStart = parent.taskStartDate ? new Date(parent.taskStartDate) : null;
-            const pDue = parent.taskDueDate ? new Date(parent.taskDueDate) : null;
+      const parent = await Task.findById(parentTask);
+      if (parent) {
+        const start = new Date(taskStartDate);
+        const due = new Date(taskDueDate);
+        const pStart = parent.taskStartDate ? new Date(parent.taskStartDate) : null;
+        const pDue = parent.taskDueDate ? new Date(parent.taskDueDate) : null;
 
-            if (pStart && start < pStart) {
-                return res.status(400).json(new ApiError(400, `Subtask start date (${start.toLocaleDateString()}) cannot be before parent task start date (${pStart.toLocaleDateString()})`));
-            }
-            if (pDue && due > pDue) {
-                return res.status(400).json(new ApiError(400, `Subtask due date (${due.toLocaleDateString()}) cannot be after parent task due date (${pDue.toLocaleDateString()})`));
-            }
+        if (pStart && start < pStart) {
+          return res.status(400).json(new ApiError(400, `Subtask start date (${start.toLocaleDateString()}) cannot be before parent task start date (${pStart.toLocaleDateString()})`));
         }
+        if (pDue && due > pDue) {
+          return res.status(400).json(new ApiError(400, `Subtask due date (${due.toLocaleDateString()}) cannot be after parent task due date (${pDue.toLocaleDateString()})`));
+        }
+      }
     }
 
     const createdTask = await Task.create({
@@ -206,191 +350,159 @@ tc.getLastCreatedTask = asyncHandler(async (req, res) => {
 
 //update Task
 tc.updateTask = asyncHandler(async (req, res) => {
-  console.log("req.body", req.body)
   try {
-    if (!req.params.taskId || req.params.taskId === "undefined") {
+    const { taskId } = req.params;
+    if (!taskId || taskId === "undefined") {
       return res.status(400).json(new ApiError(400, "Task ID not provided"));
     }
 
-    const {
-      projectName,
-      taskName,
-      taskPriority,
-      taskType,
-      taskStartDate,
-      taskDueDate,
-      assignee,
-      status,
-      milestone,
-      attachments,
-      taskDescription,
-      dependentTasks,
-      estimatedHours,
-      backlogEstimatedHours,
-      storyPoints,
-      epic,
-      sprint,
-      additionalNotes,
-      youtubeUrl,
-      progress,
-      parentTask,
-    } = req.body;
+    const userId = req.user._id;
+    const isAdmin = req.user?.email === "balajiaadi2000@gmail.com" ||
+      req.user?.userRole?.name?.toLowerCase() === "admin" ||
+      req.user?.role === "admin";
 
-    const existingTask = await Task.findById(req.params.taskId);
+    const existingTask = await Task.findById(taskId);
     if (!existingTask) {
-      return res.status(400).json(new ApiError(400, "Task not found"));
+      return res.status(404).json(new ApiError(404, "Task not found"));
     }
 
-    // Status Restriction: Any task cannot be 'done' if it has pending subtasks
-    if (status === 'done') {
-        const pendingSubtasks = await Task.countDocuments({
-            parentTask: new mongoose.Types.ObjectId(existingTask._id),
-            status: { $ne: 'done' }
-        });
-        if (pendingSubtasks > 0) {
-            return res.status(400).json(new ApiError(400, "Cannot complete task while subtasks are still pending."));
+    const curriculumFields = [
+      "taskName", "taskPriority", "taskType", "assignee", "taskDescription",
+      "attachments", "estimatedHours", "backlogEstimatedHours", "storyPoints",
+      "epic", "sprint", "milestone", "dependentTasks", "parentTask",
+      "additionalNotes", "youtubeUrl", "projectName"
+    ];
+
+    const executionFields = [
+      "status", "progress", "taskStartDate", "taskDueDate", "holdDate"
+    ];
+
+    const incomingKeys = Object.keys(req.body).filter(k => req.body[k] !== undefined);
+    const hasCurriculum = incomingKeys.some(k => curriculumFields.includes(k));
+    const hasExecution = incomingKeys.some(k => executionFields.includes(k));
+
+    // Guard: Non-admin users cannot mutate curriculum metadata
+    if (hasCurriculum && !isAdmin) {
+      return res.status(403).json(new ApiError(403, "Forbidden: Only administrators can modify master curriculum content."));
+    }
+
+    // 1. If Admin updates Master Curriculum fields
+    if (hasCurriculum && isAdmin) {
+      const curriculumUpdates = {};
+      curriculumFields.forEach(field => {
+        if (req.body[field] !== undefined) {
+          curriculumUpdates[field] = req.body[field];
         }
+      });
+      curriculumUpdates.updatedBy = userId;
+
+      await Task.findByIdAndUpdate(taskId, curriculumUpdates, { new: true });
     }
 
-    // Date Validation for Subtasks
-    if (existingTask.parentTask) {
-        const parent = await Task.findById(existingTask.parentTask);
-        if (parent) {
-            const start = taskStartDate ? new Date(taskStartDate) : existingTask.taskStartDate ? new Date(existingTask.taskStartDate) : null;
-            const due = taskDueDate ? new Date(taskDueDate) : existingTask.taskDueDate ? new Date(existingTask.taskDueDate) : null;
-            
-            const pStart = parent.taskStartDate ? new Date(parent.taskStartDate) : null;
-            const pDue = parent.taskDueDate ? new Date(parent.taskDueDate) : null;
+    // 2. User Execution updates (applies to both regular users and Admin's personal learning)
+    let userProgress = await UserTaskProgress.findOne({ userId, taskId: existingTask._id });
+    if (!userProgress) {
+      userProgress = new UserTaskProgress({
+        userId,
+        taskId: existingTask._id,
+        projectName: existingTask.projectName,
+        branchId: existingTask.branchId || (req.branchId ? new mongoose.Types.ObjectId(req.branchId) : undefined),
+        status: "todo",
+        progress: 0,
+        activityLogs: []
+      });
+    }
 
-            if (pStart && start && start < pStart) {
-                return res.status(400).json(new ApiError(400, `Subtask start date cannot be before parent task start date (${pStart.toLocaleDateString()})`));
+    if (hasExecution) {
+      const { status, progress, taskStartDate, taskDueDate, holdDate } = req.body;
+      const oldStatus = userProgress.status || "todo";
+
+      if (status !== undefined) {
+        // Status Restriction: Parent task cannot be 'done' if user has pending subtasks
+        if (status === "done") {
+          const childTasks = await Task.find({ parentTask: existingTask._id }).select("_id");
+          if (childTasks.length > 0) {
+            const childIds = childTasks.map(c => c._id);
+            const doneCount = await UserTaskProgress.countDocuments({
+              userId,
+              taskId: { $in: childIds },
+              status: "done"
+            });
+            if (doneCount < childTasks.length) {
+              return res.status(400).json(new ApiError(400, "Cannot complete task while subtasks are still pending."));
             }
-            if (pDue && due && due > pDue) {
-                return res.status(400).json(new ApiError(400, `Subtask due date cannot be after parent task due date (${pDue.toLocaleDateString()})`));
-            }
+          }
         }
-    }
 
-    let activityLogEntry = null;
-    if (status && existingTask.status !== status) {
-      activityLogEntry = {
-        oldStatus: existingTask.status,
-        currentStatus: status,
-        user: req.user?._id,
-        date: new Date(),
-        message: `Task has been updated from ${existingTask.status} >>> ${status}`,
-      };
-    }
-
-    // Construct update object with only defined fields (Partial Update)
-    const updateFields = {};
-    if (projectName !== undefined) updateFields.projectName = projectName;
-    if (taskName !== undefined) updateFields.taskName = taskName;
-    if (taskPriority !== undefined) updateFields.taskPriority = taskPriority;
-    if (taskType !== undefined) updateFields.taskType = taskType;
-    if (taskStartDate !== undefined) updateFields.taskStartDate = taskStartDate;
-    if (taskDueDate !== undefined) updateFields.taskDueDate = taskDueDate;
-    if (assignee !== undefined) updateFields.assignee = assignee;
-    if (taskDescription !== undefined) updateFields.taskDescription = taskDescription;
-    if (attachments !== undefined) updateFields.attachments = attachments;
-    if (estimatedHours !== undefined) updateFields.estimatedHours = estimatedHours;
-    if (backlogEstimatedHours !== undefined) updateFields.backlogEstimatedHours = backlogEstimatedHours;
-    if (storyPoints !== undefined) updateFields.storyPoints = storyPoints;
-    if (epic !== undefined) updateFields.epic = epic;
-    if (sprint !== undefined) updateFields.sprint = sprint;
-    if (dependentTasks !== undefined) updateFields.dependentTasks = dependentTasks;
-    if (milestone !== undefined) updateFields.milestone = milestone || null;
-    if (parentTask !== undefined) updateFields.parentTask = parentTask ? new mongoose.Types.ObjectId(parentTask) : null;
-    if (additionalNotes !== undefined) updateFields.additionalNotes = additionalNotes;
-    if (youtubeUrl !== undefined) updateFields.youtubeUrl = youtubeUrl;
-    if (status !== undefined) {
-      updateFields.status = status;
-      if (status === 'hold') {
-        if (!existingTask.parentTask) {
-          updateFields.holdDate = new Date();
+        userProgress.status = status;
+        if (status === "done") {
+          userProgress.progress = 100;
+          userProgress.completedAt = new Date();
+        } else if (status === "todo") {
+          userProgress.progress = 0;
+          userProgress.completedAt = null;
         }
-      } else if (existingTask.status === 'hold') {
-        if (!existingTask.parentTask) {
-          updateFields.holdDate = null;
+
+        if (status === "hold") {
+          userProgress.holdDate = holdDate ? new Date(holdDate) : new Date();
+        } else if (oldStatus === "hold") {
+          userProgress.holdDate = null;
+        }
+
+        if (oldStatus !== status) {
+          userProgress.activityLogs.unshift({
+            oldStatus,
+            currentStatus: status,
+            date: new Date(),
+            message: `Task updated from ${oldStatus} >>> ${status}`
+          });
         }
       }
-    }
-    if (progress !== undefined) updateFields.progress = progress;
-    if (status === 'done') updateFields.progress = 100;
-    else if (status === 'todo' && progress === undefined) updateFields.progress = 0;
-    
-    updateFields.updatedBy = req.user?._id;
 
-    const updatedTask = await Task.findOneAndUpdate(
-      { _id: req.params.taskId, branchId: req.branchId },
-      {
-        ...updateFields,
-        ...(activityLogEntry && {
-          $push: {
-            activityLogs: {
-              $each: [activityLogEntry],
-              $position: 0,
-            },
-          },
-        }),
-      },
-      { new: true }
-    );
+      if (progress !== undefined && status !== "done") {
+        userProgress.progress = progress;
+      }
+      if (taskStartDate !== undefined) {
+        userProgress.taskStartDate = taskStartDate ? new Date(taskStartDate) : null;
+      }
+      if (taskDueDate !== undefined) {
+        userProgress.taskDueDate = taskDueDate ? new Date(taskDueDate) : null;
+      }
 
-    if (!updatedTask) {
-      return res.status(400).json(new ApiError(400, "Task not found"));
+      await userProgress.save();
+
+      // Cascade hold status to child tasks in UserTaskProgress if status changed
+      if (!existingTask.parentTask && (status === "hold" || oldStatus === "hold")) {
+        await handleUserHoldCascade(existingTask._id, status, oldStatus, userId, existingTask.branchId || req.branchId, existingTask.projectName);
+      }
     }
 
-    // Cascade hold status to child tasks if status changed
-    if (status && existingTask.status !== status) {
-        await handleHoldCascade(updatedTask, status, existingTask.status, req.user?._id);
-    }
+    // Fetch fresh canonical master task and project user execution state
+    const freshMasterTask = await Task.findById(taskId)
+      .populate("projectName", "name key settings")
+      .populate("assignee", "firstName lastName email")
+      .populate("milestone", "milestoneName")
+      .populate("epic", "epicName")
+      .populate("sprint", "sprintName startDate endDate")
+      .populate("parentTask", "taskName taskId status taskStartDate taskDueDate holdDate");
 
-    // Only send notification if assignee and projectName are known (either updated or existing)
-    const recipientId = assignee || updatedTask.assignee;
-    const projId = projectName || updatedTask.projectName;
+    const projectedTask = {
+      ...freshMasterTask.toObject(),
+      status: userProgress.status,
+      progress: userProgress.progress,
+      taskStartDate: userProgress.taskStartDate,
+      taskDueDate: userProgress.taskDueDate,
+      holdDate: userProgress.holdDate,
+      completedAt: userProgress.completedAt,
+      activityLogs: userProgress.activityLogs || [],
+      revisionLogs: userProgress.revisionLogs || [],
+      duration: calculateStatusDuration(userProgress.activityLogs || [])
+    };
 
-    if (recipientId && projId) {
-        try {
-            await Notification.create({
-                senderId: req.user?._id,
-                receiverId: new mongoose.Types.ObjectId(recipientId),
-                title: "Task updated for you",
-                message: taskName || updatedTask.taskName,
-                projectId: new mongoose.Types.ObjectId(projId),
-            });
-
-            const message = { title: "Task updated for you", body: taskName || updatedTask.taskName };
-            socketService._io.emit("notification", message, recipientId);
-            await notificationService(new mongoose.Types.ObjectId(recipientId), message);
-        } catch (notifErr) {
-            console.error("Non-blocking notification error:", notifErr);
-        }
-    }
-
-    // Cascading Progress Updates
-    if (updatedTask.parentTask) await ProgressService.updateParentTaskProgress(updatedTask.parentTask);
-    
-    // If parent changed, update the OLD parent's progress as well
-    if (existingTask.parentTask && existingTask.parentTask.toString() !== (updatedTask.parentTask?.toString() || "")) {
-        await ProgressService.updateParentTaskProgress(existingTask.parentTask);
-    }
-
-    if (updatedTask.milestone) await ProgressService.updateMilestoneProgress(updatedTask.milestone);
-    if (updatedTask.projectName) await ProgressService.updateProjectProgress(updatedTask.projectName);
-    if (updatedTask.sprint) await ProgressService.updateSprintProgress(updatedTask.sprint);
-
-    // Update Analytics
-    if (status && existingTask.status !== status) {
-        AnalyticsService.handleTaskUpdate(updatedTask.assignee, updatedTask.projectName, updatedTask._id, existingTask.status, status).catch(err => console.error("Analytics Error:", err));
-    }
-
-    return res
-      .status(200)
-      .json(new ApiResponse(200, updatedTask, "Task updated successfully"));
+    return res.status(200).json(new ApiResponse(200, projectedTask, "Task updated successfully"));
   } catch (error) {
-    console.log("Error------", error);
-    return res.status(400).json(new ApiError(404, "Internal server error"));
+    console.error("Error updating task:", error);
+    return res.status(500).json(new ApiError(500, error.message || "Internal server error"));
   }
 });
 
@@ -398,32 +510,142 @@ tc.updateTask = asyncHandler(async (req, res) => {
 // get task by id
 tc.getTaskById = asyncHandler(async (req, res) => {
   try {
-    if (req.params.taskId == "undefined" || !req.params.taskId) {
-      return res.status(400).json(new ApiError(400, "id not provided"));
+    if (!req.params.taskId || req.params.taskId === "undefined") {
+      return res.status(400).json(new ApiError(400, "Task ID not provided"));
     }
-    const task = await Task.findOne({ _id: req.params.taskId, branchId: req.branchId }).populate(
-      "projectName assignee activityLogs.user"
-    );
+
+    const userId = req.user._id;
+    const task = await Task.findById(req.params.taskId)
+      .populate("projectName assignee milestone epic sprint parentTask");
 
     if (!task) {
       return res.status(404).json(new ApiError(404, "Task not found"));
     }
-    task.activityLogs.sort((a, b) => b.date - a.date);
-    const duration = calculateStatusDuration(task.activityLogs);
 
-    const taskWithDuration = {
-      ...task.toObject(),
-      duration,
-    };
+    // Verify branch authorization if branch header is present
+    if (req.branchId) {
+      const isSuperAdmin = req.user?.email === "balajiaadi2000@gmail.com";
+      const taskBranchId = task.branchId ? task.branchId.toString() : null;
+      const projectBranchId = task.projectName?.branchId ? task.projectName.branchId.toString() : null;
 
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(200, taskWithDuration, "Task fetched successfully")
-      );
+      let isBranchAuthorized = (taskBranchId === req.branchId.toString()) || (projectBranchId === req.branchId.toString());
+      if (!isBranchAuthorized && task.projectName) {
+        const pId = task.projectName._id || task.projectName;
+        const project = await Project.findOne({ _id: pId, branchId: req.branchId }).select("_id").lean();
+        if (project) isBranchAuthorized = true;
+      }
+
+      if (!isBranchAuthorized && !isSuperAdmin) {
+        return res.status(403).json(new ApiError(403, "Access denied: Task does not belong to the active branch"));
+      }
+    }
+
+    const userProgress = await UserTaskProgress.findOne({ userId, taskId: task._id }).lean();
+    const isAdmin = checkIsAdmin(req.user);
+
+    const taskObj = task.toObject();
+    if (userProgress) {
+      taskObj.status = userProgress.status || "todo";
+      taskObj.progress = userProgress.progress ?? (userProgress.status === "done" ? 100 : 0);
+      taskObj.taskStartDate = userProgress.taskStartDate || null;
+      taskObj.taskDueDate = userProgress.taskDueDate || null;
+      taskObj.holdDate = userProgress.holdDate || null;
+      taskObj.completedAt = userProgress.completedAt || null;
+      taskObj.activityLogs = userProgress.activityLogs || [];
+      taskObj.revisionLogs = userProgress.revisionLogs || [];
+    } else if (isAdmin) {
+      taskObj.status = taskObj.status || "todo";
+      taskObj.progress = taskObj.progress ?? (taskObj.status === "done" ? 100 : 0);
+      taskObj.taskStartDate = taskObj.taskStartDate || null;
+      taskObj.taskDueDate = taskObj.taskDueDate || null;
+      taskObj.holdDate = taskObj.holdDate || null;
+      taskObj.completedAt = taskObj.completedAt || null;
+      taskObj.activityLogs = taskObj.activityLogs || [];
+      taskObj.revisionLogs = taskObj.revisionLogs || [];
+    } else {
+      taskObj.status = "todo";
+      taskObj.progress = 0;
+      taskObj.taskStartDate = null;
+      taskObj.taskDueDate = null;
+      taskObj.holdDate = null;
+      taskObj.completedAt = null;
+      taskObj.activityLogs = [];
+      taskObj.revisionLogs = [];
+    }
+
+    // Overlay user execution state on populated parentTask if present
+    if (taskObj.parentTask && typeof taskObj.parentTask === "object") {
+      const parentId = (taskObj.parentTask._id || taskObj.parentTask.id)?.toString();
+      if (parentId) {
+        const parentProgress = await UserTaskProgress.findOne({ userId, taskId: parentId }).lean();
+        if (parentProgress) {
+          taskObj.parentTask = {
+            ...taskObj.parentTask,
+            status: parentProgress.status || "todo",
+            taskStartDate: parentProgress.taskStartDate || null,
+            taskDueDate: parentProgress.taskDueDate || null,
+            holdDate: parentProgress.holdDate || null
+          };
+        } else if (isAdmin) {
+          taskObj.parentTask = {
+            ...taskObj.parentTask,
+            status: taskObj.parentTask.status || "todo",
+            taskStartDate: taskObj.parentTask.taskStartDate || null,
+            taskDueDate: taskObj.parentTask.taskDueDate || null,
+            holdDate: taskObj.parentTask.holdDate || null
+          };
+        } else {
+          taskObj.parentTask = {
+            ...taskObj.parentTask,
+            status: "todo",
+            taskStartDate: null,
+            taskDueDate: null,
+            holdDate: null
+          };
+        }
+      }
+    }
+
+    // Dynamically calculate user-scoped subtaskStats & progress for Parent Topics
+    if (!taskObj.parentTask) {
+      const childTasks = await Task.find({ parentTask: taskObj._id }).select("_id status").lean();
+      const childIds = childTasks.map(c => c._id);
+      const total = childIds.length;
+      let completed = 0;
+      if (total > 0) {
+        if (isAdmin) {
+          const doneProgress = await UserTaskProgress.countDocuments({
+            userId: new mongoose.Types.ObjectId(userId),
+            taskId: { $in: childIds },
+            status: "done"
+          });
+          const doneTasks = childTasks.filter(c => c.status === "done").length;
+          completed = Math.max(doneProgress, doneTasks);
+        } else {
+          completed = await UserTaskProgress.countDocuments({
+            userId: new mongoose.Types.ObjectId(userId),
+            taskId: { $in: childIds },
+            status: "done"
+          });
+        }
+      }
+      taskObj.subtaskStats = { total, completed };
+      taskObj.progress = total > 0 ? Math.round((completed / total) * 100) : (taskObj.progress || 0);
+      if (completed === total && total > 0) {
+        taskObj.status = "done";
+      }
+    } else {
+      taskObj.subtaskStats = { total: 0, completed: 0 };
+    }
+
+    taskObj.duration = calculateStatusDuration(taskObj.activityLogs || []);
+
+    return res.status(200).json(
+      new ApiResponse(200, taskObj, "Task fetched successfully")
+    );
   } catch (error) {
-    console.log("Error------", error);
-    return res.status(400).json(new ApiError(404, error, "Error"));
+    console.error("Error in getTaskById:", error);
+    return res.status(500).json(new ApiError(500, error.message || "Error fetching task"));
   }
 });
 
@@ -432,32 +654,35 @@ import { checkAndTransitionTasks } from "./taskTransition.job.js";
 
 // get all tasks
 tc.getallTasks = asyncHandler(async (req, res) => {
-  console.log("req.body--->", req.body);
-  
   try {
     const { search = "" } = req.query;
     let { filter = {}, sortOrder = -1 } = req.body;
-    
-    // Enforce branch isolation
-    if (req.branchId) {
-      filter.branchId = new mongoose.Types.ObjectId(req.branchId);
-    }
-    // Extract permissions from req.user (already populated in auth middleware)
-    const permissions = new Set();
-    
-    if (req.user?.userRole?.active && req.user?.userRole?.permissions) {
-        req.user.userRole.permissions.forEach(p => {
-             if (p && p.name) permissions.add(p.name);
-        });
-    }
+    const userId = req.user._id;
 
-    req.user?.userRoles?.forEach(role => {
-        if (role.active && role.permissions) {
-            role.permissions.forEach(p => {
-                if (p && p.name) permissions.add(p.name);
-            });
+    // Normalize target project filter
+    const targetProjectId = filter?.projectName || filter?.projectId;
+    if (targetProjectId) {
+      if (req.branchId) {
+        // Verify project belongs to active branch
+        const isSuperAdmin = req.user?.email === "balajiaadi2000@gmail.com";
+        const project = await Project.findOne({ _id: targetProjectId, branchId: req.branchId }).select("_id").lean();
+        if (!project && !isSuperAdmin) {
+          return res.status(403).json(new ApiError(403, "Access denied: Project does not belong to the active branch"));
         }
-    });
+      }
+      filter.projectName = new mongoose.Types.ObjectId(targetProjectId);
+      delete filter.projectId;
+      delete filter.branchId;
+    } else if (req.branchId) {
+      // Cross-project query in active branch: match tasks with explicit branchId OR projects belonging to this branch
+      const branchProjects = await Project.find({ branchId: req.branchId }).select("_id").lean();
+      const branchProjectIds = branchProjects.map(p => p._id);
+      filter.$or = [
+        { branchId: new mongoose.Types.ObjectId(req.branchId) },
+        { projectName: { $in: branchProjectIds } }
+      ];
+      delete filter.branchId;
+    }
 
     let searchCondition = {};
     if (search && search !== "undefined") {
@@ -468,18 +693,13 @@ tc.getallTasks = asyncHandler(async (req, res) => {
         { taskType: { $regex: regex } },
         { taskDescription: { $regex: regex } },
         { additionalNotes: { $regex: regex } },
-        { status: { $regex: regex } },
       ];
-    }
-
-    if (filter?.projectName) {
-      filter.projectName = new mongoose.Types.ObjectId(filter.projectName);
     }
 
     if (filter.milestone) {
       filter.milestone = new mongoose.Types.ObjectId(filter.milestone);
     }
-    
+
     if (filter.sprint) {
       filter.sprint = new mongoose.Types.ObjectId(filter.sprint);
     }
@@ -492,49 +712,42 @@ tc.getallTasks = asyncHandler(async (req, res) => {
       filter.parentTask = new mongoose.Types.ObjectId(filter.parentTask);
     }
 
-    // ENFORCE INDIVIDUAL ISOLATION: User only sees what they created
-    if (req.user?.email !== "balajiaadi2000@gmail.com") {
-        filter.createdBy = req.user._id;
-    }
-
-    if (filter?.type === "open") {
-      searchCondition.status = { $in: ["todo", "inprogress"] };
-    } else if (filter?.type === "hold") {
-      searchCondition.status = "hold";
-    }
-
+    const requestedStatus = filter?.status;
+    const requestedType = filter?.type;
+    delete filter.status;
     delete filter.type;
 
     const tasks = await Task.find({ ...searchCondition, ...filter })
-    .populate("projectName", "name key settings")
-    .populate("assignee", "firstName lastName email")
-    .populate("milestone", "milestoneName")
-    .populate("epic", "epicName")
-    .populate("sprint", "sprintName startDate endDate")
-    .populate("parentTask", "taskName taskId status taskStartDate taskDueDate holdDate")
-    .populate({
-      path: "createdBy",
-      select: "firstName lastName email"
-    })
-    .sort({ _id: sortOrder })
-    .lean();
-  
-    // Auto-sync subtasks of held parent tasks
-    const syncedTasks = await autoSyncHeldParentChildren(tasks, req.user?._id);
+      .populate("projectName", "name key settings")
+      .populate("assignee", "firstName lastName email")
+      .populate("milestone", "milestoneName")
+      .populate("epic", "epicName")
+      .populate("sprint", "sprintName startDate endDate")
+      .populate("parentTask", "taskName taskId status taskStartDate taskDueDate holdDate")
+      .populate({
+        path: "createdBy",
+        select: "firstName lastName email"
+      })
+      .sort({ _id: sortOrder })
+      .lean();
 
-    // Map tasks to include pre-calculated duration
-    syncedTasks.forEach(task => {
-        task.duration = calculateStatusDuration(task.activityLogs || []);
-    });
-  
+    // Dynamically project user-specific execution state from UserTaskProgress
+    const projectedTasks = await projectUserTaskProgress(tasks, userId, req.user);
 
-    if (syncedTasks.length === 0) {
-      return res.status(200).json(new ApiResponse(200, [], "No tasks found"));
+    // Apply user-level status or type filter if requested
+    let finalTasks = projectedTasks;
+    if (requestedStatus) {
+      finalTasks = finalTasks.filter(t => t.status === requestedStatus);
+    }
+    if (requestedType === "open") {
+      finalTasks = finalTasks.filter(t => ["todo", "inprogress"].includes(t.status));
+    } else if (requestedType === "hold") {
+      finalTasks = finalTasks.filter(t => t.status === "hold");
     }
 
     return res
       .status(200)
-      .json(new ApiResponse(200, syncedTasks, "Tasks fetched successfully"));
+      .json(new ApiResponse(200, finalTasks, "Tasks fetched successfully"));
   } catch (error) {
     console.log("Error------", error);
     return res
@@ -577,129 +790,109 @@ tc.deleteTask = asyncHandler(async (req, res) => {
 
 
 const handleHoldCascade = async (parentTask, newStatus, oldStatus, userId) => {
-    // If it's a parent task
-    if (!parentTask.parentTask) {
-        if (newStatus === 'hold') {
-            // Find all child tasks (supporting both ObjectId and string representations in DB)
-            const childTasks = await Task.find({
-                $or: [
-                    { parentTask: parentTask._id },
-                    { parentTask: parentTask._id.toString() }
-                ]
-            });
-            for (const child of childTasks) {
-                // Only put non-done, non-hold child tasks on hold
-                if (child.status !== 'hold' && child.status !== 'done') {
-                    child.activityLogs.unshift({
-                        oldStatus: child.status,
-                        currentStatus: 'hold',
-                        user: userId,
-                        date: new Date(),
-                        message: `Status had been changed from ${child.status} >>> hold (inherited from parent task hold)`,
-                    });
-                    child.status = 'hold';
-                    child.updatedBy = userId;
-                    await child.save();
-                    AnalyticsService.handleTaskUpdate(child.assignee, child.projectName, child._id, child.status, 'hold').catch(err => console.error("Analytics Error:", err));
-                }
-            }
-        } else if (oldStatus === 'hold' && newStatus !== 'hold') {
-            // Release all held child tasks to 'todo'
-            const childTasks = await Task.find({
-                $or: [
-                    { parentTask: parentTask._id },
-                    { parentTask: parentTask._id.toString() }
-                ]
-            });
-            for (const child of childTasks) {
-                if (child.status === 'hold') {
-                    child.activityLogs.unshift({
-                        oldStatus: 'hold',
-                        currentStatus: 'todo',
-                        user: userId,
-                        date: new Date(),
-                        message: `Status had been changed from hold >>> todo (released from parent task hold)`,
-                    });
-                    child.status = 'todo';
-                    child.updatedBy = userId;
-                    await child.save();
-                    AnalyticsService.handleTaskUpdate(child.assignee, child.projectName, child._id, 'hold', 'todo').catch(err => console.error("Analytics Error:", err));
-                }
-            }
+  // If it's a top-level parent task
+  if (!parentTask.parentTask) {
+    const childTasks = await Task.find({ parentTask: parentTask._id });
+    for (const child of childTasks) {
+      let userChildProgress = await UserTaskProgress.findOne({ userId, taskId: child._id });
+      const childStatus = userChildProgress?.status || "todo";
+
+      if (newStatus === "hold" && childStatus !== "hold" && childStatus !== "done") {
+        if (!userChildProgress) {
+          userChildProgress = new UserTaskProgress({
+            userId,
+            taskId: child._id,
+            projectName: child.projectName,
+            branchId: child.branchId,
+            status: "hold",
+            holdDate: new Date(),
+            activityLogs: []
+          });
+        } else {
+          userChildProgress.status = "hold";
+          userChildProgress.holdDate = new Date();
         }
+        userChildProgress.activityLogs.unshift({
+          oldStatus: childStatus,
+          currentStatus: "hold",
+          date: new Date(),
+          message: `Status had been changed from ${childStatus} >>> hold (inherited from parent task hold)`
+        });
+        await userChildProgress.save();
+        AnalyticsService.handleTaskUpdate(child.assignee, child.projectName, child._id, childStatus, "hold").catch(err => console.error("Analytics Error:", err));
+      } else if (oldStatus === "hold" && newStatus !== "hold" && childStatus === "hold") {
+        if (userChildProgress) {
+          userChildProgress.status = "todo";
+          userChildProgress.holdDate = null;
+          userChildProgress.activityLogs.unshift({
+            oldStatus: "hold",
+            currentStatus: "todo",
+            date: new Date(),
+            message: `Status had been changed from hold >>> todo (released from parent task hold)`
+          });
+          await userChildProgress.save();
+          AnalyticsService.handleTaskUpdate(child.assignee, child.projectName, child._id, "hold", "todo").catch(err => console.error("Analytics Error:", err));
+        }
+      }
     }
+  }
 };
 
 const getParentTaskId = (parentTaskField) => {
-    if (!parentTaskField) return null;
-    if (typeof parentTaskField === 'string') return parentTaskField;
-    if (mongoose.Types.ObjectId.isValid(parentTaskField)) return parentTaskField.toString();
-    if (typeof parentTaskField === 'object') {
-        if (parentTaskField._id) return parentTaskField._id.toString();
-        return parentTaskField.toString();
-    }
-    return null;
+  if (!parentTaskField) return null;
+  if (typeof parentTaskField === 'string') return parentTaskField;
+  if (mongoose.Types.ObjectId.isValid(parentTaskField)) return parentTaskField.toString();
+  if (typeof parentTaskField === 'object') {
+    if (parentTaskField._id) return parentTaskField._id.toString();
+    return parentTaskField.toString();
+  }
+  return null;
 };
 
 const autoSyncHeldParentChildren = async (tasks, userId) => {
-    // 1. Find all parent tasks in the fetched list that are on 'hold'
-    const heldParentIds = tasks
-        .filter(t => !t.parentTask && t.status === 'hold')
-        .map(t => t._id.toString());
-        
-    if (heldParentIds.length === 0) return tasks;
+  // 1. Find all parent tasks in the fetched list that are on 'hold'
+  const heldParentIds = tasks
+    .filter(t => !t.parentTask && t.status === 'hold')
+    .map(t => t._id.toString());
 
-    const updatePromises = [];
-    // 2. Loop through all fetched tasks and sync child tasks in parallel
-    for (let task of tasks) {
-        const pIdStr = getParentTaskId(task.parentTask);
-        if (pIdStr && heldParentIds.includes(pIdStr)) {
-            // This child belongs to a held parent task.
-            // If it is not 'done' and not 'hold', update it to 'hold'!
-            if (task.status !== 'hold' && task.status !== 'done') {
-                updatePromises.push(
-                    Task.updateOne(
-                        { _id: task._id },
-                        {
-                            $set: { status: 'hold', updatedBy: userId },
-                            $push: {
-                                activityLogs: {
-                                    $each: [{
-                                        oldStatus: task.status,
-                                        currentStatus: 'hold',
-                                        user: userId,
-                                        date: new Date(),
-                                        message: `Status automatically synced to hold because parent task is on hold`,
-                                    }],
-                                    $position: 0
-                                }
-                            }
-                        }
-                    )
-                );
-                
-                // Update in returned list object
-                task.status = 'hold';
-                if (!task.activityLogs) task.activityLogs = [];
-                task.activityLogs.unshift({
-                    oldStatus: task.status,
-                    currentStatus: 'hold',
-                    user: userId,
-                    date: new Date(),
-                    message: `Status automatically synced to hold because parent task is on hold`,
-                });
-                
-                // Trigger analytics update asynchronously
-                AnalyticsService.handleTaskUpdate(task.assignee, task.projectName, task._id, task.status, 'hold').catch(err => console.error("Analytics Error:", err));
-            }
+  if (heldParentIds.length === 0) return tasks;
+
+  // 2. Loop through all fetched tasks and sync child tasks in UserTaskProgress
+  for (let task of tasks) {
+    const pIdStr = getParentTaskId(task.parentTask);
+    if (pIdStr && heldParentIds.includes(pIdStr)) {
+      if (task.status !== 'hold' && task.status !== 'done') {
+        let userProgress = await UserTaskProgress.findOne({ userId, taskId: task._id });
+        if (!userProgress) {
+          userProgress = new UserTaskProgress({
+            userId,
+            taskId: task._id,
+            projectName: task.projectName?._id || task.projectName,
+            branchId: task.branchId,
+            status: "hold",
+            holdDate: new Date(),
+            activityLogs: []
+          });
+        } else {
+          userProgress.status = "hold";
+          userProgress.holdDate = new Date();
         }
+        userProgress.activityLogs.unshift({
+          oldStatus: task.status,
+          currentStatus: "hold",
+          date: new Date(),
+          message: "Status automatically synced to hold because parent task is on hold"
+        });
+        await userProgress.save();
+
+        task.status = "hold";
+        task.holdDate = userProgress.holdDate;
+        AnalyticsService.handleTaskUpdate(task.assignee, task.projectName, task._id, task.status, "hold").catch(err => console.error("Analytics Error:", err));
+      }
     }
-    
-    if (updatePromises.length > 0) {
-        await Promise.all(updatePromises);
-    }
-    
-    return tasks;
+  }
+
+  return tasks;
 };
 
 //update Task status
@@ -708,7 +901,8 @@ tc.updatetaskLog = asyncHandler(async (req, res) => {
 
   try {
     const { taskId } = req.params;
-    const { status } = req.body;
+    const { status, taskStartDate, taskDueDate, holdDate } = req.body;
+    const userId = req.user._id;
 
     if (!taskId) {
       return res.status(400).json(new ApiError(400, "Task ID not provided"));
@@ -725,76 +919,102 @@ tc.updatetaskLog = asyncHandler(async (req, res) => {
 
     // Restriction for Employees: Cannot change status if sprint hasn't started
     if (task.sprint && new Date() < new Date(task.sprint.startDate)) {
-        // Check if user is an employee (doesn't have UPDATE_TASK or CREATE_SPRINT)
-        const permissions = new Set();
-        if (req.user?.userRole?.active && req.user?.userRole?.permissions) {
-            req.user.userRole.permissions.forEach(p => p && p.name && permissions.add(p.name));
-        }
-        req.user?.userRoles?.forEach(role => {
-            if (role.active && role.permissions) role.permissions.forEach(p => p && p.name && permissions.add(p.name));
-        });
+      const permissions = new Set();
+      if (req.user?.userRole?.active && req.user?.userRole?.permissions) {
+        req.user.userRole.permissions.forEach(p => p && p.name && permissions.add(p.name));
+      }
+      req.user?.userRoles?.forEach(role => {
+        if (role.active && role.permissions) role.permissions.forEach(p => p && p.name && permissions.add(p.name));
+      });
 
-        const canBypass = permissions.has('UPDATE_TASK') || permissions.has('CREATE_SPRINT');
-        if (!canBypass) {
-            return res.status(400).json(new ApiError(400, "Cannot update status. The linked sprint has not started yet."));
-        }
+      const canBypass = permissions.has('UPDATE_TASK') || permissions.has('CREATE_SPRINT');
+      if (!canBypass) {
+        return res.status(400).json(new ApiError(400, "Cannot update status. The linked sprint has not started yet."));
+      }
     }
 
-    // Status Restriction: Any task cannot be 'done' if it has pending subtasks
+    // Status Restriction: Any task cannot be 'done' if user has pending subtasks
     if (status === 'done') {
-        const pendingSubtasks = await Task.countDocuments({
-            parentTask: new mongoose.Types.ObjectId(task._id),
-            status: { $ne: 'done' }
+      const childTasks = await Task.find({ parentTask: task._id }).select('_id');
+      if (childTasks.length > 0) {
+        const childIds = childTasks.map(c => c._id);
+        const doneCount = await UserTaskProgress.countDocuments({
+          userId,
+          taskId: { $in: childIds },
+          status: 'done'
         });
-        if (pendingSubtasks > 0) {
-            return res.status(400).json(new ApiError(400, "Cannot complete task while subtasks are still pending."));
+        if (doneCount < childTasks.length) {
+          return res.status(400).json(new ApiError(400, "Cannot complete task while subtasks are still pending."));
         }
+      }
     }
 
-    const oldStatus = task.status; // Store old status before updating
+    let userProgress = await UserTaskProgress.findOne({ userId, taskId: task._id });
+    const oldStatus = userProgress?.status || "todo";
+
+    if (!userProgress) {
+      userProgress = new UserTaskProgress({
+        userId,
+        taskId: task._id,
+        projectName: task.projectName,
+        branchId: task.branchId || (req.branchId ? new mongoose.Types.ObjectId(req.branchId) : undefined),
+        status: "todo",
+        progress: 0,
+        activityLogs: []
+      });
+    }
+
+    userProgress.status = status;
+    if (status === 'done') {
+      userProgress.progress = 100;
+      userProgress.completedAt = new Date();
+    } else if (status === 'todo') {
+      userProgress.progress = 0;
+      userProgress.completedAt = null;
+    }
 
     if (status === 'hold') {
-        if (!task.parentTask) {
-            task.holdDate = new Date();
-        }
+      userProgress.holdDate = holdDate ? new Date(holdDate) : new Date();
     } else if (oldStatus === 'hold') {
-        if (!task.parentTask) {
-            task.holdDate = null;
-        }
+      userProgress.holdDate = null;
     }
 
-    task.activityLogs.unshift({
-      oldStatus: task.status,
+    if (taskStartDate !== undefined) userProgress.taskStartDate = taskStartDate ? new Date(taskStartDate) : null;
+    if (taskDueDate !== undefined) userProgress.taskDueDate = taskDueDate ? new Date(taskDueDate) : null;
+
+    userProgress.activityLogs.unshift({
+      oldStatus,
       currentStatus: status,
-      user: req.user?._id, // Ensure this is stored as an ObjectId
       date: new Date(),
-      message: `Status had been changed from ${task.status} >>> ${status}`,
+      message: `Status had been changed from ${oldStatus} >>> ${status}`,
     });
 
-    task.status = status;
-    if (status === 'done') task.progress = 100;
-    else if (status === 'todo') task.progress = 0;
-
-    task.updatedBy = req.user?._id;
-    await task.save();
+    await userProgress.save();
 
     // Cascading Hold Status to children if parent is put on hold / released
-    await handleHoldCascade(task, status, oldStatus, req.user?._id);
-
-    // Cascading Progress Updates
-    await ProgressService.updateParentTaskProgress(task.parentTask);
-    if (task.milestone) await ProgressService.updateMilestoneProgress(task.milestone);
-    if (task.projectName) await ProgressService.updateProjectProgress(task.projectName);
-    if (task.sprint) await ProgressService.updateSprintProgress(task.sprint);
+    await handleHoldCascade(task, status, oldStatus, userId);
 
     // Update Analytics
     if (status && oldStatus !== status) {
-        AnalyticsService.handleTaskUpdate(task.assignee, task.projectName, task._id, oldStatus, status).catch(err => console.error("Analytics Error:", err));
+      AnalyticsService.handleTaskUpdate(task.assignee, task.projectName, task._id, oldStatus, status).catch(err => console.error("Analytics Error:", err));
     }
+
+    const projectedTask = {
+      ...task.toObject(),
+      status: userProgress.status,
+      progress: userProgress.progress,
+      taskStartDate: userProgress.taskStartDate,
+      taskDueDate: userProgress.taskDueDate,
+      holdDate: userProgress.holdDate,
+      completedAt: userProgress.completedAt,
+      activityLogs: userProgress.activityLogs || [],
+      revisionLogs: userProgress.revisionLogs || [],
+      duration: calculateStatusDuration(userProgress.activityLogs || [])
+    };
 
     return res
       .status(200)
-      .json(new ApiResponse(200, task, "Task status updated successfully"));
+      .json(new ApiResponse(200, projectedTask, "Task status updated successfully"));
   } catch (error) {
     console.error("Error------", error);
     return res.status(400).json(new ApiError(404, "Internal server error"));
@@ -839,14 +1059,35 @@ tc.deletemilestone = asyncHandler(async (req, res) => {
 //getalltaskregardless
 tc.getallTasksfree = asyncHandler(async (req, res) => {
   console.log("req.body--->", req.body);
-  
+
   try {
     const { search = "" } = req.query;
     let { filter = {}, sortOrder = -1 } = req.body;
-    
-    // Enforce branch isolation
-    if (req.branchId) {
-      filter.branchId = new mongoose.Types.ObjectId(req.branchId);
+    const userId = req.user._id;
+
+    // Normalize target project filter
+    const targetProjectId = filter?.projectName || filter?.projectId;
+    if (targetProjectId) {
+      if (req.branchId) {
+        // Verify project belongs to active branch
+        const isSuperAdmin = req.user?.email === "balajiaadi2000@gmail.com";
+        const project = await Project.findOne({ _id: targetProjectId, branchId: req.branchId }).select("_id").lean();
+        if (!project && !isSuperAdmin) {
+          return res.status(403).json(new ApiError(403, "Access denied: Project does not belong to the active branch"));
+        }
+      }
+      filter.projectName = new mongoose.Types.ObjectId(targetProjectId);
+      delete filter.projectId;
+      delete filter.branchId;
+    } else if (req.branchId) {
+      // Cross-project query in active branch: match tasks with explicit branchId OR projects belonging to this branch
+      const branchProjects = await Project.find({ branchId: req.branchId }).select("_id").lean();
+      const branchProjectIds = branchProjects.map(p => p._id);
+      filter.$or = [
+        { branchId: new mongoose.Types.ObjectId(req.branchId) },
+        { projectName: { $in: branchProjectIds } }
+      ];
+      delete filter.branchId;
     }
 
     let searchCondition = {};
@@ -858,46 +1099,49 @@ tc.getallTasksfree = asyncHandler(async (req, res) => {
         { taskType: { $regex: regex } },
         { taskDescription: { $regex: regex } },
         { additionalNotes: { $regex: regex } },
-        { status: { $regex: regex } },
       ];
     }
-    
-    if (req.user?.email !== "balajiaadi2000@gmail.com") {
-        filter.createdBy = req.user._id;
-    }
+
+    const requestedStatus = filter?.status;
+    delete filter.status;
 
     const tasks = await Task.find({ ...searchCondition, ...filter })
-    .populate("projectName", "name key settings")
-    .populate("assignee milestone activityLogs.user")
-    .populate({
-      path: "dependentTasks",
-      populate: [
-      {
+      .populate("projectName", "name key settings")
+      .populate("assignee milestone activityLogs.user")
+      .populate({
+        path: "dependentTasks",
+        populate: [
+          {
+            path: "createdBy",
+            select: "email userRole firstName lastName"
+          },
+          {
+            path: "assignee",
+            select: "email userRole firstName lastName"
+          }
+        ]
+      })
+      .populate({
         path: "createdBy",
         select: "email userRole firstName lastName"
-      },
-      {
-        path: "assignee",
-        select: "email userRole firstName lastName"
-      }
-    ]
-    })
-    .populate({
-      path: "createdBy",
-      select: "email userRole firstName lastName"
-    })
-    .sort({ _id: sortOrder });;
+      })
+      .sort({ _id: sortOrder })
+      .lean();
 
-    // Auto-sync subtasks of held parent tasks
-    const syncedTasks = await autoSyncHeldParentChildren(tasks, req.user?._id);
+    const projectedTasks = await projectUserTaskProgress(tasks, userId, req.user);
 
-    if (syncedTasks.length === 0) {
+    let finalTasks = projectedTasks;
+    if (requestedStatus) {
+      finalTasks = finalTasks.filter(t => t.status === requestedStatus);
+    }
+
+    if (finalTasks.length === 0) {
       return res.status(200).json(new ApiResponse(200, [], "No tasks found"));
     }
 
     return res
       .status(200)
-      .json(new ApiResponse(200, syncedTasks, "Tasks fetched successfully"));
+      .json(new ApiResponse(200, finalTasks, "Tasks fetched successfully"));
   } catch (error) {
     console.log("Error------", error);
     return res
@@ -908,127 +1152,139 @@ tc.getallTasksfree = asyncHandler(async (req, res) => {
 
 // Add Revision
 tc.addRevision = asyncHandler(async (req, res) => {
-    const { taskId } = req.params;
-    const { notes, revisionDate, timezoneOffset } = req.body;
+  const { taskId } = req.params;
+  const { notes, revisionDate, timezoneOffset } = req.body;
 
-    if (!taskId) {
-        return res.status(400).json(new ApiError(400, "Task ID is required"));
-    }
+  if (!taskId) {
+    return res.status(400).json(new ApiError(400, "Task ID is required"));
+  }
 
-    const task = await Task.findById(taskId);
-    if (!task) {
-        return res.status(404).json(new ApiError(404, "Task not found"));
-    }
+  const task = await Task.findById(taskId);
+  if (!task) {
+    return res.status(404).json(new ApiError(404, "Task not found"));
+  }
 
-    const revisionLog = {
-        revisionDate: revisionDate || new Date(),
-        notes: notes || "",
-        revisedBy: req.user?._id
-    };
+  const userId = req.user?._id;
+  const revisionLog = {
+    revisionDate: revisionDate || new Date(),
+    notes: notes || "",
+    revisedBy: userId
+  };
 
-    if (!task.revisionLogs) task.revisionLogs = [];
-    task.revisionLogs.push(revisionLog);
-    
-    await task.save();
+  // Record revision log in user execution progress
+  if (userId) {
+    await UserTaskProgress.findOneAndUpdate(
+      { userId: userId, taskId: task._id },
+      {
+        $push: { revisionLogs: revisionLog },
+        $setOnInsert: {
+          status: "done",
+          projectName: task.projectName,
+          branchId: task.branchId
+        }
+      },
+      { upsert: true, new: true }
+    );
+  }
 
-    // Check if this task is part of today's DailyRevision and mark it completed
-    try {
-        const offset = timezoneOffset !== undefined ? parseInt(timezoneOffset) : new Date().getTimezoneOffset();
-        const localDateStr = getLocalDateString(new Date(), offset);
-        const dailyRev = await DailyRevision.findOne({
-            userId: req.user._id,
-            isStarted: true,
-            isCompleted: false
+  // Check if this task is part of today's DailyRevision and mark it completed
+  try {
+    const offset = timezoneOffset !== undefined ? parseInt(timezoneOffset) : new Date().getTimezoneOffset();
+    const localDateStr = getLocalDateString(new Date(), offset);
+    const dailyRev = await DailyRevision.findOne({
+      userId: req.user._id,
+      isStarted: true,
+      isCompleted: false
+    });
+
+    if (dailyRev && dailyRev.questions.some(qId => qId.toString() === task._id.toString())) {
+      const completedStrList = dailyRev.completedQuestions.map(q => q.toString());
+      if (!completedStrList.includes(task._id.toString())) {
+        // 1. Enforce sequence: must be the active question
+        const activeIdx = dailyRev.completedQuestions.length;
+        const activeTaskId = dailyRev.questions[activeIdx];
+        if (!activeTaskId || activeTaskId.toString() !== task._id.toString()) {
+          return res.status(400).json(new ApiError(400, "You must complete the daily revision questions in the exact order shown!"));
+        }
+
+        // 2. Sync remaining time to get accurate current timeLeft
+        if (dailyRev.timerIsActive && dailyRev.timerLastUpdated) {
+          const now = Date.now();
+          const lastUpdate = new Date(dailyRev.timerLastUpdated).getTime();
+          const elapsedSeconds = Math.floor((now - lastUpdate) / 1000);
+          if (elapsedSeconds > 0) {
+            dailyRev.timeLeft = Math.max(0, dailyRev.timeLeft - elapsedSeconds);
+            dailyRev.timerLastUpdated = new Date(now);
+          }
+        }
+
+        // 3. Enforce 15-minute rule (900 seconds)
+        const timeSpent = dailyRev.currentQuestionStartTimeLeft - dailyRev.timeLeft;
+        if (timeSpent < 900) {
+          const remainingSeconds = 900 - timeSpent;
+          const remMins = Math.floor(remainingSeconds / 60);
+          const remSecs = remainingSeconds % 60;
+          return res.status(400).json(new ApiError(400, `You must revise this question for at least 15 minutes! Please wait another ${remMins}m ${remSecs}s.`));
+        }
+
+        // 4. Log progress and completion
+        dailyRev.completedQuestions.push(task._id);
+
+        if (!dailyRev.questionLogs) dailyRev.questionLogs = [];
+        dailyRev.questionLogs.push({
+          taskId: task._id,
+          completedAtTimeLeft: dailyRev.timeLeft,
+          timeSpent: timeSpent,
+          notes: notes || ""
         });
 
-        if (dailyRev && dailyRev.questions.some(qId => qId.toString() === task._id.toString())) {
-            const completedStrList = dailyRev.completedQuestions.map(q => q.toString());
-            if (!completedStrList.includes(task._id.toString())) {
-                // 1. Enforce sequence: must be the active question
-                const activeIdx = dailyRev.completedQuestions.length;
-                const activeTaskId = dailyRev.questions[activeIdx];
-                if (!activeTaskId || activeTaskId.toString() !== task._id.toString()) {
-                    return res.status(400).json(new ApiError(400, "You must complete the daily revision questions in the exact order shown!"));
-                }
+        dailyRev.currentQuestionStartTimeLeft = dailyRev.timeLeft;
 
-                // 2. Sync remaining time to get accurate current timeLeft
-                if (dailyRev.timerIsActive && dailyRev.timerLastUpdated) {
-                    const now = Date.now();
-                    const lastUpdate = new Date(dailyRev.timerLastUpdated).getTime();
-                    const elapsedSeconds = Math.floor((now - lastUpdate) / 1000);
-                    if (elapsedSeconds > 0) {
-                        dailyRev.timeLeft = Math.max(0, dailyRev.timeLeft - elapsedSeconds);
-                        dailyRev.timerLastUpdated = new Date(now);
-                    }
-                }
+        // Create a persistent FocusSession for the completed revision
+        const sessionDurationMins = Math.max(1, Math.round(timeSpent / 60));
+        const focusSession = new FocusSession({
+          user: req.user._id,
+          startTime: new Date(Date.now() - timeSpent * 1000),
+          endTime: new Date(),
+          duration: sessionDurationMins,
+          type: "Revision",
+          date: new Date(),
+          task: task._id,
+          taskName: task.taskName,
+          taskIdString: task.taskId,
+          statusAtCompletion: "done",
+          completionState: "completed",
+          branchId: dailyRev.branchId || task.branchId || null
+        });
+        await focusSession.save();
 
-                // 3. Enforce 15-minute rule (900 seconds)
-                const timeSpent = dailyRev.currentQuestionStartTimeLeft - dailyRev.timeLeft;
-                if (timeSpent < 900) {
-                    const remainingSeconds = 900 - timeSpent;
-                    const remMins = Math.floor(remainingSeconds / 60);
-                    const remSecs = remainingSeconds % 60;
-                    return res.status(400).json(new ApiError(400, `You must revise this question for at least 15 minutes! Please wait another ${remMins}m ${remSecs}s.`));
-                }
+        // Record analytics
+        await AnalyticsService.recordFocusTime(
+          req.user._id,
+          sessionDurationMins,
+          focusSession.date,
+          dailyRev.branchId || task.branchId || null,
+          task._id
+        );
 
-                // 4. Log progress and completion
-                dailyRev.completedQuestions.push(task._id);
-                
-                if (!dailyRev.questionLogs) dailyRev.questionLogs = [];
-                dailyRev.questionLogs.push({
-                    taskId: task._id,
-                    completedAtTimeLeft: dailyRev.timeLeft,
-                    timeSpent: timeSpent,
-                    notes: notes || ""
-                });
-
-                dailyRev.currentQuestionStartTimeLeft = dailyRev.timeLeft;
-                
-                // Create a persistent FocusSession for the completed revision
-                const sessionDurationMins = Math.max(1, Math.round(timeSpent / 60));
-                const focusSession = new FocusSession({
-                    user: req.user._id,
-                    startTime: new Date(Date.now() - timeSpent * 1000),
-                    endTime: new Date(),
-                    duration: sessionDurationMins,
-                    type: "Revision",
-                    date: new Date(),
-                    task: task._id,
-                    taskName: task.taskName,
-                    taskIdString: task.taskId,
-                    statusAtCompletion: "done",
-                    completionState: "completed",
-                    branchId: dailyRev.branchId || task.branchId || null
-                });
-                await focusSession.save();
-
-                // Record analytics
-                await AnalyticsService.recordFocusTime(
-                    req.user._id, 
-                    sessionDurationMins, 
-                    focusSession.date, 
-                    dailyRev.branchId || task.branchId || null, 
-                    task._id
-                );
-
-                // Check if all questions are completed now
-                if (dailyRev.completedQuestions.length === dailyRev.questions.length) {
-                    dailyRev.isCompleted = true;
-                    dailyRev.timerIsActive = false;
-                    dailyRev.timerLastUpdated = null;
-                }
-                
-                await dailyRev.save();
-            }
+        // Check if all questions are completed now
+        if (dailyRev.completedQuestions.length === dailyRev.questions.length) {
+          dailyRev.isCompleted = true;
+          dailyRev.timerIsActive = false;
+          dailyRev.timerLastUpdated = null;
         }
-    } catch (err) {
-        console.error("Error updating DailyRevision on addRevision:", err);
-        if (err.statusCode || err.message?.includes("must revise") || err.message?.includes("order")) {
-            return res.status(err.statusCode || 400).json(new ApiError(err.statusCode || 400, err.message));
-        }
+
+        await dailyRev.save();
+      }
     }
+  } catch (err) {
+    console.error("Error updating DailyRevision on addRevision:", err);
+    if (err.statusCode || err.message?.includes("must revise") || err.message?.includes("order")) {
+      return res.status(err.statusCode || 400).json(new ApiError(err.statusCode || 400, err.message));
+    }
+  }
 
-    return res.status(200).json(new ApiResponse(200, task, "Revision logged successfully"));
+  return res.status(200).json(new ApiResponse(200, task, "Revision logged successfully"));
 });
 
 const getLocalDateString = (date, offsetMinutes = 0) => {
@@ -1041,260 +1297,260 @@ const getLocalDateString = (date, offsetMinutes = 0) => {
 
 // Get Revision Stats
 tc.getRevisionStats = asyncHandler(async (req, res) => {
-    try {
-        const timezoneOffset = req.query.timezoneOffset ? parseInt(req.query.timezoneOffset) : 0;
-        
-        const filter = {};
-        if (req.branchId) {
-            filter.branchId = new mongoose.Types.ObjectId(req.branchId);
-        }
-        if (req.user?.email !== "balajiaadi2000@gmail.com") {
-            filter.createdBy = req.user._id;
-        }
-        
-        // Fetch completed subtasks
-        filter.parentTask = { $ne: null };
-        filter.status = "done";
-        
-        const tasks = await Task.find(filter)
-            .populate("projectName", "name key settings")
-            .populate("parentTask", "taskName taskId")
-            .lean();
-        
-        const revisionLogsByDate = {};
-        const completionDates = new Set();
-        const revisionDates = new Set();
-        
-        tasks.forEach(task => {
-            let completionDate = null;
-            if (task.activityLogs && Array.isArray(task.activityLogs)) {
-                const doneLog = [...task.activityLogs]
-                    .reverse()
-                    .find(log => log.currentStatus === 'done');
-                if (doneLog) {
-                    completionDate = doneLog.date;
-                }
-            }
-            if (!completionDate) {
-                completionDate = task.updatedAt || task.createdAt;
-            }
-            
-            const compDateStr = getLocalDateString(completionDate, timezoneOffset);
-            if (compDateStr) {
-                completionDates.add(compDateStr);
-            }
-            
-            if (task.revisionLogs && Array.isArray(task.revisionLogs)) {
-                task.revisionLogs.forEach(log => {
-                    const revDateStr = getLocalDateString(log.revisionDate, timezoneOffset);
-                    if (revDateStr) {
-                        revisionDates.add(revDateStr);
-                        if (!revisionLogsByDate[revDateStr]) {
-                            revisionLogsByDate[revDateStr] = [];
-                        }
-                        revisionLogsByDate[revDateStr].push({
-                            taskId: task._id,
-                            taskName: task.taskName,
-                            taskKey: task.taskId,
-                            projectName: task.projectName?.name || task.projectName,
-                            projectKey: task.projectName?.key || 'MOM',
-                            notes: log.notes,
-                            revisionDate: log.revisionDate,
-                            revisedBy: log.revisedBy
-                        });
-                    }
-                });
-            }
-        });
-        
-        const streakDates = Array.from(revisionDates);
-        
-        const calculateStreak = (dates) => {
-            if (dates.length === 0) return { currentStreak: 0, longestStreak: 0 };
-            
-            const sorted = dates.sort((a, b) => new Date(b) - new Date(a));
-            const todayStr = getLocalDateString(new Date(), timezoneOffset);
-            
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-            const yesterdayStr = getLocalDateString(yesterday, timezoneOffset);
-            
-            let currentStreak = 0;
-            let longestStreak = 0;
-            let tempStreak = 0;
-            
-            const sortedAsc = [...dates].sort((a, b) => new Date(a) - new Date(b));
-            if (sortedAsc.length > 0) {
-                tempStreak = 1;
-                longestStreak = 1;
-                for (let i = 1; i < sortedAsc.length; i++) {
-                    const prev = new Date(sortedAsc[i - 1]);
-                    const curr = new Date(sortedAsc[i]);
-                    const diffTime = Math.abs(curr - prev);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    
-                    if (diffDays === 1) {
-                        tempStreak++;
-                    } else if (diffDays > 1) {
-                        tempStreak = 1;
-                    }
-                    if (tempStreak > longestStreak) {
-                        longestStreak = tempStreak;
-                    }
-                }
-            }
-            
-            let startOffset = 0;
-            if (sorted.includes(todayStr)) {
-                currentStreak = 1;
-            } else if (sorted.includes(yesterdayStr)) {
-                currentStreak = 1;
-                startOffset = 1;
-            } else {
-                currentStreak = 0;
-            }
-            
-            if (currentStreak > 0) {
-                let checkDate = new Date();
-                if (startOffset === 1) {
-                    checkDate.setDate(checkDate.getDate() - 1);
-                }
-                while (true) {
-                    checkDate.setDate(checkDate.getDate() - 1);
-                    const checkDateStr = getLocalDateString(checkDate, timezoneOffset);
-                    if (sorted.includes(checkDateStr)) {
-                        currentStreak++;
-                    } else {
-                        break;
-                    }
-                }
-            }
-            
-            return { currentStreak, longestStreak };
-        };
-        
-        const { currentStreak, longestStreak } = calculateStreak(streakDates);
-        
-        const completedByDate = {};
-        tasks.forEach(task => {
-            let completionDate = null;
-            if (task.activityLogs && Array.isArray(task.activityLogs)) {
-                const doneLog = [...task.activityLogs]
-                    .reverse()
-                    .find(log => log.currentStatus === 'done');
-                if (doneLog) {
-                    completionDate = doneLog.date;
-                }
-            }
-            if (!completionDate) {
-                completionDate = task.updatedAt || task.createdAt;
-            }
-            const dateStr = getLocalDateString(completionDate, timezoneOffset);
-            if (dateStr) {
-                if (!completedByDate[dateStr]) {
-                    completedByDate[dateStr] = [];
-                }
-                completedByDate[dateStr].push({
-                    taskId: task._id,
-                    taskName: task.taskName,
-                    taskKey: task.taskId,
-                    projectName: task.projectName?.name || task.projectName,
-                    projectKey: task.projectName?.key || 'MOM',
-                    completionDate
-                });
-            }
-        });
-        
-        return res.status(200).json(new ApiResponse(200, {
-            currentStreak,
-            longestStreak,
-            revisionsByDate: revisionLogsByDate,
-            completedByDate
-        }, "Revision stats fetched successfully"));
-    } catch (error) {
-        console.error("Error fetching revision stats:", error);
-        return res.status(400).json(new ApiError(400, "Error fetching revision stats"));
+  try {
+    const timezoneOffset = req.query.timezoneOffset ? parseInt(req.query.timezoneOffset) : 0;
+
+    const filter = {};
+    if (req.branchId) {
+      filter.branchId = new mongoose.Types.ObjectId(req.branchId);
     }
+    if (req.user?.email !== "balajiaadi2000@gmail.com") {
+      filter.createdBy = req.user._id;
+    }
+
+    // Fetch completed subtasks
+    filter.parentTask = { $ne: null };
+    filter.status = "done";
+
+    const tasks = await Task.find(filter)
+      .populate("projectName", "name key settings")
+      .populate("parentTask", "taskName taskId")
+      .lean();
+
+    const revisionLogsByDate = {};
+    const completionDates = new Set();
+    const revisionDates = new Set();
+
+    tasks.forEach(task => {
+      let completionDate = null;
+      if (task.activityLogs && Array.isArray(task.activityLogs)) {
+        const doneLog = [...task.activityLogs]
+          .reverse()
+          .find(log => log.currentStatus === 'done');
+        if (doneLog) {
+          completionDate = doneLog.date;
+        }
+      }
+      if (!completionDate) {
+        completionDate = task.updatedAt || task.createdAt;
+      }
+
+      const compDateStr = getLocalDateString(completionDate, timezoneOffset);
+      if (compDateStr) {
+        completionDates.add(compDateStr);
+      }
+
+      if (task.revisionLogs && Array.isArray(task.revisionLogs)) {
+        task.revisionLogs.forEach(log => {
+          const revDateStr = getLocalDateString(log.revisionDate, timezoneOffset);
+          if (revDateStr) {
+            revisionDates.add(revDateStr);
+            if (!revisionLogsByDate[revDateStr]) {
+              revisionLogsByDate[revDateStr] = [];
+            }
+            revisionLogsByDate[revDateStr].push({
+              taskId: task._id,
+              taskName: task.taskName,
+              taskKey: task.taskId,
+              projectName: task.projectName?.name || task.projectName,
+              projectKey: task.projectName?.key || 'MOM',
+              notes: log.notes,
+              revisionDate: log.revisionDate,
+              revisedBy: log.revisedBy
+            });
+          }
+        });
+      }
+    });
+
+    const streakDates = Array.from(revisionDates);
+
+    const calculateStreak = (dates) => {
+      if (dates.length === 0) return { currentStreak: 0, longestStreak: 0 };
+
+      const sorted = dates.sort((a, b) => new Date(b) - new Date(a));
+      const todayStr = getLocalDateString(new Date(), timezoneOffset);
+
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = getLocalDateString(yesterday, timezoneOffset);
+
+      let currentStreak = 0;
+      let longestStreak = 0;
+      let tempStreak = 0;
+
+      const sortedAsc = [...dates].sort((a, b) => new Date(a) - new Date(b));
+      if (sortedAsc.length > 0) {
+        tempStreak = 1;
+        longestStreak = 1;
+        for (let i = 1; i < sortedAsc.length; i++) {
+          const prev = new Date(sortedAsc[i - 1]);
+          const curr = new Date(sortedAsc[i]);
+          const diffTime = Math.abs(curr - prev);
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+          if (diffDays === 1) {
+            tempStreak++;
+          } else if (diffDays > 1) {
+            tempStreak = 1;
+          }
+          if (tempStreak > longestStreak) {
+            longestStreak = tempStreak;
+          }
+        }
+      }
+
+      let startOffset = 0;
+      if (sorted.includes(todayStr)) {
+        currentStreak = 1;
+      } else if (sorted.includes(yesterdayStr)) {
+        currentStreak = 1;
+        startOffset = 1;
+      } else {
+        currentStreak = 0;
+      }
+
+      if (currentStreak > 0) {
+        let checkDate = new Date();
+        if (startOffset === 1) {
+          checkDate.setDate(checkDate.getDate() - 1);
+        }
+        while (true) {
+          checkDate.setDate(checkDate.getDate() - 1);
+          const checkDateStr = getLocalDateString(checkDate, timezoneOffset);
+          if (sorted.includes(checkDateStr)) {
+            currentStreak++;
+          } else {
+            break;
+          }
+        }
+      }
+
+      return { currentStreak, longestStreak };
+    };
+
+    const { currentStreak, longestStreak } = calculateStreak(streakDates);
+
+    const completedByDate = {};
+    tasks.forEach(task => {
+      let completionDate = null;
+      if (task.activityLogs && Array.isArray(task.activityLogs)) {
+        const doneLog = [...task.activityLogs]
+          .reverse()
+          .find(log => log.currentStatus === 'done');
+        if (doneLog) {
+          completionDate = doneLog.date;
+        }
+      }
+      if (!completionDate) {
+        completionDate = task.updatedAt || task.createdAt;
+      }
+      const dateStr = getLocalDateString(completionDate, timezoneOffset);
+      if (dateStr) {
+        if (!completedByDate[dateStr]) {
+          completedByDate[dateStr] = [];
+        }
+        completedByDate[dateStr].push({
+          taskId: task._id,
+          taskName: task.taskName,
+          taskKey: task.taskId,
+          projectName: task.projectName?.name || task.projectName,
+          projectKey: task.projectName?.key || 'MOM',
+          completionDate
+        });
+      }
+    });
+
+    return res.status(200).json(new ApiResponse(200, {
+      currentStreak,
+      longestStreak,
+      revisionsByDate: revisionLogsByDate,
+      completedByDate
+    }, "Revision stats fetched successfully"));
+  } catch (error) {
+    console.error("Error fetching revision stats:", error);
+    return res.status(400).json(new ApiError(400, "Error fetching revision stats"));
+  }
 });
 
 // Get Completed Parent Tasks (Patterns)
 tc.getCompletedParents = asyncHandler(async (req, res) => {
-    try {
-        const filter = {
-            parentTask: null,
-            status: "done"
-        };
-        
-        if (req.branchId) {
-            filter.branchId = new mongoose.Types.ObjectId(req.branchId);
-        }
-        if (req.user?.email !== "balajiaadi2000@gmail.com") {
-            filter.createdBy = req.user._id;
-        }
+  try {
+    const filter = {
+      parentTask: null,
+      status: "done"
+    };
 
-        const completedParents = await Task.find(filter)
-            .populate("projectName", "name key")
-            .select("taskName taskId status projectName")
-            .lean();
-
-        return res.status(200).json(
-            new ApiResponse(200, completedParents, "Completed parent tasks retrieved successfully")
-        );
-    } catch (error) {
-        console.error("Error fetching completed parent tasks:", error);
-        return res.status(500).json(new ApiError(500, error.message || "Error fetching completed parent tasks"));
+    if (req.branchId) {
+      filter.branchId = new mongoose.Types.ObjectId(req.branchId);
     }
+    if (req.user?.email !== "balajiaadi2000@gmail.com") {
+      filter.createdBy = req.user._id;
+    }
+
+    const completedParents = await Task.find(filter)
+      .populate("projectName", "name key")
+      .select("taskName taskId status projectName")
+      .lean();
+
+    return res.status(200).json(
+      new ApiResponse(200, completedParents, "Completed parent tasks retrieved successfully")
+    );
+  } catch (error) {
+    console.error("Error fetching completed parent tasks:", error);
+    return res.status(500).json(new ApiError(500, error.message || "Error fetching completed parent tasks"));
+  }
 });
 
 // Suggest Revision Challenge using AI
 tc.suggestRevisionChallenge = asyncHandler(async (req, res) => {
-    const { parentTaskId } = req.body;
-    const apiKey = process.env.GROQ_API_KEY;
+  const { parentTaskId } = req.body;
+  const apiKey = process.env.GROQ_API_KEY;
 
-    if (!apiKey) {
-        throw new ApiError(500, "Groq API key is not configured on backend server");
+  if (!apiKey) {
+    throw new ApiError(500, "Groq API key is not configured on backend server");
+  }
+
+  let parentTask = null;
+  if (parentTaskId && parentTaskId !== "random") {
+    parentTask = await Task.findById(parentTaskId).populate("projectName");
+    if (!parentTask) {
+      throw new ApiError(404, "Selected parent task not found");
+    }
+  } else {
+    // Pick a random completed parent task
+    const filter = { parentTask: null, status: "done" };
+    if (req.branchId) {
+      filter.branchId = new mongoose.Types.ObjectId(req.branchId);
+    }
+    if (req.user?.email !== "balajiaadi2000@gmail.com") {
+      filter.createdBy = req.user._id;
     }
 
-    let parentTask = null;
-    if (parentTaskId && parentTaskId !== "random") {
-        parentTask = await Task.findById(parentTaskId).populate("projectName");
-        if (!parentTask) {
-            throw new ApiError(404, "Selected parent task not found");
-        }
-    } else {
-        // Pick a random completed parent task
-        const filter = { parentTask: null, status: "done" };
-        if (req.branchId) {
-            filter.branchId = new mongoose.Types.ObjectId(req.branchId);
-        }
-        if (req.user?.email !== "balajiaadi2000@gmail.com") {
-            filter.createdBy = req.user._id;
-        }
-        
-        // Exclude projects with key ESP
-        const eligibleProjects = await Project.find({ key: { $ne: "ESP" } }).select("_id");
-        const eligibleProjectIds = eligibleProjects.map(p => p._id);
-        filter.projectName = { $in: eligibleProjectIds };
+    // Exclude projects with key ESP
+    const eligibleProjects = await Project.find({ key: { $ne: "ESP" } }).select("_id");
+    const eligibleProjectIds = eligibleProjects.map(p => p._id);
+    filter.projectName = { $in: eligibleProjectIds };
 
-        const completedParents = await Task.find(filter).populate("projectName");
-        if (completedParents.length === 0) {
-            throw new ApiError(400, "No completed parent tasks found. Please complete a parent pattern task first.");
-        }
-        parentTask = completedParents[Math.floor(Math.random() * completedParents.length)];
+    const completedParents = await Task.find(filter).populate("projectName");
+    if (completedParents.length === 0) {
+      throw new ApiError(400, "No completed parent tasks found. Please complete a parent pattern task first.");
     }
+    parentTask = completedParents[Math.floor(Math.random() * completedParents.length)];
+  }
 
-    if (parentTask.projectName?.key === "ESP") {
-        throw new ApiError(400, "AI Challenges are disabled for ESP Arena");
-    }
+  if (parentTask.projectName?.key === "ESP") {
+    throw new ApiError(400, "AI Challenges are disabled for ESP Arena");
+  }
 
-    // Fetch child tasks (solved problems) under this parent task
-    const childTasks = await Task.find({ parentTask: parentTask._id }).select("taskName").lean();
-    const solvedProblems = childTasks.map(t => t.taskName);
-    const solvedProblemsStr = solvedProblems.length > 0 
-        ? solvedProblems.map((p, i) => `${i+1}. ${p}`).join("\n") 
-        : "None (no solved problems yet under this pattern)";
+  // Fetch child tasks (solved problems) under this parent task
+  const childTasks = await Task.find({ parentTask: parentTask._id }).select("taskName").lean();
+  const solvedProblems = childTasks.map(t => t.taskName);
+  const solvedProblemsStr = solvedProblems.length > 0
+    ? solvedProblems.map((p, i) => `${i + 1}. ${p}`).join("\n")
+    : "None (no solved problems yet under this pattern)";
 
-    const prompt = `
+  const prompt = `
 You are an expert DSA (Data Structures and Algorithms) coach.
 The user is revising the coding pattern/topic: "${parentTask.taskName}".
 They have already solved the following problems under this pattern:
@@ -1322,437 +1578,508 @@ JSON Schema:
 }
 `;
 
-    try {
-        const response = await axios.post(
-            `https://api.groq.com/openai/v1/chat/completions`,
-            {
-                model: "llama-3.3-70b-versatile",
-                messages: [
-                    {
-                        role: "user",
-                        content: prompt
-                    }
-                ],
-                response_format: {
-                    type: "json_object"
-                }
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${apiKey}`,
-                    "Content-Type": "application/json"
-                }
-            }
-        );
+  try {
+    const response = await axios.post(
+      `https://api.groq.com/openai/v1/chat/completions`,
+      {
+        model: "llama-3.3-70b-versatile",
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        response_format: {
+          type: "json_object"
+        }
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
 
-        let responseText = response.data?.choices?.[0]?.message?.content || "";
-        const challenge = JSON.parse(responseText.trim());
+    let responseText = response.data?.choices?.[0]?.message?.content || "";
+    const challenge = JSON.parse(responseText.trim());
 
-        return res.status(200).json(
-            new ApiResponse(200, challenge, "AI revision challenge generated successfully")
-        );
-    } catch (error) {
-        console.error("Groq Revision Challenge Suggestion Error:", error.response?.data || error.message);
-        throw new ApiError(500, `AI challenge generation failed: ${error.message}`);
-    }
+    return res.status(200).json(
+      new ApiResponse(200, challenge, "AI revision challenge generated successfully")
+    );
+  } catch (error) {
+    console.error("Groq Revision Challenge Suggestion Error:", error.response?.data || error.message);
+    throw new ApiError(500, `AI challenge generation failed: ${error.message}`);
+  }
 });
 
 // Get Daily Revision
 tc.getDailyRevision = asyncHandler(async (req, res) => {
-    try {
-        const timezoneOffset = req.query.timezoneOffset ? parseInt(req.query.timezoneOffset) : 0;
-        const localDateStr = getLocalDateString(new Date(), timezoneOffset);
-        
-        let dailyRev = await DailyRevision.findOne({
-            userId: req.user._id,
-            isCompleted: false
-        }).populate("questions").populate("completedQuestions").populate("reviseTomorrowQuestions");
+  try {
+    const userId = req.user._id;
+    const timezoneOffset = req.query.timezoneOffset ? parseInt(req.query.timezoneOffset) : 0;
+    const localDateStr = getLocalDateString(new Date(), timezoneOffset);
 
-        if (!dailyRev) {
-            dailyRev = await DailyRevision.findOne({
-                userId: req.user._id,
-                dateStr: localDateStr
-            }).populate("questions").populate("completedQuestions").populate("reviseTomorrowQuestions");
-        }
+    // 1. Find qualifying projects (DSA and DSAP2)
+    const projects = await Project.find({ key: { $in: ["DSA", "DSAP2"] } }).select("_id");
+    const projectIds = projects.map(p => p._id);
 
-        // Dynamic database fix: Truncate any active revision with > 4 questions to exactly 4
-        if (dailyRev && dailyRev.questions && dailyRev.questions.length > 4) {
-            const completedSet = new Set((dailyRev.completedQuestions || []).map(q => (q._id || q).toString()));
-            
-            // Keep completed questions
-            const finalQuestions = dailyRev.questions.filter(q => completedSet.has((q._id || q).toString()));
-            
-            // Keep pending questions in original order
-            const pendingQuestions = dailyRev.questions.filter(q => !completedSet.has((q._id || q).toString()));
-            
-            // Fill up remaining slots to make exactly 4 questions
-            const neededCount = Math.max(0, 4 - finalQuestions.length);
-            finalQuestions.push(...pendingQuestions.slice(0, neededCount));
-            
-            dailyRev.questions = finalQuestions.map(q => q._id || q);
-            await dailyRev.save();
+    // 2. Find all child tasks in DSA / DSAP2
+    const qualifyingChildTasks = await Task.find({
+      projectName: { $in: projectIds },
+      parentTask: { $ne: null }
+    }).select("_id taskName projectName parentTask taskId").lean();
+    const qualifyingChildTaskIds = qualifyingChildTasks.map(t => t._id);
 
-            // Refetch to ensure populated state is updated
-            dailyRev = await DailyRevision.findById(dailyRev._id)
-                .populate("questions")
-                .populate("completedQuestions")
-                .populate("reviseTomorrowQuestions");
-        }
+    // 3. Count authenticated user's completed child tasks
+    const completedUserProgress = await UserTaskProgress.find({
+      userId: userId,
+      taskId: { $in: qualifyingChildTaskIds },
+      status: "done"
+    }).select("taskId").lean();
 
-        if (!dailyRev) {
-            // Find projects with key DSA and DSAP2
-            const projects = await Project.find({ key: { $in: ["DSA", "DSAP2"] } }).select("_id");
-            const projectIds = projects.map(p => p._id);
+    const isAdmin = checkIsAdmin(req.user);
+    let completedCount = 0;
+    let eligibleChildTasks = [];
 
-            // Fetch completed subtasks
-            const filter = {
-                projectName: { $in: projectIds },
-                parentTask: { $ne: null },
-                status: "done"
-            };
-            if (req.branchId) {
-                filter.branchId = new mongoose.Types.ObjectId(req.branchId);
-            }
-            if (req.user?.email !== "balajiaadi2000@gmail.com") {
-                filter.createdBy = req.user._id;
-            }
-
-            const allEligibleTasks = await Task.find(filter).select("_id taskName revisionLogs").lean();
-
-            // Fetch past 5 days of selections to prevent duplicates
-            const pastRevisions = await DailyRevision.find({ userId: req.user._id })
-                .sort({ dateStr: -1 })
-                .limit(5)
-                .lean();
-
-            const recentlySelectedIds = new Set();
-            pastRevisions.forEach(rev => {
-                if (rev.questions) {
-                    rev.questions.forEach(q => recentlySelectedIds.add(q.toString()));
-                }
-            });
-
-            // Check for revise tomorrow questions from the last revision session
-            const lastRev = await DailyRevision.findOne({ userId: req.user._id })
-                .sort({ dateStr: -1 })
-                .lean();
-            const reviseTomorrowIds = lastRev ? (lastRev.reviseTomorrowQuestions || []) : [];
-            const reviseTomorrowStrSet = new Set(reviseTomorrowIds.map(id => id.toString()));
-
-            // Filter out recently selected tasks AND any already pinned reviseTomorrow tasks
-            let availableTasks = allEligibleTasks.filter(t => 
-                !recentlySelectedIds.has(t._id.toString()) &&
-                !reviseTomorrowStrSet.has(t._id.toString())
-            );
-
-            // Fallbacks if not enough tasks are available after filtering
-            if (availableTasks.length < 4) {
-                const yesterdayRev = pastRevisions[0];
-                const yesterdayIds = new Set(yesterdayRev ? yesterdayRev.questions.map(q => q.toString()) : []);
-                availableTasks = allEligibleTasks.filter(t => 
-                    !yesterdayIds.has(t._id.toString()) &&
-                    !reviseTomorrowStrSet.has(t._id.toString())
-                );
-            }
-
-            if (availableTasks.length < 4) {
-                availableTasks = allEligibleTasks.filter(t => !reviseTomorrowStrSet.has(t._id.toString()));
-            }
-
-            // Pin limit: maximum of 4
-            const activePins = reviseTomorrowIds.slice(0, 4);
-            const randomCountNeeded = Math.max(0, 4 - activePins.length);
-
-            // Pick remaining tasks from availableTasks (Balancing 50% Revised & 50% Unrevised)
-            const selectedTasks = [];
-            if (randomCountNeeded > 0) {
-                const unrevisedPool = availableTasks.filter(t => !t.revisionLogs || t.revisionLogs.length === 0);
-                const revisedPool = availableTasks.filter(t => t.revisionLogs && t.revisionLogs.length > 0);
-
-                // Target half unrevised, half revised
-                let targetUnrevised = Math.ceil(randomCountNeeded / 2);
-                let targetRevised = Math.floor(randomCountNeeded / 2);
-
-                // Adjust targets if one pool doesn't have enough items
-                if (unrevisedPool.length < targetUnrevised) {
-                    targetRevised += (targetUnrevised - unrevisedPool.length);
-                    targetUnrevised = unrevisedPool.length;
-                }
-                if (revisedPool.length < targetRevised) {
-                    targetUnrevised += (targetRevised - revisedPool.length);
-                    targetUnrevised = Math.min(unrevisedPool.length, targetUnrevised);
-                    targetRevised = revisedPool.length;
-                }
-
-                // Pick from unrevised (shuffled randomly)
-                const shuffledUnrevised = [...unrevisedPool].sort(() => 0.5 - Math.random());
-                const chosenUnrevised = shuffledUnrevised.slice(0, targetUnrevised);
-
-                // Pick from revised (prioritize lower revision count / spaced repetition, with random shuffle for ties)
-                const sortedRevised = [...revisedPool].sort((a, b) => {
-                    const countA = a.revisionLogs ? a.revisionLogs.length : 0;
-                    const countB = b.revisionLogs ? b.revisionLogs.length : 0;
-                    if (countA !== countB) return countA - countB;
-                    return 0.5 - Math.random();
-                });
-                const chosenRevised = sortedRevised.slice(0, targetRevised);
-
-                selectedTasks.push(...chosenUnrevised, ...chosenRevised);
-
-                // Ultimate fallback if still short of randomCountNeeded
-                if (selectedTasks.length < randomCountNeeded) {
-                    const chosenIds = new Set(selectedTasks.map(t => t._id.toString()));
-                    const remainingFallback = availableTasks.filter(t => !chosenIds.has(t._id.toString()));
-                    const shuffledFallback = [...remainingFallback].sort(() => 0.5 - Math.random());
-                    selectedTasks.push(...shuffledFallback.slice(0, randomCountNeeded - selectedTasks.length));
-                }
-            }
-
-            // Combine pinned and new random questions to make exactly 4 total
-            const finalQuestions = [...activePins, ...selectedTasks.map(t => t._id)];
-
-            // Create new record
-            dailyRev = await DailyRevision.create({
-                userId: req.user._id,
-                dateStr: localDateStr,
-                questions: finalQuestions,
-                completedQuestions: [],
-                reviseTomorrowQuestions: [],
-                isStarted: false,
-                isCompleted: false,
-                timeLeft: 10800, // 3 hours
-                timerIsActive: false,
-                timerLastUpdated: null,
-                branchId: req.branchId ? new mongoose.Types.ObjectId(req.branchId) : null
-            });
-
-            dailyRev = await DailyRevision.findById(dailyRev._id)
-                .populate("questions")
-                .populate("completedQuestions")
-                .populate("reviseTomorrowQuestions");
-        } else {
-            // Recalculate remaining time if timer is active
-            if (dailyRev.timerIsActive && dailyRev.timerLastUpdated && !dailyRev.isCompleted) {
-                const now = Date.now();
-                const lastUpdate = new Date(dailyRev.timerLastUpdated).getTime();
-                const elapsedSeconds = Math.floor((now - lastUpdate) / 1000);
-                if (elapsedSeconds > 0) {
-                    dailyRev.timeLeft = Math.max(0, dailyRev.timeLeft - elapsedSeconds);
-                    dailyRev.timerLastUpdated = new Date(now);
-                    await dailyRev.save();
-                }
-            }
-        }
-        return res.status(200).json(
-            new ApiResponse(200, dailyRev, "Daily revision status retrieved successfully")
-        );
-    } catch (error) {
-        console.error("Error retrieving daily revision:", error);
-        return res.status(500).json(new ApiError(500, error.message || "Error retrieving daily revision"));
+    if (isAdmin) {
+      const doneTasks = await Task.find({
+        _id: { $in: qualifyingChildTaskIds },
+        status: "done"
+      }).select("_id").lean();
+      const doneTaskIds = new Set([
+        ...doneTasks.map(t => t._id.toString()),
+        ...completedUserProgress.map(p => p.taskId.toString())
+      ]);
+      completedCount = doneTaskIds.size;
+      eligibleChildTasks = qualifyingChildTasks.filter(t => doneTaskIds.has(t._id.toString()));
+    } else {
+      completedCount = completedUserProgress.length;
+      const userDoneTaskIds = new Set(completedUserProgress.map(p => p.taskId.toString()));
+      eligibleChildTasks = qualifyingChildTasks.filter(t => userDoneTaskIds.has(t._id.toString()));
     }
+
+    const THRESHOLD = 50;
+
+    // 4. Threshold Check: If below 50, user is NOT eligible
+    if (completedCount < THRESHOLD) {
+      return res.status(200).json(
+        new ApiResponse(200, {
+          isEligible: false,
+          completedCount: completedCount,
+          threshold: THRESHOLD,
+          isCompleted: false,
+          isStarted: false,
+          questions: [],
+          completedQuestions: [],
+          reviseTomorrowQuestions: []
+        }, "User has not reached the 50-task Daily Revision threshold")
+      );
+    }
+
+    // 5. User is eligible (>= 50 completed tasks)
+    // Check for existing DailyRevision record for this user
+    let dailyRev = await DailyRevision.findOne({
+      userId: userId,
+      isCompleted: false
+    }).populate("questions").populate("completedQuestions").populate("reviseTomorrowQuestions");
+
+    if (!dailyRev) {
+      dailyRev = await DailyRevision.findOne({
+        userId: userId,
+        dateStr: localDateStr
+      }).populate("questions").populate("completedQuestions").populate("reviseTomorrowQuestions");
+    }
+
+    // Dynamic database fix: Truncate any active revision with > 4 questions to exactly 4
+    if (dailyRev && dailyRev.questions && dailyRev.questions.length > 4) {
+      const completedSet = new Set((dailyRev.completedQuestions || []).map(q => (q._id || q).toString()));
+
+      // Keep completed questions
+      const finalQuestions = dailyRev.questions.filter(q => completedSet.has((q._id || q).toString()));
+
+      // Keep pending questions in original order
+      const pendingQuestions = dailyRev.questions.filter(q => !completedSet.has((q._id || q).toString()));
+
+      // Fill up remaining slots to make exactly 4 questions
+      const neededCount = Math.max(0, 4 - finalQuestions.length);
+      finalQuestions.push(...pendingQuestions.slice(0, neededCount));
+
+      dailyRev.questions = finalQuestions.map(q => q._id || q);
+      await dailyRev.save();
+
+      // Refetch to ensure populated state is updated
+      dailyRev = await DailyRevision.findById(dailyRev._id)
+        .populate("questions")
+        .populate("completedQuestions")
+        .populate("reviseTomorrowQuestions");
+    }
+
+    if (!dailyRev) {
+      const allEligibleTasks = eligibleChildTasks;
+
+      // Fetch past 5 days of selections for this user to prevent duplicates
+      const pastRevisions = await DailyRevision.find({ userId: userId })
+        .sort({ dateStr: -1 })
+        .limit(5)
+        .lean();
+
+      const recentlySelectedIds = new Set();
+      pastRevisions.forEach(rev => {
+        if (rev.questions) {
+          rev.questions.forEach(q => recentlySelectedIds.add(q.toString()));
+        }
+      });
+
+      // Check for revise tomorrow questions from user's last revision session
+      const lastRev = await DailyRevision.findOne({ userId: userId })
+        .sort({ dateStr: -1 })
+        .lean();
+      const reviseTomorrowIds = lastRev ? (lastRev.reviseTomorrowQuestions || []) : [];
+      const reviseTomorrowStrSet = new Set(reviseTomorrowIds.map(id => id.toString()));
+
+      // Filter out recently selected tasks AND any already pinned reviseTomorrow tasks
+      let availableTasks = allEligibleTasks.filter(t =>
+        !recentlySelectedIds.has(t._id.toString()) &&
+        !reviseTomorrowStrSet.has(t._id.toString())
+      );
+
+      // Fallbacks if not enough tasks are available after filtering
+      if (availableTasks.length < 4) {
+        const yesterdayRev = pastRevisions[0];
+        const yesterdayIds = new Set(yesterdayRev ? yesterdayRev.questions.map(q => q.toString()) : []);
+        availableTasks = allEligibleTasks.filter(t =>
+          !yesterdayIds.has(t._id.toString()) &&
+          !reviseTomorrowStrSet.has(t._id.toString())
+        );
+      }
+
+      if (availableTasks.length < 4) {
+        availableTasks = allEligibleTasks.filter(t => !reviseTomorrowStrSet.has(t._id.toString()));
+      }
+
+      if (availableTasks.length < 4) {
+        availableTasks = allEligibleTasks;
+      }
+
+      // Pin limit: maximum of 4
+      const activePins = reviseTomorrowIds.slice(0, 4);
+      const randomCountNeeded = Math.max(0, 4 - activePins.length);
+
+      // Pick remaining tasks from availableTasks (Balancing 50% Revised & 50% Unrevised)
+      const selectedTasks = [];
+      if (randomCountNeeded > 0) {
+        const unrevisedPool = availableTasks.filter(t => !t.revisionLogs || t.revisionLogs.length === 0);
+        const revisedPool = availableTasks.filter(t => t.revisionLogs && t.revisionLogs.length > 0);
+
+        // Target half unrevised, half revised
+        let targetUnrevised = Math.ceil(randomCountNeeded / 2);
+        let targetRevised = Math.floor(randomCountNeeded / 2);
+
+        // Adjust targets if one pool doesn't have enough items
+        if (unrevisedPool.length < targetUnrevised) {
+          targetRevised += (targetUnrevised - unrevisedPool.length);
+          targetUnrevised = unrevisedPool.length;
+        }
+        if (revisedPool.length < targetRevised) {
+          targetUnrevised += (targetRevised - revisedPool.length);
+          targetUnrevised = Math.min(unrevisedPool.length, targetUnrevised);
+          targetRevised = revisedPool.length;
+        }
+
+        // Pick from unrevised (shuffled randomly)
+        const shuffledUnrevised = [...unrevisedPool].sort(() => 0.5 - Math.random());
+        const chosenUnrevised = shuffledUnrevised.slice(0, targetUnrevised);
+
+        // Pick from revised (prioritize lower revision count / spaced repetition, with random shuffle for ties)
+        const sortedRevised = [...revisedPool].sort((a, b) => {
+          const countA = a.revisionLogs ? a.revisionLogs.length : 0;
+          const countB = b.revisionLogs ? b.revisionLogs.length : 0;
+          if (countA !== countB) return countA - countB;
+          return 0.5 - Math.random();
+        });
+        const chosenRevised = sortedRevised.slice(0, targetRevised);
+
+        selectedTasks.push(...chosenUnrevised, ...chosenRevised);
+
+        // Ultimate fallback if still short of randomCountNeeded
+        if (selectedTasks.length < randomCountNeeded) {
+          const chosenIds = new Set(selectedTasks.map(t => t._id.toString()));
+          const remainingFallback = availableTasks.filter(t => !chosenIds.has(t._id.toString()));
+          const shuffledFallback = [...remainingFallback].sort(() => 0.5 - Math.random());
+          selectedTasks.push(...shuffledFallback.slice(0, randomCountNeeded - selectedTasks.length));
+        }
+      }
+
+      // Combine pinned and new random questions to make exactly 4 total
+      const finalQuestions = [...activePins, ...selectedTasks.map(t => t._id)];
+
+      // Create new record
+      dailyRev = await DailyRevision.create({
+        userId: userId,
+        dateStr: localDateStr,
+        questions: finalQuestions,
+        completedQuestions: [],
+        reviseTomorrowQuestions: [],
+        isStarted: false,
+        isCompleted: false,
+        timeLeft: 10800, // 3 hours
+        timerIsActive: false,
+        timerLastUpdated: null,
+        branchId: req.branchId ? new mongoose.Types.ObjectId(req.branchId) : null
+      });
+
+      dailyRev = await DailyRevision.findById(dailyRev._id)
+        .populate("questions")
+        .populate("completedQuestions")
+        .populate("reviseTomorrowQuestions");
+    } else {
+      // Recalculate remaining time if timer is active
+      if (dailyRev.timerIsActive && dailyRev.timerLastUpdated && !dailyRev.isCompleted) {
+        const now = Date.now();
+        const lastUpdate = new Date(dailyRev.timerLastUpdated).getTime();
+        const elapsedSeconds = Math.floor((now - lastUpdate) / 1000);
+        if (elapsedSeconds > 0) {
+          dailyRev.timeLeft = Math.max(0, dailyRev.timeLeft - elapsedSeconds);
+          dailyRev.timerLastUpdated = new Date(now);
+          await dailyRev.save();
+        }
+      }
+    }
+
+    const revObj = dailyRev.toObject ? dailyRev.toObject() : dailyRev;
+    revObj.isEligible = true;
+    revObj.completedCount = completedCount;
+    revObj.threshold = THRESHOLD;
+
+    return res.status(200).json(
+      new ApiResponse(200, revObj, "Daily revision status retrieved successfully")
+    );
+  } catch (error) {
+    console.error("Error retrieving daily revision:", error);
+    return res.status(500).json(new ApiError(500, error.message || "Error retrieving daily revision"));
+  }
 });
 
 // Start Daily Revision
 tc.startDailyRevision = asyncHandler(async (req, res) => {
-    try {
-        const timezoneOffset = req.body.timezoneOffset ? parseInt(req.body.timezoneOffset) : 0;
-        const localDateStr = getLocalDateString(new Date(), timezoneOffset);
+  try {
+    const userId = req.user._id;
+    const timezoneOffset = req.body.timezoneOffset ? parseInt(req.body.timezoneOffset) : 0;
+    const localDateStr = getLocalDateString(new Date(), timezoneOffset);
 
-        let dailyRev = await DailyRevision.findOne({
-            userId: req.user._id,
-            isCompleted: false
-        });
+    let dailyRev = await DailyRevision.findOne({
+      userId: userId,
+      isCompleted: false
+    });
 
-        if (!dailyRev) {
-            dailyRev = await DailyRevision.findOne({
-                userId: req.user._id,
-                dateStr: localDateStr
-            });
-        }
-
-        if (!dailyRev) {
-            throw new ApiError(404, "Today's daily revision is not generated yet");
-        }
-
-        dailyRev.isStarted = true;
-        dailyRev.timerIsActive = true;
-        dailyRev.timerLastUpdated = new Date();
-        dailyRev.currentQuestionStartTimeLeft = 10800;
-        await dailyRev.save();
-
-        dailyRev = await DailyRevision.findById(dailyRev._id)
-            .populate("questions")
-            .populate("completedQuestions")
-            .populate("reviseTomorrowQuestions");
-
-        return res.status(200).json(
-            new ApiResponse(200, dailyRev, "Daily revision timer started successfully")
-        );
-    } catch (error) {
-        console.error("Error starting daily revision:", error);
-        return res.status(500).json(new ApiError(500, error.message || "Error starting daily revision"));
+    if (!dailyRev) {
+      dailyRev = await DailyRevision.findOne({
+        userId: userId,
+        dateStr: localDateStr
+      });
     }
+
+    if (!dailyRev || !dailyRev.questions || dailyRev.questions.length === 0) {
+      throw new ApiError(404, "Today's daily revision is not generated yet or user has not reached the threshold");
+    }
+
+    dailyRev.isStarted = true;
+    dailyRev.timerIsActive = true;
+    dailyRev.timerLastUpdated = new Date();
+    dailyRev.currentQuestionStartTimeLeft = 10800;
+    await dailyRev.save();
+
+    dailyRev = await DailyRevision.findById(dailyRev._id)
+      .populate("questions")
+      .populate("completedQuestions")
+      .populate("reviseTomorrowQuestions");
+
+    const revObj = dailyRev.toObject ? dailyRev.toObject() : dailyRev;
+    revObj.isEligible = true;
+
+    return res.status(200).json(
+      new ApiResponse(200, revObj, "Daily revision timer started successfully")
+    );
+  } catch (error) {
+    console.error("Error starting daily revision:", error);
+    return res.status(error.statusCode || 500).json(new ApiError(error.statusCode || 500, error.message || "Error starting daily revision"));
+  }
 });
 
 // Toggle Daily Revision Timer
 tc.toggleDailyRevisionTimer = asyncHandler(async (req, res) => {
-    try {
-        const timezoneOffset = req.body.timezoneOffset ? parseInt(req.body.timezoneOffset) : 0;
-        const localDateStr = getLocalDateString(new Date(), timezoneOffset);
+  try {
+    const userId = req.user._id;
+    const timezoneOffset = req.body.timezoneOffset ? parseInt(req.body.timezoneOffset) : 0;
+    const localDateStr = getLocalDateString(new Date(), timezoneOffset);
 
-        let dailyRev = await DailyRevision.findOne({
-            userId: req.user._id,
-            isCompleted: false
-        });
+    let dailyRev = await DailyRevision.findOne({
+      userId: userId,
+      isCompleted: false
+    });
 
-        if (!dailyRev) {
-            dailyRev = await DailyRevision.findOne({
-                userId: req.user._id,
-                dateStr: localDateStr
-            });
-        }
-
-        if (!dailyRev) {
-            throw new ApiError(404, "Today's daily revision is not generated yet");
-        }
-
-        if (!dailyRev.isStarted) {
-            throw new ApiError(400, "Daily revision has not been started yet");
-        }
-
-        if (dailyRev.isCompleted) {
-            return res.status(200).json(
-                new ApiResponse(200, dailyRev, "Daily revision is already completed")
-            );
-        }
-
-        if (dailyRev.timerIsActive) {
-            // Pause: Calculate elapsed time and update timeLeft
-            const now = Date.now();
-            const lastUpdate = dailyRev.timerLastUpdated ? new Date(dailyRev.timerLastUpdated).getTime() : now;
-            const elapsed = Math.floor((now - lastUpdate) / 1000);
-            
-            dailyRev.timeLeft = Math.max(0, dailyRev.timeLeft - elapsed);
-            dailyRev.timerIsActive = false;
-            dailyRev.timerLastUpdated = null;
-        } else {
-            // Resume
-            dailyRev.timerIsActive = true;
-            dailyRev.timerLastUpdated = new Date();
-        }
-
-        await dailyRev.save();
-
-        dailyRev = await DailyRevision.findById(dailyRev._id)
-            .populate("questions")
-            .populate("completedQuestions")
-            .populate("reviseTomorrowQuestions");
-
-        return res.status(200).json(
-            new ApiResponse(200, dailyRev, "Daily revision timer state toggled successfully")
-        );
-    } catch (error) {
-        console.error("Error toggling daily revision timer:", error);
-        return res.status(500).json(new ApiError(500, error.message || "Error toggling daily revision timer"));
+    if (!dailyRev) {
+      dailyRev = await DailyRevision.findOne({
+        userId: userId,
+        dateStr: localDateStr
+      });
     }
+
+    if (!dailyRev) {
+      throw new ApiError(404, "Today's daily revision is not generated yet");
+    }
+
+    if (!dailyRev.isStarted) {
+      throw new ApiError(400, "Daily revision has not been started yet");
+    }
+
+    if (dailyRev.isCompleted) {
+      const revObj = dailyRev.toObject ? dailyRev.toObject() : dailyRev;
+      revObj.isEligible = true;
+      return res.status(200).json(
+        new ApiResponse(200, revObj, "Daily revision is already completed")
+      );
+    }
+
+    if (dailyRev.timerIsActive) {
+      // Pause: Calculate elapsed time and update timeLeft
+      const now = Date.now();
+      const lastUpdate = dailyRev.timerLastUpdated ? new Date(dailyRev.timerLastUpdated).getTime() : now;
+      const elapsed = Math.floor((now - lastUpdate) / 1000);
+
+      dailyRev.timeLeft = Math.max(0, dailyRev.timeLeft - elapsed);
+      dailyRev.timerIsActive = false;
+      dailyRev.timerLastUpdated = null;
+    } else {
+      // Resume
+      dailyRev.timerIsActive = true;
+      dailyRev.timerLastUpdated = new Date();
+    }
+
+    await dailyRev.save();
+
+    dailyRev = await DailyRevision.findById(dailyRev._id)
+      .populate("questions")
+      .populate("completedQuestions")
+      .populate("reviseTomorrowQuestions");
+
+    const revObj = dailyRev.toObject ? dailyRev.toObject() : dailyRev;
+    revObj.isEligible = true;
+
+    return res.status(200).json(
+      new ApiResponse(200, revObj, "Daily revision timer state toggled successfully")
+    );
+  } catch (error) {
+    console.error("Error toggling daily revision timer:", error);
+    return res.status(error.statusCode || 500).json(new ApiError(error.statusCode || 500, error.message || "Error toggling daily revision timer"));
+  }
 });
 
 // Sync Daily Revision Timer
 tc.syncDailyRevisionTimer = asyncHandler(async (req, res) => {
-    try {
-        const { timeLeft, timerIsActive, timezoneOffset } = req.body;
-        const offset = timezoneOffset !== undefined ? parseInt(timezoneOffset) : 0;
-        const localDateStr = getLocalDateString(new Date(), offset);
+  try {
+    const userId = req.user._id;
+    const { timeLeft, timerIsActive, timezoneOffset } = req.body;
+    const offset = timezoneOffset !== undefined ? parseInt(timezoneOffset) : 0;
+    const localDateStr = getLocalDateString(new Date(), offset);
 
-        let dailyRev = await DailyRevision.findOne({
-            userId: req.user._id,
-            isCompleted: false
-        });
+    let dailyRev = await DailyRevision.findOne({
+      userId: userId,
+      isCompleted: false
+    });
 
-        if (!dailyRev) {
-            dailyRev = await DailyRevision.findOne({
-                userId: req.user._id,
-                dateStr: localDateStr
-            });
-        }
-
-        if (!dailyRev) {
-            throw new ApiError(404, "Today's daily revision is not generated yet");
-        }
-
-        if (timeLeft !== undefined) {
-            dailyRev.timeLeft = Math.max(0, parseInt(timeLeft));
-        }
-
-        if (timerIsActive !== undefined) {
-            dailyRev.timerIsActive = !!timerIsActive;
-            dailyRev.timerLastUpdated = dailyRev.timerIsActive ? new Date() : null;
-        }
-
-        await dailyRev.save();
-
-        return res.status(200).json(
-            new ApiResponse(200, dailyRev, "Daily revision timer synced successfully")
-        );
-    } catch (error) {
-        console.error("Error syncing daily revision timer:", error);
-        return res.status(500).json(new ApiError(500, error.message || "Error syncing daily revision timer"));
+    if (!dailyRev) {
+      dailyRev = await DailyRevision.findOne({
+        userId: userId,
+        dateStr: localDateStr
+      });
     }
+
+    if (!dailyRev) {
+      throw new ApiError(404, "Today's daily revision is not generated yet");
+    }
+
+    if (timeLeft !== undefined) {
+      dailyRev.timeLeft = Math.max(0, parseInt(timeLeft));
+    }
+
+    if (timerIsActive !== undefined) {
+      dailyRev.timerIsActive = !!timerIsActive;
+      dailyRev.timerLastUpdated = dailyRev.timerIsActive ? new Date() : null;
+    }
+
+    await dailyRev.save();
+
+    const revObj = dailyRev.toObject ? dailyRev.toObject() : dailyRev;
+    revObj.isEligible = true;
+
+    return res.status(200).json(
+      new ApiResponse(200, revObj, "Daily revision timer synced successfully")
+    );
+  } catch (error) {
+    console.error("Error syncing daily revision timer:", error);
+    return res.status(error.statusCode || 500).json(new ApiError(error.statusCode || 500, error.message || "Error syncing daily revision timer"));
+  }
 });
 
 // Toggle Revise Tomorrow
 tc.toggleReviseTomorrow = asyncHandler(async (req, res) => {
-    try {
-        const { taskId, reviseTomorrow, timezoneOffset } = req.body;
-        const offset = timezoneOffset !== undefined ? parseInt(timezoneOffset) : 0;
-        const localDateStr = getLocalDateString(new Date(), offset);
+  try {
+    const userId = req.user._id;
+    const { taskId, reviseTomorrow, timezoneOffset } = req.body;
+    const offset = timezoneOffset !== undefined ? parseInt(timezoneOffset) : 0;
+    const localDateStr = getLocalDateString(new Date(), offset);
 
-        let dailyRev = await DailyRevision.findOne({
-            userId: req.user._id,
-            isCompleted: false
-        });
+    let dailyRev = await DailyRevision.findOne({
+      userId: userId,
+      isCompleted: false
+    });
 
-        if (!dailyRev) {
-            dailyRev = await DailyRevision.findOne({
-                userId: req.user._id,
-                dateStr: localDateStr
-            });
-        }
-
-        if (!dailyRev) {
-            throw new ApiError(404, "Today's daily revision is not generated yet");
-        }
-
-        if (!dailyRev.reviseTomorrowQuestions) {
-            dailyRev.reviseTomorrowQuestions = [];
-        }
-
-        const taskObjectId = new mongoose.Types.ObjectId(taskId);
-        if (reviseTomorrow) {
-            const alreadyExists = dailyRev.reviseTomorrowQuestions.some(id => id.toString() === taskId.toString());
-            if (!alreadyExists) {
-                dailyRev.reviseTomorrowQuestions.push(taskObjectId);
-            }
-        } else {
-            dailyRev.reviseTomorrowQuestions = dailyRev.reviseTomorrowQuestions.filter(
-                id => id.toString() !== taskId.toString()
-            );
-        }
-
-        await dailyRev.save();
-
-        dailyRev = await DailyRevision.findById(dailyRev._id)
-            .populate("questions")
-            .populate("completedQuestions")
-            .populate("reviseTomorrowQuestions");
-
-        return res.status(200).json(
-            new ApiResponse(200, dailyRev, "Revise tomorrow preference updated successfully")
-        );
-    } catch (error) {
-        console.error("Error toggling revise tomorrow:", error);
-        return res.status(500).json(new ApiError(500, error.message || "Error toggling revise tomorrow"));
+    if (!dailyRev) {
+      dailyRev = await DailyRevision.findOne({
+        userId: userId,
+        dateStr: localDateStr
+      });
     }
+
+    if (!dailyRev) {
+      throw new ApiError(404, "Today's daily revision is not generated yet");
+    }
+
+    if (!dailyRev.reviseTomorrowQuestions) {
+      dailyRev.reviseTomorrowQuestions = [];
+    }
+
+    const taskObjectId = new mongoose.Types.ObjectId(taskId);
+    if (reviseTomorrow) {
+      const alreadyExists = dailyRev.reviseTomorrowQuestions.some(id => id.toString() === taskId.toString());
+      if (!alreadyExists) {
+        dailyRev.reviseTomorrowQuestions.push(taskObjectId);
+      }
+    } else {
+      dailyRev.reviseTomorrowQuestions = dailyRev.reviseTomorrowQuestions.filter(
+        id => id.toString() !== taskId.toString()
+      );
+    }
+
+    await dailyRev.save();
+
+    dailyRev = await DailyRevision.findById(dailyRev._id)
+      .populate("questions")
+      .populate("completedQuestions")
+      .populate("reviseTomorrowQuestions");
+
+    const revObj = dailyRev.toObject ? dailyRev.toObject() : dailyRev;
+    revObj.isEligible = true;
+
+    return res.status(200).json(
+      new ApiResponse(200, revObj, "Revise tomorrow preference updated successfully")
+    );
+  } catch (error) {
+    console.error("Error toggling revise tomorrow:", error);
+    return res.status(error.statusCode || 500).json(new ApiError(error.statusCode || 500, error.message || "Error toggling revise tomorrow"));
+  }
 });
 
 export default tc;

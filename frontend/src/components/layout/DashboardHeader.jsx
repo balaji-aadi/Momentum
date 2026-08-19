@@ -36,7 +36,10 @@ const DashboardHeader = ({
     parentId,
     onParentChange,
     parentTasks,
-    onHideControls
+    onHideControls,
+    onOpenSchedule,
+    hasProjectSelected,
+    isArenaScheduled
 }) => {
 
     const tabs = [
@@ -187,8 +190,19 @@ const DashboardHeader = ({
                     ))}
                 </div>
 
-                {/* Actions (Refine View / Hide Controls and Create Task) */}
+                {/* Actions (Schedule Arena, Refine View / Hide Controls and Create Task) */}
                 <div className="flex items-center gap-2 self-end sm:self-auto">
+                    {onOpenSchedule && hasProjectSelected && !isArenaScheduled && (
+                        <button
+                            onClick={onOpenSchedule}
+                            className="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-4 py-1.5 rounded-xl text-[10px] uppercase tracking-wider flex items-center gap-1.5 shadow-md hover:shadow-lg transition-all active:scale-95 shrink-0 cursor-pointer"
+                            title="Generate and apply custom timeline schedule for this Arena"
+                        >
+                            <IoCalendarOutline size={14} className="text-white" />
+                            <span>Schedule Arena</span>
+                        </button>
+                    )}
+
                     {onHideControls && !isFiltersOpen && (
                         <button
                             onClick={onHideControls}

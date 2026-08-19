@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { IoTimeOutline, IoPlay, IoPause } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
+import { getScopedItem } from '../../utils/userStorage';
 
 const GlobalTimerWidget = () => {
     const navigate = useNavigate();
@@ -10,8 +11,8 @@ const GlobalTimerWidget = () => {
 
     useEffect(() => {
         const updateTimer = () => {
-            const stateStr = localStorage.getItem("focus_timer_state");
-            const bindingStr = localStorage.getItem("focus_timer_task_binding");
+            const stateStr = getScopedItem("focus_timer_state");
+            const bindingStr = getScopedItem("focus_timer_task_binding");
             
             if (stateStr) {
                 const state = JSON.parse(stateStr);

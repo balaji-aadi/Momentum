@@ -101,6 +101,7 @@ const storeSlice = createSlice({
         state.token = true;
         state.isAuthenticated = true;
         state.currentUser = action.payload.data.user || null;
+        localStorage.setItem("currentUser", JSON.stringify(action.payload.data.user));
         localStorage.setItem("accessToken", action.payload.data.accessToken);
         localStorage.setItem("refreshToken", action.payload.data.refreshToken);
         toast.success(`Welcome Back, ${action.payload.data?.user?.firstName}`);
@@ -122,6 +123,7 @@ const storeSlice = createSlice({
         state.token = true;
         state.isAuthenticated = true;
         state.currentUser = action.payload.data.user || null;
+        localStorage.setItem("currentUser", JSON.stringify(action.payload.data.user));
         localStorage.setItem("accessToken", action.payload.data.accessToken);
         localStorage.setItem("refreshToken", action.payload.data.refreshToken);
         toast.success(`Welcome ${action.payload.data?.user?.firstName}`);
@@ -145,27 +147,13 @@ const storeSlice = createSlice({
         state.currentUser = null;
         state.token = false;
         state.isAuthenticated = false;
+        state.activeBranch = null;
 
-        // Preserve timer state and UI configuration keys
-        const keysToPreserve = [
-          "focus_timer_state",
-          "focus_timer_task_binding",
-          "focus_timer_retrievable",
-          "sarathi_show_topbar",
-          "projectTabsOrder",
-          "dontShowInProgressToast"
-        ];
-        const preserved = {};
-        keysToPreserve.forEach(key => {
-          const val = localStorage.getItem(key);
-          if (val !== null) preserved[key] = val;
-        });
-
-        localStorage.clear();
-
-        Object.entries(preserved).forEach(([key, val]) => {
-          localStorage.setItem(key, val);
-        });
+        // Clear session auth tokens and active branch while leaving user-scoped execution data intact
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("activeBranch");
 
         toast.success("Logout successfully");
       })

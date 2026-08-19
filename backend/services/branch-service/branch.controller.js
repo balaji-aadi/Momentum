@@ -3,7 +3,20 @@ import { asyncHandler } from "../../utils/asyncHandler.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
 import { ApiError } from "../../utils/ApiError.js";
 
+const isUserAdmin = (user) => {
+    if (!user) return false;
+    if (user.email === "balajiaadi2000@gmail.com") return true;
+    if (user.role === "admin") return true;
+    if (user.userRole?.name?.toLowerCase() === "admin") return true;
+    if (Array.isArray(user.userRoles) && user.userRoles.some(r => r.name?.toLowerCase() === "admin" || (r.active && r.permissions?.some(p => ["CREATE_BRANCH", "UPDATE_BRANCH", "DELETE_BRANCH"].includes(p.name))))) return true;
+    return false;
+};
+
 const createBranch = asyncHandler(async (req, res) => {
+    if (!isUserAdmin(req.user)) {
+        throw new ApiError(403, "Forbidden: Only administrators can create canonical Branches/Modules.");
+    }
+
     const { name, description, address, city, country, logo, visibility } = req.body;
 
     if (!name) {
@@ -24,11 +37,12 @@ const createBranch = asyncHandler(async (req, res) => {
         city,
         country,
         logo,
-        visibility: req.user?.email === "balajiaadi2000@gmail.com" ? (visibility || "private") : "private",
+        visibility: visibility || "public",
         createdBy: req.user._id
     });
 
     // Add access to the creator
+    if (!req.user.branchAccess) req.user.branchAccess = [];
     req.user.branchAccess.push({ branchId: branch._id, role: "admin" });
     await req.user.save();
 
@@ -36,13 +50,27 @@ const createBranch = asyncHandler(async (req, res) => {
 });
 
 const getBranches = asyncHandler(async (req, res) => {
-    // Only see branches created by you OR branches that are explicitly public
-    let query = {
-        $or: [
-            { createdBy: req.user._id },
-            { visibility: "public" }
-        ]
-    };
+    const isSuperAdmin = req.user?.email === "balajiaadi2000@gmail.com" ||
+                         req.user?.role === "admin" ||
+                         req.user?.userRole?.name?.toLowerCase() === "admin";
+    
+    let query = {};
+    if (!isSuperAdmin) {
+        const { User } = await import("../../models/user.model.js");
+        const adminUser = await User.findOne({ email: "balajiaadi2000@gmail.com" }).select("_id");
+        const adminId = adminUser ? adminUser._id : null;
+
+        const userBranchIds = (req.user?.branchAccess || []).map(b => b.branchId).filter(Boolean);
+        const orConditions = [
+            { visibility: "public" },
+            { createdBy: req.user?._id },
+            { _id: { $in: userBranchIds } }
+        ];
+        if (adminId) {
+            orConditions.push({ createdBy: adminId });
+        }
+        query = { $or: orConditions };
+    }
     
     const branches = await Branch.find(query);
 
@@ -52,7 +80,6 @@ const getBranches = asyncHandler(async (req, res) => {
 const getBranchStats = asyncHandler(async (req, res) => {
     const { branchId } = req.params;
     
-    // Import models inside or use them if already imported (need to add imports)
     const { Project } = await import("../../models/project.model.js");
     const { Task } = await import("../../models/task.model.js");
 
@@ -65,6 +92,10 @@ const getBranchStats = asyncHandler(async (req, res) => {
 });
 
 const updateBranch = asyncHandler(async (req, res) => {
+    if (!isUserAdmin(req.user)) {
+        throw new ApiError(403, "Forbidden: Only administrators can update canonical Branches/Modules.");
+    }
+
     const { branchId } = req.params;
     const { name, description, visibility } = req.body;
 
@@ -77,8 +108,7 @@ const updateBranch = asyncHandler(async (req, res) => {
     }
     if (description) branch.description = description;
     
-    // Only admin can change visibility
-    if (visibility && req.user?.email === "balajiaadi2000@gmail.com") {
+    if (visibility) {
         branch.visibility = visibility;
     }
 
@@ -88,6 +118,10 @@ const updateBranch = asyncHandler(async (req, res) => {
 });
 
 const deleteBranch = asyncHandler(async (req, res) => {
+    if (!isUserAdmin(req.user)) {
+        throw new ApiError(403, "Forbidden: Only administrators can delete canonical Branches/Modules.");
+    }
+
     const { branchId } = req.params;
     const { confirmationName } = req.body;
 
@@ -98,7 +132,7 @@ const deleteBranch = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Branch name confirmation does not match");
     }
 
-    // Cascade delete projects and tasks (optional but recommended for cleanliness)
+    // Cascade delete projects and tasks
     const { Project } = await import("../../models/project.model.js");
     const { Task } = await import("../../models/task.model.js");
 
@@ -109,8 +143,10 @@ const deleteBranch = asyncHandler(async (req, res) => {
     ]);
 
     // Remove from user's branchAccess
-    req.user.branchAccess = req.user.branchAccess.filter(access => access.branchId.toString() !== branchId);
-    await req.user.save();
+    if (req.user.branchAccess) {
+        req.user.branchAccess = req.user.branchAccess.filter(access => access.branchId?.toString() !== branchId);
+        await req.user.save();
+    }
 
     return res.status(200).json(new ApiResponse(200, null, "Branch deleted successfully"));
 });

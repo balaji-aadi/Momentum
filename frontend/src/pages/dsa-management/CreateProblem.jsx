@@ -18,7 +18,6 @@ import ConstraintCard from '../../components/dsa-cms/ConstraintCard';
 import HintCard from '../../components/dsa-cms/HintCard';
 import StarterCodeTabs from '../../components/dsa-cms/StarterCodeTabs';
 import TestCaseCard from '../../components/dsa-cms/TestCaseCard';
-import { ProblemPackageStudio } from '../../components/dsa/ProblemPackageStudio';
 import { ProblemApi } from '../../services/api/Problem.api';
 import toast from 'react-hot-toast';
 
@@ -252,6 +251,7 @@ export default function CreateProblem() {
           />
 
           <ExecutionProfileCard 
+            functionDefinition={formData.functionDefinition}
             executionProfile={formData.executionProfile} 
             onChange={(execProfile) => setFormData(prev => ({ ...prev, executionProfile: execProfile }))} 
           />
@@ -281,15 +281,6 @@ export default function CreateProblem() {
 
           {/* Phase 8: Visible & Hidden Test Cases */}
           <TestCaseCard formData={formData} setFormData={setFormData} />
-
-          {/* Phase 1.5: Problem Package Studio Engine */}
-          <div className="pt-4">
-            <ProblemPackageStudio 
-              problemId={editId} 
-              formData={formData} 
-              setFormData={setFormData} 
-            />
-          </div>
         </div>
       )}
 

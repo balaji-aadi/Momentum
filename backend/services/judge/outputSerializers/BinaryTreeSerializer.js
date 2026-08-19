@@ -1,8 +1,8 @@
 /**
- * Binary Tree Output Serializer
- * Converts `TreeNode` hierarchy back into BFS level-order JSON array `[1, null, 2, 3]`.
+ * Binary Tree Output Serializer (Phase 4)
+ * Converts `TreeNode` hierarchy back into canonical BFS level-order JSON array `[1, null, 2, 3]`.
+ * Automatically trims redundant trailing null values.
  */
-
 export class BinaryTreeSerializer {
   static serialize(root) {
     if (root === null || root === undefined) return [];
@@ -24,7 +24,7 @@ export class BinaryTreeSerializer {
       }
     }
 
-    // Trim trailing nulls
+    // Trim trailing nulls (LeetCode standard canonical representation)
     while (result.length > 0 && result[result.length - 1] === null) {
       result.pop();
     }

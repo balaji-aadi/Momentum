@@ -1,5 +1,9 @@
 import Problem from "../../models/problem.model.js";
-import { validateProblemTestCases } from "./problem.validator.js";
+import { 
+  validateProblemTestCases, 
+  validateExecutionProfileCompatibility,
+  validateStarterCodeOverrides
+} from "./problem.validator.js";
 
 // Helper to generate clean URL slug
 const generateSlug = (str) => {
@@ -54,8 +58,8 @@ export const createProblem = async (req, res) => {
       examples = [],
       constraints = [],
       hints = [],
-      functionDefinition = { functionName: 'twoSum', parameters: [], returnType: 'void' },
-      executionProfile = { runtimeType: 'FUNCTION', inputParser: 'ArrayParser', outputSerializer: 'ArraySerializer', comparator: 'ExactMatch' },
+      functionDefinition = { functionName: 'solution', parameters: [], returnType: 'void' },
+      executionProfile = { runtimeType: 'FUNCTION', outputSerializer: 'PrimitiveSerializer', comparator: 'ExactMatch' },
       languageRuntimes = [],
       starterCode = [],
       visibleTestCases = [],
@@ -74,9 +78,11 @@ export const createProblem = async (req, res) => {
       });
     }
 
-    // Pre-flight Test Case Validation against Function Definition
+    // Pre-flight Cross-Field Execution Profile & Test Case Validation
     try {
+      validateExecutionProfileCompatibility(functionDefinition, executionProfile);
       validateProblemTestCases(functionDefinition, visibleTestCases, hiddenTestCases);
+      validateStarterCodeOverrides(starterCode, functionDefinition);
     } catch (valErr) {
       return res.status(400).json({
         success: false,
@@ -249,14 +255,19 @@ export const updateProblem = async (req, res) => {
     // Prevent updating problemCode manually
     delete updates.problemCode;
 
-    // Pre-flight Test Case Validation if functionDefinition or testcases are being updated
-    if (updates.functionDefinition || updates.visibleTestCases || updates.hiddenTestCases) {
+    // Pre-flight Validation if functionDefinition, executionProfile, starterCode, or testcases are being updated
+    if (updates.functionDefinition || updates.executionProfile || updates.starterCode || updates.visibleTestCases || updates.hiddenTestCases) {
       try {
         const existing = await Problem.findById(id);
         const fnDef = updates.functionDefinition || existing?.functionDefinition;
+        const execProfile = updates.executionProfile || existing?.executionProfile;
         const visTC = updates.visibleTestCases || existing?.visibleTestCases || [];
         const hidTC = updates.hiddenTestCases || existing?.hiddenTestCases || [];
+        const starterCode = updates.starterCode || existing?.starterCode || [];
+        
+        validateExecutionProfileCompatibility(fnDef, execProfile);
         validateProblemTestCases(fnDef, visTC, hidTC);
+        validateStarterCodeOverrides(starterCode, fnDef);
       } catch (valErr) {
         return res.status(400).json({
           success: false,

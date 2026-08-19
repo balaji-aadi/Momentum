@@ -50,7 +50,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(false);
     const { currentUser, activeBranch, globalSettings, dailyRevision, isSidebarCollapsed } = useSelector((state) => state.store);
-    const isRevisionLocked = dailyRevision && dailyRevision.isStarted && !dailyRevision.isCompleted;
+    const isRevisionLocked = dailyRevision && dailyRevision.isEligible === true && dailyRevision.questions?.length > 0 && dailyRevision.isStarted && !dailyRevision.isCompleted;
     const noBranchLocked = !activeBranch;
 
     const { slug } = useParams();
@@ -508,11 +508,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                             className={`relative group w-full flex items-center ${isSidebarCollapsed ? 'justify-center py-1' : 'justify-between px-2.5 py-1'} cursor-pointer transition-all duration-150 rounded-lg ${noBranchLocked ? 'opacity-40 cursor-not-allowed' : (isActive ? 'bg-primary/10 text-primary font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60')}`}
                                         >
                                             <div className="flex items-center gap-2 min-w-0">
-                                                <span className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 transition-all text-[10px] font-black uppercase ${
-                                                    isActive 
-                                                      ? 'bg-primary text-white shadow-xs shadow-primary/30' 
-                                                      : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200 group-hover:text-slate-700'
-                                                }`}>
+                                                <span className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 transition-all text-[10px] font-black uppercase ${isActive
+                                                        ? 'bg-primary text-white shadow-xs shadow-primary/30'
+                                                        : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200 group-hover:text-slate-700'
+                                                    }`}>
                                                     {project.name ? project.name.charAt(0).toUpperCase() : 'A'}
                                                 </span>
                                                 {!isSidebarCollapsed && (

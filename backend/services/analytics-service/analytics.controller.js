@@ -66,7 +66,7 @@ analyticsController.getProjectHealth = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: "Project ID is required" });
     }
 
-    const stats = await AnalyticsService.getProjectConsistencyStats(projectId);
+    const stats = await AnalyticsService.getProjectConsistencyStats(projectId, req.user._id);
 
     return res.status(200).json(
         new ApiResponse(200, stats, "Project health fetched successfully")

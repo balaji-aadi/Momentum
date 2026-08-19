@@ -1,0 +1,74 @@
+[
+  {
+    "v": 2,
+    "key": {
+      "_id": 1
+    },
+    "name": "_id_"
+  },
+  {
+    "v": 2,
+    "key": {
+      "entityType": 1
+    },
+    "name": "entityType_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "entityId": 1
+    },
+    "name": "entityId_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "period": 1
+    },
+    "name": "period_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "date": 1
+    },
+    "name": "date_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "entityType": 1,
+      "entityId": 1,
+      "period": 1,
+      "date": 1
+    },
+    "name": "entityType_1_entityId_1_period_1_date_1",
+    "background": true,
+    "unique": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "branchId": 1
+    },
+    "name": "branchId_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "branchId": 1,
+      "entityType": 1,
+      "entityId": 1,
+      "period": 1,
+      "date": 1
+    },
+    "name": "branchId_1_entityType_1_entityId_1_period_1_date_1",
+    "background": true,
+    "unique": true
+  }
+]

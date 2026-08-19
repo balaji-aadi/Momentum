@@ -9,7 +9,7 @@ const exampleSchema = new Schema({
 
 const parameterSchema = new Schema({
   name: { type: String, required: true, trim: true },
-  type: { type: String, required: true, trim: true }, // number, string, boolean, number[], string[], ListNode, TreeNode, number[][]
+  type: { type: String, required: true, trim: true }, // number, string, boolean, number[], string[], boolean[], number[][], string[][], ListNode, RandomListNode, TreeNode, Graph
   required: { type: Boolean, default: true },
   nullable: { type: Boolean, default: false },
   description: { type: String, default: "" }
@@ -24,23 +24,32 @@ const functionDefinitionSchema = new Schema({
 const executionProfileSchema = new Schema({
   runtimeType: { 
     type: String, 
-    enum: ['FUNCTION', 'CONSOLE_INPUT'], 
+    enum: ['FUNCTION'], 
     default: 'FUNCTION' 
-  },
-  inputParser: { 
-    type: String, 
-    trim: true,
-    default: 'ArrayParser' 
   },
   outputSerializer: { 
     type: String, 
     trim: true,
-    default: 'ArraySerializer' 
+    default: 'PrimitiveSerializer' 
   },
   comparator: { 
     type: String, 
     trim: true,
     default: 'ExactMatch' 
+  },
+  customType: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  inPlaceMutation: {
+    type: Boolean,
+    default: false
+  },
+  mutatedParameter: {
+    type: String,
+    trim: true,
+    default: ''
   }
 }, { _id: false });
 
@@ -49,7 +58,8 @@ const languageRuntimeSchema = new Schema({
   runtime: {
     version: { type: String, default: "" },
     compiler: { type: String, default: "" },
-    entryPoint: { type: String, default: "Solution" }
+    entryPoint: { type: String, default: "Solution" },
+    boilerplateOverride: { type: String, default: "" }
   }
 }, { _id: false });
 
@@ -61,17 +71,22 @@ const starterCodeSchema = new Schema({
 }, { _id: false });
 
 const visibleTestCaseSchema = new Schema({
-  input: { type: Schema.Types.Mixed, required: true }, // Can be raw string or structured JSON object
+  input: { type: Schema.Types.Mixed, required: true }, // Structured JSON object or primitive
   expectedOutput: { type: Schema.Types.Mixed, required: true },
   explanation: { type: String, default: "" },
-  order: { type: Number, default: 1 }
+  order: { type: Number, default: 1 },
+  weight: { type: Number, default: 1.0 },
+  isActive: { type: Boolean, default: true }
 }, { _id: false });
 
 const hiddenTestCaseSchema = new Schema({
   input: { type: Schema.Types.Mixed, required: true },
   expectedOutput: { type: Schema.Types.Mixed, required: true },
-  weight: { type: Number, default: 1 },
-  executionOrder: { type: Number, default: 1 }
+  explanation: { type: String, default: "" },
+  weight: { type: Number, default: 1.0 },
+  executionOrder: { type: Number, default: 1 },
+  isActive: { type: Boolean, default: true },
+  isPerformanceTest: { type: Boolean, default: false }
 }, { _id: false });
 
 const problemSchema = new Schema(
@@ -143,7 +158,7 @@ const problemSchema = new Schema(
     },
     executionProfile: {
       type: executionProfileSchema,
-      default: () => ({ runtimeType: "FUNCTION", inputParser: "ArrayParser", outputSerializer: "ArraySerializer", comparator: "ExactMatch" })
+      default: () => ({ runtimeType: "FUNCTION", outputSerializer: "PrimitiveSerializer", comparator: "ExactMatch", customType: "", inPlaceMutation: false, mutatedParameter: "" })
     },
     languageRuntimes: [languageRuntimeSchema],
 

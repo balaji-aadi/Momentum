@@ -16,7 +16,12 @@ import toast from 'react-hot-toast';
 const MainLayout = () => {
     const { activeBranch, currentUser, globalSettings, dailyRevision, isSidebarCollapsed } = useSelector((state) => state.store);
     const location = useLocation();
-    const isLocked = dailyRevision && !dailyRevision.isCompleted;
+    const isLocked =
+        dailyRevision &&
+        dailyRevision.isEligible === true &&
+        dailyRevision.questions?.length > 0 &&
+        dailyRevision.isStarted &&
+        !dailyRevision.isCompleted;
     const allowedPaths = ['/revision', '/login', '/branch', '/pricing'];
     const isPathAllowed = allowedPaths.includes(location.pathname);
     const { handleLoading } = useLoading();
@@ -47,7 +52,12 @@ const MainLayout = () => {
     useEffect(() => {
         if (!currentUser || !activeBranch || !dailyRevision) return;
 
-        const isLocked = !dailyRevision.isCompleted;
+        const isLocked =
+            dailyRevision &&
+            dailyRevision.isEligible === true &&
+            dailyRevision.questions?.length > 0 &&
+            dailyRevision.isStarted &&
+            !dailyRevision.isCompleted;
         const allowedPaths = ['/revision', '/login', '/branch', '/pricing'];
 
         if (isLocked && !allowedPaths.includes(location.pathname)) {
@@ -69,12 +79,15 @@ const MainLayout = () => {
         const isPricingPage = location.pathname === '/pricing';
         const isPaid = currentUser.subscriptionType === 'paid';
         const hasTime = (currentUser.invitationTimeRemaining || 0) > 0;
-        const isAdmin = currentUser.email === "balajiaadi2000@gmail.com";
+        const isAdmin = currentUser.email === "balajiaadi2000@gmail.com" || 
+                        currentUser?.userRole?.name?.toLowerCase() === "admin" ||
+                        currentUser?.role === "admin";
+        const isGlobalPaidMode = globalSettings?.subscriptionType === 'paid';
 
-        if (!isPaid && !hasTime && !isPricingPage && !isAdmin) {
+        if (isGlobalPaidMode && !isPaid && !hasTime && !isPricingPage && !isAdmin) {
             navigate('/pricing', { replace: true });
         }
-    }, [currentUser, location.pathname, navigate]);
+    }, [currentUser, globalSettings, location.pathname, navigate]);
 
     // Invitation Timer Logic
     useEffect(() => {

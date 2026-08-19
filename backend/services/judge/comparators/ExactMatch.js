@@ -1,58 +1,47 @@
-/**
- * Exact Match Comparator
- * Performs strict primitive equality comparison (numbers, booleans, strings, arrays, objects).
- */
+import { createComparisonResult } from './ComparatorErrors.js';
 
+/**
+ * Exact Match Comparator (Phase 5)
+ * Strict primitive and structural equality comparator.
+ */
 export class ExactMatch {
   static compare(actual, expected) {
+    const COMP_NAME = 'ExactMatch';
+
+    // 1. Exact Primitive Identity
     if (actual === expected) {
-      return { match: true };
+      return createComparisonResult(true, COMP_NAME, 'MATCH', 'Outputs match exactly.', expected, actual);
     }
 
-    let normActual = actual;
-    let normExpected = expected;
-
-    if (typeof normActual === 'string') {
-      const trimmed = normActual.trim();
-      if (
-        (trimmed.startsWith('[') && trimmed.endsWith(']')) ||
-        (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
-        trimmed === 'true' ||
-        trimmed === 'false' ||
-        (!isNaN(trimmed) && trimmed !== '')
-      ) {
-        try { normActual = JSON.parse(trimmed); } catch (e) {}
-      }
+    // 2. Null Checks
+    if (actual === null && expected !== null) {
+      return createComparisonResult(false, COMP_NAME, 'NULL_MISMATCH', `Expected non-null value ${JSON.stringify(expected)}, received null.`, expected, actual);
+    }
+    if (actual !== null && expected === null) {
+      return createComparisonResult(false, COMP_NAME, 'NULL_MISMATCH', `Expected null, received ${JSON.stringify(actual)}.`, expected, actual);
     }
 
-    if (typeof normExpected === 'string') {
-      const trimmed = normExpected.trim();
-      if (
-        (trimmed.startsWith('[') && trimmed.endsWith(']')) ||
-        (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
-        trimmed === 'true' ||
-        trimmed === 'false' ||
-        (!isNaN(trimmed) && trimmed !== '')
-      ) {
-        try { normExpected = JSON.parse(trimmed); } catch (e) {}
-      }
+    // 3. Type Discrepancy Checks
+    if (typeof actual !== typeof expected) {
+      return createComparisonResult(false, COMP_NAME, 'TYPE_MISMATCH', `Type mismatch: expected ${typeof expected} (${JSON.stringify(expected)}), received ${typeof actual} (${JSON.stringify(actual)}).`, expected, actual);
     }
 
-    if (normActual === normExpected) {
-      return { match: true };
+    // 4. Array / Structural Deep Comparison
+    const actualStr = JSON.stringify(actual);
+    const expectedStr = JSON.stringify(expected);
+
+    if (actualStr === expectedStr) {
+      return createComparisonResult(true, COMP_NAME, 'MATCH', 'Outputs match exactly.', expected, actual);
     }
 
-    if (JSON.stringify(normActual) === JSON.stringify(normExpected)) {
-      return { match: true };
-    }
-
-    if (String(normActual).trim() === String(normExpected).trim()) {
-      return { match: true };
-    }
-
-    return {
-      match: false,
-      message: `Expected ${JSON.stringify(normExpected)}, received ${JSON.stringify(normActual)}`
-    };
+    return createComparisonResult(
+      false,
+      COMP_NAME,
+      'ELEMENT_MISMATCH',
+      `Value mismatch: expected ${expectedStr}, received ${actualStr}.`,
+      expected,
+      actual,
+      { expectedStr, actualStr }
+    );
   }
 }

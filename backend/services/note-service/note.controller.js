@@ -7,14 +7,23 @@ import mongoose from "mongoose";
 
 const noteController = {};
 
+const checkIsAdmin = (user) => {
+  return (
+    user?.email === "balajiaadi2000@gmail.com" ||
+    user?.userRole?.name?.toLowerCase() === "admin" ||
+    user?.role === "admin" ||
+    (user?.userRoles && user.userRoles.some(r => r.name?.toLowerCase() === "admin"))
+  );
+};
+
 /**
- * Get all notes for the authenticated user
+ * Get all notes for the authenticated user or canonical task-linked notes
  */
 noteController.getNotes = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const { taskId, taskIds } = req.query;
 
-  const query = { userId };
+  let query = {};
 
   if (taskId || taskIds) {
     const ids = [];
@@ -23,10 +32,14 @@ noteController.getNotes = asyncHandler(async (req, res) => {
       taskIds.split(',').forEach(id => ids.push(id.trim()));
     }
     const objectIds = ids.map(id => mongoose.Types.ObjectId.isValid(id) ? new mongoose.Types.ObjectId(id) : id);
+    // Task-linked notes are canonical curriculum content shared with all authenticated users
     query.$or = [
       { taskId: { $in: objectIds } },
       { taskIds: { $in: objectIds } }
     ];
+  } else {
+    // Unlinked sticky notes are private to the user
+    query.userId = userId;
   }
 
   const notes = await Note.find(query).sort({ updatedAt: -1 });
@@ -38,10 +51,17 @@ noteController.getNotes = asyncHandler(async (req, res) => {
 
 /**
  * Create a new sticky note
+ * Non-admins can only create personal unlinked notes; task-linked notes require Admin role
  */
 noteController.createNote = asyncHandler(async (req, res) => {
   const userId = req.user._id;
+  const isAdmin = checkIsAdmin(req.user);
   const { content, imageUrl, color, position, size, isPinned, title, tags, taskId, taskIds } = req.body;
+
+  const isTaskLinked = Boolean(taskId || (Array.isArray(taskIds) && taskIds.length > 0));
+  if (isTaskLinked && !isAdmin) {
+    throw new ApiError(403, "Forbidden: Only administrators can create canonical notes for tasks");
+  }
 
   const newNote = await Note.create({
     userId,
@@ -64,14 +84,25 @@ noteController.createNote = asyncHandler(async (req, res) => {
 
 /**
  * Update an existing sticky note
+ * Task-linked notes require Admin role; personal notes require owner or Admin
  */
 noteController.updateNote = asyncHandler(async (req, res) => {
   const userId = req.user._id;
+  const isAdmin = checkIsAdmin(req.user);
   const { id } = req.params;
 
-  const note = await Note.findOne({ _id: id, userId });
+  const note = await Note.findById(id);
   if (!note) {
-    throw new ApiError(404, "Note not found or unauthorized");
+    throw new ApiError(404, "Note not found");
+  }
+
+  const isTaskLinked = note.taskId || (Array.isArray(note.taskIds) && note.taskIds.length > 0);
+  if (isTaskLinked && !isAdmin) {
+    throw new ApiError(403, "Forbidden: Only administrators can update canonical notes");
+  }
+
+  if (!isTaskLinked && !isAdmin && note.userId.toString() !== userId.toString()) {
+    throw new ApiError(403, "Forbidden: Unauthorized to update this personal note");
   }
 
   // Update properties if provided in body
@@ -91,15 +122,28 @@ noteController.updateNote = asyncHandler(async (req, res) => {
 
 /**
  * Delete a sticky note
+ * Task-linked notes require Admin role; personal notes require owner or Admin
  */
 noteController.deleteNote = asyncHandler(async (req, res) => {
   const userId = req.user._id;
+  const isAdmin = checkIsAdmin(req.user);
   const { id } = req.params;
 
-  const note = await Note.findOneAndDelete({ _id: id, userId });
+  const note = await Note.findById(id);
   if (!note) {
-    throw new ApiError(404, "Note not found or unauthorized");
+    throw new ApiError(404, "Note not found");
   }
+
+  const isTaskLinked = note.taskId || (Array.isArray(note.taskIds) && note.taskIds.length > 0);
+  if (isTaskLinked && !isAdmin) {
+    throw new ApiError(403, "Forbidden: Only administrators can delete canonical notes");
+  }
+
+  if (!isTaskLinked && !isAdmin && note.userId.toString() !== userId.toString()) {
+    throw new ApiError(403, "Forbidden: Unauthorized to delete this personal note");
+  }
+
+  await Note.findByIdAndDelete(id);
 
   return res.status(200).json(
     new ApiResponse(200, null, "Note deleted successfully")

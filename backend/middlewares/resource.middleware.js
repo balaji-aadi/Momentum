@@ -74,59 +74,19 @@ export const validateResourceOwnership = (Model, ownerField = 'assignee', overri
  * Manager: Can update any task.
  */
 export const canUpdateTask = asyncHandler(async (req, res, next) => {
-    // Dynamic import to avoid circular dependencies
-    const { User } = await import('../models/user.model.js'); 
     const { Task } = await import('../models/task.model.js');
     
-    const userId = req.user._id;
-    // Fix: Access taskId via req.params.taskId (as defined in router) or req.params.id fallback
+    const userId = req.user?._id;
     const taskId = req.params.taskId || req.params.id; 
 
     if (!taskId) {
         throw new ApiError(400, "Task ID is required");
     }
 
-    // 1. Fetch User Permissions (Optimized: check if already available in req.user from auth middleware?)
-    // auth.middleware might have already populated 'userRoles' and 'permissions'.
-    // Let's use req.user if available to save a DB call, else fetch.
-    let userPermissions = new Set();
-    
-    if (req.user?.userRoles && req.user.userRoles.length > 0 && req.user.userRoles[0].permissions) {
-         // permissions populated
-         req.user.userRoles.forEach(role => {
-             if (role.permissions && Array.isArray(role.permissions)) {
-                 role.permissions.forEach(p => userPermissions.add(p.name));
-             }
-         });
-    } else {
-        // Fetch if not available
-        const user = await User.findById(userId).populate({
-            path: 'userRoles',
-            populate: { path: 'permissions' }
-        });
-        user?.userRoles?.forEach(role => role.permissions?.forEach(p => userPermissions.add(p.name)));
-    }
+    const task = await Task.findById(taskId);
+    if (!task) throw new ApiError(404, "Task not found");
 
-    // 2. Check Global Permission
-    if (userPermissions.has('UPDATE_TASK')) {
-        return next(); 
-    }
-
-    // 3. Check Assigned Permission + Ownership
-    // Assuming 'UPDATE_ASSIGNED_TASK' is the granular permission name.
-    // Ensure this matches the seed script.
-    if (userPermissions.has('UPDATE_ASSIGNED_TASK')) {
-        const task = await Task.findById(taskId);
-        if (!task) throw new ApiError(404, "Task not found");
-
-        const isAssigned = Array.isArray(task.assignees) 
-            ? task.assignees.some(id => id.toString() === userId.toString())
-            : task.assignee?.toString() === userId.toString();
-
-        if (isAssigned) {
-            return next();
-        }
-    }
-
-    throw new ApiError(403, "Forbidden: You do not have permission to update this task");
+    // All authenticated users with branch access can proceed to update their personal execution state (UserTaskProgress).
+    // Curriculum updates are strictly guarded for Admin in the controller.
+    return next();
 });
