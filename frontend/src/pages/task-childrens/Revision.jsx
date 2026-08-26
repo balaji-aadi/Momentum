@@ -144,6 +144,21 @@ const Revision = () => {
     const [stats, setStats] = useState({ currentStreak: 0, longestStreak: 0, revisionsByDate: {}, completedByDate: {} });
     const [notes, setNotes] = useState([]);
 
+    const isLeetCodeEligible = (task) => {
+        if (!task) return false;
+        const projectKey = (typeof task.projectName === 'object' ? task.projectName?.key : '') || '';
+        const projectNameStr = (typeof task.projectName === 'object' ? task.projectName?.name : String(task.projectName || '')) || '';
+        const taskIdStr = task.taskId || '';
+        const enableSetting = typeof task.projectName === 'object' ? task.projectName?.settings?.enableLeetCodeSearch : false;
+
+        return (
+            enableSetting === true ||
+            projectKey.toUpperCase().includes('DSA') ||
+            projectNameStr.toUpperCase().includes('DSA') ||
+            taskIdStr.toUpperCase().startsWith('DSA')
+        );
+    };
+
     // Filters
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedProject, setSelectedProject] = useState('all');
@@ -1032,7 +1047,7 @@ const Revision = () => {
                                     >
                                         📖 VIEW DETAILS & NOTES
                                     </button>
-                                    {(task.projectName?.key === 'DSA' || (task.taskId && task.taskId.startsWith('DSA-'))) && (
+                                    {isLeetCodeEligible(task) && (
                                          <button
                                              onClick={() => {
                                                  const slug = task.taskName
@@ -1719,7 +1734,7 @@ const Revision = () => {
                                                         >
                                                             {task.taskName}
                                                         </span>
-                                                        {(task.projectName?.key === 'DSA' || (task.taskId && task.taskId.startsWith('DSA-'))) && (
+                                                        {isLeetCodeEligible(task) && (
                                                             <button
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();

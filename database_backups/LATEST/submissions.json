@@ -1,0 +1,1276 @@
+[
+  {
+    "_id": {
+      "$oid": "6a8494a7d035ed967f200ebf"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a665d0067f411def59e3042"
+    },
+    "problemCode": "DSA-001",
+    "language": "python",
+    "code": "\nclass Solution:\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\n        lookup = {}\n        for i, n in enumerate(nums):\n            diff = target - n\n            if diff in lookup:\n                return [lookup[diff], i]\n            lookup[n] = i\n        return []\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 4,
+    "totalTestCases": 4,
+    "executionTimeMs": 140,
+    "submittedAt": {
+      "$date": "2026-08-18T17:21:43.333Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:21:43.336Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:21:43.336Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494a7d035ed967f200ec1"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a673c00ff27d024ed9af7d5"
+    },
+    "problemCode": "DSA-002",
+    "language": "python",
+    "code": "\nclass Solution:\n    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        prev = None\n        curr = head\n        while curr:\n            nxt = curr.next\n            curr.next = prev\n            prev = curr\n            curr = nxt\n        return prev\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 136,
+    "submittedAt": {
+      "$date": "2026-08-18T17:21:43.748Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:21:43.748Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:21:43.748Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494a8d035ed967f200ec3"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a69e58e9f4cdd1fc4abfe38"
+    },
+    "problemCode": "DSA-003",
+    "language": "python",
+    "code": "\nclass Solution:\n    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:\n        if not root:\n            return None\n        root.left, root.right = self.invertTree(root.right), self.invertTree(root.left)\n        return root\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 149,
+    "submittedAt": {
+      "$date": "2026-08-18T17:21:44.176Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:21:44.176Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:21:44.176Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494a8d035ed967f200ec5"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a6a426ea3ba96fe9701e7bb"
+    },
+    "problemCode": "DSA-004",
+    "language": "python",
+    "code": "\nclass Solution:\n    def rotate(self, matrix: List[List[int]]) -> None:\n        n = len(matrix)\n        for i in range(n):\n            for j in range(i + 1, n):\n                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]\n        for row in matrix:\n            row.reverse()\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 2,
+    "totalTestCases": 2,
+    "executionTimeMs": 151,
+    "submittedAt": {
+      "$date": "2026-08-18T17:21:44.648Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:21:44.648Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:21:44.648Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494a9d035ed967f200ec7"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a6b57493948462ef54173ad"
+    },
+    "problemCode": "DSA-005",
+    "language": "python",
+    "code": "\nclass Solution:\n    def numIslands(self, grid: List[List[int]]) -> int:\n        if not grid:\n            return 0\n        m, n = len(grid), len(grid[0])\n        count = 0\n        def dfs(r, c):\n            if r < 0 or r >= m or c < 0 or c >= n or grid[r][c] != 1:\n                return\n            grid[r][c] = 0\n            dfs(r + 1, c)\n            dfs(r - 1, c)\n            dfs(r, c + 1)\n            dfs(r, c - 1)\n        for r in range(m):\n            for c in range(n):\n                if grid[r][c] == 1:\n                    count += 1\n                    dfs(r, c)\n        return count\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 137,
+    "submittedAt": {
+      "$date": "2026-08-18T17:21:45.059Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:21:45.059Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:21:45.059Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494a9d035ed967f200ec9"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a6b820208fbd2b4c8913aae"
+    },
+    "problemCode": "DSA-006",
+    "language": "python",
+    "code": "\nclass Solution:\n    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:\n        dummy = ListNode(0)\n        curr = dummy\n        carry = 0\n        while l1 or l2 or carry:\n            v1 = l1.val if l1 else 0\n            v2 = l2.val if l2 else 0\n            total = v1 + v2 + carry\n            carry = total // 10\n            curr.next = ListNode(total % 10)\n            curr = curr.next\n            if l1: l1 = l1.next\n            if l2: l2 = l2.next\n        return dummy.next\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 146,
+    "submittedAt": {
+      "$date": "2026-08-18T17:21:45.565Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:21:45.566Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:21:45.566Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494a9d035ed967f200ecb"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f5404"
+    },
+    "problemCode": "DSA-007",
+    "language": "python",
+    "code": "\nclass Solution:\n    def sortColors(self, nums: List[int]) -> None:\n        low, mid, high = 0, 0, len(nums) - 1\n        while mid <= high:\n            if nums[mid] == 0:\n                nums[low], nums[mid] = nums[mid], nums[low]\n                low += 1\n                mid += 1\n            elif nums[mid] == 1:\n                mid += 1\n            else:\n                nums[mid], nums[high] = nums[high], nums[mid]\n                high -= 1\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 141,
+    "submittedAt": {
+      "$date": "2026-08-18T17:21:45.984Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:21:45.984Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:21:45.984Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494aad035ed967f200ecd"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f5407"
+    },
+    "problemCode": "DSA-008",
+    "language": "python",
+    "code": "\nclass Solution:\n    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':\n        if not head:\n            return None\n        old_to_new = {}\n        curr = head\n        while curr:\n            old_to_new[curr] = Node(curr.val)\n            curr = curr.next\n        curr = head\n        while curr:\n            if curr.next:\n                old_to_new[curr].next = old_to_new[curr.next]\n            if curr.random:\n                old_to_new[curr].random = old_to_new[curr.random]\n            curr = curr.next\n        return old_to_new[head]\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 2,
+    "totalTestCases": 2,
+    "executionTimeMs": 141,
+    "submittedAt": {
+      "$date": "2026-08-18T17:21:46.444Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:21:46.444Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:21:46.444Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494aad035ed967f200ecf"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f540a"
+    },
+    "problemCode": "DSA-009",
+    "language": "python",
+    "code": "\nclass Solution:\n    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:\n        if not node:\n            return None\n        clones = {}\n        def dfs(curr):\n            if curr in clones:\n                return clones[curr]\n            copy = Node(curr.val)\n            clones[curr] = copy\n            for nei in curr.neighbors:\n                copy.neighbors.append(dfs(nei))\n            return copy\n        return dfs(node)\n",
+    "verdict": "WRONG_ANSWER",
+    "passedTestCases": 1,
+    "totalTestCases": 3,
+    "executionTimeMs": 139,
+    "submittedAt": {
+      "$date": "2026-08-18T17:21:46.857Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:21:46.858Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:21:46.858Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494abd035ed967f200ed1"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f540d"
+    },
+    "problemCode": "DSA-010",
+    "language": "python",
+    "code": "\nclass Solution:\n    def findAnagrams(self, s: str, words: List[str], k: int) -> List[int]:\n        if not s or not words:\n            return []\n        p = words[0]\n        p_len = len(p)\n        if len(s) < p_len:\n            return []\n        from collections import Counter\n        p_count = Counter(p)\n        s_count = Counter(s[:p_len])\n        res = []\n        if s_count == p_count:\n            res.append(0)\n        for i in range(p_len, len(s)):\n            s_count[s[i]] += 1\n            s_count[s[i - p_len]] -= 1\n            if s_count[s[i - p_len]] == 0:\n                del s_count[s[i - p_len]]\n            if s_count == p_count:\n                res.append(i - p_len + 1)\n        return res\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 2,
+    "totalTestCases": 2,
+    "executionTimeMs": 138,
+    "submittedAt": {
+      "$date": "2026-08-18T17:21:47.269Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:21:47.269Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:21:47.269Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494df771692bb07c34c88"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a665d0067f411def59e3042"
+    },
+    "problemCode": "DSA-001",
+    "language": "python",
+    "code": "\nclass Solution:\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\n        lookup = {}\n        for i, n in enumerate(nums):\n            diff = target - n\n            if diff in lookup:\n                return [lookup[diff], i]\n            lookup[n] = i\n        return []\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 4,
+    "totalTestCases": 4,
+    "executionTimeMs": 144,
+    "submittedAt": {
+      "$date": "2026-08-18T17:22:39.803Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:22:39.806Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:22:39.806Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494e0771692bb07c34c8a"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a673c00ff27d024ed9af7d5"
+    },
+    "problemCode": "DSA-002",
+    "language": "python",
+    "code": "\nclass Solution:\n    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        prev = None\n        curr = head\n        while curr:\n            nxt = curr.next\n            curr.next = prev\n            prev = curr\n            curr = nxt\n        return prev\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 151,
+    "submittedAt": {
+      "$date": "2026-08-18T17:22:40.242Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:22:40.242Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:22:40.242Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494e0771692bb07c34c8c"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a69e58e9f4cdd1fc4abfe38"
+    },
+    "problemCode": "DSA-003",
+    "language": "python",
+    "code": "\nclass Solution:\n    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:\n        if not root:\n            return None\n        root.left, root.right = self.invertTree(root.right), self.invertTree(root.left)\n        return root\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 149,
+    "submittedAt": {
+      "$date": "2026-08-18T17:22:40.700Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:22:40.701Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:22:40.701Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494e1771692bb07c34c8e"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a6a426ea3ba96fe9701e7bb"
+    },
+    "problemCode": "DSA-004",
+    "language": "python",
+    "code": "\nclass Solution:\n    def rotate(self, matrix: List[List[int]]) -> None:\n        n = len(matrix)\n        for i in range(n):\n            for j in range(i + 1, n):\n                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]\n        for row in matrix:\n            row.reverse()\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 2,
+    "totalTestCases": 2,
+    "executionTimeMs": 139,
+    "submittedAt": {
+      "$date": "2026-08-18T17:22:41.109Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:22:41.109Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:22:41.109Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494e1771692bb07c34c90"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a6b57493948462ef54173ad"
+    },
+    "problemCode": "DSA-005",
+    "language": "python",
+    "code": "\nclass Solution:\n    def numIslands(self, grid: List[List[int]]) -> int:\n        if not grid:\n            return 0\n        m, n = len(grid), len(grid[0])\n        count = 0\n        def dfs(r, c):\n            if r < 0 or r >= m or c < 0 or c >= n or grid[r][c] != 1:\n                return\n            grid[r][c] = 0\n            dfs(r + 1, c)\n            dfs(r - 1, c)\n            dfs(r, c + 1)\n            dfs(r, c - 1)\n        for r in range(m):\n            for c in range(n):\n                if grid[r][c] == 1:\n                    count += 1\n                    dfs(r, c)\n        return count\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 143,
+    "submittedAt": {
+      "$date": "2026-08-18T17:22:41.504Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:22:41.504Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:22:41.504Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494e1771692bb07c34c92"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a6b820208fbd2b4c8913aae"
+    },
+    "problemCode": "DSA-006",
+    "language": "python",
+    "code": "\nclass Solution:\n    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:\n        dummy = ListNode(0)\n        curr = dummy\n        carry = 0\n        while l1 or l2 or carry:\n            v1 = l1.val if l1 else 0\n            v2 = l2.val if l2 else 0\n            total = v1 + v2 + carry\n            carry = total // 10\n            curr.next = ListNode(total % 10)\n            curr = curr.next\n            if l1: l1 = l1.next\n            if l2: l2 = l2.next\n        return dummy.next\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 138,
+    "submittedAt": {
+      "$date": "2026-08-18T17:22:41.917Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:22:41.918Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:22:41.918Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494e2771692bb07c34c94"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f5404"
+    },
+    "problemCode": "DSA-007",
+    "language": "python",
+    "code": "\nclass Solution:\n    def sortColors(self, nums: List[int]) -> None:\n        low, mid, high = 0, 0, len(nums) - 1\n        while mid <= high:\n            if nums[mid] == 0:\n                nums[low], nums[mid] = nums[mid], nums[low]\n                low += 1\n                mid += 1\n            elif nums[mid] == 1:\n                mid += 1\n            else:\n                nums[mid], nums[high] = nums[high], nums[mid]\n                high -= 1\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 144,
+    "submittedAt": {
+      "$date": "2026-08-18T17:22:42.339Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:22:42.339Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:22:42.339Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494e2771692bb07c34c96"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f5407"
+    },
+    "problemCode": "DSA-008",
+    "language": "python",
+    "code": "\nclass Solution:\n    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':\n        if not head:\n            return None\n        old_to_new = {}\n        curr = head\n        while curr:\n            old_to_new[curr] = Node(curr.val)\n            curr = curr.next\n        curr = head\n        while curr:\n            if curr.next:\n                old_to_new[curr].next = old_to_new[curr.next]\n            if curr.random:\n                old_to_new[curr].random = old_to_new[curr.random]\n            curr = curr.next\n        return old_to_new[head]\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 2,
+    "totalTestCases": 2,
+    "executionTimeMs": 142,
+    "submittedAt": {
+      "$date": "2026-08-18T17:22:42.747Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:22:42.748Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:22:42.748Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494e3771692bb07c34c98"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f540a"
+    },
+    "problemCode": "DSA-009",
+    "language": "python",
+    "code": "\nclass Solution:\n    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:\n        if not node:\n            return None\n        clones = {}\n        def dfs(curr):\n            if curr in clones:\n                return clones[curr]\n            copy = Node(curr.val)\n            clones[curr] = copy\n            for nei in curr.neighbors:\n                copy.neighbors.append(dfs(nei))\n            return copy\n        return dfs(node)\n",
+    "verdict": "WRONG_ANSWER",
+    "passedTestCases": 1,
+    "totalTestCases": 3,
+    "executionTimeMs": 142,
+    "submittedAt": {
+      "$date": "2026-08-18T17:22:43.157Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:22:43.157Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:22:43.157Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8494e3771692bb07c34c9a"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f540d"
+    },
+    "problemCode": "DSA-010",
+    "language": "python",
+    "code": "\nclass Solution:\n    def findAnagrams(self, s: str, words: List[str], k: int) -> List[int]:\n        if not s or not words:\n            return []\n        p = words[0]\n        p_len = len(p)\n        if len(s) < p_len:\n            return []\n        from collections import Counter\n        p_count = Counter(p)\n        s_count = Counter(s[:p_len])\n        res = []\n        if s_count == p_count:\n            res.append(0)\n        for i in range(p_len, len(s)):\n            s_count[s[i]] += 1\n            s_count[s[i - p_len]] -= 1\n            if s_count[s[i - p_len]] == 0:\n                del s_count[s[i - p_len]]\n            if s_count == p_count:\n                res.append(i - p_len + 1)\n        return res\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 2,
+    "totalTestCases": 2,
+    "executionTimeMs": 137,
+    "submittedAt": {
+      "$date": "2026-08-18T17:22:43.573Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:22:43.574Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:22:43.574Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8495284e855eb027ad15d2"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f540a"
+    },
+    "problemCode": "DSA-009",
+    "language": "python",
+    "code": "\nclass Solution:\n    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:\n        if not node:\n            return None\n        clones = {}\n        def dfs(curr):\n            if curr in clones:\n                return clones[curr]\n            copy = Node(curr.val)\n            clones[curr] = copy\n            for nei in curr.neighbors:\n                copy.neighbors.append(dfs(nei))\n            return copy\n        return dfs(node)\n",
+    "verdict": "WRONG_ANSWER",
+    "passedTestCases": 1,
+    "totalTestCases": 3,
+    "executionTimeMs": 151,
+    "submittedAt": {
+      "$date": "2026-08-18T17:23:52.805Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:23:52.808Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:23:52.808Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a849562b47c232d159a093b"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a665d0067f411def59e3042"
+    },
+    "problemCode": "DSA-001",
+    "language": "python",
+    "code": "\nclass Solution:\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\n        lookup = {}\n        for i, n in enumerate(nums):\n            diff = target - n\n            if diff in lookup:\n                return [lookup[diff], i]\n            lookup[n] = i\n        return []\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 4,
+    "totalTestCases": 4,
+    "executionTimeMs": 141,
+    "submittedAt": {
+      "$date": "2026-08-18T17:24:50.944Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:24:50.948Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:24:50.948Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a849563b47c232d159a093f"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a673c00ff27d024ed9af7d5"
+    },
+    "problemCode": "DSA-002",
+    "language": "python",
+    "code": "\nclass Solution:\n    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        prev = None\n        curr = head\n        while curr:\n            nxt = curr.next\n            curr.next = prev\n            prev = curr\n            curr = nxt\n        return prev\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 142,
+    "submittedAt": {
+      "$date": "2026-08-18T17:24:51.380Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:24:51.380Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:24:51.380Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a849564b47c232d159a0941"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a69e58e9f4cdd1fc4abfe38"
+    },
+    "problemCode": "DSA-003",
+    "language": "python",
+    "code": "\nclass Solution:\n    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:\n        if not root:\n            return None\n        root.left, root.right = self.invertTree(root.right), self.invertTree(root.left)\n        return root\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 139,
+    "submittedAt": {
+      "$date": "2026-08-18T17:24:52.054Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:24:52.055Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:24:52.055Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a849564b47c232d159a0943"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a6a426ea3ba96fe9701e7bb"
+    },
+    "problemCode": "DSA-004",
+    "language": "python",
+    "code": "\nclass Solution:\n    def rotate(self, matrix: List[List[int]]) -> None:\n        n = len(matrix)\n        for i in range(n):\n            for j in range(i + 1, n):\n                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]\n        for row in matrix:\n            row.reverse()\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 2,
+    "totalTestCases": 2,
+    "executionTimeMs": 137,
+    "submittedAt": {
+      "$date": "2026-08-18T17:24:52.468Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:24:52.468Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:24:52.468Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a849564b47c232d159a0945"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a6b57493948462ef54173ad"
+    },
+    "problemCode": "DSA-005",
+    "language": "python",
+    "code": "\nclass Solution:\n    def numIslands(self, grid: List[List[int]]) -> int:\n        if not grid:\n            return 0\n        m, n = len(grid), len(grid[0])\n        count = 0\n        def dfs(r, c):\n            if r < 0 or r >= m or c < 0 or c >= n or grid[r][c] != 1:\n                return\n            grid[r][c] = 0\n            dfs(r + 1, c)\n            dfs(r - 1, c)\n            dfs(r, c + 1)\n            dfs(r, c - 1)\n        for r in range(m):\n            for c in range(n):\n                if grid[r][c] == 1:\n                    count += 1\n                    dfs(r, c)\n        return count\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 137,
+    "submittedAt": {
+      "$date": "2026-08-18T17:24:52.872Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:24:52.873Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:24:52.873Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a849565b47c232d159a0947"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a6b820208fbd2b4c8913aae"
+    },
+    "problemCode": "DSA-006",
+    "language": "python",
+    "code": "\nclass Solution:\n    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:\n        dummy = ListNode(0)\n        curr = dummy\n        carry = 0\n        while l1 or l2 or carry:\n            v1 = l1.val if l1 else 0\n            v2 = l2.val if l2 else 0\n            total = v1 + v2 + carry\n            carry = total // 10\n            curr.next = ListNode(total % 10)\n            curr = curr.next\n            if l1: l1 = l1.next\n            if l2: l2 = l2.next\n        return dummy.next\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 140,
+    "submittedAt": {
+      "$date": "2026-08-18T17:24:53.274Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:24:53.274Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:24:53.274Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a849565b47c232d159a0949"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f5404"
+    },
+    "problemCode": "DSA-007",
+    "language": "python",
+    "code": "\nclass Solution:\n    def sortColors(self, nums: List[int]) -> None:\n        low, mid, high = 0, 0, len(nums) - 1\n        while mid <= high:\n            if nums[mid] == 0:\n                nums[low], nums[mid] = nums[mid], nums[low]\n                low += 1\n                mid += 1\n            elif nums[mid] == 1:\n                mid += 1\n            else:\n                nums[mid], nums[high] = nums[high], nums[mid]\n                high -= 1\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 138,
+    "submittedAt": {
+      "$date": "2026-08-18T17:24:53.769Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:24:53.769Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:24:53.769Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a849566b47c232d159a094b"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f5407"
+    },
+    "problemCode": "DSA-008",
+    "language": "python",
+    "code": "\nclass Solution:\n    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':\n        if not head:\n            return None\n        old_to_new = {}\n        curr = head\n        while curr:\n            old_to_new[curr] = Node(curr.val)\n            curr = curr.next\n        curr = head\n        while curr:\n            if curr.next:\n                old_to_new[curr].next = old_to_new[curr.next]\n            if curr.random:\n                old_to_new[curr].random = old_to_new[curr.random]\n            curr = curr.next\n        return old_to_new[head]\n",
+    "verdict": "WRONG_ANSWER",
+    "passedTestCases": 0,
+    "totalTestCases": 2,
+    "executionTimeMs": 136,
+    "submittedAt": {
+      "$date": "2026-08-18T17:24:54.196Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:24:54.196Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:24:54.196Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a849566b47c232d159a094d"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f540a"
+    },
+    "problemCode": "DSA-009",
+    "language": "python",
+    "code": "\nclass Solution:\n    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:\n        if not node:\n            return None\n        clones = {}\n        def dfs(curr):\n            if curr in clones:\n                return clones[curr]\n            copy = Node(curr.val)\n            clones[curr] = copy\n            for nei in curr.neighbors:\n                copy.neighbors.append(dfs(nei))\n            return copy\n        return dfs(node)\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 139,
+    "submittedAt": {
+      "$date": "2026-08-18T17:24:54.629Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:24:54.629Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:24:54.629Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a849567b47c232d159a094f"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f540d"
+    },
+    "problemCode": "DSA-010",
+    "language": "python",
+    "code": "\nclass Solution:\n    def findAnagrams(self, s: str, words: List[str], k: int) -> List[int]:\n        if not s or not words:\n            return []\n        p = words[0]\n        p_len = len(p)\n        if len(s) < p_len:\n            return []\n        from collections import Counter\n        p_count = Counter(p)\n        s_count = Counter(s[:p_len])\n        res = []\n        if s_count == p_count:\n            res.append(0)\n        for i in range(p_len, len(s)):\n            s_count[s[i]] += 1\n            s_count[s[i - p_len]] -= 1\n            if s_count[s[i - p_len]] == 0:\n                del s_count[s[i - p_len]]\n            if s_count == p_count:\n                res.append(i - p_len + 1)\n        return res\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 2,
+    "totalTestCases": 2,
+    "executionTimeMs": 138,
+    "submittedAt": {
+      "$date": "2026-08-18T17:24:55.027Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:24:55.027Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:24:55.027Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8495a7b10828bac54dac8f"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a665d0067f411def59e3042"
+    },
+    "problemCode": "DSA-001",
+    "language": "python",
+    "code": "\nclass Solution:\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\n        lookup = {}\n        for i, n in enumerate(nums):\n            diff = target - n\n            if diff in lookup:\n                return [lookup[diff], i]\n            lookup[n] = i\n        return []\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 4,
+    "totalTestCases": 4,
+    "executionTimeMs": 137,
+    "submittedAt": {
+      "$date": "2026-08-18T17:25:59.051Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:25:59.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:25:59.054Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8495a7b10828bac54dac91"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a673c00ff27d024ed9af7d5"
+    },
+    "problemCode": "DSA-002",
+    "language": "python",
+    "code": "\nclass Solution:\n    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        prev = None\n        curr = head\n        while curr:\n            nxt = curr.next\n            curr.next = prev\n            prev = curr\n            curr = nxt\n        return prev\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 141,
+    "submittedAt": {
+      "$date": "2026-08-18T17:25:59.468Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:25:59.469Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:25:59.469Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8495a7b10828bac54dac93"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a69e58e9f4cdd1fc4abfe38"
+    },
+    "problemCode": "DSA-003",
+    "language": "python",
+    "code": "\nclass Solution:\n    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:\n        if not root:\n            return None\n        root.left, root.right = self.invertTree(root.right), self.invertTree(root.left)\n        return root\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 136,
+    "submittedAt": {
+      "$date": "2026-08-18T17:25:59.872Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:25:59.873Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:25:59.873Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8495a8b10828bac54dac95"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a6a426ea3ba96fe9701e7bb"
+    },
+    "problemCode": "DSA-004",
+    "language": "python",
+    "code": "\nclass Solution:\n    def rotate(self, matrix: List[List[int]]) -> None:\n        n = len(matrix)\n        for i in range(n):\n            for j in range(i + 1, n):\n                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]\n        for row in matrix:\n            row.reverse()\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 2,
+    "totalTestCases": 2,
+    "executionTimeMs": 139,
+    "submittedAt": {
+      "$date": "2026-08-18T17:26:00.271Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:26:00.272Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:26:00.272Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8495a8b10828bac54dac97"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a6b57493948462ef54173ad"
+    },
+    "problemCode": "DSA-005",
+    "language": "python",
+    "code": "\nclass Solution:\n    def numIslands(self, grid: List[List[int]]) -> int:\n        if not grid:\n            return 0\n        m, n = len(grid), len(grid[0])\n        count = 0\n        def dfs(r, c):\n            if r < 0 or r >= m or c < 0 or c >= n or grid[r][c] != 1:\n                return\n            grid[r][c] = 0\n            dfs(r + 1, c)\n            dfs(r - 1, c)\n            dfs(r, c + 1)\n            dfs(r, c - 1)\n        for r in range(m):\n            for c in range(n):\n                if grid[r][c] == 1:\n                    count += 1\n                    dfs(r, c)\n        return count\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 139,
+    "submittedAt": {
+      "$date": "2026-08-18T17:26:00.667Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:26:00.668Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:26:00.668Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8495a9b10828bac54dac99"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a6b820208fbd2b4c8913aae"
+    },
+    "problemCode": "DSA-006",
+    "language": "python",
+    "code": "\nclass Solution:\n    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:\n        dummy = ListNode(0)\n        curr = dummy\n        carry = 0\n        while l1 or l2 or carry:\n            v1 = l1.val if l1 else 0\n            v2 = l2.val if l2 else 0\n            total = v1 + v2 + carry\n            carry = total // 10\n            curr.next = ListNode(total % 10)\n            curr = curr.next\n            if l1: l1 = l1.next\n            if l2: l2 = l2.next\n        return dummy.next\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 139,
+    "submittedAt": {
+      "$date": "2026-08-18T17:26:01.080Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:26:01.080Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:26:01.080Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8495a9b10828bac54dac9b"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f5404"
+    },
+    "problemCode": "DSA-007",
+    "language": "python",
+    "code": "\nclass Solution:\n    def sortColors(self, nums: List[int]) -> None:\n        low, mid, high = 0, 0, len(nums) - 1\n        while mid <= high:\n            if nums[mid] == 0:\n                nums[low], nums[mid] = nums[mid], nums[low]\n                low += 1\n                mid += 1\n            elif nums[mid] == 1:\n                mid += 1\n            else:\n                nums[mid], nums[high] = nums[high], nums[mid]\n                high -= 1\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 141,
+    "submittedAt": {
+      "$date": "2026-08-18T17:26:01.552Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:26:01.553Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:26:01.553Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8495a9b10828bac54dac9d"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f5407"
+    },
+    "problemCode": "DSA-008",
+    "language": "python",
+    "code": "\nclass Solution:\n    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':\n        if not head:\n            return None\n        old_to_new = {}\n        curr = head\n        while curr:\n            old_to_new[curr] = Node(curr.val)\n            curr = curr.next\n        curr = head\n        while curr:\n            if curr.next:\n                old_to_new[curr].next = old_to_new[curr.next]\n            if curr.random:\n                old_to_new[curr].random = old_to_new[curr.random]\n            curr = curr.next\n        return old_to_new[head]\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 2,
+    "totalTestCases": 2,
+    "executionTimeMs": 137,
+    "submittedAt": {
+      "$date": "2026-08-18T17:26:01.943Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:26:01.943Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:26:01.943Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8495aab10828bac54dac9f"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f540a"
+    },
+    "problemCode": "DSA-009",
+    "language": "python",
+    "code": "\nclass Solution:\n    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:\n        if not node:\n            return None\n        clones = {}\n        def dfs(curr):\n            if curr in clones:\n                return clones[curr]\n            copy = Node(curr.val)\n            clones[curr] = copy\n            for nei in curr.neighbors:\n                copy.neighbors.append(dfs(nei))\n            return copy\n        return dfs(node)\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 137,
+    "submittedAt": {
+      "$date": "2026-08-18T17:26:02.356Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:26:02.356Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:26:02.356Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8495aab10828bac54daca1"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8482e4a8f89839c70f540d"
+    },
+    "problemCode": "DSA-010",
+    "language": "python",
+    "code": "\nclass Solution:\n    def findAnagrams(self, s: str, words: List[str], k: int) -> List[int]:\n        if not s or not words:\n            return []\n        p = words[0]\n        p_len = len(p)\n        if len(s) < p_len:\n            return []\n        from collections import Counter\n        p_count = Counter(p)\n        s_count = Counter(s[:p_len])\n        res = []\n        if s_count == p_count:\n            res.append(0)\n        for i in range(p_len, len(s)):\n            s_count[s[i]] += 1\n            s_count[s[i - p_len]] -= 1\n            if s_count[s[i - p_len]] == 0:\n                del s_count[s[i - p_len]]\n            if s_count == p_count:\n                res.append(i - p_len + 1)\n        return res\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 2,
+    "totalTestCases": 2,
+    "executionTimeMs": 139,
+    "submittedAt": {
+      "$date": "2026-08-18T17:26:02.779Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:26:02.780Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:26:02.780Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a849644a79ab642fb6e75d7"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a665d0067f411def59e3042"
+    },
+    "problemCode": "DSA-001",
+    "language": "python",
+    "code": "from typing import List, Optional\n\nclass Solution:\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\n        freq = {}\n\n        for i,num in enumerate(nums):\n            complement = target - num\n            if complement in freq:\n                return [freq[complement], i]\n            \n            freq[num] = i\n        \n        return []\n        pass\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 4,
+    "totalTestCases": 4,
+    "executionTimeMs": 145,
+    "submittedAt": {
+      "$date": "2026-08-18T17:28:36.062Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T17:28:36.065Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T17:28:36.065Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a849f36a79ab642fb6e7b49"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a673c00ff27d024ed9af7d5"
+    },
+    "problemCode": "DSA-002",
+    "language": "python",
+    "code": "from typing import List, Optional\n\n# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\n\nclass Solution:\n    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        prev = None\n        curr = head\n\n        while curr:\n            nxt = curr.next\n            curr.next = prev\n            prev = curr\n            curr = nxt\n        \n        return prev\n        \n        pass\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 3,
+    "totalTestCases": 3,
+    "executionTimeMs": 157,
+    "submittedAt": {
+      "$date": "2026-08-18T18:06:46.938Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-18T18:06:46.943Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T18:06:46.943Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8829ab6428d48bf5b61cce"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8822221a879b2809e8d87a"
+    },
+    "problemCode": "DSA-011",
+    "language": "python",
+    "code": "from typing import List, Optional\n\nclass Solution:\n    def factorial(self, n: int) -> int:\n        if n == 0:\n            return 1\n\n        return n * self.factorial(n-1)\n        pass\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 5,
+    "totalTestCases": 5,
+    "executionTimeMs": 154,
+    "submittedAt": {
+      "$date": "2026-08-21T10:34:19.882Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-21T10:34:19.883Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-21T10:34:19.883Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a882fa77769fb8854e24edb"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8822221a879b2809e8d87d"
+    },
+    "problemCode": "DSA-012",
+    "language": "python",
+    "code": "from typing import List, Optional\n\nclass Solution:\n    def fib(self, n: int) -> int:\n        # Base case\n        if n <= 1:\n            return n\n        \n        return self.fib(n-1) + self.fib(n-2)\n        pass\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 6,
+    "totalTestCases": 6,
+    "executionTimeMs": 438,
+    "submittedAt": {
+      "$date": "2026-08-21T10:59:51.293Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-21T10:59:51.293Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-21T10:59:51.293Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a884910738de6dfedfd530b"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8822231a879b2809e8d886"
+    },
+    "problemCode": "DSA-015",
+    "language": "python",
+    "code": "class Solution:\n    def reverseString(self, s: List[str]) -> None:\n        left, right = 0, len(s) - 1\n        while left < right:\n            s[left], s[right] = s[right], s[left]\n            left += 1\n            right -= 1",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 4,
+    "totalTestCases": 4,
+    "executionTimeMs": 135,
+    "submittedAt": {
+      "$date": "2026-08-21T12:48:16.126Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-21T12:48:16.128Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-21T12:48:16.128Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a884a4c5a428bcdd51a7312"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8822231a879b2809e8d886"
+    },
+    "problemCode": "DSA-015",
+    "language": "python",
+    "code": "from typing import List, Optional\n\nclass Solution:\n    def reverseString(self, s: List[str]) -> None:\n        def helper(left:int, right:int):\n            if left >= right:\n                return \n            \n            s[left],s[right] = s[right],s[left]\n\n            helper(left + 1, right - 1)\n        \n        helper(0, len(s) - 1)\n\n        pass\n",
+    "verdict": "ACCEPTED",
+    "passedTestCases": 4,
+    "totalTestCases": 4,
+    "executionTimeMs": 114,
+    "submittedAt": {
+      "$date": "2026-08-21T12:53:32.185Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-21T12:53:32.188Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-21T12:53:32.188Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a897145fb38479ec2ee1c48"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8822221a879b2809e8d880"
+    },
+    "problemCode": "DSA-013",
+    "language": "python",
+    "code": "from typing import List, Optional\n\nclass Solution:\n    def myPow(self, x: int, n: int) -> int:\n        if n == 1:\n            return x\n        \n        return x * self.myPow(x,n-1)\n        pass\n",
+    "verdict": "RUNTIME_ERROR",
+    "passedTestCases": 0,
+    "totalTestCases": 5,
+    "executionTimeMs": 130,
+    "submittedAt": {
+      "$date": "2026-08-22T09:52:05.302Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-22T09:52:05.302Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-22T09:52:05.302Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a89717ffb38479ec2ee1c4c"
+    },
+    "userId": null,
+    "problemId": {
+      "$oid": "6a8822221a879b2809e8d880"
+    },
+    "problemCode": "DSA-013",
+    "language": "python",
+    "code": "from typing import List, Optional\n\nclass Solution:\n    def myPow(self, x: int, n: int) -> int:\n        if n <= 1:\n            return x\n        \n        return x * self.myPow(x,n-1)\n        pass\n",
+    "verdict": "RUNTIME_ERROR",
+    "passedTestCases": 0,
+    "totalTestCases": 5,
+    "executionTimeMs": 118,
+    "submittedAt": {
+      "$date": "2026-08-22T09:53:03.496Z"
+    },
+    "createdAt": {
+      "$date": "2026-08-22T09:53:03.497Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-22T09:53:03.497Z"
+    },
+    "__v": 0
+  }
+]

@@ -66,19 +66,30 @@ const SarathiBot = () => {
 
       // 2. Fetch Today's Focus Minutes
       const focusRes = await FocusApi.getTodayStats();
-      setTodayFocusMinutes(focusRes.data?.data?.totalMinutes || 0);
+      const focusMins = focusRes.data?.data?.totalMinutes ?? focusRes.data?.data?.totalDuration ?? 0;
+      setTodayFocusMinutes(focusMins);
 
       // 3. Fetch Pending Revisions & Revisions Done Today
-      const revisionRes = await TaskApi.getRevisionStats(new Date().getTimezoneOffset());
+      const tzOffset = new Date().getTimezoneOffset();
+      const revisionRes = await TaskApi.getRevisionStats(tzOffset);
       const revData = revisionRes.data?.data || {};
       setPendingRevisions(revData.overdueCount || 0);
-      setTodayRevisions(revData.revisionsByDate?.[todayStr]?.length || 0);
+
+      const count = revData.todayCount ?? (revData.revisionsByDate?.[todayStr]?.length || 0);
+      setTodayRevisions(count);
     } catch (e) {
       console.error("SarathiBot failed to fetch stats:", e);
     } finally {
       setLoading(false);
     }
   };
+
+  // Re-fetch stats whenever modal opens
+  useEffect(() => {
+    if (isOpen && currentUser) {
+      fetchStats();
+    }
+  }, [isOpen, currentUser]);
 
   // Periodic Reminder logic: check every 5 minutes (300000ms)
   // If todayRevisions < 2, flash a notification bubble on the bot icon
@@ -93,7 +104,6 @@ const SarathiBot = () => {
         // If daily revision goal not met, show warning bubble
         if (todayRevisions < 2) {
           setShowNotificationBubble(true);
-          // Play a gentle notification sound or bounce animation (simulated here)
         }
       });
     }, 300000); // 5 minutes

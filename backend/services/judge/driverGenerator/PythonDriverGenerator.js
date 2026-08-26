@@ -1,4 +1,5 @@
 import { ProblemConfigurationError } from '../outputSerializers/SerializerErrors.js';
+import { SemanticValidatorRegistry } from '../validators/SemanticValidatorRegistry.js';
 
 /**
  * Python Driver Harness Generator (Phase 6)
@@ -10,18 +11,28 @@ export function generatePythonDriverHarness(studentCode, functionDefinition, exe
   const returnType = functionDefinition?.returnType || 'number[]';
   const inPlaceMutation = executionProfile?.inPlaceMutation === true || returnType === 'void';
   const mutatedParameter = executionProfile?.mutatedParameter;
+  const semanticValidator = executionProfile?.semanticValidator;
+
+  if (semanticValidator) {
+    SemanticValidatorRegistry.assertValid(semanticValidator);
+  }
 
   if (inPlaceMutation) {
-    if (!mutatedParameter) {
+    const cleanMutated = (mutatedParameter || '').trim();
+    if (!cleanMutated) {
       throw new ProblemConfigurationError("Missing required 'executionProfile.mutatedParameter' for in-place mutation problem.");
     }
-    const paramExists = parameters.some(p => p.name === mutatedParameter);
+    const paramExists = parameters.some(p => {
+      const pName = typeof p === 'string' ? p : (p.name || (p.toObject ? p.toObject().name : '') || '');
+      return pName.trim() === cleanMutated;
+    });
     if (!paramExists) {
-      throw new ProblemConfigurationError(`Mutated parameter '${mutatedParameter}' not found in functionDefinition parameters.`);
+      throw new ProblemConfigurationError(`Mutated parameter '${cleanMutated}' not found in functionDefinition parameters.`);
     }
   }
 
   const serializedTCs = JSON.stringify(testCases);
+  const validationHelpersCode = SemanticValidatorRegistry.getInjectedValidationCode('python', semanticValidator);
 
   return `import sys, json, time
 from typing import List, Optional
@@ -133,6 +144,8 @@ def parse_graph_node(val):
     first_key = val[0].get("val") if isinstance(val[0], dict) else None
     return nodes.get(first_key) if first_key in nodes else None
 
+${validationHelpersCode}
+
 # ==========================================
 # 3. RUNTIME OUTPUT SERIALIZER (PHASE 4 CONTRACT)
 # ==========================================
@@ -238,6 +251,8 @@ def run_driver():
               }
             }).join('\n            ')}
 
+            ${semanticValidator === 'DeepCopyValidator' ? 'original_node_ids = collect_original_node_ids(args)' : ''}
+
             solution = Solution()
             ${inPlaceMutation ? `
             # In-Place Mutation Execution
@@ -247,6 +262,7 @@ def run_driver():
             output = serialize_output(args[mutated_idx])
             ` : `
             result = solution.${functionName}(*args)
+            ${semanticValidator === 'DeepCopyValidator' ? 'validate_deep_copy(result, original_node_ids)' : ''}
             output = serialize_output(result)
             `}
 

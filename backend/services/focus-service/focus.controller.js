@@ -78,18 +78,23 @@ export const FocusController = {
       const endOfDay = new Date();
       endOfDay.setHours(23, 59, 59, 999);
 
-      const sessions = await FocusSession.find({
+      const query = {
         user: userId,
-        branchId: req.branchId,
         date: { $gte: startOfDay, $lte: endOfDay },
-      });
+      };
+      if (req.branchId) {
+        query.branchId = req.branchId;
+      }
 
-      const totalDuration = sessions.reduce((acc, s) => acc + s.duration, 0);
+      const sessions = await FocusSession.find(query);
+
+      const totalDuration = sessions.reduce((acc, s) => acc + (s.duration || 0), 0);
       res.status(200).json({
         success: true,
         data: {
           sessionsCount: sessions.length,
           totalDuration,
+          totalMinutes: totalDuration,
           sessions,
         },
       });

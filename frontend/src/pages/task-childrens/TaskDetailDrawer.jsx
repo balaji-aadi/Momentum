@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { server } from '../../services/config';
 import DsaCodingArenaModal from '../../components/dsa/DsaCodingArenaModal';
 import { FaCode } from "react-icons/fa";
+import ReactQuill from 'react-quill';
 
 const hasAdditionalNotes = (notes) => {
     if (!notes) return false;
@@ -75,6 +76,7 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
     const [editedEnContent, setEditedEnContent] = useState("");
     const [editedHiContent, setEditedHiContent] = useState("");
     const [isTranslating, setIsTranslating] = useState(false);
+    const [editorMode, setEditorMode] = useState("rich"); // "rich" or "code"
     const activeNote = notes.find(n => n._id === activeReaderNoteId);
     // Zen Reading Mode State
     const [isReadingModeActive, setIsReadingModeActive] = useState(false);
@@ -1213,11 +1215,18 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                                                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
                                                                         🇬🇧 English Content
                                                                     </label>
-                                                                    <textarea
+                                                                    <ReactQuill
                                                                         value={editedEnContent}
-                                                                        onChange={(e) => setEditedEnContent(e.target.value)}
-                                                                        placeholder="Paste or write HTML/CSS code directly here..."
-                                                                        className="w-full min-h-[200px] max-h-[600px] font-mono text-[11px] p-3 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 leading-normal"
+                                                                        onChange={setEditedEnContent}
+                                                                        placeholder="Type English notes here..."
+                                                                        modules={{
+                                                                            toolbar: [
+                                                                                [{ 'header': [1, 2, 3, false] }],
+                                                                                ['bold', 'italic', 'underline', 'strike'],
+                                                                                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                                                                ['link', 'clean']
+                                                                            ]
+                                                                        }}
                                                                     />
                                                                 </div>
                                                                 <div className="space-y-2">
@@ -1239,18 +1248,45 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                                                             {isTranslating ? "⏳ Translating..." : "⚡ Translate from English"}
                                                                         </button>
                                                                     </div>
-                                                                    <textarea
+                                                                    <ReactQuill
                                                                         value={editedHiContent}
-                                                                        onChange={(e) => setEditedHiContent(e.target.value)}
-                                                                        placeholder="Paste or write HTML/CSS code directly here..."
-                                                                        className="w-full min-h-[200px] max-h-[600px] font-mono text-[11px] p-3 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 leading-normal"
+                                                                        onChange={setEditedHiContent}
+                                                                        placeholder="Type Hindi notes here..."
+                                                                        modules={{
+                                                                            toolbar: [
+                                                                                [{ 'header': [1, 2, 3, false] }],
+                                                                                ['bold', 'italic', 'underline', 'strike'],
+                                                                                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                                                                ['link', 'clean']
+                                                                            ]
+                                                                        }}
                                                                     />
                                                                 </div>
                                                             </div>
                                                         ) : (
                                                             <div className="space-y-2">
                                                                 <div className="flex justify-between items-center mb-1 gap-2 flex-wrap">
-                                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Note HTML / Text Content</label>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Note HTML / Text Content</label>
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => {
+                                                                                if (editorMode === "rich") {
+                                                                                    setEditedContent(decodeHtmlEntities(editedContent));
+                                                                                    setEditorMode("code");
+                                                                                } else {
+                                                                                    setEditorMode("rich");
+                                                                                }
+                                                                            }}
+                                                                            className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border transition-all ${
+                                                                                editorMode === "code"
+                                                                                    ? "bg-blue-500 text-white border-blue-500 hover:bg-blue-600"
+                                                                                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-200"
+                                                                            }`}
+                                                                        >
+                                                                            {editorMode === "code" ? "📝 Use Rich Text" : "💻 Use HTML/CSS Code"}
+                                                                        </button>
+                                                                    </div>
                                                                     <button
                                                                         type="button"
                                                                         disabled={isTranslating}
@@ -1268,12 +1304,28 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                                                         {isTranslating ? "⏳ Translating..." : "🌐 Auto-Translate note to Hindi"}
                                                                     </button>
                                                                 </div>
-                                                                <textarea
-                                                                    value={editedContent}
-                                                                    onChange={(e) => setEditedContent(e.target.value)}
-                                                                    placeholder="Paste or write HTML/CSS code directly here..."
-                                                                    className="w-full min-h-[300px] max-h-[600px] font-mono text-[11px] p-3 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 leading-normal"
-                                                                />
+                                                                {editorMode === "code" ? (
+                                                                    <textarea
+                                                                        value={editedContent}
+                                                                        onChange={(e) => setEditedContent(e.target.value)}
+                                                                        placeholder="Paste or write HTML/CSS code directly here..."
+                                                                        className="w-full min-h-[300px] max-h-[600px] font-mono text-[11px] p-3 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 dark:text-slate-100 leading-normal"
+                                                                    />
+                                                                ) : (
+                                                                    <ReactQuill
+                                                                        value={editedContent}
+                                                                        onChange={setEditedContent}
+                                                                        placeholder="Type notes here..."
+                                                                        modules={{
+                                                                            toolbar: [
+                                                                                [{ 'header': [1, 2, 3, false] }],
+                                                                                ['bold', 'italic', 'underline', 'strike'],
+                                                                                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                                                                ['link', 'clean']
+                                                                            ]
+                                                                        }}
+                                                                    />
+                                                                )}
                                                             </div>
                                                         )}
                                                     </div>

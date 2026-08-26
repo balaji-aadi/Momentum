@@ -1,0 +1,29 @@
+[
+  {
+    "_id": {
+      "$oid": "69d778246d3910f342f37162"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "sections": [
+      {
+        "id": "section_default",
+        "title": "General Learning",
+        "rows": [
+          {
+            "id": "row_1775843975538",
+            "date": "2026-04-10",
+            "content": "<p>Basics of python</p>"
+          }
+        ]
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-04-09T09:57:56.234Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-10T17:59:44.017Z"
+    }
+  }
+]

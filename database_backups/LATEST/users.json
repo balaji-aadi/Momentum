@@ -1,0 +1,111 @@
+[
+  {
+    "_id": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "email": "balajiaadi2000@gmail.com",
+    "address": "",
+    "createdAt": {
+      "$date": "2026-02-16T11:50:23.162Z"
+    },
+    "firstName": "Balaji",
+    "isActive": true,
+    "lastName": "Aadi",
+    "otp": null,
+    "otpTime": null,
+    "password": "$2b$10$ZB1YuGY8Rz04gkuiXbhb6eoMzCdZfeCDGKM6BuAZu2V2X/chaobSq",
+    "phoneNumber": "7804946631",
+    "profileImage": "http://localhost:5003/api/v1/file/get-file/IMG_20221204_224327.jpg",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTkzMDQ3ZjE2ZTg1ZmYzZTRlZmQ5YTMiLCJpYXQiOjE3ODc0ODA3MzcsImV4cCI6MTc4ODc3NjczN30.YfP-9Vg7laTqcogQYqua-JJyWPpqjyBYqGElDh90mUg",
+    "updatedAt": {
+      "$date": "2026-08-23T10:25:37.151Z"
+    },
+    "userRole": {
+      "$oid": "69d777804b5ba11b8da9c128"
+    },
+    "userRoles": [
+      {
+        "$oid": "69d777804b5ba11b8da9c128"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c129"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c12b"
+      }
+    ],
+    "branchAccess": [
+      {
+        "branchId": {
+          "$oid": "6a081b6e111c99b633b00d76"
+        },
+        "role": "admin",
+        "_id": {
+          "$oid": "6a081b73111c99b633b00d7c"
+        }
+      }
+    ],
+    "invitationTimeRemaining": 300,
+    "subscriptionPlan": "half-yearly",
+    "subscriptionType": "paid",
+    "subscriptionExpiresAt": {
+      "$date": "2026-11-16T10:06:43.205Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a07fe669a0d94f268897c92"
+    },
+    "email": "test@gmail.com",
+    "userRole": {
+      "$oid": "69d777804b5ba11b8da9c12b"
+    },
+    "userRoles": [
+      {
+        "$oid": "69d777804b5ba11b8da9c12b"
+      }
+    ],
+    "firstName": "test",
+    "lastName": "one",
+    "phoneNumber": "7898889898",
+    "address": "",
+    "profileImage": "",
+    "otp": null,
+    "otpTime": null,
+    "isActive": true,
+    "password": "$2b$10$6quIH.CoBPg/KgOOuaM./uS2Z1l/mqKEMU1HfO9voEGtZyCXW8YY6",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTA3ZmU2NjlhMGQ5NGYyNjg4OTdjOTIiLCJpYXQiOjE3ODcwMzkzNjYsImV4cCI6MTc4ODMzNTM2Nn0.Q6PKrkHPIHT9Qv1wlGMLCe2KiBJ78vOiieCgA4ARNk8",
+    "createdAt": {
+      "$date": "2026-05-16T05:19:34.230Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T07:49:26.027Z"
+    },
+    "branchAccess": [
+      {
+        "branchId": {
+          "$oid": "6a081b6e111c99b633b00d76"
+        },
+        "role": "admin",
+        "_id": {
+          "$oid": "6a081b74111c99b633b00d81"
+        }
+      },
+      {
+        "branchId": {
+          "$oid": "6a083a77f7e66b83659e7174"
+        },
+        "role": "admin",
+        "_id": {
+          "$oid": "6a083a77f7e66b83659e7176"
+        }
+      }
+    ],
+    "invitationTimeRemaining": 300,
+    "subscriptionPlan": "half-yearly",
+    "subscriptionType": "paid",
+    "subscriptionExpiresAt": {
+      "$date": "2026-11-16T12:10:57.854Z"
+    }
+  }
+]

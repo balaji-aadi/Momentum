@@ -1,0 +1,4266 @@
+[
+  {
+    "_id": {
+      "$oid": "6a50cbad7ce9f4c99753886a"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-10",
+    "questions": [
+      {
+        "$oid": "69e75061c05bf5f0580b8105"
+      },
+      {
+        "$oid": "69e75051c05bf5f0580b8051"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a1"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807f"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75061c05bf5f0580b8105"
+      },
+      {
+        "$oid": "69e75051c05bf5f0580b8051"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a1"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807f"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 4039,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "createdAt": {
+      "$date": "2026-07-10T10:38:37.655Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-10T17:38:07.693Z"
+    },
+    "currentQuestionStartTimeLeft": 4039,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75061c05bf5f0580b8105"
+        },
+        "completedAtTimeLeft": 9613,
+        "timeSpent": 1187,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a50d9a70553d156e75637cc"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75051c05bf5f0580b8051"
+        },
+        "completedAtTimeLeft": 7241,
+        "timeSpent": 2372,
+        "notes": "completed but still need more revision ",
+        "_id": {
+          "$oid": "6a50e5f194c3e98898337e49"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80a1"
+        },
+        "completedAtTimeLeft": 5598,
+        "timeSpent": 1643,
+        "notes": "completed ",
+        "_id": {
+          "$oid": "6a5127e00c272272df8f1238"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b807f"
+        },
+        "completedAtTimeLeft": 4039,
+        "timeSpent": 1559,
+        "notes": "This problem is not done yet revise it after completed ",
+        "_id": {
+          "$oid": "6a512dff0c272272df8f164c"
+        }
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e75051c05bf5f0580b8051"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6a51cf5694c55d7de84b7224"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-11",
+    "questions": [
+      {
+        "$oid": "69e75051c05bf5f0580b8051"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441a8"
+      },
+      {
+        "$oid": "69e75061c05bf5f0580b8101"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807b"
+      },
+      {
+        "$oid": "69e75051c05bf5f0580b8055"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75051c05bf5f0580b8051"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441a8"
+      },
+      {
+        "$oid": "69e75061c05bf5f0580b8101"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807b"
+      },
+      {
+        "$oid": "69e75051c05bf5f0580b8055"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e75061c05bf5f0580b8101"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807b"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 3856,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 3856,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75051c05bf5f0580b8051"
+        },
+        "completedAtTimeLeft": 9795,
+        "timeSpent": 1005,
+        "notes": "completed ",
+        "_id": {
+          "$oid": "6a51d4c594c55d7de84b74e7"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a49011bb80dc9d6090441a8"
+        },
+        "completedAtTimeLeft": 8890,
+        "timeSpent": 905,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a51d85294c55d7de84b7787"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75061c05bf5f0580b8101"
+        },
+        "completedAtTimeLeft": 6422,
+        "timeSpent": 2468,
+        "notes": "completed but still need more revision to understand optimal solution ",
+        "_id": {
+          "$oid": "6a51e1ff94c55d7de84b7ceb"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b807b"
+        },
+        "completedAtTimeLeft": 4784,
+        "timeSpent": 1638,
+        "notes": "partially completed still need more revision fantastic problem ",
+        "_id": {
+          "$oid": "6a51ea8894c55d7de84b81d3"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75051c05bf5f0580b8055"
+        },
+        "completedAtTimeLeft": 3856,
+        "timeSpent": 928,
+        "notes": "Not completed this is the DP problem ",
+        "_id": {
+          "$oid": "6a51ee3f94c55d7de84b8708"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-11T05:06:30.425Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-11T07:18:24.413Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a528cdba36051db207b83c5"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-12",
+    "questions": [
+      {
+        "$oid": "69e75061c05bf5f0580b8101"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807b"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441af"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441ac"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75061c05bf5f0580b8101"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807b"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441af"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441ac"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e75052c05bf5f0580b807b"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441af"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 1737,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 1737,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75061c05bf5f0580b8101"
+        },
+        "completedAtTimeLeft": 9891,
+        "timeSpent": 909,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a53130736b8fdee7fb1757f"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b807b"
+        },
+        "completedAtTimeLeft": 8620,
+        "timeSpent": 1271,
+        "notes": "completed ",
+        "_id": {
+          "$oid": "6a531a8536b8fdee7fb17949"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a49011bb80dc9d6090441af"
+        },
+        "completedAtTimeLeft": 5244,
+        "timeSpent": 3376,
+        "notes": "completed ",
+        "_id": {
+          "$oid": "6a53a3c47afec72d814e8c26"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a49011bb80dc9d6090441ac"
+        },
+        "completedAtTimeLeft": 1737,
+        "timeSpent": 3507,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a53b17e7afec72d814e94eb"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-11T18:35:07.022Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-12T15:23:43.101Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a5486003e12830921a7fe34"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-13",
+    "questions": [
+      {
+        "$oid": "69e75052c05bf5f0580b807b"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441af"
+      },
+      {
+        "$oid": "69e75062c05bf5f0580b811d"
+      },
+      {
+        "$oid": "69e75046c05bf5f0580b8003"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75052c05bf5f0580b807b"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441af"
+      },
+      {
+        "$oid": "69e75062c05bf5f0580b811d"
+      },
+      {
+        "$oid": "69e75046c05bf5f0580b8003"
+      }
+    ],
+    "reviseTomorrowQuestions": [],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 6143,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 6143,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b807b"
+        },
+        "completedAtTimeLeft": 9893,
+        "timeSpent": 907,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a5489963e12830921a800db"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a49011bb80dc9d6090441af"
+        },
+        "completedAtTimeLeft": 8986,
+        "timeSpent": 907,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a548d273e12830921a80370"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75062c05bf5f0580b811d"
+        },
+        "completedAtTimeLeft": 8080,
+        "timeSpent": 906,
+        "notes": "complete",
+        "_id": {
+          "$oid": "6a5490b33e12830921a805e7"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75046c05bf5f0580b8003"
+        },
+        "completedAtTimeLeft": 6143,
+        "timeSpent": 1937,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a54aa5c3e12830921a80e66"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-13T06:30:24.428Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-13T09:05:33.114Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a55a04a3fa7aed375f19e9e"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-14",
+    "questions": [
+      {
+        "$oid": "69e75047c05bf5f0580b8009"
+      },
+      {
+        "$oid": "69e7504ec05bf5f0580b8019"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b808f"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b808b"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75047c05bf5f0580b8009"
+      },
+      {
+        "$oid": "69e7504ec05bf5f0580b8019"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b808f"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b808b"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e75047c05bf5f0580b8009"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 4830,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 4830,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75047c05bf5f0580b8009"
+        },
+        "completedAtTimeLeft": 8581,
+        "timeSpent": 2219,
+        "notes": "completed still need a little bit more revisions",
+        "_id": {
+          "$oid": "6a55a9223fa7aed375f1a16a"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7504ec05bf5f0580b8019"
+        },
+        "completedAtTimeLeft": 7305,
+        "timeSpent": 1276,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a55afc53fa7aed375f1a515"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b808f"
+        },
+        "completedAtTimeLeft": 6341,
+        "timeSpent": 964,
+        "notes": "Not completed use stack and queue knowledge",
+        "_id": {
+          "$oid": "6a55b38b3fa7aed375f1a72d"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b808b"
+        },
+        "completedAtTimeLeft": 4830,
+        "timeSpent": 1511,
+        "notes": "completed but review the code once again \n",
+        "_id": {
+          "$oid": "6a55bf803fa7aed375f1ac7d"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-14T02:34:50.910Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-14T04:48:01.383Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a5729d210818e0c13bc7a22"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-15",
+    "questions": [
+      {
+        "$oid": "69e75047c05bf5f0580b8009"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441a9"
+      },
+      {
+        "$oid": "69e7504fc05bf5f0580b8027"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a9"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75047c05bf5f0580b8009"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441a9"
+      },
+      {
+        "$oid": "69e7504fc05bf5f0580b8027"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a9"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "6a49011bb80dc9d6090441a9"
+      },
+      {
+        "$oid": "69e7504fc05bf5f0580b8027"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a9"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 10740,
+    "timerIsActive": true,
+    "timerLastUpdated": {
+      "$date": "2026-07-15T11:37:15.815Z"
+    },
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 4414,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75047c05bf5f0580b8009"
+        },
+        "completedAtTimeLeft": 9612,
+        "timeSpent": 1188,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a5734fc10818e0c13bc869a"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a49011bb80dc9d6090441a9"
+        },
+        "completedAtTimeLeft": 8145,
+        "timeSpent": 1467,
+        "notes": "completed still need a better understanding ",
+        "_id": {
+          "$oid": "6a573dea10818e0c13bc8d69"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7504fc05bf5f0580b8027"
+        },
+        "completedAtTimeLeft": 6269,
+        "timeSpent": 1876,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a5752e610818e0c13bc957b"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80a9"
+        },
+        "completedAtTimeLeft": 4414,
+        "timeSpent": 1855,
+        "notes": "not completed",
+        "_id": {
+          "$oid": "6a575b1410818e0c13bc9c39"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-15T06:33:54.027Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-15T11:37:15.817Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a58397502b5886e5a57f475"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-16",
+    "questions": [
+      {
+        "$oid": "6a49011bb80dc9d6090441a9"
+      },
+      {
+        "$oid": "69e7504fc05bf5f0580b8027"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a9"
+      },
+      {
+        "$oid": "69d78683ef8d64e8cbe9fc0d"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "6a49011bb80dc9d6090441a9"
+      },
+      {
+        "$oid": "69e7504fc05bf5f0580b8027"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a9"
+      },
+      {
+        "$oid": "69d78683ef8d64e8cbe9fc0d"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80a9"
+      },
+      {
+        "$oid": "69d78683ef8d64e8cbe9fc0d"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 5507,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 5507,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "6a49011bb80dc9d6090441a9"
+        },
+        "completedAtTimeLeft": 9867,
+        "timeSpent": 933,
+        "notes": "completed ",
+        "_id": {
+          "$oid": "6a58400402b5886e5a57f756"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7504fc05bf5f0580b8027"
+        },
+        "completedAtTimeLeft": 8507,
+        "timeSpent": 1360,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a58455502b5886e5a57fa6c"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80a9"
+        },
+        "completedAtTimeLeft": 6790,
+        "timeSpent": 1717,
+        "notes": "Understand the logic but still needs more revision on coding part",
+        "_id": {
+          "$oid": "6a58500b02b5886e5a58000d"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69d78683ef8d64e8cbe9fc0d"
+        },
+        "completedAtTimeLeft": 5507,
+        "timeSpent": 1283,
+        "notes": "Still need revision ",
+        "_id": {
+          "$oid": "6a585d5202b5886e5a5804c6"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-16T01:52:53.348Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-16T04:26:03.025Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a59bf45204e4119451783a0"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-17",
+    "questions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80a9"
+      },
+      {
+        "$oid": "69d78683ef8d64e8cbe9fc0d"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807d"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441ab"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80a9"
+      },
+      {
+        "$oid": "69d78683ef8d64e8cbe9fc0d"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807d"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441ab"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80a9"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807d"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441ab"
+      },
+      {
+        "$oid": "69d78683ef8d64e8cbe9fc0d"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 2158,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 2158,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80a9"
+        },
+        "completedAtTimeLeft": 9116,
+        "timeSpent": 1684,
+        "notes": "The  second optimal approach code review is pending",
+        "_id": {
+          "$oid": "6a59ded3204e411945178ab3"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69d78683ef8d64e8cbe9fc0d"
+        },
+        "completedAtTimeLeft": 7472,
+        "timeSpent": 1644,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a59e86d204e411945178fa1"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b807d"
+        },
+        "completedAtTimeLeft": 4729,
+        "timeSpent": 2743,
+        "notes": "Not completed ",
+        "_id": {
+          "$oid": "6a5a10a1204e411945179a5f"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a49011bb80dc9d6090441ab"
+        },
+        "completedAtTimeLeft": 2158,
+        "timeSpent": 2571,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a5a6e34204e41194517a7aa"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-17T05:36:05.134Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-17T18:03:07.777Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a5aec40e7a8257ceaea0949"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-18",
+    "questions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80a9"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807d"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441ab"
+      },
+      {
+        "$oid": "69d78683ef8d64e8cbe9fc0d"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80a9"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807d"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441ab"
+      },
+      {
+        "$oid": "69d78683ef8d64e8cbe9fc0d"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e75052c05bf5f0580b807d"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 5342,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 5342,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80a9"
+        },
+        "completedAtTimeLeft": 9645,
+        "timeSpent": 1155,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a5afb51e7a8257ceaea1116"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b807d"
+        },
+        "completedAtTimeLeft": 8659,
+        "timeSpent": 986,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a5b1b45e7a8257ceaea1683"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a49011bb80dc9d6090441ab"
+        },
+        "completedAtTimeLeft": 6459,
+        "timeSpent": 2200,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a5b28a8e7a8257ceaea1c2b"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69d78683ef8d64e8cbe9fc0d"
+        },
+        "completedAtTimeLeft": 5342,
+        "timeSpent": 1117,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a5b2dc0e7a8257ceaea205f"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-18T03:00:16.678Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-18T07:39:49.234Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a5c776be7a8257ceaea525f"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-19",
+    "questions": [
+      {
+        "$oid": "69e75052c05bf5f0580b807d"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80b5"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8073"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807b"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75052c05bf5f0580b807d"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80b5"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8073"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807b"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80b5"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807d"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8073"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 6566,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 6566,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b807d"
+        },
+        "completedAtTimeLeft": 9435,
+        "timeSpent": 1365,
+        "notes": "Heap logic is clear partially completed",
+        "_id": {
+          "$oid": "6a5c98cde7a8257ceaea56e3"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80b5"
+        },
+        "completedAtTimeLeft": 8535,
+        "timeSpent": 900,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a5ca303e7a8257ceaea5aa8"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b8073"
+        },
+        "completedAtTimeLeft": 7475,
+        "timeSpent": 1060,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a5ca92ce7a8257ceaea5da9"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b807b"
+        },
+        "completedAtTimeLeft": 6566,
+        "timeSpent": 909,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a5cacbae7a8257ceaea6056"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-19T07:06:19.151Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-19T10:53:47.728Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a5db509e7a8257ceaea8086"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-20",
+    "questions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80b5"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807d"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8073"
+      },
+      {
+        "$oid": "6a4cbd358f3ba6c540a5cbfc"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80b5"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b807d"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8073"
+      },
+      {
+        "$oid": "6a4cbd358f3ba6c540a5cbfc"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e75052c05bf5f0580b807d"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8073"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 5160,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 5160,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80b5"
+        },
+        "completedAtTimeLeft": 9770,
+        "timeSpent": 1030,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a5db93be7a8257ceaea8432"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b807d"
+        },
+        "completedAtTimeLeft": 8746,
+        "timeSpent": 1024,
+        "notes": "completed ",
+        "_id": {
+          "$oid": "6a5dc149e7a8257ceaea8903"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b8073"
+        },
+        "completedAtTimeLeft": 6352,
+        "timeSpent": 2394,
+        "notes": "completed by a little confusion in some part ",
+        "_id": {
+          "$oid": "6a5e5bb0e7a8257ceaea91e0"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd358f3ba6c540a5cbfc"
+        },
+        "completedAtTimeLeft": 5160,
+        "timeSpent": 1192,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a5e60c8e7a8257ceaea94fc"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-20T05:41:29.205Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-20T17:54:18.436Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a5f1251e7a8257ceaea9fbc"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-21",
+    "questions": [
+      {
+        "$oid": "69e75052c05bf5f0580b807d"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8073"
+      },
+      {
+        "$oid": "69e75051c05bf5f0580b804d"
+      },
+      {
+        "$oid": "69e75060c05bf5f0580b80c1"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75052c05bf5f0580b807d"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8073"
+      },
+      {
+        "$oid": "69e75051c05bf5f0580b804d"
+      },
+      {
+        "$oid": "69e75060c05bf5f0580b80c1"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e75060c05bf5f0580b80c1"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 7152,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 7152,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b807d"
+        },
+        "completedAtTimeLeft": 9895,
+        "timeSpent": 905,
+        "notes": "completed ",
+        "_id": {
+          "$oid": "6a5f30eae7a8257ceaeaa61a"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b8073"
+        },
+        "completedAtTimeLeft": 8964,
+        "timeSpent": 931,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a5f348ee7a8257ceaeaa857"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75051c05bf5f0580b804d"
+        },
+        "completedAtTimeLeft": 8058,
+        "timeSpent": 906,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a5f3a1ae7a8257ceaeaacab"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75060c05bf5f0580b80c1"
+        },
+        "completedAtTimeLeft": 7152,
+        "timeSpent": 906,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a5f45dbe7a8257ceaeab173"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-21T06:31:45.632Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-21T10:11:44.541Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a606446e7a8257ceaeadb8f"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-22",
+    "questions": [
+      {
+        "$oid": "69e75060c05bf5f0580b80c1"
+      },
+      {
+        "$oid": "6a4cbd378f3ba6c540a5cc10"
+      },
+      {
+        "$oid": "69d799b36f815dc6d8e65a0e"
+      },
+      {
+        "$oid": "69da6970faaf4f1fd14b6f8f"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75060c05bf5f0580b80c1"
+      },
+      {
+        "$oid": "6a4cbd378f3ba6c540a5cc10"
+      },
+      {
+        "$oid": "69d799b36f815dc6d8e65a0e"
+      },
+      {
+        "$oid": "69da6970faaf4f1fd14b6f8f"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69da6970faaf4f1fd14b6f8f"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 5028,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 5028,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75060c05bf5f0580b80c1"
+        },
+        "completedAtTimeLeft": 9632,
+        "timeSpent": 1168,
+        "notes": "completed still need revision ",
+        "_id": {
+          "$oid": "6a6068e2e7a8257ceaeaddd3"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd378f3ba6c540a5cc10"
+        },
+        "completedAtTimeLeft": 7855,
+        "timeSpent": 1777,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a606fd4e7a8257ceaeae178"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69d799b36f815dc6d8e65a0e"
+        },
+        "completedAtTimeLeft": 6934,
+        "timeSpent": 921,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a60736ee7a8257ceaeae32f"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69da6970faaf4f1fd14b6f8f"
+        },
+        "completedAtTimeLeft": 5028,
+        "timeSpent": 1906,
+        "notes": "Completed but revise again ",
+        "_id": {
+          "$oid": "6a607d35e7a8257ceaeae8be"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-22T06:33:42.609Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-22T08:20:11.998Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a618d28e7a8257ceaeaf619"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-23",
+    "questions": [
+      {
+        "$oid": "69da6970faaf4f1fd14b6f8f"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fcd"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a3"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fdb"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69da6970faaf4f1fd14b6f8f"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fcd"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a3"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fdb"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69da6970faaf4f1fd14b6f8f"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fcd"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a3"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 5411,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 5411,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69da6970faaf4f1fd14b6f8f"
+        },
+        "completedAtTimeLeft": 9792,
+        "timeSpent": 1008,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a619718e7a8257ceaeafb02"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a30ea665fb08c29755f7fcd"
+        },
+        "completedAtTimeLeft": 7242,
+        "timeSpent": 2550,
+        "notes": "completed if the given sorted rotated array nums have unique elements.\nFollow up distinct is pending ",
+        "_id": {
+          "$oid": "6a61c319e7a8257ceaeb0309"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80a3"
+        },
+        "completedAtTimeLeft": 6318,
+        "timeSpent": 924,
+        "notes": "Not completed optimal one and code",
+        "_id": {
+          "$oid": "6a61c7f8e7a8257ceaeb0744"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a30ea665fb08c29755f7fdb"
+        },
+        "completedAtTimeLeft": 5411,
+        "timeSpent": 907,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a61d2e5e7a8257ceaeb0c48"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-23T03:40:24.337Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-23T08:37:58.604Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6315bfa7d2ddedec2fcabe"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-24",
+    "questions": [
+      {
+        "$oid": "69da6970faaf4f1fd14b6f8f"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fcd"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a3"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fd5"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69da6970faaf4f1fd14b6f8f"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fcd"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a3"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fd5"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "6a30ea665fb08c29755f7fd5"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a3"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fcd"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 7051,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 7051,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69da6970faaf4f1fd14b6f8f"
+        },
+        "completedAtTimeLeft": 9895,
+        "timeSpent": 905,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a6324eca7d2ddedec2fcec6"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a30ea665fb08c29755f7fcd"
+        },
+        "completedAtTimeLeft": 8870,
+        "timeSpent": 1025,
+        "notes": "Not completed for distinct",
+        "_id": {
+          "$oid": "6a6352e1a7d2ddedec2fd515"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80a3"
+        },
+        "completedAtTimeLeft": 7957,
+        "timeSpent": 913,
+        "notes": "Not completed optimal code is pending",
+        "_id": {
+          "$oid": "6a635679a7d2ddedec2fd83a"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a30ea665fb08c29755f7fd5"
+        },
+        "completedAtTimeLeft": 7051,
+        "timeSpent": 906,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a639208a7d2ddedec2fe000"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-24T07:35:27.139Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-24T16:25:58.709Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6458b5402e9813dd3fc8cb"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-25",
+    "questions": [
+      {
+        "$oid": "6a30ea665fb08c29755f7fd5"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a3"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fcd"
+      },
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "6a30ea665fb08c29755f7fd5"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a3"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fcd"
+      },
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 6596,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 6596,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "6a30ea665fb08c29755f7fd5"
+        },
+        "completedAtTimeLeft": 9893,
+        "timeSpent": 907,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a645cab402e9813dd3fcb41"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80a3"
+        },
+        "completedAtTimeLeft": 8978,
+        "timeSpent": 915,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a64603f402e9813dd3fcdb2"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a30ea665fb08c29755f7fcd"
+        },
+        "completedAtTimeLeft": 8004,
+        "timeSpent": 974,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a646529402e9813dd3fd11a"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75053c05bf5f0580b8093"
+        },
+        "completedAtTimeLeft": 6596,
+        "timeSpent": 1408,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a646e74402e9813dd3fd533"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-25T06:33:25.404Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-25T08:06:19.422Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a65797926d0bf0763815a9c"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-26",
+    "questions": [
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      },
+      {
+        "$oid": "69d78634ef8d64e8cbe9faf9"
+      },
+      {
+        "$oid": "6a1d415c4ea9a30357efaadf"
+      },
+      {
+        "$oid": "69d799dd6f815dc6d8e65b08"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      },
+      {
+        "$oid": "69d78634ef8d64e8cbe9faf9"
+      },
+      {
+        "$oid": "6a1d415c4ea9a30357efaadf"
+      },
+      {
+        "$oid": "69d799dd6f815dc6d8e65b08"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      },
+      {
+        "$oid": "6a1d415c4ea9a30357efaadf"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 6514,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 6514,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75053c05bf5f0580b8093"
+        },
+        "completedAtTimeLeft": 9383,
+        "timeSpent": 1417,
+        "notes": "Not completed ",
+        "_id": {
+          "$oid": "6a657fc826d0bf0763817a33"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69d78634ef8d64e8cbe9faf9"
+        },
+        "completedAtTimeLeft": 8446,
+        "timeSpent": 937,
+        "notes": "completed ",
+        "_id": {
+          "$oid": "6a65837326d0bf0763818839"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a1d415c4ea9a30357efaadf"
+        },
+        "completedAtTimeLeft": 7434,
+        "timeSpent": 1012,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a65a89726d0bf076381a2cc"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69d799dd6f815dc6d8e65b08"
+        },
+        "completedAtTimeLeft": 6514,
+        "timeSpent": 920,
+        "notes": "completed\n",
+        "_id": {
+          "$oid": "6a65b8fb26d0bf076381d11e"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-26T03:05:29.427Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-26T07:36:28.193Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a66edba51f46b456f763361"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-27",
+    "questions": [
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      },
+      {
+        "$oid": "6a1d415c4ea9a30357efaadf"
+      },
+      {
+        "$oid": "69e75062c05bf5f0580b811d"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8071"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      },
+      {
+        "$oid": "6a1d415c4ea9a30357efaadf"
+      },
+      {
+        "$oid": "69e75062c05bf5f0580b811d"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8071"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 5800,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 5800,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75053c05bf5f0580b8093"
+        },
+        "completedAtTimeLeft": 8569,
+        "timeSpent": 2231,
+        "notes": "Not completed ",
+        "_id": {
+          "$oid": "6a66f6b851f46b456f764f6a"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a1d415c4ea9a30357efaadf"
+        },
+        "completedAtTimeLeft": 7619,
+        "timeSpent": 950,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a66fa7051f46b456f765cb8"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75062c05bf5f0580b811d"
+        },
+        "completedAtTimeLeft": 6713,
+        "timeSpent": 906,
+        "notes": "completed\n",
+        "_id": {
+          "$oid": "6a6700e151f46b456f76738e"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b8071"
+        },
+        "completedAtTimeLeft": 5800,
+        "timeSpent": 913,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a67047451f46b456f7681d1"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-27T05:33:46.655Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-27T07:10:50.490Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a686a6c8ac8742996ae38a0"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-28",
+    "questions": [
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      },
+      {
+        "$oid": "69da6926faaf4f1fd14b6e2f"
+      },
+      {
+        "$oid": "6a4cbd3b8f3ba6c540a5cc54"
+      },
+      {
+        "$oid": "69e75062c05bf5f0580b8117"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      },
+      {
+        "$oid": "69da6926faaf4f1fd14b6e2f"
+      },
+      {
+        "$oid": "6a4cbd3b8f3ba6c540a5cc54"
+      },
+      {
+        "$oid": "69e75062c05bf5f0580b8117"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      },
+      {
+        "$oid": "69e75062c05bf5f0580b8117"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 6944,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 6944,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75053c05bf5f0580b8093"
+        },
+        "completedAtTimeLeft": 9856,
+        "timeSpent": 944,
+        "notes": "Not completed ",
+        "_id": {
+          "$oid": "6a68dd44f2398074f8b3fa02"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69da6926faaf4f1fd14b6e2f"
+        },
+        "completedAtTimeLeft": 8890,
+        "timeSpent": 966,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a68e10cf2398074f8b40aef"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd3b8f3ba6c540a5cc54"
+        },
+        "completedAtTimeLeft": 7985,
+        "timeSpent": 905,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a68e496f2398074f8b41888"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75062c05bf5f0580b8117"
+        },
+        "completedAtTimeLeft": 6944,
+        "timeSpent": 1041,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a68e8fff2398074f8b4270b"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-28T08:38:04.395Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-28T17:38:15.101Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a69a085bf6c4aaaa51b9929"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-29",
+    "questions": [
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      },
+      {
+        "$oid": "69e75062c05bf5f0580b8117"
+      },
+      {
+        "$oid": "69d799b36f815dc6d8e65a0e"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8081"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      },
+      {
+        "$oid": "69e75062c05bf5f0580b8117"
+      },
+      {
+        "$oid": "69d799b36f815dc6d8e65a0e"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8081"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e75062c05bf5f0580b8117"
+      },
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 5439,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 5439,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75053c05bf5f0580b8093"
+        },
+        "completedAtTimeLeft": 9787,
+        "timeSpent": 1013,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a69baaabf6c4aaaa51bd956"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75062c05bf5f0580b8117"
+        },
+        "completedAtTimeLeft": 7254,
+        "timeSpent": 2533,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a69c538bf6c4aaaa51bed96"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69d799b36f815dc6d8e65a0e"
+        },
+        "completedAtTimeLeft": 6345,
+        "timeSpent": 909,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a69c916bf6c4aaaa51bfca9"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b8081"
+        },
+        "completedAtTimeLeft": 5439,
+        "timeSpent": 906,
+        "notes": "completed\n",
+        "_id": {
+          "$oid": "6a69cca6bf6c4aaaa51c0bc6"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-29T06:41:09.878Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-29T09:49:27.560Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6b0a6d18a4decb9f76c965"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-30",
+    "questions": [
+      {
+        "$oid": "69e75062c05bf5f0580b8117"
+      },
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      },
+      {
+        "$oid": "6a4cbd388f3ba6c540a5cc28"
+      },
+      {
+        "$oid": "69e75047c05bf5f0580b8009"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75062c05bf5f0580b8117"
+      },
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      },
+      {
+        "$oid": "6a4cbd388f3ba6c540a5cc28"
+      },
+      {
+        "$oid": "69e75047c05bf5f0580b8009"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      },
+      {
+        "$oid": "6a4cbd388f3ba6c540a5cc28"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 5662,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 5662,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75062c05bf5f0580b8117"
+        },
+        "completedAtTimeLeft": 9883,
+        "timeSpent": 917,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a6b0f0818a4decb9f76dbb4"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75053c05bf5f0580b8093"
+        },
+        "completedAtTimeLeft": 8796,
+        "timeSpent": 1087,
+        "notes": "Not completed\n",
+        "_id": {
+          "$oid": "6a6b18bf18a4decb9f76fb9c"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd388f3ba6c540a5cc28"
+        },
+        "completedAtTimeLeft": 6569,
+        "timeSpent": 2227,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a6b21a118a4decb9f771714"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75047c05bf5f0580b8009"
+        },
+        "completedAtTimeLeft": 5662,
+        "timeSpent": 907,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a6b252d18a4decb9f7725a6"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-30T08:25:17.986Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-30T10:19:25.845Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c468bf41c8bc529e53e0c"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-07-31",
+    "questions": [
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      },
+      {
+        "$oid": "6a4cbd388f3ba6c540a5cc28"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b809f"
+      },
+      {
+        "$oid": "6a4cbd3b8f3ba6c540a5cc5e"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75053c05bf5f0580b8093"
+      },
+      {
+        "$oid": "6a4cbd388f3ba6c540a5cc28"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b809f"
+      },
+      {
+        "$oid": "6a4cbd3b8f3ba6c540a5cc5e"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "6a4cbd388f3ba6c540a5cc28"
+      },
+      {
+        "$oid": "6a4cbd3b8f3ba6c540a5cc5e"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 6190,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 6190,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75053c05bf5f0580b8093"
+        },
+        "completedAtTimeLeft": 9143,
+        "timeSpent": 1657,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a6c4eb7f41c8bc529e55cd0"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd388f3ba6c540a5cc28"
+        },
+        "completedAtTimeLeft": 8138,
+        "timeSpent": 1005,
+        "notes": "Partial complete",
+        "_id": {
+          "$oid": "6a6c52a5f41c8bc529e56d9c"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b809f"
+        },
+        "completedAtTimeLeft": 7232,
+        "timeSpent": 906,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a6c5630f41c8bc529e57ba3"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd3b8f3ba6c540a5cc5e"
+        },
+        "completedAtTimeLeft": 6190,
+        "timeSpent": 1042,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a6c5a43f41c8bc529e58a76"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-07-31T06:54:03.755Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-31T08:18:16.506Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6d63f51399183c961a5145"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-01",
+    "questions": [
+      {
+        "$oid": "6a4cbd388f3ba6c540a5cc28"
+      },
+      {
+        "$oid": "6a4cbd3b8f3ba6c540a5cc5e"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80b3"
+      },
+      {
+        "$oid": "6a4cbd378f3ba6c540a5cc10"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "6a4cbd388f3ba6c540a5cc28"
+      },
+      {
+        "$oid": "6a4cbd3b8f3ba6c540a5cc5e"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80b3"
+      },
+      {
+        "$oid": "6a4cbd378f3ba6c540a5cc10"
+      }
+    ],
+    "reviseTomorrowQuestions": [],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 4107,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 4107,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "6a4cbd388f3ba6c540a5cc28"
+        },
+        "completedAtTimeLeft": 7842,
+        "timeSpent": 2958,
+        "notes": "completed\n",
+        "_id": {
+          "$oid": "6a6d93781399183c961a8433"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd3b8f3ba6c540a5cc5e"
+        },
+        "completedAtTimeLeft": 6936,
+        "timeSpent": 906,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a6d989b1399183c961a9921"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80b3"
+        },
+        "completedAtTimeLeft": 5961,
+        "timeSpent": 975,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a6d9c6c1399183c961aaa7d"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd378f3ba6c540a5cc10"
+        },
+        "completedAtTimeLeft": 4107,
+        "timeSpent": 1854,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a6da5391399183c961ac655"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-01T03:11:49.686Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-01T07:50:18.233Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6ed66aef67e3d04e74085d"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-02",
+    "questions": [
+      {
+        "$oid": "6a4cbd3b8f3ba6c540a5cc50"
+      },
+      {
+        "$oid": "69e75061c05bf5f0580b8103"
+      },
+      {
+        "$oid": "69e75051c05bf5f0580b804f"
+      },
+      {
+        "$oid": "69e75050c05bf5f0580b8045"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "6a4cbd3b8f3ba6c540a5cc50"
+      },
+      {
+        "$oid": "69e75061c05bf5f0580b8103"
+      },
+      {
+        "$oid": "69e75051c05bf5f0580b804f"
+      },
+      {
+        "$oid": "69e75050c05bf5f0580b8045"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "6a4cbd3b8f3ba6c540a5cc50"
+      },
+      {
+        "$oid": "69e75061c05bf5f0580b8103"
+      },
+      {
+        "$oid": "69e75051c05bf5f0580b804f"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 5995,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 5995,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "6a4cbd3b8f3ba6c540a5cc50"
+        },
+        "completedAtTimeLeft": 9730,
+        "timeSpent": 1070,
+        "notes": "partially completed",
+        "_id": {
+          "$oid": "6a6edb20ef67e3d04e7416a5"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75061c05bf5f0580b8103"
+        },
+        "completedAtTimeLeft": 8572,
+        "timeSpent": 1158,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a6eeeb9ef67e3d04e7451d1"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75051c05bf5f0580b804f"
+        },
+        "completedAtTimeLeft": 6900,
+        "timeSpent": 1672,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a6efad8ef67e3d04e747a9e"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75050c05bf5f0580b8045"
+        },
+        "completedAtTimeLeft": 5995,
+        "timeSpent": 905,
+        "notes": "completed\n",
+        "_id": {
+          "$oid": "6a6f8d04ef67e3d04e74dde9"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-02T05:32:26.533Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-02T18:31:33.320Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a7033c9ef67e3d04e74e5fc"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-03",
+    "questions": [
+      {
+        "$oid": "6a4cbd3b8f3ba6c540a5cc50"
+      },
+      {
+        "$oid": "69e75061c05bf5f0580b8103"
+      },
+      {
+        "$oid": "69e75051c05bf5f0580b804f"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fd1"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "6a4cbd3b8f3ba6c540a5cc50"
+      },
+      {
+        "$oid": "69e75061c05bf5f0580b8103"
+      },
+      {
+        "$oid": "69e75051c05bf5f0580b804f"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fd1"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e75051c05bf5f0580b804f"
+      },
+      {
+        "$oid": "69e75061c05bf5f0580b8103"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 1480,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 1480,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "6a4cbd3b8f3ba6c540a5cc50"
+        },
+        "completedAtTimeLeft": 9580,
+        "timeSpent": 1220,
+        "notes": "Mathematical approach is still need some revision ",
+        "_id": {
+          "$oid": "6a70395cef67e3d04e750256"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75061c05bf5f0580b8103"
+        },
+        "completedAtTimeLeft": 3825,
+        "timeSpent": 5755,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a705229ef67e3d04e75499c"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75051c05bf5f0580b804f"
+        },
+        "completedAtTimeLeft": 2380,
+        "timeSpent": 1445,
+        "notes": "Need revision once again",
+        "_id": {
+          "$oid": "6a70691bef67e3d04e757f9a"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a30ea665fb08c29755f7fd1"
+        },
+        "completedAtTimeLeft": 1480,
+        "timeSpent": 900,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a706d12ef67e3d04e759940"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-03T06:23:05.815Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T10:27:31.200Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a716e38ef67e3d04e76e7bc"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-04",
+    "questions": [
+      {
+        "$oid": "69e75051c05bf5f0580b804f"
+      },
+      {
+        "$oid": "69e75061c05bf5f0580b8103"
+      },
+      {
+        "$oid": "69e7504fc05bf5f0580b8029"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80b7"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e75051c05bf5f0580b804f"
+      },
+      {
+        "$oid": "69e75061c05bf5f0580b8103"
+      },
+      {
+        "$oid": "69e7504fc05bf5f0580b8029"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80b7"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80b7"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 6365,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 6365,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e75051c05bf5f0580b804f"
+        },
+        "completedAtTimeLeft": 9772,
+        "timeSpent": 1028,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a717fceef67e3d04e7721c7"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75061c05bf5f0580b8103"
+        },
+        "completedAtTimeLeft": 8675,
+        "timeSpent": 1097,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a7190eeef67e3d04e774606"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7504fc05bf5f0580b8029"
+        },
+        "completedAtTimeLeft": 7348,
+        "timeSpent": 1327,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a719686ef67e3d04e775cd4"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80b7"
+        },
+        "completedAtTimeLeft": 6365,
+        "timeSpent": 983,
+        "notes": "Still need revision ",
+        "_id": {
+          "$oid": "6a719a5eef67e3d04e776c41"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-04T04:44:40.015Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-04T07:53:05.875Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a72f4dc88da14e9e7c0d603"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-05",
+    "questions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80b7"
+      },
+      {
+        "$oid": "6a4cbd3b8f3ba6c540a5cc58"
+      },
+      {
+        "$oid": "6a4cbd378f3ba6c540a5cc1a"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80af"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80b7"
+      },
+      {
+        "$oid": "6a4cbd3b8f3ba6c540a5cc58"
+      },
+      {
+        "$oid": "6a4cbd378f3ba6c540a5cc1a"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80af"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80af"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 7127,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 7127,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80b7"
+        },
+        "completedAtTimeLeft": 9892,
+        "timeSpent": 908,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a730ada88da14e9e7c113e1"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd3b8f3ba6c540a5cc58"
+        },
+        "completedAtTimeLeft": 8940,
+        "timeSpent": 952,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a730e9488da14e9e7c122fb"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd378f3ba6c540a5cc1a"
+        },
+        "completedAtTimeLeft": 8035,
+        "timeSpent": 905,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a73200488da14e9e7c15a72"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80af"
+        },
+        "completedAtTimeLeft": 7127,
+        "timeSpent": 908,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a7323e588da14e9e7c16a8b"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-05T08:31:24.491Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-05T11:52:08.951Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a74108888da14e9e7c1925a"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-06",
+    "questions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80af"
+      },
+      {
+        "$oid": "69e7504fc05bf5f0580b802b"
+      },
+      {
+        "$oid": "69e75047c05bf5f0580b800d"
+      },
+      {
+        "$oid": "69e75046c05bf5f0580b8003"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80af"
+      },
+      {
+        "$oid": "69e7504fc05bf5f0580b802b"
+      },
+      {
+        "$oid": "69e75047c05bf5f0580b800d"
+      },
+      {
+        "$oid": "69e75046c05bf5f0580b8003"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80af"
+      },
+      {
+        "$oid": "69e7504fc05bf5f0580b802b"
+      },
+      {
+        "$oid": "69e75047c05bf5f0580b800d"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 4709,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 4709,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80af"
+        },
+        "completedAtTimeLeft": 9218,
+        "timeSpent": 1582,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a741d5588da14e9e7c1cc2f"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7504fc05bf5f0580b802b"
+        },
+        "completedAtTimeLeft": 7239,
+        "timeSpent": 1979,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a74251188da14e9e7c1e9d5"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75047c05bf5f0580b800d"
+        },
+        "completedAtTimeLeft": 5628,
+        "timeSpent": 1611,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a742b5d88da14e9e7c20110"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75046c05bf5f0580b8003"
+        },
+        "completedAtTimeLeft": 4709,
+        "timeSpent": 919,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a742ef688da14e9e7c2102e"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-06T04:41:44.160Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-06T06:51:37.766Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a76ce0788da14e9e7c30b6d"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-08",
+    "questions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80af"
+      },
+      {
+        "$oid": "69e7504fc05bf5f0580b802b"
+      },
+      {
+        "$oid": "69e75047c05bf5f0580b800d"
+      },
+      {
+        "$oid": "69e75061c05bf5f0580b80f9"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80af"
+      },
+      {
+        "$oid": "69e7504fc05bf5f0580b802b"
+      },
+      {
+        "$oid": "69e75047c05bf5f0580b800d"
+      },
+      {
+        "$oid": "69e75061c05bf5f0580b80f9"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80af"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 6616,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 6616,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80af"
+        },
+        "completedAtTimeLeft": 9791,
+        "timeSpent": 1009,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a76f31388da14e9e7c38caa"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7504fc05bf5f0580b802b"
+        },
+        "completedAtTimeLeft": 8866,
+        "timeSpent": 925,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a76f6b288da14e9e7c39ccc"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75047c05bf5f0580b800d"
+        },
+        "completedAtTimeLeft": 7954,
+        "timeSpent": 912,
+        "notes": "complete",
+        "_id": {
+          "$oid": "6a781f1788da14e9e7c4267f"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75061c05bf5f0580b80f9"
+        },
+        "completedAtTimeLeft": 6616,
+        "timeSpent": 1338,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a78245388da14e9e7c43e6c"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-08T06:34:47.777Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-09T06:55:16.705Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a78245588da14e9e7c43e94"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-09",
+    "questions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80af"
+      },
+      {
+        "$oid": "6a4cbd368f3ba6c540a5cc00"
+      },
+      {
+        "$oid": "6a4cbd378f3ba6c540a5cc18"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8081"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80af"
+      },
+      {
+        "$oid": "6a4cbd368f3ba6c540a5cc00"
+      },
+      {
+        "$oid": "6a4cbd378f3ba6c540a5cc18"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8081"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "6a4cbd378f3ba6c540a5cc18"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 6894,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 6894,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80af"
+        },
+        "completedAtTimeLeft": 9688,
+        "timeSpent": 1112,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a78293588da14e9e7c455b8"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd368f3ba6c540a5cc00"
+        },
+        "completedAtTimeLeft": 8779,
+        "timeSpent": 909,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a782cc488da14e9e7c4658c"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd378f3ba6c540a5cc18"
+        },
+        "completedAtTimeLeft": 7798,
+        "timeSpent": 981,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a7837b788da14e9e7c4850d"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b8081"
+        },
+        "completedAtTimeLeft": 6894,
+        "timeSpent": 904,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a783b4088da14e9e7c49587"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-09T06:55:17.398Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-09T08:33:05.538Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a7962d575acdb73d69c8aab"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-10",
+    "questions": [
+      {
+        "$oid": "6a4cbd378f3ba6c540a5cc18"
+      },
+      {
+        "$oid": "6a4cbd3c8f3ba6c540a5cc72"
+      },
+      {
+        "$oid": "6a4cbd368f3ba6c540a5cc0c"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b808b"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "6a4cbd378f3ba6c540a5cc18"
+      },
+      {
+        "$oid": "6a4cbd3c8f3ba6c540a5cc72"
+      },
+      {
+        "$oid": "6a4cbd368f3ba6c540a5cc0c"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b808b"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "6a4cbd368f3ba6c540a5cc0c"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 5525,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 5525,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "6a4cbd378f3ba6c540a5cc18"
+        },
+        "completedAtTimeLeft": 9882,
+        "timeSpent": 918,
+        "notes": "completed\n",
+        "_id": {
+          "$oid": "6a796e6175acdb73d69cd0a1"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd3c8f3ba6c540a5cc72"
+        },
+        "completedAtTimeLeft": 8910,
+        "timeSpent": 972,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a79722d75acdb73d69ce047"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd368f3ba6c540a5cc0c"
+        },
+        "completedAtTimeLeft": 6773,
+        "timeSpent": 2137,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a797cc175acdb73d69d0aab"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b808b"
+        },
+        "completedAtTimeLeft": 5525,
+        "timeSpent": 1248,
+        "notes": "Completed",
+        "_id": {
+          "$oid": "6a7981a375acdb73d69d1fd6"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-10T05:34:13.267Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-10T07:45:40.353Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a7ab6fe75acdb73d69e11ed"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-11",
+    "questions": [
+      {
+        "$oid": "6a4cbd368f3ba6c540a5cc0c"
+      },
+      {
+        "$oid": "6a4cbd3a8f3ba6c540a5cc3c"
+      },
+      {
+        "$oid": "69e75046c05bf5f0580b8005"
+      },
+      {
+        "$oid": "69df03953686ac4738203616"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "6a4cbd368f3ba6c540a5cc0c"
+      },
+      {
+        "$oid": "6a4cbd3a8f3ba6c540a5cc3c"
+      },
+      {
+        "$oid": "69e75046c05bf5f0580b8005"
+      },
+      {
+        "$oid": "69df03953686ac4738203616"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "6a4cbd3a8f3ba6c540a5cc3c"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 6554,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 6554,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "6a4cbd368f3ba6c540a5cc0c"
+        },
+        "completedAtTimeLeft": 9895,
+        "timeSpent": 905,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a7ac7be75acdb73d69e4e1e"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd3a8f3ba6c540a5cc3c"
+        },
+        "completedAtTimeLeft": 8988,
+        "timeSpent": 907,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a7ad33775acdb73d69e74b9"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75046c05bf5f0580b8005"
+        },
+        "completedAtTimeLeft": 8040,
+        "timeSpent": 948,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a7eca8b75acdb73d6a1d871"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69df03953686ac4738203616"
+        },
+        "completedAtTimeLeft": 6554,
+        "timeSpent": 1486,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a7edab675acdb73d6a210c6"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-11T05:45:34.372Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-14T09:07:03.013Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a7edab775acdb73d6a2111a"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-14",
+    "questions": [
+      {
+        "$oid": "6a4cbd3a8f3ba6c540a5cc3c"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fcf"
+      },
+      {
+        "$oid": "6a4cbd3a8f3ba6c540a5cc3e"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8089"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "6a4cbd3a8f3ba6c540a5cc3c"
+      },
+      {
+        "$oid": "6a30ea665fb08c29755f7fcf"
+      },
+      {
+        "$oid": "6a4cbd3a8f3ba6c540a5cc3e"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b8089"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "6a4cbd3a8f3ba6c540a5cc3c"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 3259,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 3259,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "6a4cbd3a8f3ba6c540a5cc3c"
+        },
+        "completedAtTimeLeft": 6544,
+        "timeSpent": 4256,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a7eeb2675acdb73d6a247d0"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a30ea665fb08c29755f7fcf"
+        },
+        "completedAtTimeLeft": 5123,
+        "timeSpent": 1421,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a7ef0bd75acdb73d6a25faa"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd3a8f3ba6c540a5cc3e"
+        },
+        "completedAtTimeLeft": 4167,
+        "timeSpent": 956,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a7ef68975acdb73d6a2776f"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b8089"
+        },
+        "completedAtTimeLeft": 3259,
+        "timeSpent": 908,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a7f005075acdb73d6a2976f"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-14T09:07:03.724Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-14T11:47:29.940Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a7fdd8638b05034d4c29b00"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-15",
+    "questions": [
+      {
+        "$oid": "6a4cbd3a8f3ba6c540a5cc3c"
+      },
+      {
+        "$oid": "69e7504ec05bf5f0580b8025"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441a9"
+      },
+      {
+        "$oid": "69e75051c05bf5f0580b8055"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "6a4cbd3a8f3ba6c540a5cc3c"
+      },
+      {
+        "$oid": "69e7504ec05bf5f0580b8025"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441a9"
+      },
+      {
+        "$oid": "69e75051c05bf5f0580b8055"
+      }
+    ],
+    "reviseTomorrowQuestions": [],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 5499,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 5499,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "6a4cbd3a8f3ba6c540a5cc3c"
+        },
+        "completedAtTimeLeft": 9884,
+        "timeSpent": 916,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a814d3a75acdb73d6a38dbf"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7504ec05bf5f0580b8025"
+        },
+        "completedAtTimeLeft": 8895,
+        "timeSpent": 989,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a81511875acdb73d6a39e24"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a49011bb80dc9d6090441a9"
+        },
+        "completedAtTimeLeft": 6446,
+        "timeSpent": 2449,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a815aad75acdb73d6a3d14a"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75051c05bf5f0580b8055"
+        },
+        "completedAtTimeLeft": 5499,
+        "timeSpent": 947,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a815e6375acdb73d6a3ea6b"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-15T03:31:18.947Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-16T06:53:24.832Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a7fe06e38b05034d4c2b404"
+    },
+    "userId": {
+      "$oid": "6a07fe669a0d94f268897c92"
+    },
+    "dateStr": "2026-08-15",
+    "questions": [],
+    "completedQuestions": [],
+    "reviseTomorrowQuestions": [],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 10800,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 10800,
+    "questionLogs": [],
+    "createdAt": {
+      "$date": "2026-08-15T03:43:42.918Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-16T07:13:19.619Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a815e6575acdb73d6a3ea97"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-16",
+    "questions": [
+      {
+        "$oid": "6a49011bb80dc9d6090441b0"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a5"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441aa"
+      },
+      {
+        "$oid": "69df03c13686ac47382037b2"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "6a49011bb80dc9d6090441b0"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a5"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441aa"
+      },
+      {
+        "$oid": "69df03c13686ac47382037b2"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "6a49011bb80dc9d6090441b0"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a5"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441aa"
+      },
+      {
+        "$oid": "69df03c13686ac47382037b2"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 10800,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 10800,
+    "questionLogs": [],
+    "createdAt": {
+      "$date": "2026-08-16T06:53:25.621Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-16T09:23:06.274Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a827b31657168be483495cd"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-17",
+    "questions": [
+      {
+        "$oid": "6a49011bb80dc9d6090441b0"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a5"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441aa"
+      },
+      {
+        "$oid": "69df03c13686ac47382037b2"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "6a49011bb80dc9d6090441b0"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a5"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441aa"
+      },
+      {
+        "$oid": "69df03c13686ac47382037b2"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "6a49011bb80dc9d6090441b0"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a5"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441aa"
+      },
+      {
+        "$oid": "69df03c13686ac47382037b2"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 4916,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 4916,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "6a49011bb80dc9d6090441b0"
+        },
+        "completedAtTimeLeft": 9373,
+        "timeSpent": 1427,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a828223657168be4834ab15"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80a5"
+        },
+        "completedAtTimeLeft": 7084,
+        "timeSpent": 2289,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a828b4d657168be4834cff8"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a49011bb80dc9d6090441aa"
+        },
+        "completedAtTimeLeft": 5930,
+        "timeSpent": 1154,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a828fd1657168be4834e53c"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69df03c13686ac47382037b2"
+        },
+        "completedAtTimeLeft": 4916,
+        "timeSpent": 1014,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a8293c8657168be4834f6b9"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-17T03:08:33.093Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-17T04:53:31.793Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a8340e7657168be483634d4"
+    },
+    "userId": {
+      "$oid": "6a07fe669a0d94f268897c92"
+    },
+    "dateStr": "2026-08-17",
+    "questions": [],
+    "completedQuestions": [],
+    "reviseTomorrowQuestions": [],
+    "isStarted": false,
+    "isCompleted": false,
+    "timeLeft": 10800,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 10800,
+    "questionLogs": [],
+    "createdAt": {
+      "$date": "2026-08-17T17:12:07.500Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-17T17:12:07.500Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a83e93b657168be4836dffa"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-18",
+    "questions": [
+      {
+        "$oid": "6a49011bb80dc9d6090441b0"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a5"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441aa"
+      },
+      {
+        "$oid": "69df03c13686ac47382037b2"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "6a49011bb80dc9d6090441b0"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a5"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441aa"
+      },
+      {
+        "$oid": "69df03c13686ac47382037b2"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80a5"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 4007,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 4007,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "6a49011bb80dc9d6090441b0"
+        },
+        "completedAtTimeLeft": 9140,
+        "timeSpent": 1660,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a83f279657168be483704be"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80a5"
+        },
+        "completedAtTimeLeft": 7197,
+        "timeSpent": 1943,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a83fa11657168be4837256f"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a49011bb80dc9d6090441aa"
+        },
+        "completedAtTimeLeft": 5276,
+        "timeSpent": 1921,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a840193657168be4837430f"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69df03c13686ac47382037b2"
+        },
+        "completedAtTimeLeft": 4007,
+        "timeSpent": 1269,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a84068c657168be48375831"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-18T05:10:19.347Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T07:15:25.244Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a859ab577acebf173117506"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-19",
+    "questions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80a5"
+      },
+      {
+        "$oid": "69e75061c05bf5f0580b80ff"
+      },
+      {
+        "$oid": "69e75047c05bf5f0580b800b"
+      },
+      {
+        "$oid": "69e7504ec05bf5f0580b8023"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80a5"
+      },
+      {
+        "$oid": "69e75061c05bf5f0580b80ff"
+      },
+      {
+        "$oid": "69e75047c05bf5f0580b800b"
+      },
+      {
+        "$oid": "69e7504ec05bf5f0580b8023"
+      }
+    ],
+    "reviseTomorrowQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80a5"
+      }
+    ],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 6464,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 6464,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80a5"
+        },
+        "completedAtTimeLeft": 9530,
+        "timeSpent": 1270,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a85efcd34e94c39aec7a250"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75061c05bf5f0580b80ff"
+        },
+        "completedAtTimeLeft": 8543,
+        "timeSpent": 987,
+        "notes": "completed\n",
+        "_id": {
+          "$oid": "6a85f3aa34e94c39aec7a4e5"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75047c05bf5f0580b800b"
+        },
+        "completedAtTimeLeft": 7469,
+        "timeSpent": 1074,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a868d4434e94c39aec7ac18"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7504ec05bf5f0580b8023"
+        },
+        "completedAtTimeLeft": 6464,
+        "timeSpent": 1005,
+        "notes": "Not completed",
+        "_id": {
+          "$oid": "6a869e0d34e94c39aec7b3eb"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-19T11:59:49.718Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-20T06:26:22.182Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a869e0f34e94c39aec7b411"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-20",
+    "questions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80a5"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b808b"
+      },
+      {
+        "$oid": "6a4cbd378f3ba6c540a5cc1a"
+      },
+      {
+        "$oid": "6a4cbd368f3ba6c540a5cbfe"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80a5"
+      },
+      {
+        "$oid": "69e75052c05bf5f0580b808b"
+      },
+      {
+        "$oid": "6a4cbd378f3ba6c540a5cc1a"
+      },
+      {
+        "$oid": "6a4cbd368f3ba6c540a5cbfe"
+      }
+    ],
+    "reviseTomorrowQuestions": [],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 6244,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 6244,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80a5"
+        },
+        "completedAtTimeLeft": 9361,
+        "timeSpent": 1439,
+        "notes": "Completed",
+        "_id": {
+          "$oid": "6a87342dbbd7145619f06660"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e75052c05bf5f0580b808b"
+        },
+        "completedAtTimeLeft": 8365,
+        "timeSpent": 996,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a873812bbd7145619f0693a"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd378f3ba6c540a5cc1a"
+        },
+        "completedAtTimeLeft": 7443,
+        "timeSpent": 922,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a873cc514154545985a5d97"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "6a4cbd368f3ba6c540a5cbfe"
+        },
+        "completedAtTimeLeft": 6244,
+        "timeSpent": 1199,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a87417714154545985a607a"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-20T06:26:23.069Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-20T18:03:36.180Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a87e3ab14154545985a6a3e"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-21",
+    "questions": [
+      {
+        "$oid": "6a4cbd3d8f3ba6c540a5cc9e"
+      },
+      {
+        "$oid": "69e7504fc05bf5f0580b8027"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a3"
+      },
+      {
+        "$oid": "69d78683ef8d64e8cbe9fc0d"
+      }
+    ],
+    "completedQuestions": [
+      {
+        "$oid": "6a4cbd3d8f3ba6c540a5cc9e"
+      },
+      {
+        "$oid": "69e7504fc05bf5f0580b8027"
+      },
+      {
+        "$oid": "69e7505fc05bf5f0580b80a3"
+      },
+      {
+        "$oid": "69d78683ef8d64e8cbe9fc0d"
+      }
+    ],
+    "reviseTomorrowQuestions": [],
+    "isStarted": true,
+    "isCompleted": true,
+    "timeLeft": 6864,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 6864,
+    "questionLogs": [
+      {
+        "taskId": {
+          "$oid": "6a4cbd3d8f3ba6c540a5cc9e"
+        },
+        "completedAtTimeLeft": 9894,
+        "timeSpent": 906,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a89e9462f0a384c737252e1"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7504fc05bf5f0580b8027"
+        },
+        "completedAtTimeLeft": 8734,
+        "timeSpent": 1160,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a89f0962f0a384c7372576b"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69e7505fc05bf5f0580b80a3"
+        },
+        "completedAtTimeLeft": 7796,
+        "timeSpent": 938,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a89f4642f0a384c73725a53"
+        }
+      },
+      {
+        "taskId": {
+          "$oid": "69d78683ef8d64e8cbe9fc0d"
+        },
+        "completedAtTimeLeft": 6864,
+        "timeSpent": 932,
+        "notes": "completed",
+        "_id": {
+          "$oid": "6a89f8282f0a384c73725d75"
+        }
+      }
+    ],
+    "createdAt": {
+      "$date": "2026-08-21T05:35:39.167Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-22T19:27:37.439Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a89f82a2f0a384c73725db7"
+    },
+    "userId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "dateStr": "2026-08-22",
+    "questions": [
+      {
+        "$oid": "69e7505fc05bf5f0580b80b9"
+      },
+      {
+        "$oid": "69e75051c05bf5f0580b804b"
+      },
+      {
+        "$oid": "69da6926faaf4f1fd14b6e2f"
+      },
+      {
+        "$oid": "6a49011bb80dc9d6090441ac"
+      }
+    ],
+    "completedQuestions": [],
+    "reviseTomorrowQuestions": [],
+    "isStarted": false,
+    "isCompleted": false,
+    "timeLeft": 10800,
+    "timerIsActive": false,
+    "timerLastUpdated": null,
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "currentQuestionStartTimeLeft": 10800,
+    "questionLogs": [],
+    "createdAt": {
+      "$date": "2026-08-22T19:27:38.297Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-22T19:27:38.297Z"
+    }
+  }
+]

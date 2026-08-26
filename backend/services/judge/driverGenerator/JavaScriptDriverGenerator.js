@@ -1,4 +1,5 @@
 import { ProblemConfigurationError } from '../outputSerializers/SerializerErrors.js';
+import { SemanticValidatorRegistry } from '../validators/SemanticValidatorRegistry.js';
 
 /**
  * JavaScript Driver Harness Generator (Phase 6)
@@ -14,18 +15,28 @@ export function generateJavaScriptDriverHarness(studentCode, functionDefinition,
   const returnType = functionDefinition?.returnType || 'number[]';
   const inPlaceMutation = executionProfile?.inPlaceMutation === true || returnType === 'void';
   const mutatedParameter = executionProfile?.mutatedParameter;
+  const semanticValidator = executionProfile?.semanticValidator;
+
+  if (semanticValidator) {
+    SemanticValidatorRegistry.assertValid(semanticValidator);
+  }
 
   if (inPlaceMutation) {
-    if (!mutatedParameter) {
+    const cleanMutated = (mutatedParameter || '').trim();
+    if (!cleanMutated) {
       throw new ProblemConfigurationError("Missing required 'executionProfile.mutatedParameter' for in-place mutation problem.");
     }
-    const paramExists = parameters.some(p => p.name === mutatedParameter);
+    const paramExists = parameters.some(p => {
+      const pName = typeof p === 'string' ? p : (p.name || (p.toObject ? p.toObject().name : '') || '');
+      return pName.trim() === cleanMutated;
+    });
     if (!paramExists) {
-      throw new ProblemConfigurationError(`Mutated parameter '${mutatedParameter}' not found in functionDefinition parameters.`);
+      throw new ProblemConfigurationError(`Mutated parameter '${cleanMutated}' not found in functionDefinition parameters.`);
     }
   }
 
   const serializedTCs = JSON.stringify(testCases);
+  const validationHelpersCode = SemanticValidatorRegistry.getInjectedValidationCode('javascript', semanticValidator);
 
   return `// ==========================================
 // 1. STANDARD DATA STRUCTURE DEFINITIONS
@@ -135,6 +146,8 @@ function parseGraphNode(val) {
     return val[0] && val[0].val !== undefined ? nodes[val[0].val] : null;
 }
 
+${validationHelpersCode}
+
 // ==========================================
 // 3. RUNTIME OUTPUT SERIALIZER (PHASE 4 CONTRACT)
 // ==========================================
@@ -169,7 +182,7 @@ function serializeOutput(obj) {
         return res;
     }
     if (obj instanceof Node) {
-        if (Array.isArray(obj.neighbors) && (obj.next === null && obj.random === null || obj.neighbors.length > 0)) {
+        if ("${executionProfile?.outputSerializer || ''}" === "GraphNodeSerializer" || (Array.isArray(obj.neighbors) && obj.neighbors.length > 0)) {
             // GraphNode BFS
             const visited = new Map();
             const queue = [obj];
@@ -248,6 +261,8 @@ ${studentCode}
               }
             }).join('\n            ')}
 
+            ${semanticValidator === 'DeepCopyValidator' ? 'const originalNodeIds = collectOriginalNodeIds(args);' : ''}
+
             ${inPlaceMutation ? `
             // In-Place Mutation Execution
             const mutatedIdx = ${parameters.findIndex(p => p.name === mutatedParameter)};
@@ -255,6 +270,7 @@ ${studentCode}
             const output = serializeOutput(args[mutatedIdx]);
             ` : `
             const result = ${functionName}(...args);
+            ${semanticValidator === 'DeepCopyValidator' ? 'validateDeepCopy(result, originalNodeIds);' : ''}
             const output = serializeOutput(result);
             `}
 

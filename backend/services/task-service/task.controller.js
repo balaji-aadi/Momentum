@@ -1299,13 +1299,14 @@ const getLocalDateString = (date, offsetMinutes = 0) => {
 tc.getRevisionStats = asyncHandler(async (req, res) => {
   try {
     const timezoneOffset = req.query.timezoneOffset ? parseInt(req.query.timezoneOffset) : 0;
+    const userId = req.user._id;
 
     const filter = {};
     if (req.branchId) {
       filter.branchId = new mongoose.Types.ObjectId(req.branchId);
     }
     if (req.user?.email !== "balajiaadi2000@gmail.com") {
-      filter.createdBy = req.user._id;
+      filter.createdBy = userId;
     }
 
     // Fetch completed subtasks
@@ -1320,7 +1321,54 @@ tc.getRevisionStats = asyncHandler(async (req, res) => {
     const revisionLogsByDate = {};
     const completionDates = new Set();
     const revisionDates = new Set();
+    const processedLogKeys = new Set();
 
+    // 1. Fetch revision logs from UserTaskProgress for the authenticated user
+    const userProgressFilter = {
+      userId: userId,
+      "revisionLogs.0": { $exists: true }
+    };
+    if (req.branchId) {
+      userProgressFilter.branchId = new mongoose.Types.ObjectId(req.branchId);
+    }
+
+    const userProgresses = await UserTaskProgress.find(userProgressFilter)
+      .populate({
+        path: "taskId",
+        populate: { path: "projectName", select: "name key settings" }
+      })
+      .lean();
+
+    userProgresses.forEach(progress => {
+      const task = progress.taskId;
+      if (task && progress.revisionLogs && Array.isArray(progress.revisionLogs)) {
+        progress.revisionLogs.forEach(log => {
+          const revDateStr = getLocalDateString(log.revisionDate, timezoneOffset);
+          if (revDateStr) {
+            const logKey = `${task._id}_${new Date(log.revisionDate).getTime()}`;
+            if (!processedLogKeys.has(logKey)) {
+              processedLogKeys.add(logKey);
+              revisionDates.add(revDateStr);
+              if (!revisionLogsByDate[revDateStr]) {
+                revisionLogsByDate[revDateStr] = [];
+              }
+              revisionLogsByDate[revDateStr].push({
+                taskId: task._id,
+                taskName: task.taskName,
+                taskKey: task.taskId,
+                projectName: task.projectName?.name || task.projectName,
+                projectKey: task.projectName?.key || 'MOM',
+                notes: log.notes,
+                revisionDate: log.revisionDate,
+                revisedBy: userId
+              });
+            }
+          }
+        });
+      }
+    });
+
+    // 2. Also check Task model revisionLogs for legacy/admin logs
     tasks.forEach(task => {
       let completionDate = null;
       if (task.activityLogs && Array.isArray(task.activityLogs)) {
@@ -1344,20 +1392,24 @@ tc.getRevisionStats = asyncHandler(async (req, res) => {
         task.revisionLogs.forEach(log => {
           const revDateStr = getLocalDateString(log.revisionDate, timezoneOffset);
           if (revDateStr) {
-            revisionDates.add(revDateStr);
-            if (!revisionLogsByDate[revDateStr]) {
-              revisionLogsByDate[revDateStr] = [];
+            const logKey = `${task._id}_${new Date(log.revisionDate).getTime()}`;
+            if (!processedLogKeys.has(logKey)) {
+              processedLogKeys.add(logKey);
+              revisionDates.add(revDateStr);
+              if (!revisionLogsByDate[revDateStr]) {
+                revisionLogsByDate[revDateStr] = [];
+              }
+              revisionLogsByDate[revDateStr].push({
+                taskId: task._id,
+                taskName: task.taskName,
+                taskKey: task.taskId,
+                projectName: task.projectName?.name || task.projectName,
+                projectKey: task.projectName?.key || 'MOM',
+                notes: log.notes,
+                revisionDate: log.revisionDate,
+                revisedBy: log.revisedBy
+              });
             }
-            revisionLogsByDate[revDateStr].push({
-              taskId: task._id,
-              taskName: task.taskName,
-              taskKey: task.taskId,
-              projectName: task.projectName?.name || task.projectName,
-              projectKey: task.projectName?.key || 'MOM',
-              notes: log.notes,
-              revisionDate: log.revisionDate,
-              revisedBy: log.revisedBy
-            });
           }
         });
       }
@@ -1461,11 +1513,16 @@ tc.getRevisionStats = asyncHandler(async (req, res) => {
       }
     });
 
+    const todayDateStr = getLocalDateString(new Date(), timezoneOffset);
+    const todayCount = revisionLogsByDate[todayDateStr] ? revisionLogsByDate[todayDateStr].length : 0;
+
     return res.status(200).json(new ApiResponse(200, {
       currentStreak,
       longestStreak,
       revisionsByDate: revisionLogsByDate,
-      completedByDate
+      completedByDate,
+      todayCount,
+      todayDateStr
     }, "Revision stats fetched successfully"));
   } catch (error) {
     console.error("Error fetching revision stats:", error);

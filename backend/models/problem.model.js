@@ -50,6 +50,11 @@ const executionProfileSchema = new Schema({
     type: String,
     trim: true,
     default: ''
+  },
+  semanticValidator: {
+    type: String,
+    trim: true,
+    default: ''
   }
 }, { _id: false });
 

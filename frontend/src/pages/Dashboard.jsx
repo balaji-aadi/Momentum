@@ -32,9 +32,10 @@ const Dashboard = () => {
   const [viewMode, setViewMode] = useState(searchParams.get('view') || 'board');
   const [isEditingTask, setIsEditingTask] = useState(false);
 
-  // Controls visibility toggle for Arena views (visible by default)
-  const [isControlsVisible, setIsControlsVisible] = useState(true);
+  // Controls visibility toggle for Arena views (hidden initially to prevent load flash)
+  const [isControlsVisible, setIsControlsVisible] = useState(false);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const userToggledControlsRef = React.useRef(false);
 
   // Global Filters
   const [projectId, setProjectId] = useState('');
@@ -52,6 +53,11 @@ const Dashboard = () => {
   // In-memory cache for ultra-fast instant switching without network delays
   const taskCacheRef = React.useRef({});
   const projectsCacheRef = React.useRef(null);
+
+  // Reset user manual toggle tracking when arena slug changes
+  useEffect(() => {
+    userToggledControlsRef.current = false;
+  }, [slug]);
 
   useEffect(() => {
     if (!activeBranch) {
@@ -209,9 +215,18 @@ const Dashboard = () => {
     return matchesSearch && (pId?.toString() === projectId?.toString());
   });
 
+  const isDataLoaded = !loading && tasks !== null;
+
   const isArenaScheduled = Boolean(
-    tasks && tasks.length > 0 && tasks.some(t => t.taskStartDate || t.taskDueDate)
+    isDataLoaded && tasks && tasks.length > 0 && tasks.some(t => t.taskStartDate || t.taskDueDate)
   );
+
+  // Automatically hide controls for scheduled arenas and show controls for unscheduled arenas
+  useEffect(() => {
+    if (isDataLoaded && !userToggledControlsRef.current) {
+      setIsControlsVisible(!isArenaScheduled);
+    }
+  }, [isDataLoaded, isArenaScheduled, slug]);
 
   const handleCreateTask = () => {
     navigate('/task/create-task');
@@ -237,18 +252,22 @@ const Dashboard = () => {
     <div className="h-full flex flex-col bg-bgLight relative">
       {/* Floating CONTROLS Trigger Button when Collapsed */}
       {!isControlsVisible && !isEditingTask && (
-        <div className="fixed right-4 top-20 z-[100] pointer-events-auto">
+        <div className="fixed right-5 top-20 z-[100] pointer-events-auto">
           <motion.button
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
-            onClick={() => setIsControlsVisible(true)}
-            className="flex items-center gap-1 px-3 py-1.5 bg-vermilion-500 hover:bg-vermilion-600 text-white rounded-full shadow-md transition-all border border-white/20 text-[9px] font-black uppercase tracking-wider cursor-pointer"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              userToggledControlsRef.current = true;
+              setIsControlsVisible(true);
+            }}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900/90 hover:bg-slate-900 text-white backdrop-blur-md rounded-full shadow-lg border border-slate-700/50 text-xs font-bold transition-all cursor-pointer hover:shadow-xl hover:scale-105"
+            title="Expand header controls"
           >
-            <IoFilterOutline size={12} />
-            <span className='text-[12px]'>Controls</span>
-            <IoChevronDownOutline size={11} className="opacity-70" />
+            <IoFilterOutline size={13} className="text-indigo-400" />
+            <span>Controls</span>
+            <IoChevronDownOutline size={12} className="text-slate-400" />
           </motion.button>
         </div>
       )}
@@ -296,10 +315,14 @@ const Dashboard = () => {
               parentId={parentId}
               onParentChange={setParentId}
               parentTasks={parentTasks}
-              onHideControls={() => setIsControlsVisible(false)}
-              onOpenSchedule={!isArenaScheduled ? () => setIsScheduleModalOpen(true) : null}
+              onHideControls={() => {
+                userToggledControlsRef.current = true;
+                setIsControlsVisible(false);
+              }}
+              onOpenSchedule={(isDataLoaded && !isArenaScheduled) ? () => setIsScheduleModalOpen(true) : null}
               hasProjectSelected={!!projectId}
               isArenaScheduled={isArenaScheduled}
+              isDataLoaded={isDataLoaded}
             />
           </motion.div>
         )}
@@ -319,7 +342,7 @@ const Dashboard = () => {
             externalTasks={tasks}
             externalLoading={loading}
             onEditStateChange={(editing) => setIsEditingTask(editing)}
-            onOpenSchedule={!isArenaScheduled ? () => setIsScheduleModalOpen(true) : null}
+            onOpenSchedule={(isDataLoaded && !isArenaScheduled) ? () => setIsScheduleModalOpen(true) : null}
           />
         )}
 

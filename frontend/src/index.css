@@ -123,3 +123,20 @@
   @apply bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 text-slate-800 font-bold outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all shadow-inner;
 }
 
+/* Fix Monaco Editor codicon folding icons to display proper arrows instead of square boxes */
+.monaco-editor .codicon-folding-expanded::before {
+  content: "▾" !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  color: #a0aec0 !important;
+}
+
+.monaco-editor .codicon-folding-collapsed::before {
+  content: "▸" !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  color: #a0aec0 !important;
+}
+

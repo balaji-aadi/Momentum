@@ -1,0 +1,400 @@
+[
+  {
+    "_id": {
+      "$oid": "6a806191cb685fb359ec7f32"
+    },
+    "userId": {
+      "$oid": "6a806185cb685fb359ec7df0"
+    },
+    "projectId": {
+      "$oid": "6a806185cb685fb359ec7df3"
+    },
+    "startDate": {
+      "$date": "2026-08-01T00:00:00Z"
+    },
+    "endDate": {
+      "$date": "2026-08-30T00:00:00Z"
+    },
+    "tasksPerDay": 5,
+    "revisionDaysPerParent": 2,
+    "totalTasks": 0,
+    "totalParentTasks": 0,
+    "calculatedTotalDays": 0,
+    "createdAt": {
+      "$date": "2026-08-15T12:54:41.658Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-15T12:54:41.658Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a806192cb685fb359ec7f40"
+    },
+    "userId": {
+      "$oid": "6a806185cb685fb359ec7df1"
+    },
+    "projectId": {
+      "$oid": "6a806185cb685fb359ec7df3"
+    },
+    "startDate": {
+      "$date": "2026-09-01T00:00:00Z"
+    },
+    "endDate": {
+      "$date": "2026-09-15T00:00:00Z"
+    },
+    "tasksPerDay": 8,
+    "revisionDaysPerParent": 2,
+    "totalTasks": 0,
+    "totalParentTasks": 0,
+    "calculatedTotalDays": 0,
+    "createdAt": {
+      "$date": "2026-08-15T12:54:42.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-15T12:54:42.054Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a80631f0e15cde6f0bd4010"
+    },
+    "userId": {
+      "$oid": "6a80630d0e15cde6f0bd3ecf"
+    },
+    "projectId": {
+      "$oid": "6a80630d0e15cde6f0bd3ed2"
+    },
+    "startDate": {
+      "$date": "2026-08-01T00:00:00Z"
+    },
+    "endDate": {
+      "$date": "2026-08-30T00:00:00Z"
+    },
+    "tasksPerDay": 5,
+    "revisionDaysPerParent": 2,
+    "totalTasks": 0,
+    "totalParentTasks": 0,
+    "calculatedTotalDays": 0,
+    "createdAt": {
+      "$date": "2026-08-15T13:01:19.397Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-15T13:01:19.397Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a8063200e15cde6f0bd401e"
+    },
+    "userId": {
+      "$oid": "6a80630d0e15cde6f0bd3ed0"
+    },
+    "projectId": {
+      "$oid": "6a80630d0e15cde6f0bd3ed2"
+    },
+    "startDate": {
+      "$date": "2026-09-01T00:00:00Z"
+    },
+    "endDate": {
+      "$date": "2026-09-15T00:00:00Z"
+    },
+    "tasksPerDay": 8,
+    "revisionDaysPerParent": 2,
+    "totalTasks": 0,
+    "totalParentTasks": 0,
+    "calculatedTotalDays": 0,
+    "createdAt": {
+      "$date": "2026-08-15T13:01:20.080Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-15T13:01:20.080Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a8064126b8cb2afcfa91fbb"
+    },
+    "userId": {
+      "$oid": "6a8063f66b8cb2afcfa91e7a"
+    },
+    "projectId": {
+      "$oid": "6a8063f66b8cb2afcfa91e7d"
+    },
+    "startDate": {
+      "$date": "2026-08-01T00:00:00Z"
+    },
+    "endDate": {
+      "$date": "2026-08-30T00:00:00Z"
+    },
+    "tasksPerDay": 5,
+    "revisionDaysPerParent": 2,
+    "totalTasks": 0,
+    "totalParentTasks": 0,
+    "calculatedTotalDays": 0,
+    "createdAt": {
+      "$date": "2026-08-15T13:05:22.269Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-15T13:05:22.269Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a8064126b8cb2afcfa91fc9"
+    },
+    "userId": {
+      "$oid": "6a8063f66b8cb2afcfa91e7b"
+    },
+    "projectId": {
+      "$oid": "6a8063f66b8cb2afcfa91e7d"
+    },
+    "startDate": {
+      "$date": "2026-09-01T00:00:00Z"
+    },
+    "endDate": {
+      "$date": "2026-09-15T00:00:00Z"
+    },
+    "tasksPerDay": 8,
+    "revisionDaysPerParent": 2,
+    "totalTasks": 0,
+    "totalParentTasks": 0,
+    "calculatedTotalDays": 0,
+    "createdAt": {
+      "$date": "2026-08-15T13:05:22.705Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-15T13:05:22.705Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a80656da6793dfddfba5f08"
+    },
+    "userId": {
+      "$oid": "6a806560a6793dfddfba5dc7"
+    },
+    "projectId": {
+      "$oid": "6a806560a6793dfddfba5dca"
+    },
+    "startDate": {
+      "$date": "2026-08-01T00:00:00Z"
+    },
+    "endDate": {
+      "$date": "2026-08-30T00:00:00Z"
+    },
+    "tasksPerDay": 5,
+    "revisionDaysPerParent": 2,
+    "totalTasks": 0,
+    "totalParentTasks": 0,
+    "calculatedTotalDays": 0,
+    "createdAt": {
+      "$date": "2026-08-15T13:11:09.682Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-15T13:11:09.682Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a80656ea6793dfddfba5f16"
+    },
+    "userId": {
+      "$oid": "6a806560a6793dfddfba5dc8"
+    },
+    "projectId": {
+      "$oid": "6a806560a6793dfddfba5dca"
+    },
+    "startDate": {
+      "$date": "2026-09-01T00:00:00Z"
+    },
+    "endDate": {
+      "$date": "2026-09-15T00:00:00Z"
+    },
+    "tasksPerDay": 8,
+    "revisionDaysPerParent": 2,
+    "totalTasks": 0,
+    "totalParentTasks": 0,
+    "calculatedTotalDays": 0,
+    "createdAt": {
+      "$date": "2026-08-15T13:11:10.168Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-15T13:11:10.168Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a807bf6264172069b26181d"
+    },
+    "userId": {
+      "$oid": "6a807b0c264172069b2616dc"
+    },
+    "projectId": {
+      "$oid": "6a807b0c264172069b2616df"
+    },
+    "startDate": {
+      "$date": "2026-08-01T00:00:00Z"
+    },
+    "endDate": {
+      "$date": "2026-08-30T00:00:00Z"
+    },
+    "tasksPerDay": 5,
+    "revisionDaysPerParent": 2,
+    "totalTasks": 0,
+    "totalParentTasks": 0,
+    "calculatedTotalDays": 0,
+    "createdAt": {
+      "$date": "2026-08-15T14:47:18.729Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-15T14:47:18.729Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a807bfa264172069b26182b"
+    },
+    "userId": {
+      "$oid": "6a807b0c264172069b2616dd"
+    },
+    "projectId": {
+      "$oid": "6a807b0c264172069b2616df"
+    },
+    "startDate": {
+      "$date": "2026-09-01T00:00:00Z"
+    },
+    "endDate": {
+      "$date": "2026-09-15T00:00:00Z"
+    },
+    "tasksPerDay": 8,
+    "revisionDaysPerParent": 2,
+    "totalTasks": 0,
+    "totalParentTasks": 0,
+    "calculatedTotalDays": 0,
+    "createdAt": {
+      "$date": "2026-08-15T14:47:22.739Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-15T14:47:22.739Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a80824b0815aa89b23101de"
+    },
+    "userId": {
+      "$oid": "6a80824a0815aa89b23100a8"
+    },
+    "projectId": {
+      "$oid": "6a80824a0815aa89b23100ab"
+    },
+    "startDate": {
+      "$date": "2026-08-01T00:00:00Z"
+    },
+    "endDate": {
+      "$date": "2026-08-30T00:00:00Z"
+    },
+    "tasksPerDay": 5,
+    "revisionDaysPerParent": 2,
+    "totalTasks": 0,
+    "totalParentTasks": 0,
+    "calculatedTotalDays": 0,
+    "createdAt": {
+      "$date": "2026-08-15T15:14:19.707Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-15T15:14:19.707Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a80824b0815aa89b23101ea"
+    },
+    "userId": {
+      "$oid": "6a80824a0815aa89b23100a9"
+    },
+    "projectId": {
+      "$oid": "6a80824a0815aa89b23100ab"
+    },
+    "startDate": {
+      "$date": "2026-09-01T00:00:00Z"
+    },
+    "endDate": {
+      "$date": "2026-09-15T00:00:00Z"
+    },
+    "tasksPerDay": 8,
+    "revisionDaysPerParent": 2,
+    "totalTasks": 0,
+    "totalParentTasks": 0,
+    "calculatedTotalDays": 0,
+    "createdAt": {
+      "$date": "2026-08-15T15:14:19.869Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-15T15:14:19.869Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a80b67820dd192730a967c1"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "userId": {
+      "$oid": "6a07fe669a0d94f268897c92"
+    },
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "calculatedTotalDays": 57,
+    "createdAt": {
+      "$date": "2026-08-15T18:56:57.070Z"
+    },
+    "endDate": {
+      "$date": "2026-10-10T23:59:59.999Z"
+    },
+    "revisionDaysPerParent": 2,
+    "startDate": {
+      "$date": "2026-08-15T00:00:00Z"
+    },
+    "tasksPerDay": 4,
+    "totalParentTasks": 12,
+    "totalTasks": 121,
+    "updatedAt": {
+      "$date": "2026-08-15T18:56:57.070Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a80b67b20dd192730a968cd"
+    },
+    "userId": {
+      "$oid": "6a07fe669a0d94f268897c92"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "calculatedTotalDays": 59,
+    "createdAt": {
+      "$date": "2026-08-15T18:57:00.234Z"
+    },
+    "endDate": {
+      "$date": "2026-11-28T23:59:59.999Z"
+    },
+    "revisionDaysPerParent": 1,
+    "startDate": {
+      "$date": "2026-10-01T00:00:00Z"
+    },
+    "tasksPerDay": 5,
+    "totalParentTasks": 29,
+    "totalTasks": 105,
+    "updatedAt": {
+      "$date": "2026-08-15T18:57:00.234Z"
+    }
+  }
+]

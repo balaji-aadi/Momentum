@@ -1,0 +1,310 @@
+[
+  {
+    "_id": {
+      "$oid": "69d7777e4b5ba11b8da9c112"
+    },
+    "name": "CREATE_PROJECT",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:09.979Z"
+    },
+    "description": "Create a new project",
+    "module": "PROJECT",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:09.979Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d7777e4b5ba11b8da9c113"
+    },
+    "name": "UPDATE_PROJECT",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:10.396Z"
+    },
+    "description": "Update existing project details",
+    "module": "PROJECT",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:10.396Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d7777e4b5ba11b8da9c114"
+    },
+    "name": "DELETE_PROJECT",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:10.443Z"
+    },
+    "description": "Delete a project",
+    "module": "PROJECT",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:10.443Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d7777e4b5ba11b8da9c115"
+    },
+    "name": "VIEW_PROJECT",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:10.496Z"
+    },
+    "description": "View project details",
+    "module": "PROJECT",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:10.496Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d7777e4b5ba11b8da9c116"
+    },
+    "name": "VIEW_ALL_PROJECTS",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:10.545Z"
+    },
+    "description": "View all projects",
+    "module": "PROJECT",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:10.545Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d7777e4b5ba11b8da9c117"
+    },
+    "name": "CREATE_MILESTONE",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:10.593Z"
+    },
+    "description": "Create a milestone",
+    "module": "MILESTONE",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:10.593Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d7777e4b5ba11b8da9c118"
+    },
+    "name": "UPDATE_MILESTONE",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:10.658Z"
+    },
+    "description": "Update a milestone",
+    "module": "MILESTONE",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:10.658Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d7777e4b5ba11b8da9c119"
+    },
+    "name": "DELETE_MILESTONE",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:10.704Z"
+    },
+    "description": "Delete a milestone",
+    "module": "MILESTONE",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:10.704Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d7777f4b5ba11b8da9c11a"
+    },
+    "name": "CREATE_TASK",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:10.932Z"
+    },
+    "description": "Create a task",
+    "module": "TASK",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:10.932Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d7777f4b5ba11b8da9c11b"
+    },
+    "name": "UPDATE_TASK",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:11.359Z"
+    },
+    "description": "Update any task",
+    "module": "TASK",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:11.359Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c11c"
+    },
+    "name": "DELETE_TASK",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:11.961Z"
+    },
+    "description": "Delete a task",
+    "module": "TASK",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:11.961Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c11d"
+    },
+    "name": "ASSIGN_TASK",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:12.019Z"
+    },
+    "description": "Assign task to user",
+    "module": "TASK",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:12.019Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c11e"
+    },
+    "name": "CHANGE_STATUS",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:12.083Z"
+    },
+    "description": "Change task status",
+    "module": "TASK",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:12.083Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c11f"
+    },
+    "name": "VIEW_TASK",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:12.129Z"
+    },
+    "description": "View task details",
+    "module": "TASK",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:12.129Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c120"
+    },
+    "name": "VIEW_ASSIGNED_TASK",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:12.176Z"
+    },
+    "description": "View only assigned tasks",
+    "module": "TASK",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:12.176Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c121"
+    },
+    "name": "UPDATE_ASSIGNED_TASK",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:12.224Z"
+    },
+    "description": "Update only assigned tasks",
+    "module": "TASK",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:12.224Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c122"
+    },
+    "name": "CREATE_SPRINT",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:12.289Z"
+    },
+    "description": "Create a sprint",
+    "module": "SPRINT",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:12.289Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c123"
+    },
+    "name": "START_SPRINT",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:12.350Z"
+    },
+    "description": "Start a sprint",
+    "module": "SPRINT",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:12.350Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c124"
+    },
+    "name": "COMPLETE_SPRINT",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:12.409Z"
+    },
+    "description": "Complete a sprint",
+    "module": "SPRINT",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:12.409Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c125"
+    },
+    "name": "CREATE_USER",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:12.458Z"
+    },
+    "description": "Create a new user",
+    "module": "USER",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:12.458Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c126"
+    },
+    "name": "UPDATE_USER",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:12.507Z"
+    },
+    "description": "Update user details",
+    "module": "USER",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:12.507Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c127"
+    },
+    "name": "ASSIGN_ROLE",
+    "createdAt": {
+      "$date": "2026-04-09T09:55:12.556Z"
+    },
+    "description": "Assign roles to users",
+    "module": "USER",
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:12.556Z"
+    }
+  }
+]

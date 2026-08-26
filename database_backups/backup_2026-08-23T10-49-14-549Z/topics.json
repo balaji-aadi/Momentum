@@ -1,0 +1,482 @@
+[
+  {
+    "_id": {
+      "$oid": "6a6622397610287711f6ea69"
+    },
+    "name": "Array",
+    "slug": "array",
+    "category": "Data Structures",
+    "createdAt": {
+      "$date": "2026-07-26T15:05:29.736Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T16:04:29.624Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a6622467610287711f6ea6c"
+    },
+    "name": "Hash Table",
+    "slug": "hash-table",
+    "category": "Data Structures",
+    "createdAt": {
+      "$date": "2026-07-26T15:05:42.332Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T16:04:30.217Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a67396eff27d024ed9aef31"
+    },
+    "name": "Sliding Window",
+    "slug": "sliding-window",
+    "category": "Algorithms",
+    "createdAt": {
+      "$date": "2026-07-27T10:56:46.456Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T16:04:30.336Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a673977ff27d024ed9aef34"
+    },
+    "name": "Prefix Sum",
+    "slug": "prefix-sum",
+    "category": "Algorithms",
+    "createdAt": {
+      "$date": "2026-07-27T10:56:55.269Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.737Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a6794420afaf1e3be3792ac"
+    },
+    "slug": "string",
+    "__v": 0,
+    "category": "Data Structures",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:17.575Z"
+    },
+    "name": "String",
+    "updatedAt": {
+      "$date": "2026-08-18T16:04:29.844Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794420afaf1e3be3792ad"
+    },
+    "slug": "two-pointers",
+    "__v": 0,
+    "category": "Algorithms",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:18.598Z"
+    },
+    "name": "Two Pointers",
+    "updatedAt": {
+      "$date": "2026-08-18T16:04:30.275Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794420afaf1e3be3792ae"
+    },
+    "slug": "stack",
+    "__v": 0,
+    "category": "Data Structures",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:18.721Z"
+    },
+    "name": "Stack",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:18.721Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794420afaf1e3be3792af"
+    },
+    "slug": "queue",
+    "__v": 0,
+    "category": "Data Structures",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:18.780Z"
+    },
+    "name": "Queue",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:18.780Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794420afaf1e3be3792b0"
+    },
+    "slug": "heap-priority-queue",
+    "__v": 0,
+    "category": "Data Structures",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:18.822Z"
+    },
+    "name": "Heap (Priority Queue)",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:18.822Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794420afaf1e3be3792b1"
+    },
+    "slug": "binary-search",
+    "__v": 0,
+    "category": "Algorithms",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:18.893Z"
+    },
+    "name": "Binary Search",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:18.893Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792b2"
+    },
+    "slug": "linked-list",
+    "__v": 0,
+    "category": "Data Structures",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:18.965Z"
+    },
+    "name": "Linked List",
+    "updatedAt": {
+      "$date": "2026-08-18T16:04:30.392Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792b3"
+    },
+    "slug": "binary-tree",
+    "__v": 0,
+    "category": "Data Structures",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.021Z"
+    },
+    "name": "Binary Tree",
+    "updatedAt": {
+      "$date": "2026-08-18T16:04:30.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792b4"
+    },
+    "slug": "binary-search-tree-bst",
+    "__v": 0,
+    "category": "Data Structures",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.074Z"
+    },
+    "name": "Binary Search Tree (BST)",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.074Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792b5"
+    },
+    "slug": "graph",
+    "__v": 0,
+    "category": "Data Structures",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.131Z"
+    },
+    "name": "Graph",
+    "updatedAt": {
+      "$date": "2026-08-18T16:04:30.489Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792b6"
+    },
+    "slug": "depth-first-search-dfs",
+    "__v": 0,
+    "category": "Algorithms",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.194Z"
+    },
+    "name": "Depth-First Search (DFS)",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.194Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792b7"
+    },
+    "slug": "breadth-first-search-bfs",
+    "__v": 0,
+    "category": "Algorithms",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.261Z"
+    },
+    "name": "Breadth-First Search (BFS)",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.261Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792b8"
+    },
+    "slug": "backtracking",
+    "__v": 0,
+    "category": "Algorithms",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.312Z"
+    },
+    "name": "Backtracking",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.312Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792b9"
+    },
+    "slug": "dynamic-programming",
+    "__v": 0,
+    "category": "Algorithms",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.371Z"
+    },
+    "name": "Dynamic Programming",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.371Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792ba"
+    },
+    "slug": "greedy",
+    "__v": 0,
+    "category": "Algorithms",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.415Z"
+    },
+    "name": "Greedy",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.415Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792bb"
+    },
+    "slug": "bit-manipulation",
+    "__v": 0,
+    "category": "Algorithms",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.477Z"
+    },
+    "name": "Bit Manipulation",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.477Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792bc"
+    },
+    "slug": "union-find-disjoint-set",
+    "__v": 0,
+    "category": "Data Structures",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.535Z"
+    },
+    "name": "Union Find (Disjoint Set)",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.535Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792bd"
+    },
+    "slug": "topological-sort",
+    "__v": 0,
+    "category": "Algorithms",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.580Z"
+    },
+    "name": "Topological Sort",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.580Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792be"
+    },
+    "slug": "trie",
+    "__v": 0,
+    "category": "Data Structures",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.640Z"
+    },
+    "name": "Trie",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.640Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792bf"
+    },
+    "slug": "matrix",
+    "__v": 0,
+    "category": "Data Structures",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.682Z"
+    },
+    "name": "Matrix",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.682Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792c0"
+    },
+    "slug": "segment-tree",
+    "__v": 0,
+    "category": "Advanced Topics",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.782Z"
+    },
+    "name": "Segment Tree",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.782Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792c1"
+    },
+    "slug": "monotonic-stack",
+    "__v": 0,
+    "category": "Data Structures",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.844Z"
+    },
+    "name": "Monotonic Stack",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.844Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794430afaf1e3be3792c2"
+    },
+    "slug": "divide-and-conquer",
+    "__v": 0,
+    "category": "Algorithms",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.889Z"
+    },
+    "name": "Divide and Conquer",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.889Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794440afaf1e3be3792c3"
+    },
+    "slug": "recursion",
+    "__v": 0,
+    "category": "Algorithms font-semibold",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:19.952Z"
+    },
+    "name": "Recursion",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:19.952Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794440afaf1e3be3792c4"
+    },
+    "slug": "math",
+    "__v": 0,
+    "category": "Advanced Topics",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:20.014Z"
+    },
+    "name": "Math",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:20.014Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794440afaf1e3be3792c5"
+    },
+    "slug": "game-theory",
+    "__v": 0,
+    "category": "Advanced Topics",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:20.072Z"
+    },
+    "name": "Game Theory",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:20.072Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794440afaf1e3be3792c6"
+    },
+    "slug": "geometry",
+    "__v": 0,
+    "category": "Advanced Topics",
+    "createdAt": {
+      "$date": "2026-07-27T17:24:20.135Z"
+    },
+    "name": "Geometry",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:20.135Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a8482aebb0505a8fe5d4948"
+    },
+    "name": "Sorting",
+    "slug": "sorting",
+    "category": "Algorithms",
+    "createdAt": {
+      "$date": "2026-08-18T16:05:02.924Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T16:05:02.924Z"
+    },
+    "__v": 0
+  }
+]

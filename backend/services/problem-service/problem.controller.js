@@ -1,4 +1,7 @@
 import Problem from "../../models/problem.model.js";
+import Company from "../../models/company.model.js";
+import Topic from "../../models/topic.model.js";
+import Pattern from "../../models/pattern.model.js";
 import { 
   validateProblemTestCases, 
   validateExecutionProfileCompatibility,
@@ -198,7 +201,8 @@ export const getAllProblems = async (req, res) => {
         page: Number(page),
         limit: Number(limit),
         total,
-        totalPages: Math.ceil(total / Number(limit))
+        totalPages: Math.ceil(total / Number(limit)),
+        pages: Math.ceil(total / Number(limit))
       }
     });
   } catch (error) {

@@ -65,11 +65,11 @@ export function renderMarkdown(markdown = '') {
         inList = true;
         listType = targetType;
         html += targetType === 'ul' 
-          ? '<ul class="list-disc list-inside space-y-2 my-3 text-slate-800 dark:text-slate-100 text-sm sm:text-base font-normal leading-relaxed pl-1">' 
-          : '<ol class="list-decimal list-inside space-y-2 my-3 text-slate-800 dark:text-slate-100 text-sm sm:text-base font-normal leading-relaxed pl-1">';
+          ? '<ul class="list-disc list-inside space-y-2.5 my-3.5 text-slate-800 dark:text-slate-100 text-base sm:text-lg font-normal leading-relaxed pl-1">' 
+          : '<ol class="list-decimal list-inside space-y-2.5 my-3.5 text-slate-800 dark:text-slate-100 text-base sm:text-lg font-normal leading-relaxed pl-1">';
       }
 
-      html += `<li class="my-1"><span class="text-slate-800 dark:text-slate-100">${itemContent}</span></li>`;
+      html += `<li class="my-1.5"><span class="text-slate-800 dark:text-slate-100">${itemContent}</span></li>`;
       continue;
     } else {
       closeListIfNeeded();
@@ -95,7 +95,7 @@ export function renderMarkdown(markdown = '') {
     // 4. Blockquotes (> text)
     if (line.startsWith('> ')) {
       const text = formatInlineMarkdown(line.slice(2));
-      html += `<blockquote class="border-l-4 border-primary bg-primary/5 text-slate-800 dark:text-slate-200 pl-4 py-2.5 my-3.5 rounded-r-xl text-sm italic leading-relaxed">${text}</blockquote>`;
+      html += `<blockquote class="border-l-4 border-orange-500 bg-orange-500/10 text-slate-800 dark:text-slate-200 pl-4 py-2.5 my-3.5 rounded-r-xl text-base italic leading-relaxed">${text}</blockquote>`;
       continue;
     }
 
@@ -121,7 +121,7 @@ export function renderMarkdown(markdown = '') {
       html += `<div class="h-2"></div>`;
     } else {
       const text = formatInlineMarkdown(line);
-      html += `<p class="text-sm sm:text-base text-slate-800 dark:text-slate-100 my-2.5 leading-relaxed font-normal">${text}</p>`;
+      html += `<p class="text-base sm:text-lg text-slate-800 dark:text-slate-100 my-3 leading-relaxed font-normal">${text}</p>`;
     }
   }
 
@@ -145,7 +145,7 @@ function formatInlineMarkdown(text = '') {
   res = res.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="my-4 rounded-xl border border-slate-200 dark:border-slate-700 max-h-96 object-contain shadow-md inline-block" />');
 
   // Links [label](url)
-  res = res.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline font-bold">$1</a>');
+  res = res.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-orange-500 hover:underline font-bold">$1</a>');
 
   // Bold & Italic (***text*** or ___text___)
   res = res.replace(/\*\*\*(.*?)\*\*\*/g, '<strong class="font-extrabold italic text-slate-900 dark:text-white">$1</strong>');
@@ -156,8 +156,12 @@ function formatInlineMarkdown(text = '') {
   // Italic (*text*)
   res = res.replace(/\*(.*?)\*/g, '<em class="italic text-slate-700 dark:text-slate-300 font-medium">$1</em>');
 
-  // Inline Code (`code`)
-  res = res.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded-md bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/60 font-mono text-xs font-semibold">$1</code>');
+  // Strip raw LaTeX math $...$ and $$...$$ delimiters and render in #E34234 glassmorphism badge
+  res = res.replace(/\$\$(.*?)\$\$/g, '<code class="px-1.5 py-0.5 mx-0.5 rounded-md bg-[#E34234]/15 text-[#E34234] dark:text-[#ff6b5d] border border-[#E34234]/40 font-mono text-xs sm:text-sm font-semibold backdrop-blur-xs inline-block tracking-tight">$1</code>');
+  res = res.replace(/\$(.*?)\$/g, '<code class="px-1.5 py-0.5 mx-0.5 rounded-md bg-[#E34234]/15 text-[#E34234] dark:text-[#ff6b5d] border border-[#E34234]/40 font-mono text-xs sm:text-sm font-semibold backdrop-blur-xs inline-block tracking-tight">$1</code>');
+
+  // Inline Code (`code`) -> #E34234 glassmorphism badge
+  res = res.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 mx-0.5 rounded-md bg-[#E34234]/15 text-[#E34234] dark:text-[#ff6b5d] border border-[#E34234]/40 font-mono text-xs sm:text-sm font-semibold backdrop-blur-xs inline-block tracking-tight">$1</code>');
 
   return res;
 }

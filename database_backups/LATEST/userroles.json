@@ -1,0 +1,203 @@
+[
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c128"
+    },
+    "name": "admin",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-04-09T09:55:12.605Z"
+    },
+    "permissions": [
+      {
+        "$oid": "69d7777e4b5ba11b8da9c112"
+      },
+      {
+        "$oid": "69d7777e4b5ba11b8da9c113"
+      },
+      {
+        "$oid": "69d7777e4b5ba11b8da9c114"
+      },
+      {
+        "$oid": "69d7777e4b5ba11b8da9c115"
+      },
+      {
+        "$oid": "69d7777e4b5ba11b8da9c116"
+      },
+      {
+        "$oid": "69d7777e4b5ba11b8da9c117"
+      },
+      {
+        "$oid": "69d7777e4b5ba11b8da9c118"
+      },
+      {
+        "$oid": "69d7777e4b5ba11b8da9c119"
+      },
+      {
+        "$oid": "69d7777f4b5ba11b8da9c11a"
+      },
+      {
+        "$oid": "69d7777f4b5ba11b8da9c11b"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c11c"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c11d"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c11e"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c11f"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c120"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c121"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c122"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c123"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c124"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c125"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c126"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c127"
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:12.605Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c129"
+    },
+    "name": "projectmanager",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-04-09T09:55:12.660Z"
+    },
+    "permissions": [
+      {
+        "$oid": "69d7777e4b5ba11b8da9c112"
+      },
+      {
+        "$oid": "69d7777e4b5ba11b8da9c113"
+      },
+      {
+        "$oid": "69d7777e4b5ba11b8da9c116"
+      },
+      {
+        "$oid": "69d7777e4b5ba11b8da9c115"
+      },
+      {
+        "$oid": "69d7777e4b5ba11b8da9c117"
+      },
+      {
+        "$oid": "69d7777e4b5ba11b8da9c118"
+      },
+      {
+        "$oid": "69d7777e4b5ba11b8da9c119"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c122"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c123"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c124"
+      },
+      {
+        "$oid": "69d7777f4b5ba11b8da9c11a"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c11d"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c11e"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c11f"
+      },
+      {
+        "$oid": "69d7777f4b5ba11b8da9c11b"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c11c"
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:12.660Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c12a"
+    },
+    "name": "hr",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-04-09T09:55:12.729Z"
+    },
+    "permissions": [
+      {
+        "$oid": "69d7777e4b5ba11b8da9c115"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c11f"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c125"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c126"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c127"
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:12.729Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d777804b5ba11b8da9c12b"
+    },
+    "name": "employee",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-04-09T09:55:12.784Z"
+    },
+    "permissions": [
+      {
+        "$oid": "69d7777e4b5ba11b8da9c115"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c120"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c121"
+      },
+      {
+        "$oid": "69d777804b5ba11b8da9c11e"
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-04-09T09:55:12.784Z"
+    }
+  }
+]

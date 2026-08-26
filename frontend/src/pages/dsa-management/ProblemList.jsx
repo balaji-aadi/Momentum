@@ -60,8 +60,11 @@ export default function ProblemList() {
 
       if (res.data?.success) {
         setProblems(res.data.data || []);
-        setTotalPages(res.data.pagination?.pages || 1);
-        setTotalItems(res.data.pagination?.total || 0);
+        const pagination = res.data.pagination || {};
+        const total = pagination.total || 0;
+        const pages = pagination.totalPages || pagination.pages || Math.ceil(total / 10) || 1;
+        setTotalPages(pages);
+        setTotalItems(total);
       }
     } catch (error) {
       console.error("Failed to fetch problems", error);

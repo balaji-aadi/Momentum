@@ -1,0 +1,229 @@
+[
+  {
+    "_id": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "name": "DSA phase 1",
+    "access": "private",
+    "key": "DSA",
+    "description": "",
+    "startDate": {
+      "$date": "2026-04-09T00:00:00Z"
+    },
+    "endDate": {
+      "$date": "2026-05-09T00:00:00Z"
+    },
+    "priority": "high",
+    "clientName": "",
+    "githubRepository": "",
+    "budget": null,
+    "progress": 100,
+    "projectManager": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "teamMembers": [
+      {
+        "$oid": "6993047f16e85ff3e4efd9a3"
+      }
+    ],
+    "rolesAndResponsibilities": [
+      {
+        "teamMember": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "role": "Lead",
+        "responsibility": "Everything ",
+        "_id": {
+          "$oid": "69d7788e6d3910f342f371da"
+        }
+      }
+    ],
+    "status": "completed",
+    "settings": {
+      "enableLeetCodeSearch": true,
+      "enableYoutubeSearch": true,
+      "sprintDuration": 2,
+      "enableSprints": false
+    },
+    "createdBy": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "createdAt": {
+      "$date": "2026-04-09T09:59:42.125Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-31T11:34:27.125Z"
+    },
+    "updatedBy": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "completedAt": {
+      "$date": "2026-07-05T17:08:05.755Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "name": "Resume Grinding Phase 1 ",
+    "access": "private",
+    "key": "RGB",
+    "description": "Resume grinding phase 1 focusing on high-yield interview preparation for SDE-2",
+    "startDate": {
+      "$date": "2026-06-16T00:00:00Z"
+    },
+    "endDate": {
+      "$date": "2026-07-21T00:00:00Z"
+    },
+    "priority": "high",
+    "clientName": "",
+    "budget": null,
+    "progress": 54,
+    "projectManager": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "teamMembers": [
+      {
+        "$oid": "6993047f16e85ff3e4efd9a3"
+      }
+    ],
+    "rolesAndResponsibilities": [],
+    "status": "active",
+    "settings": {
+      "sprintDuration": 2,
+      "enableSprints": false,
+      "enableYoutubeSearch": false,
+      "enableLeetCodeSearch": false
+    },
+    "createdBy": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "updatedBy": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "createdAt": {
+      "$date": "2026-06-16T03:40:44.478Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-16T16:31:30.876Z"
+    },
+    "githubRepository": "",
+    "completedAt": null
+  },
+  {
+    "_id": {
+      "$oid": "6a4cb18c21b1d351daa940a6"
+    },
+    "name": "Test Verification Project",
+    "access": "private",
+    "key": "TEST-151",
+    "startDate": {
+      "$date": "2026-06-27T07:58:04.223Z"
+    },
+    "endDate": {
+      "$date": "2026-07-05T07:58:04.223Z"
+    },
+    "priority": "medium",
+    "clientName": "",
+    "githubRepository": "",
+    "budget": null,
+    "progress": 0,
+    "projectManager": {
+      "$oid": "6a4cb18c21b1d351daa940a5"
+    },
+    "teamMembers": [],
+    "status": "active",
+    "completedAt": null,
+    "settings": {
+      "sprintDuration": 2,
+      "enableSprints": false,
+      "enableYoutubeSearch": false,
+      "enableLeetCodeSearch": false
+    },
+    "rolesAndResponsibilities": [],
+    "createdAt": {
+      "$date": "2026-07-07T07:58:04.235Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-07T08:10:29.309Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "name": "DSA Phase 2",
+    "access": "private",
+    "key": "DSAP2",
+    "description": "<h3>DSA Phase 2 Syllabus</h3>\n<p>This arena covers the following advanced data structures and patterns:</p>\n<ol>\n  <li><strong>Linked List</strong> (~40 Problems)\n    <ul>\n      <li>Basic Operations</li>\n      <li>Fast & Slow Pointer</li>\n      <li>Reverse Pattern</li>\n      <li>Dummy Node Pattern</li>\n      <li>Merge Pattern</li>\n      <li>Two Pointer Pattern</li>\n      <li>Arithmetic Pattern</li>\n      <li>Random Pointer</li>\n      <li>Flatten Pattern</li>\n      <li>Design (LRU)</li>\n    </ul>\n  </li>\n  <li><strong>Stack</strong> (~20 Problems)\n    <ul>\n      <li>Basic Stack</li>\n      <li>Expression Evaluation</li>\n      <li>Parentheses Pattern</li>\n      <li>Simulation Pattern</li>\n      <li>Design Stack</li>\n    </ul>\n  </li>\n  <li><strong>Queue</strong> (~10 Problems)\n    <ul>\n      <li>Queue Basics</li>\n      <li>Deque Pattern</li>\n      <li>Circular Queue</li>\n      <li>Design Queue</li>\n    </ul>\n  </li>\n  <li><strong>Heap</strong> (~15 Problems)\n    <ul>\n      <li>Top K Pattern</li>\n      <li>Merge Pattern</li>\n      <li>Two Heap Pattern</li>\n      <li>Scheduling Pattern</li>\n      <li>Design</li>\n    </ul>\n  </li>\n  <li><strong>Recursion</strong> (~20 Problems)\n    <ul>\n      <li>Fundamentals</li>\n      <li>Tree-style Recursion</li>\n      <li>Divide & Conquer</li>\n      <li>Recursive Linked List</li>\n      <li>Advanced Recursion</li>\n    </ul>\n  </li>\n</ol>",
+    "startDate": {
+      "$date": "2026-07-07T00:00:00Z"
+    },
+    "endDate": {
+      "$date": "2026-08-19T00:00:00Z"
+    },
+    "priority": "high",
+    "clientName": "",
+    "budget": 0,
+    "progress": 47,
+    "projectManager": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "teamMembers": [
+      {
+        "$oid": "6993047f16e85ff3e4efd9a3"
+      }
+    ],
+    "rolesAndResponsibilities": [],
+    "status": "active",
+    "settings": {
+      "sprintDuration": 2,
+      "enableSprints": false,
+      "enableYoutubeSearch": true,
+      "enableLeetCodeSearch": true
+    },
+    "createdBy": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "updatedBy": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "createdAt": {
+      "$date": "2026-07-07T08:47:31.115Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-19T18:30:01.199Z"
+    },
+    "completedAt": null,
+    "githubRepository": ""
+  },
+  {
+    "_id": {
+      "$oid": "6a6c84f6ef4d39f1ed4716c0"
+    },
+    "name": "DSA Phase 3",
+    "key": "DSAP3",
+    "description": "Final Phase FAANG Pattern Mastery Arena covering missing tree, graph, DP, trie, bitmasking, math patterns and weak pattern reinforcements.",
+    "branchId": {
+      "$oid": "6a081b6e111c99b633b00d76"
+    },
+    "createdBy": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "createdAt": {
+      "$date": "2026-07-31T11:20:22.137Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-31T11:20:22.137Z"
+    }
+  }
+]

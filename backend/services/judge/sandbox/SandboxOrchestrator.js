@@ -35,9 +35,18 @@ export class SandboxOrchestrator {
       });
     }
 
-    // 2. Strict Production Sandbox Enforcement
+    // 2. Strict Production Sandbox Enforcement & gVisor Security Gate
     const isStrict = strictSandboxMode || process.env.STRICT_SANDBOX_MODE === 'true' || process.env.NODE_ENV === 'production';
-    if (isStrict) {
+    const isStrictGvisor = process.env.JUDGE_STRICT_GVISOR_REQUIRED === 'true';
+
+    if (isStrictGvisor && !dockerAvailable) {
+      return createProcessExecutionResult({
+        status: 'SANDBOX_UNAVAILABLE',
+        error: 'Strict gVisor security mode enabled, but container runtime is unavailable. Zero security downgrade allowed.'
+      });
+    }
+
+    if (isStrict && !dockerAvailable) {
       return createProcessExecutionResult({
         status: 'SANDBOX_UNAVAILABLE',
         error: 'Production container sandbox is unavailable in this environment.'

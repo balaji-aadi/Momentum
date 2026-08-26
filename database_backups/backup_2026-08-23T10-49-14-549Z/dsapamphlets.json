@@ -1,0 +1,3862 @@
+[
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c00e"
+    },
+    "topic": "Arrays & Strings",
+    "patternKey": "prefix_sum",
+    "patternName": "Prefix Sum Pattern",
+    "faangWeightage": "35% Weightage · High FAANG Frequency",
+    "weightageNum": 35,
+    "importanceTier": "High",
+    "summary": "Precompute cumulative sums to perform O(1) range sum queries and subarray sum equals K challenges.",
+    "aliases": [
+      "prefix sum",
+      "cumulative sum",
+      "subarray sum"
+    ],
+    "order": 3,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 10,
+        "totalCompleted": 10,
+        "isCompleted": true,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "69d7788e6d3910f342f371d9"
+            },
+            "arenaName": "DSA phase 1",
+            "arenaKey": "DSA",
+            "total": 10,
+            "completed": 10,
+            "problems": [
+              {
+                "taskId": "DSA-41",
+                "taskName": "Range sum query",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-42",
+                "taskName": "Subarray sum equals K",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-43",
+                "taskName": "Continuous subarray sum",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-44",
+                "taskName": "Subarrays divisible by K",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-45",
+                "taskName": "Contiguous Array",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-46",
+                "taskName": "Maximum size subarray sum = K",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-47",
+                "taskName": "Difference array basics",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-48",
+                "taskName": "Car pooling",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-49",
+                "taskName": "Range addition",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-50",
+                "taskName": "Product of array except self",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:49.127Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:06.839Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.214Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:49.130Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c00f"
+    },
+    "topic": "Arrays & Strings",
+    "patternKey": "kadane_algorithm",
+    "patternName": "Kadane's Algorithm (Max Subarray)",
+    "faangWeightage": "30% Weightage · High FAANG Frequency",
+    "weightageNum": 30,
+    "importanceTier": "High",
+    "summary": "Dynamic O(N) strategy for maximum contiguous subarray sum and maximum product subarray.",
+    "aliases": [
+      "kadane",
+      "maximum subarray",
+      "contiguous subarray"
+    ],
+    "order": 4,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 10,
+        "totalCompleted": 10,
+        "isCompleted": true,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "69d7788e6d3910f342f371d9"
+            },
+            "arenaName": "DSA phase 1",
+            "arenaKey": "DSA",
+            "total": 10,
+            "completed": 10,
+            "problems": [
+              {
+                "taskId": "DSA-52",
+                "taskName": "Maximum subarray",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-53",
+                "taskName": "Maximum sum circular subarray",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-54",
+                "taskName": "Maximum product subarray",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-55",
+                "taskName": "Best time to buy and sell stock",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-56",
+                "taskName": "Maximum sum rectangle (2D Kadane)",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-57",
+                "taskName": "Maximum subarray sum with one deletion",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-58",
+                "taskName": "K concatenation maximum sum",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-59",
+                "taskName": "Maximum alternating subarray sum",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-60",
+                "taskName": "Largest sum of averages",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-61",
+                "taskName": "Maximum difference problem",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:49.177Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:06.915Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.214Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:49.180Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c020"
+    },
+    "topic": "Dynamic Programming",
+    "patternKey": "knapsack_dp",
+    "patternName": "0/1 & Unbounded Knapsack DP",
+    "faangWeightage": "45% Weightage · Crucial FAANG Pattern",
+    "weightageNum": 45,
+    "importanceTier": "Crucial",
+    "summary": "Decision-making with subset sums, target sums, coin change, or item combination weights.",
+    "aliases": [
+      "knapsack",
+      "0/1 knapsack",
+      "coin change",
+      "target sum",
+      "partition equal subset sum"
+    ],
+    "order": 21,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 6,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 6,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-50",
+                "taskName": "Coin Change",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-51",
+                "taskName": "Partition Equal Subset Sum",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-52",
+                "taskName": "Target Sum",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-53",
+                "taskName": "Combination Sum IV",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-54",
+                "taskName": "Ones and Zeroes",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-55",
+                "taskName": "Last Stone Weight II",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:50.380Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:08.087Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:50.382Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c01a"
+    },
+    "topic": "Trees & BST",
+    "patternKey": "tree_dfs_path_sum",
+    "patternName": "Tree DFS & Path Sum Pattern",
+    "faangWeightage": "40% Weightage · Crucial FAANG Pattern",
+    "weightageNum": 40,
+    "importanceTier": "Crucial",
+    "summary": "Recursive post-order/pre-order DFS for Maximum Path Sum, Lowest Common Ancestor (LCA), and Diameter.",
+    "aliases": [
+      "tree dfs",
+      "path sum",
+      "lowest common ancestor",
+      "lca",
+      "diameter of binary tree"
+    ],
+    "order": 15,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 15,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 15,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-9",
+                "taskName": "Binary Tree Inorder Traversal",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-10",
+                "taskName": "Maximum Depth of Binary Tree",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-11",
+                "taskName": "Balanced Binary Tree",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-12",
+                "taskName": "Symmetric Tree",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-13",
+                "taskName": "Diameter of Binary Tree",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-14",
+                "taskName": "Path Sum",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-15",
+                "taskName": "Binary Tree Maximum Path Sum",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-16",
+                "taskName": "Lowest Common Ancestor of a Binary Tree",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-17",
+                "taskName": "Lowest Common Ancestor of a Binary Search Tree",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-18",
+                "taskName": "Validate Binary Search Tree",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-19",
+                "taskName": "Search in a Binary Search Tree",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-20",
+                "taskName": "Kth Smallest Element in a BST",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-21",
+                "taskName": "Construct Binary Tree from Preorder and Inorder Traversal",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-22",
+                "taskName": "Serialize and Deserialize Binary Tree",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-23",
+                "taskName": "House Robber III",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:49.888Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.610Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:49.892Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c01f"
+    },
+    "topic": "Graphs",
+    "patternKey": "union_find_disjoint",
+    "patternName": "Union-Find (Disjoint Set Unit - DSU)",
+    "faangWeightage": "35% Weightage · High FAANG Frequency",
+    "weightageNum": 35,
+    "importanceTier": "High",
+    "summary": "Detect cycles in undirected graphs or merge components with path compression.",
+    "aliases": [
+      "union find",
+      "disjoint set",
+      "dsu",
+      "redundant connection"
+    ],
+    "order": 20,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 4,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 4,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-45",
+                "taskName": "Redundant Connection",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-46",
+                "taskName": "Number of Provinces",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-47",
+                "taskName": "Accounts Merge",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-48",
+                "taskName": "Most Stones Removed with Same Row or Column",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:50.202Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.902Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:50.204Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c024"
+    },
+    "topic": "Greedy & Backtracking",
+    "patternKey": "greedy_scheduling",
+    "patternName": "Greedy Scheduling & Jump Game",
+    "faangWeightage": "35% Weightage · High FAANG Frequency",
+    "weightageNum": 35,
+    "importanceTier": "High",
+    "summary": "Make locally optimal choices for Jump Game, Gas Station, Minimum Platforms.",
+    "aliases": [
+      "greedy",
+      "jump game",
+      "gas station",
+      "minimum platforms"
+    ],
+    "order": 25,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 5,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 5,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-63",
+                "taskName": "Jump Game",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-64",
+                "taskName": "Jump Game II",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-65",
+                "taskName": "Gas Station",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-66",
+                "taskName": "Minimum Number of Arrows to Burst Balloons",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-67",
+                "taskName": "Task Scheduler",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:50.678Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:08.381Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:50.680Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c015"
+    },
+    "topic": "Stack & Queue",
+    "patternKey": "parentheses_matching",
+    "patternName": "Parentheses & Expression Stack",
+    "faangWeightage": "35% Weightage · High FAANG Frequency",
+    "weightageNum": 35,
+    "importanceTier": "High",
+    "summary": "Validate brackets, evaluate reverse polish notation, or compute nested calculator expressions.",
+    "aliases": [
+      "parentheses pattern",
+      "valid parentheses",
+      "basic calculator",
+      "expression evaluation"
+    ],
+    "order": 10,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 9,
+        "totalCompleted": 4,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a4cbd238f3ba6c540a5cbe6"
+            },
+            "arenaName": "DSA Phase 2",
+            "arenaKey": "DSAP2",
+            "total": 9,
+            "completed": 4,
+            "problems": [
+              {
+                "taskId": "DSAP2-57",
+                "taskName": "Evaluate Reverse Polish Notation",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-58",
+                "taskName": "Basic Calculator",
+                "status": "backlog",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP2-59",
+                "taskName": "Basic Calculator II",
+                "status": "backlog",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP2-60",
+                "taskName": "Decode String",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-62",
+                "taskName": "Valid Parentheses",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-63",
+                "taskName": "Generate Parentheses",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-64",
+                "taskName": "Longest Valid Parentheses",
+                "status": "backlog",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP2-65",
+                "taskName": "Minimum Remove to Make Valid Parentheses",
+                "status": "backlog",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP2-66",
+                "taskName": "Remove Invalid Parentheses",
+                "status": "backlog",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:49.602Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.265Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:49.605Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c011"
+    },
+    "topic": "Linked List",
+    "patternKey": "fast_slow_pointers_ll",
+    "patternName": "Fast & Slow Pointer (Floyd Cycle)",
+    "faangWeightage": "40% Weightage · Crucial FAANG Pattern",
+    "weightageNum": 40,
+    "importanceTier": "Crucial",
+    "summary": "Detect cycles in single/double linked lists, find middle node, or palindrome linked list verification.",
+    "aliases": [
+      "fast & slow pointer",
+      "fast and slow",
+      "floyd cycle",
+      "cycle detection",
+      "middle of linked list"
+    ],
+    "order": 6,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 6,
+        "totalCompleted": 6,
+        "isCompleted": true,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a4cbd238f3ba6c540a5cbe6"
+            },
+            "arenaName": "DSA Phase 2",
+            "arenaKey": "DSAP2",
+            "total": 6,
+            "completed": 6,
+            "problems": [
+              {
+                "taskId": "DSAP2-8",
+                "taskName": "Linked List Cycle",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-9",
+                "taskName": "Linked List Cycle II",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-10",
+                "taskName": "Remove Nth Node From End of List",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-11",
+                "taskName": "Palindrome Linked List",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-12",
+                "taskName": "Reorder List",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-13",
+                "taskName": "Delete the Middle Node of a Linked List",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:49.349Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.041Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.214Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:49.351Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c012"
+    },
+    "topic": "Linked List",
+    "patternKey": "inplace_reversal_ll",
+    "patternName": "In-place Reversal Pattern",
+    "faangWeightage": "35% Weightage · High FAANG Frequency",
+    "weightageNum": 35,
+    "importanceTier": "High",
+    "summary": "Reverse linked lists fully, in sub-ranges (II), or in groups of size K without extra space allocation.",
+    "aliases": [
+      "reverse pattern",
+      "reverse linked list",
+      "reverse nodes in k group",
+      "swap nodes in pairs"
+    ],
+    "order": 7,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 8,
+        "totalCompleted": 8,
+        "isCompleted": true,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a4cbd238f3ba6c540a5cbe6"
+            },
+            "arenaName": "DSA Phase 2",
+            "arenaKey": "DSAP2",
+            "total": 8,
+            "completed": 8,
+            "problems": [
+              {
+                "taskId": "DSAP2-15",
+                "taskName": "Reverse Linked List",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-16",
+                "taskName": "Reverse Linked List II",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-17",
+                "taskName": "Reverse Nodes in K Group",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-18",
+                "taskName": "Swap Nodes in Pairs",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-19",
+                "taskName": "Rotate List",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-20",
+                "taskName": "Reverse Nodes in Even Length Groups",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-21",
+                "taskName": "Reverse Linked List Recursive",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-22",
+                "taskName": "Reverse first K elements of given linked list",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:49.414Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.105Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.214Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:49.415Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c021"
+    },
+    "topic": "Dynamic Programming",
+    "patternKey": "lcs_lis_dp",
+    "patternName": "LCS & LIS Pattern (Strings/Sequences)",
+    "faangWeightage": "40% Weightage · Crucial FAANG Pattern",
+    "weightageNum": 40,
+    "importanceTier": "Crucial",
+    "summary": "State transitions for Longest Common Subsequence, Longest Increasing Subsequence, Edit Distance.",
+    "aliases": [
+      "lcs",
+      "lis",
+      "longest common subsequence",
+      "longest increasing subsequence",
+      "edit distance"
+    ],
+    "order": 22,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 12,
+        "totalCompleted": 1,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "69d7788e6d3910f342f371d9"
+            },
+            "arenaName": "DSA phase 1",
+            "arenaKey": "DSA",
+            "total": 1,
+            "completed": 1,
+            "problems": [
+              {
+                "taskId": "DSA-147",
+                "taskName": "One edit distance",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          },
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 11,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-91",
+                "taskName": "Longest Common Subsequence",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-92",
+                "taskName": "Longest Palindromic Subsequence",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-93",
+                "taskName": "Edit Distance",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-94",
+                "taskName": "Longest Increasing Subsequence",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-95",
+                "taskName": "Russian Doll Envelopes",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-96",
+                "taskName": "Number of Longest Increasing Subsequences",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-97",
+                "taskName": "Distinct Subsequences",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-98",
+                "taskName": "Delete Operation for Two Strings",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-99",
+                "taskName": "Shortest Common Supersequence",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-100",
+                "taskName": "Interleaving String",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-101",
+                "taskName": "Minimum ASCII Delete Sum for Two Strings",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:50.444Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:08.145Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:50.448Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c010"
+    },
+    "topic": "Arrays & Strings",
+    "patternKey": "merge_intervals",
+    "patternName": "Merge Intervals Pattern",
+    "faangWeightage": "35% Weightage · High FAANG Frequency",
+    "weightageNum": 35,
+    "importanceTier": "High",
+    "summary": "Sort intervals by start time and resolve overlapping time slots or meeting scheduling bounds.",
+    "aliases": [
+      "interval",
+      "intervals",
+      "merge interval",
+      "meeting room"
+    ],
+    "order": 5,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 22,
+        "totalCompleted": 11,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "69d7788e6d3910f342f371d9"
+            },
+            "arenaName": "DSA phase 1",
+            "arenaKey": "DSA",
+            "total": 11,
+            "completed": 11,
+            "problems": [
+              {
+                "taskId": "DSA-74",
+                "taskName": "Merge intervals",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-75",
+                "taskName": "Insert interval",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-76",
+                "taskName": "Non-overlapping intervals",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-77",
+                "taskName": "Meeting rooms ",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-78",
+                "taskName": "Meeting rooms II",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-79",
+                "taskName": "My calendar ||",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-80",
+                "taskName": "Employee free time",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-81",
+                "taskName": "Interval List Intersections",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-82",
+                "taskName": "Car pooling",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-83",
+                "taskName": "My calendar I",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-162",
+                "taskName": "Maximum Population Year",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          },
+          {
+            "arenaId": {
+              "$oid": "6a4cbd238f3ba6c540a5cbe6"
+            },
+            "arenaName": "DSA Phase 2",
+            "arenaKey": "DSAP2",
+            "total": 1,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP2-104",
+                "taskName": "Meeting Rooms II",
+                "status": "backlog",
+                "isCompleted": false
+              }
+            ]
+          },
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 10,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-80",
+                "taskName": "Burst Balloons",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-81",
+                "taskName": "Guess Number Higher or Lower II",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-82",
+                "taskName": "Palindrome Partitioning II",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-83",
+                "taskName": "House Robber",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-84",
+                "taskName": "House Robber II",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-85",
+                "taskName": "Best Time to Buy and Sell Stock with Cooldown",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-86",
+                "taskName": "Best Time to Buy and Sell Stock with Transaction Fee",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-87",
+                "taskName": "Best Time to Buy and Sell Stock III",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-88",
+                "taskName": "Best Time to Buy and Sell Stock IV",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-89",
+                "taskName": "Paint Fence",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:49.279Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:06.960Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.214Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:49.283Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c01b"
+    },
+    "topic": "Heap & Priority Queue",
+    "patternKey": "top_k_elements",
+    "patternName": "Top K Elements Pattern",
+    "faangWeightage": "45% Weightage · Crucial FAANG Pattern",
+    "weightageNum": 45,
+    "importanceTier": "Crucial",
+    "summary": "Use min-heap or max-heap to keep track of top K largest/frequent items in O(N log K).",
+    "aliases": [
+      "top k pattern",
+      "top k frequent",
+      "kth largest",
+      "k closest points"
+    ],
+    "order": 16,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 14,
+        "totalCompleted": 14,
+        "isCompleted": true,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "69d7788e6d3910f342f371d9"
+            },
+            "arenaName": "DSA phase 1",
+            "arenaKey": "DSA",
+            "total": 10,
+            "completed": 10,
+            "problems": [
+              {
+                "taskId": "DSA-96",
+                "taskName": "Top K frequent elements",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-97",
+                "taskName": "Kth Largest Element in an Array",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-98",
+                "taskName": "K Closest Points to Origin",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-99",
+                "taskName": "Merge K sorted lists",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-100",
+                "taskName": "Kth Smallest Element in a Sorted Matrix",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-101",
+                "taskName": "Find median from data stream",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-102",
+                "taskName": "Reorganize string",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-103",
+                "taskName": "Task scheduler",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-104",
+                "taskName": "Sort characters by frequency",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-105",
+                "taskName": "Find K Closest Elements",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          },
+          {
+            "arenaId": {
+              "$oid": "6a4cbd238f3ba6c540a5cbe6"
+            },
+            "arenaName": "DSA Phase 2",
+            "arenaKey": "DSAP2",
+            "total": 4,
+            "completed": 4,
+            "problems": [
+              {
+                "taskId": "DSAP2-91",
+                "taskName": "Top K Frequent Elements",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-92",
+                "taskName": "K Closest Points to Origin",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-93",
+                "taskName": "Kth Largest Element in an Array",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-94",
+                "taskName": "Find K Pairs with Smallest Sums",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:49.937Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.669Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:49.942Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c01e"
+    },
+    "topic": "Graphs",
+    "patternKey": "topological_sort",
+    "patternName": "Topological Sort (Kahn's Algorithm)",
+    "faangWeightage": "40% Weightage · Crucial FAANG Pattern",
+    "weightageNum": 40,
+    "importanceTier": "Crucial",
+    "summary": "Order DAG dependencies for Course Schedule (I & II) or Alien Dictionary using in-degrees.",
+    "aliases": [
+      "topological sort",
+      "course schedule",
+      "kahn algorithm",
+      "dag ordering"
+    ],
+    "order": 19,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 5,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 5,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-33",
+                "taskName": "Course Schedule",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-34",
+                "taskName": "Course Schedule II",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-35",
+                "taskName": "Alien Dictionary",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-36",
+                "taskName": "Minimum Height Trees",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-37",
+                "taskName": "Sequence Reconstruction",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:50.143Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.846Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:50.146Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c017"
+    },
+    "topic": "Binary Search",
+    "patternKey": "binary_search_classic",
+    "patternName": "Rotated & Sorted Array Search",
+    "faangWeightage": "45% Weightage · Crucial FAANG Pattern",
+    "weightageNum": 45,
+    "importanceTier": "Crucial",
+    "summary": "Search elements in O(log N) in sorted arrays or rotated sorted array variations.",
+    "aliases": [
+      "binary search",
+      "search in rotated sorted array",
+      "first and last occurrence"
+    ],
+    "order": 12,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 14,
+        "totalCompleted": 10,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "69d7788e6d3910f342f371d9"
+            },
+            "arenaName": "DSA phase 1",
+            "arenaKey": "DSA",
+            "total": 10,
+            "completed": 10,
+            "problems": [
+              {
+                "taskId": "DSA-164",
+                "taskName": "Find First and Last Position of Element in Sorted Array",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-165",
+                "taskName": "Search in Rotated Sorted Array",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-166",
+                "taskName": "Find Minimum in Rotated Sorted Array",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-167",
+                "taskName": "Koko Eating Bananas",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-168",
+                "taskName": "Capacity to Ship Packages Within D Days",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-169",
+                "taskName": "Minimum Number of Days to Make m Bouquets",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-170",
+                "taskName": "Aggressive Cows",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-171",
+                "taskName": "Split Array Largest Sum",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-172",
+                "taskName": "Magnetic Force Between Two Balls",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-173",
+                "taskName": "Median of Two Sorted Arrays",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          },
+          {
+            "arenaId": {
+              "$oid": "6a4cbd238f3ba6c540a5cbe6"
+            },
+            "arenaName": "DSA Phase 2",
+            "arenaKey": "DSAP2",
+            "total": 1,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP2-126",
+                "taskName": "Search in Rotated Sorted Array (recursive variant)",
+                "status": "backlog",
+                "isCompleted": false
+              }
+            ]
+          },
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 3,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-17",
+                "taskName": "Lowest Common Ancestor of a Binary Search Tree",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-18",
+                "taskName": "Validate Binary Search Tree",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-19",
+                "taskName": "Search in a Binary Search Tree",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:49.724Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.381Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:49.728Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c013"
+    },
+    "topic": "Linked List",
+    "patternKey": "dummy_node_ll",
+    "patternName": "Dummy Node Pattern",
+    "faangWeightage": "30% Weightage · High FAANG Frequency",
+    "weightageNum": 30,
+    "importanceTier": "High",
+    "summary": "Eliminate edge cases when deleting/inserting at the head of a linked list (Add Two Numbers, Partition).",
+    "aliases": [
+      "dummy node",
+      "dummy node pattern",
+      "add two numbers",
+      "partition list"
+    ],
+    "order": 8,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 5,
+        "totalCompleted": 5,
+        "isCompleted": true,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a4cbd238f3ba6c540a5cbe6"
+            },
+            "arenaName": "DSA Phase 2",
+            "arenaKey": "DSAP2",
+            "total": 5,
+            "completed": 5,
+            "problems": [
+              {
+                "taskId": "DSAP2-24",
+                "taskName": "Add Two Numbers",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-25",
+                "taskName": "Partition List",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-26",
+                "taskName": "Merge Two Sorted Lists",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-27",
+                "taskName": "Remove Nth Node From End of List",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-28",
+                "taskName": "Swap Nodes in Pairs",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:49.478Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.162Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.214Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:49.479Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c00c"
+    },
+    "topic": "Arrays & Strings",
+    "patternKey": "sliding_window",
+    "patternName": "Sliding Window Pattern",
+    "faangWeightage": "45% Weightage · Crucial FAANG Pattern",
+    "weightageNum": 45,
+    "importanceTier": "Crucial",
+    "summary": "Track subarrays or substrings within a fixed or dynamic window to optimize from O(N²) to O(N). Extremely frequent at Meta, Amazon, and Google.",
+    "aliases": [
+      "sliding window",
+      "window slider",
+      "fixed window",
+      "variable window",
+      "max subarray sum"
+    ],
+    "order": 1,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 14,
+        "totalCompleted": 12,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "69d7788e6d3910f342f371d9"
+            },
+            "arenaName": "DSA phase 1",
+            "arenaKey": "DSA",
+            "total": 12,
+            "completed": 12,
+            "problems": [
+              {
+                "taskId": "DSA-2",
+                "taskName": "Patterns Brief ",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-3",
+                "taskName": "Maximum Points you can obtain from cards ",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-4",
+                "taskName": "Longest substring without repeating characters",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-6",
+                "taskName": "Maximum consecutive ones |||",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-7",
+                "taskName": "Fruit into baskets ",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-11",
+                "taskName": "Longest substring with atmost k distinct character",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-12",
+                "taskName": "Number of substrings containing all 3 characters ",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-13",
+                "taskName": "Binary subarrays with some ",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-14",
+                "taskName": "Count number of nice subarrays ",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-15",
+                "taskName": "Subarrays with k different integers",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-16",
+                "taskName": "Minimum window substring",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-161",
+                "taskName": "Longest Repeating Character Replacement",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          },
+          {
+            "arenaId": {
+              "$oid": "6a4cbd238f3ba6c540a5cbe6"
+            },
+            "arenaName": "DSA Phase 2",
+            "arenaKey": "DSAP2",
+            "total": 2,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP2-81",
+                "taskName": "Sliding Window Maximum",
+                "status": "backlog",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP2-101",
+                "taskName": "Sliding Window Median",
+                "status": "backlog",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:48.972Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:06.745Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.213Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:48.980Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c019"
+    },
+    "topic": "Trees & BST",
+    "patternKey": "tree_bfs_traversal",
+    "patternName": "Tree BFS / Level Order Traversal",
+    "faangWeightage": "40% Weightage · Crucial FAANG Pattern",
+    "weightageNum": 40,
+    "importanceTier": "Crucial",
+    "summary": "Traverse tree levels using queues to solve Level Order, Zigzag, or Right Side View problems.",
+    "aliases": [
+      "level order",
+      "tree bfs",
+      "right side view",
+      "zigzag traversal"
+    ],
+    "order": 14,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 6,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 6,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-2",
+                "taskName": "Binary Tree Level Order Traversal",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-3",
+                "taskName": "Binary Tree Zigzag Level Order Traversal",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-4",
+                "taskName": "Binary Tree Right Side View",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-5",
+                "taskName": "Minimum Depth of Binary Tree",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-6",
+                "taskName": "Populating Next Right Pointers in Each Node",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-7",
+                "taskName": "Average of Levels in Binary Tree",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:49.841Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.537Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:49.843Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c025"
+    },
+    "topic": "Trie & Bit Manipulation",
+    "patternKey": "trie_prefix_tree",
+    "patternName": "Trie (Prefix Tree) Design",
+    "faangWeightage": "35% Weightage · High FAANG Frequency",
+    "weightageNum": 35,
+    "importanceTier": "High",
+    "summary": "Efficient O(L) autocomplete, dictionary search, and maximum XOR calculations.",
+    "aliases": [
+      "trie",
+      "prefix tree",
+      "word search ii",
+      "design add and search words"
+    ],
+    "order": 26,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 6,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 6,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-103",
+                "taskName": "Implement Trie (Prefix Tree)",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-104",
+                "taskName": "Design Add and Search Words Data Structure",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-105",
+                "taskName": "Word Search II",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-106",
+                "taskName": "Replace Words",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-107",
+                "taskName": "Map Sum Pairs",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-108",
+                "taskName": "Prefix and Suffix Search",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:50.744Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:08.440Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:50.746Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c022"
+    },
+    "topic": "Dynamic Programming",
+    "patternKey": "grid_matrix_dp",
+    "patternName": "Grid Path & Matrix DP",
+    "faangWeightage": "35% Weightage · High FAANG Frequency",
+    "weightageNum": 35,
+    "importanceTier": "High",
+    "summary": "Calculate minimum path sum or unique paths from top-left to bottom-right of a 2D matrix.",
+    "aliases": [
+      "matrix dp",
+      "unique paths",
+      "minimum path sum",
+      "grid dp"
+    ],
+    "order": 23,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 5,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 5,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-57",
+                "taskName": "Unique Paths",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-58",
+                "taskName": "Minimum Path Sum",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-59",
+                "taskName": "Maximal Square",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-60",
+                "taskName": "Dungeon Game",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-61",
+                "taskName": "Cherry Pickup",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:50.499Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:08.200Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:50.501Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c026"
+    },
+    "topic": "Trie & Bit Manipulation",
+    "patternKey": "bit_manipulation_basics",
+    "patternName": "Bit Manipulation Tricks",
+    "faangWeightage": "30% Weightage · Medium FAANG Frequency",
+    "weightageNum": 30,
+    "importanceTier": "Medium",
+    "summary": "XOR properties, bitwise AND/OR masks, Single Number, Counting Bits.",
+    "aliases": [
+      "bit manipulation",
+      "single number",
+      "counting bits",
+      "bitwise"
+    ],
+    "order": 27,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 8,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 8,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-110",
+                "taskName": "Single Number",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-111",
+                "taskName": "Single Number II",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-112",
+                "taskName": "Single Number III",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-113",
+                "taskName": "Counting Bits",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-114",
+                "taskName": "Reverse Bits",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-115",
+                "taskName": "Number of 1 Bits",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-116",
+                "taskName": "Bitwise AND of Numbers Range",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-117",
+                "taskName": "Sum of Two Integers",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:50.798Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:08.516Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:50.800Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c00d"
+    },
+    "topic": "Arrays & Strings",
+    "patternKey": "two_pointers",
+    "patternName": "Two Pointers Pattern",
+    "faangWeightage": "40% Weightage · Crucial FAANG Pattern",
+    "weightageNum": 40,
+    "importanceTier": "Crucial",
+    "summary": "Iterate from start and end or at different speeds on sorted arrays/strings to find pairs, triples, or container volumes.",
+    "aliases": [
+      "two pointer",
+      "two pointers",
+      "opposite direction pointers",
+      "2 pointer"
+    ],
+    "order": 2,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 35,
+        "totalCompleted": 35,
+        "isCompleted": true,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "69d7788e6d3910f342f371d9"
+            },
+            "arenaName": "DSA phase 1",
+            "arenaKey": "DSA",
+            "total": 32,
+            "completed": 32,
+            "problems": [
+              {
+                "taskId": "DSA-2",
+                "taskName": "Patterns Brief ",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-3",
+                "taskName": "Maximum Points you can obtain from cards ",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-4",
+                "taskName": "Longest substring without repeating characters",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-6",
+                "taskName": "Maximum consecutive ones |||",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-7",
+                "taskName": "Fruit into baskets ",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-11",
+                "taskName": "Longest substring with atmost k distinct character",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-12",
+                "taskName": "Number of substrings containing all 3 characters ",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-13",
+                "taskName": "Binary subarrays with some ",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-14",
+                "taskName": "Count number of nice subarrays ",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-15",
+                "taskName": "Subarrays with k different integers",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-16",
+                "taskName": "Minimum window substring",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-19",
+                "taskName": "Two Sum II (sorted)",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-20",
+                "taskName": "Remove duplicates from sorted array",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-21",
+                "taskName": "Container with most water",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-22",
+                "taskName": "3Sum",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-23",
+                "taskName": "4Sum",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-24",
+                "taskName": "Move zeroes",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-25",
+                "taskName": "Valid palindrome",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-26",
+                "taskName": "Squares of sorted array",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-27",
+                "taskName": "Partition array",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-28",
+                "taskName": "Trapping rain water",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-140",
+                "taskName": "Valid palindrome",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-141",
+                "taskName": "Reverse string",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-142",
+                "taskName": "Reverse Words in a String",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-143",
+                "taskName": "Longest Palindromic Substring",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-144",
+                "taskName": "String compression",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-145",
+                "taskName": "Merge strings alternately",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-146",
+                "taskName": "Backspace string compare",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-147",
+                "taskName": "One edit distance",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-148",
+                "taskName": "Remove Duplicates from Sorted Array",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-149",
+                "taskName": " Minimum Swaps to Move Zeros to End",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-161",
+                "taskName": "Longest Repeating Character Replacement",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          },
+          {
+            "arenaId": {
+              "$oid": "6a4cbd238f3ba6c540a5cbe6"
+            },
+            "arenaName": "DSA Phase 2",
+            "arenaKey": "DSAP2",
+            "total": 3,
+            "completed": 3,
+            "problems": [
+              {
+                "taskId": "DSAP2-35",
+                "taskName": "Intersection of Two Linked Lists",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-36",
+                "taskName": "Odd Even Linked List",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSAP2-37",
+                "taskName": "Maximum Twin Sum of a Linked List",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:49.038Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:06.791Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.214Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:49.042Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c016"
+    },
+    "topic": "Stack & Queue",
+    "patternKey": "deque_sliding_window",
+    "patternName": "Monotonic Deque Pattern",
+    "faangWeightage": "35% Weightage · High FAANG Frequency",
+    "weightageNum": 35,
+    "importanceTier": "High",
+    "summary": "Use double-ended queues for Sliding Window Maximum in O(N) overall time complexity.",
+    "aliases": [
+      "deque pattern",
+      "sliding window maximum",
+      "circular queue"
+    ],
+    "order": 11,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 5,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a4cbd238f3ba6c540a5cbe6"
+            },
+            "arenaName": "DSA Phase 2",
+            "arenaKey": "DSAP2",
+            "total": 5,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP2-81",
+                "taskName": "Sliding Window Maximum",
+                "status": "backlog",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP2-82",
+                "taskName": "Shortest Subarray with Sum at Least K",
+                "status": "backlog",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP2-83",
+                "taskName": "Design Circular Deque",
+                "status": "backlog",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP2-85",
+                "taskName": "Design Circular Queue",
+                "status": "backlog",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP2-86",
+                "taskName": "First Unique Number",
+                "status": "backlog",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:49.661Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.326Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:49.664Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c018"
+    },
+    "topic": "Binary Search",
+    "patternKey": "binary_search_on_answer",
+    "patternName": "Binary Search on Answer Space",
+    "faangWeightage": "40% Weightage · Crucial FAANG Pattern",
+    "weightageNum": 40,
+    "importanceTier": "Crucial",
+    "summary": "Search for minimum or maximum feasible integer bounds (Koko Eating Bananas, Capacity To Ship Packages).",
+    "aliases": [
+      "binary search on answer",
+      "koko eating bananas",
+      "capacity to ship packages",
+      "divide and conquer"
+    ],
+    "order": 13,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 2,
+        "totalCompleted": 2,
+        "isCompleted": true,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "69d7788e6d3910f342f371d9"
+            },
+            "arenaName": "DSA phase 1",
+            "arenaKey": "DSA",
+            "total": 2,
+            "completed": 2,
+            "problems": [
+              {
+                "taskId": "DSA-167",
+                "taskName": "Koko Eating Bananas",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-168",
+                "taskName": "Capacity to Ship Packages Within D Days",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:49.779Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.461Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:49.781Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c01d"
+    },
+    "topic": "Graphs",
+    "patternKey": "graph_bfs_dfs",
+    "patternName": "Graph BFS/DFS & Connected Components",
+    "faangWeightage": "45% Weightage · Crucial FAANG Pattern",
+    "weightageNum": 45,
+    "importanceTier": "Crucial",
+    "summary": "Explore 2D grids or adjacency lists to find Number of Islands, Rotting Oranges, or Clone Graph.",
+    "aliases": [
+      "graph bfs",
+      "graph dfs",
+      "number of islands",
+      "connected components",
+      "rotting oranges"
+    ],
+    "order": 18,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 7,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 7,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-25",
+                "taskName": "Number of Islands",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-26",
+                "taskName": "Rotting Oranges",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-27",
+                "taskName": "Clone Graph",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-28",
+                "taskName": "Pacific Atlantic Water Flow",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-29",
+                "taskName": "Word Ladder",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-30",
+                "taskName": "Surrounded Regions",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-31",
+                "taskName": "Graph Valid Tree",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:50.082Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.786Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:50.084Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c023"
+    },
+    "topic": "Greedy & Backtracking",
+    "patternKey": "backtracking_subsets",
+    "patternName": "Backtracking (Subsets/Combinations)",
+    "faangWeightage": "40% Weightage · Crucial FAANG Pattern",
+    "weightageNum": 40,
+    "importanceTier": "Crucial",
+    "summary": "Explore recursive search space trees for Subsets, Permutations, Combination Sum, N-Queens.",
+    "aliases": [
+      "backtracking",
+      "subsets",
+      "permutations",
+      "combination sum",
+      "n-queens"
+    ],
+    "order": 24,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 13,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a4cbd238f3ba6c540a5cbe6"
+            },
+            "arenaName": "DSA Phase 2",
+            "arenaKey": "DSAP2",
+            "total": 3,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP2-119",
+                "taskName": "Permutations",
+                "status": "backlog",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP2-120",
+                "taskName": "Subsets",
+                "status": "backlog",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP2-121",
+                "taskName": "Combination Sum",
+                "status": "backlog",
+                "isCompleted": false
+              }
+            ]
+          },
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 10,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-69",
+                "taskName": "Subsets",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-70",
+                "taskName": "Subsets II",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-71",
+                "taskName": "Permutations",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-72",
+                "taskName": "Permutations II",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-73",
+                "taskName": "Combination Sum",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-74",
+                "taskName": "Combination Sum II",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-75",
+                "taskName": "Combination Sum III",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-76",
+                "taskName": "N-Queens",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-77",
+                "taskName": "Sudoku Solver",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-78",
+                "taskName": "Word Search",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:50.617Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:08.326Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:50.620Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c014"
+    },
+    "topic": "Stack & Queue",
+    "patternKey": "monotonic_stack",
+    "patternName": "Monotonic Stack Pattern",
+    "faangWeightage": "40% Weightage · Crucial FAANG Pattern",
+    "weightageNum": 40,
+    "importanceTier": "Crucial",
+    "summary": "Maintain monotonically increasing or decreasing elements to find Next Greater Element or Trapping Rain Water.",
+    "aliases": [
+      "monotonic stack",
+      "next greater element",
+      "daily temperatures",
+      "trapping rain water"
+    ],
+    "order": 9,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 11,
+        "totalCompleted": 11,
+        "isCompleted": true,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "69d7788e6d3910f342f371d9"
+            },
+            "arenaName": "DSA phase 1",
+            "arenaKey": "DSA",
+            "total": 10,
+            "completed": 10,
+            "problems": [
+              {
+                "taskId": "DSA-85",
+                "taskName": "Next greater element i",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-86",
+                "taskName": "Daily temperatures",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-87",
+                "taskName": "Stock span",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-88",
+                "taskName": "Largest rectangle in histogram",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-89",
+                "taskName": "Maximal rectangle",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-90",
+                "taskName": "Next smaller element",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-91",
+                "taskName": "Sum of subarray minimums",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-92",
+                "taskName": "Trapping rain water",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-93",
+                "taskName": "Remove K digits",
+                "status": "done",
+                "isCompleted": true
+              },
+              {
+                "taskId": "DSA-94",
+                "taskName": "Car fleet",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          },
+          {
+            "arenaId": {
+              "$oid": "6a4cbd238f3ba6c540a5cbe6"
+            },
+            "arenaName": "DSA Phase 2",
+            "arenaKey": "DSAP2",
+            "total": 1,
+            "completed": 1,
+            "problems": [
+              {
+                "taskId": "DSAP2-69",
+                "taskName": "Daily Temperatures",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:49.534Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.211Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.214Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:49.536Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c71fb606af70c1a57c01c"
+    },
+    "topic": "Heap & Priority Queue",
+    "patternKey": "two_heaps",
+    "patternName": "Two Heaps Pattern (Median Finder)",
+    "faangWeightage": "35% Weightage · High FAANG Frequency",
+    "weightageNum": 35,
+    "importanceTier": "High",
+    "summary": "Balance Max-Heap for lower half and Min-Heap for upper half to compute streaming median.",
+    "aliases": [
+      "two heap pattern",
+      "find median from data stream",
+      "sliding window median"
+    ],
+    "order": 17,
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 4,
+        "totalCompleted": 1,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "69d7788e6d3910f342f371d9"
+            },
+            "arenaName": "DSA phase 1",
+            "arenaKey": "DSA",
+            "total": 1,
+            "completed": 1,
+            "problems": [
+              {
+                "taskId": "DSA-101",
+                "taskName": "Find median from data stream",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          },
+          {
+            "arenaId": {
+              "$oid": "6a4cbd238f3ba6c540a5cbe6"
+            },
+            "arenaName": "DSA Phase 2",
+            "arenaKey": "DSAP2",
+            "total": 3,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP2-100",
+                "taskName": "Find Median from Data Stream",
+                "status": "backlog",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP2-101",
+                "taskName": "Sliding Window Median",
+                "status": "backlog",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP2-102",
+                "taskName": "IPO",
+                "status": "backlog",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:50.017Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.719Z"
+        }
+      }
+    ],
+    "__v": 2,
+    "createdAt": {
+      "$date": "2026-07-31T09:59:23.215Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:50.018Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c7651626319b9811a7366"
+    },
+    "patternKey": "dijkstra_shortest_path",
+    "__v": 2,
+    "aliases": [
+      "dijkstra",
+      "shortest path",
+      "network delay time",
+      "cheapest flights within k stops"
+    ],
+    "createdAt": {
+      "$date": "2026-07-31T10:17:53.863Z"
+    },
+    "faangWeightage": "40% Weightage · Crucial FAANG Pattern",
+    "importanceTier": "Crucial",
+    "order": 20,
+    "patternName": "Dijkstra's Algorithm & Shortest Path",
+    "summary": "Find shortest path in non-negative weighted graphs using Min-Heap Priority Queues (Network Delay Time, Path with Max Probability).",
+    "topic": "Graphs",
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:50.321Z"
+    },
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 5,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 5,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-39",
+                "taskName": "Network Delay Time",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-40",
+                "taskName": "Path with Maximum Probability",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-41",
+                "taskName": "Min Cost to Connect All Points",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-42",
+                "taskName": "Cheapest Flights Within K Stops",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-43",
+                "taskName": "Swim in Rising Water",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:50.319Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:08.022Z"
+        }
+      }
+    ],
+    "weightageNum": 40
+  },
+  {
+    "_id": {
+      "$oid": "6a6c7652626319b9811a7367"
+    },
+    "patternKey": "interval_state_dp",
+    "__v": 2,
+    "aliases": [
+      "interval dp",
+      "state machine dp",
+      "burst balloons",
+      "best time to buy and sell stock",
+      "house robber"
+    ],
+    "createdAt": {
+      "$date": "2026-07-31T10:17:54.085Z"
+    },
+    "faangWeightage": "40% Weightage · Crucial FAANG Pattern",
+    "importanceTier": "Crucial",
+    "order": 24,
+    "patternName": "Interval DP & State Machine DP",
+    "summary": "Subarray range DP (Burst Balloons, Matrix Chain Multiplication) and Finite State Machine DP (Best Time to Buy/Sell Stock with Cooldown).",
+    "topic": "Dynamic Programming",
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:50.559Z"
+    },
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 11,
+        "totalCompleted": 1,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "69d7788e6d3910f342f371d9"
+            },
+            "arenaName": "DSA phase 1",
+            "arenaKey": "DSA",
+            "total": 1,
+            "completed": 1,
+            "problems": [
+              {
+                "taskId": "DSA-55",
+                "taskName": "Best time to buy and sell stock",
+                "status": "done",
+                "isCompleted": true
+              }
+            ]
+          },
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 10,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-80",
+                "taskName": "Burst Balloons",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-81",
+                "taskName": "Guess Number Higher or Lower II",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-82",
+                "taskName": "Palindrome Partitioning II",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-83",
+                "taskName": "House Robber",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-84",
+                "taskName": "House Robber II",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-85",
+                "taskName": "Best Time to Buy and Sell Stock with Cooldown",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-86",
+                "taskName": "Best Time to Buy and Sell Stock with Transaction Fee",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-87",
+                "taskName": "Best Time to Buy and Sell Stock III",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-88",
+                "taskName": "Best Time to Buy and Sell Stock IV",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-89",
+                "taskName": "Paint Fence",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:50.556Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:08.263Z"
+        }
+      }
+    ],
+    "weightageNum": 40
+  },
+  {
+    "_id": {
+      "$oid": "6a6c782a626319b9811a7372"
+    },
+    "patternKey": "shortest_path_mst",
+    "__v": 2,
+    "aliases": [
+      "dijkstra",
+      "shortest path",
+      "prim",
+      "kruskal",
+      "minimum spanning tree",
+      "mst",
+      "bellman-ford",
+      "network delay time",
+      "cheapest flights within k stops"
+    ],
+    "createdAt": {
+      "$date": "2026-07-31T10:25:46.105Z"
+    },
+    "faangWeightage": "40% Weightage · Crucial FAANG Pattern",
+    "importanceTier": "Crucial",
+    "order": 20,
+    "patternName": "Shortest Path & Minimum Spanning Tree",
+    "summary": "Find shortest paths and minimum spanning trees in weighted graphs using Min-Heap & DSU (Dijkstra, Prim, Kruskal, Bellman-Ford optional).",
+    "topic": "Graphs",
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:50.261Z"
+    },
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 5,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 5,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-39",
+                "taskName": "Network Delay Time",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-40",
+                "taskName": "Path with Maximum Probability",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-41",
+                "taskName": "Min Cost to Connect All Points",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-42",
+                "taskName": "Cheapest Flights Within K Stops",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-43",
+                "taskName": "Swim in Rising Water",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:50.259Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:07.960Z"
+        }
+      }
+    ],
+    "weightageNum": 40
+  },
+  {
+    "_id": {
+      "$oid": "6a6c782a626319b9811a7373"
+    },
+    "patternKey": "math_number_theory",
+    "__v": 2,
+    "aliases": [
+      "math",
+      "gcd",
+      "lcm",
+      "sieve of eratosthenes",
+      "prime numbers",
+      "modular arithmetic"
+    ],
+    "createdAt": {
+      "$date": "2026-07-31T10:25:46.667Z"
+    },
+    "faangWeightage": "25% Weightage · Optional Fundamentals",
+    "importanceTier": "Medium",
+    "order": 30,
+    "patternName": "Math & Number Theory (Optional Fundamentals)",
+    "summary": "Useful mathematical utilities for GCD/LCM (Euclidean Algorithm), Prime Numbers, Sieve of Eratosthenes, and Modular Arithmetic.",
+    "topic": "Math & Fundamentals",
+    "updatedAt": {
+      "$date": "2026-08-23T10:27:50.868Z"
+    },
+    "userProgress": [
+      {
+        "userId": {
+          "$oid": "6993047f16e85ff3e4efd9a3"
+        },
+        "totalAssigned": 7,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [
+          {
+            "arenaId": {
+              "$oid": "6a6c84f6ef4d39f1ed4716c0"
+            },
+            "arenaName": "DSA Phase 3",
+            "arenaKey": "DSAP3",
+            "total": 7,
+            "completed": 0,
+            "problems": [
+              {
+                "taskId": "DSAP3-119",
+                "taskName": "Count Primes",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-120",
+                "taskName": "Greatest Common Divisor of Strings",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-121",
+                "taskName": "Pow(x, n)",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-122",
+                "taskName": "Happy Number",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-123",
+                "taskName": "Factorial Trailing Zeroes",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-124",
+                "taskName": "Palindrome Number",
+                "status": "todo",
+                "isCompleted": false
+              },
+              {
+                "taskId": "DSAP3-125",
+                "taskName": "Roman to Integer",
+                "status": "todo",
+                "isCompleted": false
+              }
+            ]
+          }
+        ],
+        "lastSyncedAt": {
+          "$date": "2026-08-23T10:27:50.866Z"
+        }
+      },
+      {
+        "userId": {
+          "$oid": "6a07fe669a0d94f268897c92"
+        },
+        "totalAssigned": 0,
+        "totalCompleted": 0,
+        "isCompleted": false,
+        "matchedArenas": [],
+        "lastSyncedAt": {
+          "$date": "2026-08-22T18:30:08.564Z"
+        }
+      }
+    ],
+    "weightageNum": 25
+  }
+]

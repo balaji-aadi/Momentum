@@ -1,0 +1,347 @@
+[
+  {
+    "_id": {
+      "$oid": "6a6622297610287711f6ea66"
+    },
+    "name": "Hash Map / Two Pointers",
+    "slug": "hash-map-two-pointers",
+    "description": "",
+    "createdAt": {
+      "$date": "2026-07-26T15:05:13.276Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-26T15:05:13.276Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a673928ff27d024ed9aef1d"
+    },
+    "name": "Array, Sliding Window",
+    "slug": "array-sliding-window",
+    "description": "",
+    "createdAt": {
+      "$date": "2026-07-27T10:55:36.488Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-27T10:55:36.488Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a6794450afaf1e3be3792da"
+    },
+    "slug": "sliding-window",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:21.506Z"
+    },
+    "description": "Maintain a running window range over arrays or strings to calculate sub-array metrics.",
+    "name": "Sliding Window",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:21.506Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794450afaf1e3be3792db"
+    },
+    "slug": "two-pointers",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:21.565Z"
+    },
+    "description": "Use two pointers moving in opposite or same direction to optimize search space.",
+    "name": "Two Pointers",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:21.565Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794450afaf1e3be3792dc"
+    },
+    "slug": "fast-slow-pointers",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:21.610Z"
+    },
+    "description": "Hare & Tortoise algorithm for detecting cycles in linked lists or arrays.",
+    "name": "Fast & Slow Pointers",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:21.610Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794450afaf1e3be3792dd"
+    },
+    "slug": "merge-intervals",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:21.675Z"
+    },
+    "description": "Overlapping intervals manipulation and interval merging techniques.",
+    "name": "Merge Intervals",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:21.675Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794450afaf1e3be3792de"
+    },
+    "slug": "cyclic-sort",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:21.749Z"
+    },
+    "description": "Sort array elements in O(N) time when elements are in range [1..N].",
+    "name": "Cyclic Sort",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:21.749Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794450afaf1e3be3792df"
+    },
+    "slug": "in-place-reversal-of-linkedlist",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:21.805Z"
+    },
+    "description": "Reverse links between nodes without allocating extra memory.",
+    "name": "In-place Reversal of LinkedList",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:21.805Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794450afaf1e3be3792e0"
+    },
+    "slug": "tree-bfs",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:21.876Z"
+    },
+    "description": "Level-order traversal using queue data structure.",
+    "name": "Tree BFS",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:21.876Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794450afaf1e3be3792e1"
+    },
+    "slug": "tree-dfs",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:21.941Z"
+    },
+    "description": "Depth-first traversal using recursion or stack (Pre-order, In-order, Post-order).",
+    "name": "Tree DFS",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:21.941Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794460afaf1e3be3792e2"
+    },
+    "slug": "two-heaps",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:21.998Z"
+    },
+    "description": "Use Min-Heap and Max-Heap simultaneously (e.g. Find Median of Data Stream).",
+    "name": "Two Heaps",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:21.998Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794460afaf1e3be3792e3"
+    },
+    "slug": "subsets-permutations",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:22.055Z"
+    },
+    "description": "Backtracking pattern for generating subsets, combinations, and permutations.",
+    "name": "Subsets & Permutations",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:22.055Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794460afaf1e3be3792e4"
+    },
+    "slug": "modified-binary-search",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:22.113Z"
+    },
+    "description": "Binary search variations on rotated, sorted, or peak element arrays.",
+    "name": "Modified Binary Search",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:22.113Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794460afaf1e3be3792e5"
+    },
+    "slug": "top-k-elements",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:22.181Z"
+    },
+    "description": "Use Min/Max Heap to maintain K largest or smallest elements.",
+    "name": "Top 'K' Elements",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:22.181Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794460afaf1e3be3792e6"
+    },
+    "slug": "k-way-merge",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:22.232Z"
+    },
+    "description": "Merge K sorted lists, arrays, or matrices using Priority Queue.",
+    "name": "K-way Merge",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:22.232Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794460afaf1e3be3792e7"
+    },
+    "slug": "01-knapsack",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:22.294Z"
+    },
+    "description": "Dynamic programming choice selection (include or exclude).",
+    "name": "0/1 Knapsack",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:22.294Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794460afaf1e3be3792e8"
+    },
+    "slug": "unbounded-knapsack",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:22.356Z"
+    },
+    "description": "Dynamic programming pattern allowing unlimited reuse of items.",
+    "name": "Unbounded Knapsack",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:22.356Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794460afaf1e3be3792e9"
+    },
+    "slug": "longest-common-subsequence-lcs",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:22.420Z"
+    },
+    "description": "String matching dynamic programming pattern.",
+    "name": "Longest Common Subsequence (LCS)",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:22.420Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794460afaf1e3be3792ea"
+    },
+    "slug": "monotonic-stack",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:22.472Z"
+    },
+    "description": "Maintain next greater or next smaller element indices.",
+    "name": "Monotonic Stack",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:22.472Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6794460afaf1e3be3792eb"
+    },
+    "slug": "prefix-sum",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-07-27T17:24:22.513Z"
+    },
+    "description": "Pre-calculate cumulative sums for O(1) range queries.",
+    "name": "Prefix Sum",
+    "updatedAt": {
+      "$date": "2026-07-27T17:24:22.513Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a69d7b3bf6c4aaaa51c2df9"
+    },
+    "name": "Stack",
+    "slug": "stack",
+    "description": "Uses LIFO (Last In, First Out) to efficiently process elements, manage nested structures, or track previous states.",
+    "createdAt": {
+      "$date": "2026-07-29T10:36:35.202Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-29T10:36:35.202Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a6a27ae54ece879a08d69f2"
+    },
+    "name": "Linked List Cloning",
+    "slug": "linked-list-cloning",
+    "description": "",
+    "createdAt": {
+      "$date": "2026-07-29T16:17:50.028Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-29T16:17:50.028Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a8482afbb0505a8fe5d4952"
+    },
+    "name": "DFS / BFS Traversal",
+    "slug": "dfs-bfs",
+    "description": "Recursive or iterative graph/tree exploration.",
+    "createdAt": {
+      "$date": "2026-08-18T16:05:03.441Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-18T16:05:03.441Z"
+    },
+    "__v": 0
+  }
+]

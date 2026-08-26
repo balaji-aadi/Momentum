@@ -1,0 +1,6097 @@
+[
+  {
+    "_id": {
+      "$oid": "69d779976d3910f342f3734e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Sliding window / Two pointers",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:04:07.559Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:18:51.621Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d779c66d3910f342f37417"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Sliding window / Two pointers",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:04:54.965Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:18:51.621Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d77a826d3910f342f3753c"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Patterns Brief ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:08:02.782Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:18:51.621Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d77e506d3910f342f377f3"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Patterns Brief ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:24:16.788Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T13:53:35.934Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d78159ef8d64e8cbe9f791"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Patterns Brief ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:37:13.508Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T13:53:35.934Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d78172ef8d64e8cbe9f841"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Patterns Brief ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:37:38.547Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T13:53:35.934Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d785b2ef8d64e8cbe9f99e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Patterns Brief ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:55:46.171Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T13:53:35.934Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d78635ef8d64e8cbe9fafc"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Maximum Points you can obtain from cards ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:57:57.020Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T13:53:35.934Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d78683ef8d64e8cbe9fc10"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Longest substring without repeating character ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:59:15.159Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T13:53:35.934Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d7869aef8d64e8cbe9fd08"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Longest substring without repeating characters",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:59:38.981Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T13:53:35.934Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d7997d6f815dc6d8e6591c"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Revision along with coding practice ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-09T12:20:13.057Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T13:53:35.934Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d799b36f815dc6d8e65a11"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Maximum consecutive ones |||",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-09T12:21:07.570Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T13:53:35.934Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69d799dd6f815dc6d8e65b0b"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Fruit into baskets ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-09T12:21:49.957Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T13:53:35.934Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69da051afaaf4f1fd14b5f5a"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Python coding practice",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-11T08:23:54.813Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-11T15:33:00.650Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69da6898faaf4f1fd14b6a4d"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Sliding window / Two pointers",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-11T15:28:24.296Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-11T15:33:00.650Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69da68c1faaf4f1fd14b6b3e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Optimal solution code",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-11T15:29:05.486Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-11T15:33:00.650Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69da68dcfaaf4f1fd14b6cd7"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Optimal solution code",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-11T15:29:32.873Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-11T15:33:00.650Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69da6926faaf4f1fd14b6e32"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Longest substring with atmost k distinct character",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-11T15:30:46.358Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-11T15:33:00.650Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69da6970faaf4f1fd14b6f92"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Number of substrings containing all 3 characters ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-11T15:32:00.105Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-11T15:33:00.650Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69defebf3686ac4738203482"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Binary subarrays with some ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-15T02:58:07.440Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-15T03:40:23.104Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69df03953686ac4738203619"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Count number of nice subarrays ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-15T03:18:45.852Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-15T03:40:23.104Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69df03c13686ac47382037b5"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Subarray with k different integers",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-15T03:19:29.211Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-15T03:40:23.104Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69df04093686ac4738203956"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Minimum window substring",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-15T03:20:41.372Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-15T03:40:23.104Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69df05cd3686ac4738203c82"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Sliding window / Two pointers",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-15T03:28:13.332Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-15T03:40:23.104Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69df330eec46356993a96415"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d77b7c6d3910f342f3762e"
+    },
+    "title": "Task updated for you",
+    "message": "English By Udisha Ma'am",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-15T06:41:18.972Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-15T06:48:12.908Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69df88b91e53866b65060978"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Binary subarrays with some ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-15T12:46:49.575Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-15T12:47:05.791Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69df95111e53866b65061b8e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Minimum window substring",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-15T13:39:29.746Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-15T15:33:09.380Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69df95621e53866b65061e62"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Minimum window substring",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-15T13:40:50.825Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-15T15:33:09.380Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69e08a5ea071591b4de13bf4"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Minimum window substring",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-16T07:06:06.314Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-16T07:58:09.550Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69e0c0ff5ff8d3302ac1607d"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Revision of Sliding window and two pointers ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-16T10:59:11.350Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-16T10:59:29.362Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69e31d485ff8d3302ac16dd1"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Revision of Sliding window and two pointers ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-18T05:57:28.449Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-19T17:53:23.751Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69e51af87803acf20dd60b06"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Revision of Sliding window and two pointers ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-19T18:12:08.587Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-19T18:12:49.517Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69e7981a2699af81cb91cf78"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d77b7c6d3910f342f3762e"
+    },
+    "title": "Task updated for you",
+    "message": "English By Udisha Ma'am",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-21T15:30:34.199Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-22T06:21:45.489Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69e7b3d92699af81cb91ddc4"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d77b7c6d3910f342f3762e"
+    },
+    "title": "Task updated for you",
+    "message": "English: Tenses",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-21T17:28:57.431Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-22T06:21:45.489Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69e8696b13940c38b88a14f1"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Revision of Sliding window and two pointers ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-22T06:23:39.409Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-22T06:43:04.441Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69e8b6a913940c38b88a2075"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Two Sum II (sorted)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-22T11:53:13.379Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-22T11:54:16.898Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69e8b6a913940c38b88a208b"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Two Sum II (sorted)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-22T11:53:13.941Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-22T11:54:16.898Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69ef0508cc5861b7a0e32066"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Minimum window substring",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-27T06:41:12.080Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-27T06:46:32.964Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69f23ec8e9e3813f37a10aeb"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Find duplicate",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-04-29T17:24:24.635Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-29T18:18:49.031Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69f8005b70d7501ed9d6c9cf"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Car pooling",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-04T02:11:39.001Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-06T03:17:07.370Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69faa6da70d7501ed9d6cd7a"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Range addition",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-06T02:26:34.671Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-06T03:17:07.370Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69fc45f71e336d0a7249a090"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Majority element",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-07T07:57:43.132Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-07T14:38:52.695Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69fe097a7ff93f3ce74b3a1e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "Longest Repeating Character Replacement",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-08T16:04:10.716Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-08T16:04:49.881Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "69fe0b3f7ff93f3ce74b3d2a"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Longest Repeating Character Replacement",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-08T16:11:43.711Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-08T16:16:09.003Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a03e73628698d10c39f88e8"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Maximum circular subarray",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-13T02:51:34.487Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-13T10:10:04.741Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a04431e28698d10c39f8bae"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Maximum product subarray",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-13T09:23:42.895Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-13T10:10:04.741Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a044aa828698d10c39f8d9e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Best time to buy and sell stock",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-13T09:55:52.934Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-13T10:10:04.741Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a091740373f8ec337c89317"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Maximum sum circular subarray",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-17T01:17:52.077Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-17T01:55:47.737Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a092ef5373f8ec337c895f0"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Maximum subarray sum with one deletion",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-17T02:59:01.730Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-17T02:59:06.434Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a096e06373f8ec337c89996"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Maximum subarray sum with one deletion",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-17T07:28:06.089Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-17T07:39:45.597Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a096e7e373f8ec337c89b91"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Kadane’s Algorithm",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-17T07:30:06.314Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-17T07:39:45.597Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a096e8e373f8ec337c89d55"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Maximum subarray",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-17T07:30:22.774Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-17T07:39:45.597Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0970b4373f8ec337c89fab"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "K concatenation maximum sum",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-17T07:39:32.267Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-17T07:39:45.597Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0acaa0ffa5c362e55cf5c5"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Implement KMP",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-18T08:15:28.480Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-18T13:53:09.907Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0ae131ffa5c362e55cf86e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Maximum difference problem",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-18T09:51:45.556Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-18T13:53:09.907Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0ae18cffa5c362e55cfa6e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Maximum alternating subarray sum",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-18T09:53:16.899Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-18T13:53:09.907Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0aed7effa5c362e55cfcb9"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Largest sum of averages",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-18T10:44:14.557Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-18T13:53:09.907Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a193f4899e61c1c3760b617"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Meeting rooms ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-29T07:24:56.280Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-29T07:37:58.713Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a1a5dad99e61c1c3760bc27"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Car pooling",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-05-30T03:46:53.077Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-30T03:47:13.977Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a1d28ac4ea9a30357efa1d9"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Car pooling",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-01T06:37:32.873Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-01T10:50:55.226Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a1d40ae4ea9a30357efa75a"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Intervals",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-01T08:19:58.954Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-01T10:50:55.226Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a1d415c4ea9a30357efaae2"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "1854. Maximum Population Year",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-01T08:22:52.505Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-01T10:50:55.226Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a1d6e534ea9a30357efb0b9"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Meeting rooms II",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-01T11:34:43.334Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-01T14:04:42.380Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a1d95c74ea9a30357efb767"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "My calendar ||",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-01T14:23:03.666Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-03T14:56:01.510Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a1e91c04ea9a30357efc41c"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Find median from data stream",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-02T08:18:08.188Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-03T14:56:01.510Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a1eb610860a8b333e08dd2e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "K Closest Points to Origin",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-02T10:53:04.219Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-03T14:56:01.510Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a20e587860a8b333e08e89d"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Next greater element |",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-04T02:40:07.852Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-04T09:34:55.606Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a20e5a6860a8b333e08ec46"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Next greater element i",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-04T02:40:38.657Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-04T09:34:55.606Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a265c1077dde69e29403b9e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Valid palindrome",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-08T06:07:12.026Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-08T06:08:34.041Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a265c5377dde69e29403dba"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Longest palindromic substring",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-08T06:08:19.402Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-08T06:08:34.041Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a26691c77dde69e29404018"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Longest palindromic substring",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-08T07:02:52.919Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-08T07:29:10.109Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a266cea77dde69e29404216"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Palindromic Substrings",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-08T07:19:06.246Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-08T07:29:10.109Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a266f2c77dde69e294043ea"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Palindromic Substrings",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-08T07:28:44.420Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-08T07:29:10.109Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a26717577dde69e294046c4"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Maximum sum rectangle (2D Kadane)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-08T07:38:29.052Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-08T07:38:33.133Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a268e9f77dde69e294049ff"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "K concatenation maximum sum",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-08T09:42:55.067Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-09T05:46:55.811Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a27d17777dde69e29405271"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Shortest palindrome",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-09T08:40:23.662Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-09T08:40:35.988Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a27d41c77dde69e29405507"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Palindrome partitioning",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-09T08:51:40.321Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-09T09:54:57.665Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a27d42b77dde69e294056ea"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Longest palindrome subsequence",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-09T08:51:55.664Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-09T09:54:57.665Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a27ffc577dde69e294059ba"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Maximum alternating subarray sum",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-09T11:57:57.045Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-09T11:58:01.824Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2800b377dde69e29405bc2"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Maximum alternating subarray sum",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-09T12:01:55.887Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-09T13:57:04.133Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2a4c1077dde69e294064ba"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Break a palindrome",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-11T05:48:00.065Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T08:48:55.495Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2a4ca077dde69e294066a3"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Minimum insertions to palindrome",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-11T05:50:24.892Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T08:48:55.495Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2a719a77dde69e29406ba6"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Palindrome pairs",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-11T08:28:10.954Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T08:48:55.495Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2a766977dde69e29406dc6"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Partition labels",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-11T08:48:41.885Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T08:48:55.495Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2bbed677dde69e2940748f"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Kth Largest Element in an Array",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-12T08:09:58.207Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T08:27:07.935Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2bcd6d77dde69e29407743"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "K Closest Points to Origin",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-12T09:12:13.920Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T08:27:07.935Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2bce4377dde69e29407a68"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Find K Closest Elements",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-12T09:15:47.395Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T08:27:07.935Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2bd93a77dde69e29407d51"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Find K Closest Elements",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-12T10:02:34.085Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T08:27:07.935Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2d026977dde69e2940828f"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Next greater element i",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-13T07:10:33.019Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T08:27:07.935Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2d0b7077dde69e2940848c"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Next greater element i",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-13T07:49:04.516Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T08:27:07.935Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2d0bae77dde69e29408688"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Next greater element i",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-13T07:50:06.086Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T08:27:07.935Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2d12ce77dde69e29408935"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Stock span",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-13T08:20:30.108Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T08:27:07.935Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2d13d777dde69e29408b5d"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Largest rectangle in histogram",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-13T08:24:55.634Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T08:27:07.935Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2d145477dde69e29408f6b"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Kth Smallest Element in a Sorted Matrix",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-13T08:27:00.593Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T08:27:07.935Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2d14ae77dde69e2940917e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Kth Smallest Element in a Sorted Matrix",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-13T08:28:30.602Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T09:32:33.381Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2d14cc77dde69e29409383"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Kth Smallest Element in a Sorted Matrix",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-13T08:29:00.562Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T09:32:33.381Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2d14db77dde69e29409588"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Merge K sorted lists",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-13T08:29:15.500Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T09:32:33.381Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2d15d177dde69e294097bd"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Maximal rectangle",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-13T08:33:21.922Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T09:32:33.381Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2d2fbd357416a650175059"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Sum of subarray minimums",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-13T10:23:57.151Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T14:15:39.357Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2d7a44357416a650175492"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Trapping rain water",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-13T15:41:56.013Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T16:40:14.199Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a2d87ea357416a650175713"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Remove K digits",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-13T16:40:10.842Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-13T16:40:14.199Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a31049957579f69c5762353"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Search in Rotated Sorted Array",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-16T08:08:57.092Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-16T17:38:00.402Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a32638393b14c10b5cae1f8"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Koko Eating Bananas",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-17T09:06:11.090Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-18T03:44:11.861Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a33697893b14c10b5caea58"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Top K frequent elements",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-18T03:43:52.813Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-18T03:44:11.861Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a33bbb0c49c7034de98e284"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Minimum Number of Days to Make m Bouquets",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-18T09:34:40.526Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-18T09:49:57.927Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a34196ac49c7034de98e987"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Minimum Number of Days to Make m Bouquets",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-18T16:14:34.640Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-18T17:55:31.411Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a34f3f9c49c7034de98f253"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Magnetic Force Between Two Balls",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-19T07:47:05.278Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-20T06:02:52.954Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a365170c49c7034de98fa4d"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Split Array Largest Sum",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-20T08:38:08.637Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-20T09:44:07.273Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a36517fc49c7034de98fce1"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Split Array Largest Sum",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-20T08:38:23.158Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-20T09:44:07.273Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a3651b2c49c7034de98ffa1"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Median of Two Sorted Arrays",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-20T08:39:14.306Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-20T09:44:07.273Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a381a383ec06ef727d83db1"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task created for you",
+    "message": " Prototypes & Prototypal Inheritance ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-21T17:07:04.379Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-21T17:20:55.567Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a382a103ec06ef727d84169"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Event Loop, Call Stack & Microtask/Macrotask Queues",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-21T18:14:40.094Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-21T18:15:51.304Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a3a1bb6821ae0dd4cb479a7"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Car fleet",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-23T05:37:58.203Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-23T06:52:17.861Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a3a2d05821ae0dd4cb47cce"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Trapping rain water",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-23T06:51:49.136Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-23T06:52:17.861Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a3a478b821ae0dd4cb4820f"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Reorganize string",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-23T08:44:59.595Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-23T08:45:04.333Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a3a5406821ae0dd4cb48553"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Task scheduler",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-23T09:38:14.653Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-23T09:38:55.797Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a3b87de821ae0dd4cb49112"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "this Keyword & Explicit Binding (call, apply, bind usage and differences)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-24T07:31:42.143Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-24T07:31:45.496Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a3ddcb9067e796ac73e161e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Reverse Words in a String",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-26T01:58:17.227Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-26T03:08:40.430Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a3ded30067e796ac73e18e0"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Reverse Words in a String",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-26T03:08:32.104Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-26T03:08:40.430Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a3f61c3067e796ac73e2b1a"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Longest Palindromic Substring",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-27T05:38:11.625Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-27T07:11:34.749Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a3f735a067e796ac73e2fbc"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Revision of Sliding window and two pointers ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-27T06:53:14.465Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-27T07:11:34.749Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a3f8e5ca80cb23ee91737be"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Minimum window substring",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-27T08:48:28.131Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-27T10:04:10.221Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a40fdc48041a054c2ef85ef"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6a40fdc48041a054c2ef85ee"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task created for you",
+    "message": "LeetCode 962: Largest Subarray Length",
+    "notificationStatus": false,
+    "createdAt": {
+      "$date": "2026-06-28T10:56:04.463Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-28T10:56:04.463Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a43663ed89a7de6fcf8f995"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Backspace string compare",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-30T06:46:22.819Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-30T09:34:40.343Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4378ffd89a7de6fcf900b8"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Remove Duplicates from Sorted Array",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-30T08:06:23.746Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-30T09:34:40.343Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4385bcd89a7de6fcf90574"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": " Minimum Swaps to Move Zeros to End",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-30T09:00:44.884Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-30T09:34:40.343Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a438a52d89a7de6fcf90a52"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Execution Context, Call Stack, Scope Chain & Temporal Dead Zone (TDZ)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-30T09:20:18.793Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-30T09:34:40.343Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a438dadd89a7de6fcf90f34"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Closures & Scope (private variables, memory leaks, closure bugs in loops)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-30T09:34:37.011Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-30T09:34:40.343Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a43a968d89a7de6fcf9187e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Execution Context, Call Stack, Scope Chain & Temporal Dead Zone (TDZ)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-06-30T11:32:56.567Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-01T05:42:38.909Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a44b7284a391755a99e4ed1"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "this Keyword & Explicit Binding (call, apply, bind usage and differences)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-01T06:43:52.571Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-01T06:45:15.893Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a44b7774a391755a99e522b"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "this Keyword & Explicit Binding (call, apply, bind usage and differences)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-01T06:45:11.277Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-01T06:45:15.893Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a44bea24a391755a99e5a48"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Top K frequent elements",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-01T07:15:46.718Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-01T07:17:03.337Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a44bec24a391755a99e60aa"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Top K frequent elements",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-01T07:16:18.402Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-01T07:17:03.337Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a45d0c28a9dd8b4b2d4d553"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Longest Repeating Character Replacement",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-02T02:45:22.208Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-02T03:43:26.224Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a45dd508a9dd8b4b2d4db72"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Subarrays with k different integers",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-02T03:38:56.970Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-02T03:43:26.224Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a45ddc58a9dd8b4b2d4e031"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Minimum window substring",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-02T03:40:53.909Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-02T03:43:26.224Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a463287780d4bc2c32c0255"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Event Loop, Call Stack & Microtask/Macrotask Queues",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-02T09:42:31.028Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-02T11:59:51.539Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a464581780d4bc2c32c087a"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Redux Flow Architecture (Actions, reducers, store, dispatch, and unidirectional flow)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-02T11:03:29.077Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-02T11:59:51.539Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a464a8e780d4bc2c32c1363"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Redux Flow Architecture (Actions, reducers, store, dispatch, and unidirectional flow)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-02T11:25:02.809Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-02T11:59:51.539Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a48b4968227e2d08f79cb2f"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Find All Anagrams in a String",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-04T07:21:58.268Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-04T08:22:50.905Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a48c25d8227e2d08f79d069"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Find All Anagrams in a String",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-04T08:20:45.058Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-04T08:22:50.905Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a48c2d88227e2d08f79d417"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Minimum Number of Steps to Make Two Strings Anagram",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-04T08:22:48.097Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-04T08:22:50.905Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a48f7678227e2d08f79d863"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Minimum Number of Steps to Make Two Strings Anagram",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-04T12:07:03.427Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-04T12:07:48.359Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4a5c153cf7c9c0ee4015c4"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Patterns Brief ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-05T13:28:53.447Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-05T13:29:21.853Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4a5c243cf7c9c0ee4018f9"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Longest substring without repeating characters",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-05T13:29:08.247Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-05T13:29:21.853Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4a5c423cf7c9c0ee401c39"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Binary subarrays with some ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-05T13:29:38.837Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-05T13:31:45.835Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4a5c753cf7c9c0ee4022ed"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Count number of nice subarrays ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-05T13:30:29.693Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-05T13:31:45.835Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4a5c853cf7c9c0ee402619"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Number of substrings containing all 3 characters ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-05T13:30:45.168Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-05T13:31:45.835Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4a5c8f3cf7c9c0ee40294b"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Longest substring with atmost k distinct character",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-05T13:30:55.627Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-05T13:31:45.835Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4a5c9a3cf7c9c0ee402c7d"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Fruit into baskets ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-05T13:31:06.965Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-05T13:31:45.835Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4a5ca53cf7c9c0ee402fb8"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Maximum consecutive ones |||",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-05T13:31:17.346Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-05T13:31:45.835Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4a5caf3cf7c9c0ee4032ed"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Maximum Points you can obtain from cards ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-05T13:31:27.010Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-05T13:31:45.835Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4a5e7c3cf7c9c0ee4037b3"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Sliding window / Two pointers",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-05T13:39:08.411Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-05T13:39:45.484Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4a6b64dac299ac981ee0f3"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Isomorphic Strings",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-05T14:34:12.350Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-05T14:38:26.098Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4a746ddac299ac981ee4aa"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Isomorphic Strings",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-05T15:12:45.643Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-05T15:15:18.314Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4a7503dac299ac981ee7a1"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Isomorphic Strings",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-05T15:15:15.807Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-05T15:15:18.314Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4a8c90dac299ac981eed11"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "First Unique Character in a String",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-05T16:55:44.859Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-05T16:55:48.254Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4cac16390dd63741f365e8"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Subarray sum equals K",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-07T07:34:46.639Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-07T07:35:08.185Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4cac3b390dd63741f368bd"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Subarray sum equals K",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-07T07:35:23.279Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-07T07:44:23.180Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4cac67390dd63741f36c1e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Continuous subarray sum",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-07T07:36:07.264Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-07T07:44:23.180Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4cd67a85fd7880114218f4"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Delete Node in a Linked List",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-07T10:35:38.595Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-07T10:35:43.469Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4cdb3b85fd788011421c36"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Middle of the Linked List",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-07T10:55:55.168Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-07T10:55:58.838Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4df6c285fd788011422777"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Linked List Cycle II",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-08T07:05:38.700Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-08T07:32:22.887Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4f09ca85fd788011423251"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Middle of the Linked List",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-09T02:39:06.365Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-09T05:21:43.131Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4f0fef85fd788011423596"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Reverse Linked List",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-09T03:05:19.133Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-09T05:21:43.131Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4f4445fb97a5abf19c104d"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Remove Nth Node From End of List",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-09T06:48:37.555Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-09T06:48:41.180Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4f5d2ffb97a5abf19c133b"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Remove Nth Node From End of List",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-09T08:34:55.230Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-09T08:36:24.194Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4fd8705f59b91409f6ef4f"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 1 - Hour 1: DBMS Basics",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-09T17:20:48.610Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-09T18:11:55.343Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4fd8bd5f59b91409f6f222"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 1 - Hour 1: DBMS Basics",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-09T17:22:05.091Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-09T18:11:55.343Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4fd90e5f59b91409f6f50c"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 1 - Hour 1: DBMS Basics",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-09T17:23:26.593Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-09T18:11:55.343Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a4fd95f5f59b91409f6f7df"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 1 - Hour 1: DBMS Basics",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-09T17:24:47.847Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-09T18:11:55.343Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a5096730d2bf43233d58577"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Delete the Middle Node of a Linked List",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-10T06:51:31.729Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-10T08:37:13.614Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a50c5f9e0261fa81faedb63"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 1 - Hour 1: DBMS Basics",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-10T10:14:17.436Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-10T10:14:46.512Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a5130310c272272df8f1dff"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Interval List Intersections",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-10T17:47:29.159Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-10T17:47:34.130Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a52136abe81d7d660d4425a"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Reverse Linked List II",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-11T09:56:58.477Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-11T10:01:42.116Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a521e9abe81d7d660d449a0"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Reorder List",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-11T10:44:42.799Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-11T11:06:48.883Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a522403be81d7d660d45046"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Reverse Nodes in Even Length Groups",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-11T11:07:47.631Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-11T11:07:51.562Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a53b22d7afec72d814e9bf7"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Contiguous Array",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-12T15:26:37.003Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-12T15:26:44.425Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a585d8702b5886e5a580943"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Find the Duplicate Number",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-16T04:26:47.414Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-16T04:27:05.863Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a5b5d5ae7a8257ceaea2f9b"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Remove Nth Node From End of List",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-18T11:02:50.959Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-18T11:04:20.463Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a5f4b04e7a8257ceaeababf"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Execution Context, Call Stack, Scope Chain & Temporal Dead Zone (TDZ)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-21T10:33:40.881Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-21T10:33:46.012Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a5f4b32e7a8257ceaeabe64"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Closures & Scope (private variables, memory leaks, closure bugs in loops)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-21T10:34:26.138Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-21T10:34:30.582Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a5f4c96e7a8257ceaeac22e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Execution Context, Call Stack, Scope Chain & Temporal Dead Zone (TDZ)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-21T10:40:22.510Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-21T10:40:27.444Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a61d2fde7a8257ceaeb1157"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Median of Two Sorted Arrays",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-23T08:38:21.145Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-23T08:38:30.265Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a61f4ccef7c99c3bd1fa2f1"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Reverse first K elements of given linked list",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-23T11:02:36.817Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-23T11:05:55.389Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a61f86cef7c99c3bd1faa08"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Merge K Sorted Lists",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-23T11:18:04.191Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-23T11:19:48.925Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a61f8bbef7c99c3bd1fadf6"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Sort List",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-23T11:19:23.535Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-23T11:19:48.925Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a61f8d0ef7c99c3bd1fb16e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Insertion Sort List",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-23T11:19:44.973Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-23T11:19:48.925Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a61fe49ef7c99c3bd1fb637"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Intersection of Two Linked Lists",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-23T11:43:05.024Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-23T11:43:08.335Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a64f4b526d0bf076380f49b"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Double a Number Represented as a Linked List",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-25T17:39:01.433Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-25T17:39:05.681Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a64fc1f26d0bf0763810fc2"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Double a Number Represented as a Linked List",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-25T18:10:39.896Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-25T18:26:13.045Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a65ce275f548813b2bd3a0b"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "69d7788e6d3910f342f371d9"
+    },
+    "title": "Task updated for you",
+    "message": "Maximum Population Year",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-26T09:06:47.648Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-26T09:07:02.707Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6b825a08fbd2b4c8913ef3"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "The Bard's Compressed Melody",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-30T16:56:58.971Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-30T16:57:34.765Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c359bf41c8bc529e50de6"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "The Bard's Compressed Melody",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-31T05:41:47.997Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-31T05:41:53.559Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c35c1f41c8bc529e51193"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Decode String",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-31T05:42:25.631Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-31T05:42:29.954Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6c6d63f41c8bc529e5c5c9"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Flatten a Multilevel Doubly Linked List",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-07-31T09:39:47.899Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-31T09:42:16.871Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6d634c1399183c961a4501"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Implement Queue",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-01T03:09:00.587Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-01T03:09:05.757Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6da7021399183c961ad44e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Remove Invalid Parentheses",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-01T07:57:54.919Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-01T08:00:00.064Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a6da7261399183c961ad807"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Daily Temperatures",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-01T07:58:30.872Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-01T08:00:00.064Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70c9b4ef67e3d04e75f185"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Maximum Frequency Stack",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:02:44.676Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:14:55.014Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d047ef67e3d04e762838"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "SQL & Database Design (5-Day Plan)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:30:47.384Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d048ef67e3d04e762862"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 5 - Hour 5: Revision & Notes",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:30:48.052Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d049ef67e3d04e7628d9"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 5 - Hour 4: Mock Interview",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:30:49Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d049ef67e3d04e762950"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 5 - Hour 3: LeetCode SQL Medium",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:30:49.916Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d04aef67e3d04e7629c7"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 5 - Hour 2: LeetCode SQL Easy",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:30:50.868Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d04bef67e3d04e762a3e"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 5 - Hour 1: Interview Patterns",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:30:51.752Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d04cef67e3d04e762ab5"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 4 - Hour 5: Indexing",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:30:52.705Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d04def67e3d04e762b2c"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 4 - Hour 4: Transactions",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:30:53.519Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d04eef67e3d04e762ba3"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 4 - Hour 3: Constraints",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:30:54.530Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d04fef67e3d04e762c1a"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 4 - Hour 2: Schema Design",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:30:55.441Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d050ef67e3d04e762c91"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 4 - Hour 1: Normalization",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:30:56.315Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d051ef67e3d04e762d08"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 3 - Hour 5: Practice (Advanced)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:30:57.083Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d052ef67e3d04e762d7f"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 3 - Hour 4: Views & Advanced Objects",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:30:58.008Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d052ef67e3d04e762df6"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 3 - Hour 3: Window Functions",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:30:58.855Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d053ef67e3d04e762e6d"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 3 - Hour 2: CTE",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:30:59.688Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d054ef67e3d04e762ee4"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 3 - Hour 1: Subqueries",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:31:00.666Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d055ef67e3d04e762f5b"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 2 - Hour 5: Practice (Intermediate)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:31:01.609Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d056ef67e3d04e762fd2"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 2 - Hour 4: Relationships",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:31:02.473Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d057ef67e3d04e763049"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 2 - Hour 3: Joins",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:31:03.491Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d058ef67e3d04e7630c0"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 2 - Hour 2: Aggregate Functions",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:31:04.345Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d059ef67e3d04e763137"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 2 - Hour 1: Functions",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:31:05.166Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d05aef67e3d04e7631ae"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 1 - Hour 5: Practice (Fundamentals)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:31:06.124Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d05aef67e3d04e763225"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 1 - Hour 4: Filtering",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:31:06.970Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d05bef67e3d04e76329c"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 1 - Hour 3: Insert & Retrieve",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:31:07.834Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d05cef67e3d04e763317"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 1 - Hour 2: SQL Basics",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:31:08.608Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d05def67e3d04e763394"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 1 - Hour 1: DBMS Basics",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:31:09.422Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d080ef67e3d04e7637dd"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 1 - DBMS Basics",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:31:44.821Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d099ef67e3d04e763c2d"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 2 - SQL Basics",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:32:09.137Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d0bbef67e3d04e764075"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 3 - Insert & Retrieve",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:32:43.872Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d0cdef67e3d04e7647fd"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 4 - Filtering",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:33:01.584Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d0dfef67e3d04e764c45"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 5 - Practice (Fundamentals)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:33:19.968Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d0f9ef67e3d04e76508d"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 6 - Functions",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:33:45.234Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d107ef67e3d04e7654d5"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 7 - Aggregate Functions",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:33:59.316Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d11fef67e3d04e76591d"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 8 - Joins",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:34:23.133Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d12eef67e3d04e765d65"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 9 - Relationships",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:34:38.350Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d140ef67e3d04e7661ad"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 10 - Practice (Intermediate)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:34:56.359Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d1c3ef67e3d04e767615"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 11 - Subqueries",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:37:07.694Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d1d4ef67e3d04e767a5d"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 12 - CTE",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:37:24.945Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d1eaef67e3d04e767ea5"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 13 - Window Functions",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:37:46.457Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d1feef67e3d04e76862d"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 14 - Views & Advanced Objects",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:38:06.702Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d210ef67e3d04e768a75"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 15 - Practice (Advanced)",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:38:24.956Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d221ef67e3d04e768ebd"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 16 - Normalization",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:38:41.011Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d22eef67e3d04e769305"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 17 - Schema Design",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:38:54.170Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d241ef67e3d04e76974d"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 18 - Constraints",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:39:13.100Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d254ef67e3d04e769b95"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 19 - Transactions",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:39:32.825Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d263ef67e3d04e769fdd"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 20 - Indexing",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:39:47.080Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d278ef67e3d04e76a453"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 21 - Interview Patterns",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:40:08.147Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d285ef67e3d04e76a89b"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 22 - LeetCode SQL Easy",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:40:21.147Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d291ef67e3d04e76ace3"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 23 - LeetCode SQL Medium",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:40:33.490Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d2a1ef67e3d04e76b12b"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 24 - Mock Interview",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:40:49.098Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a70d2aeef67e3d04e76b573"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 25 - Revision & Notes",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-03T17:41:02.448Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T17:41:23.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a71a8aeef67e3d04e779d81"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Browser History",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-04T08:54:06.633Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-04T09:04:32.271Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a71a8c9ef67e3d04e77a196"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Design Browser History",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-04T08:54:33.261Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-04T09:04:32.271Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a71a8ddef67e3d04e77a585"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "LFU Cache",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-04T08:54:53.508Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-04T09:04:32.271Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a72253b88da14e9e7c0a2fa"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Classes and Objects",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-04T17:45:31.850Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-04T17:59:12.535Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a7229b388da14e9e7c0b4d9"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Polymorphism",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-04T18:04:35.236Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-04T18:09:40.102Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a7229c788da14e9e7c0b8c7"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Abstraction",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-04T18:04:55.577Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-04T18:09:40.102Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a7456df88da14e9e7c29c8c"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 2 - SQL Basics",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-06T09:41:51.103Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-06T09:41:55.358Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a74573288da14e9e7c2a6bd"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 3 - Insert & Retrieve",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-06T09:43:14.036Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-06T09:43:34.147Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a7458b588da14e9e7c2b2e4"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 3 - Insert & Retrieve",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-06T09:49:41.665Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-06T17:25:15.991Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a74d42d88da14e9e7c2fe7f"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a4cbd238f3ba6c540a5cbe6"
+    },
+    "title": "Task updated for you",
+    "message": "Find K Pairs with Smallest Sums",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-06T18:36:29.035Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-06T18:42:00.031Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a79ac4375acdb73d69da784"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 4 - Filtering",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-10T10:47:31.593Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-10T17:16:44.400Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a81d4fa657168be4833fe09"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Day 5 - Constraints",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-16T15:19:22.957Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-17T03:08:40.581Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a81d7d8657168be48340c04"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "Constraints, Schema Evolution & Maintenance",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-16T15:31:36.136Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-17T03:08:40.581Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a81d7e4657168be483410cb"
+    },
+    "senderId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "receiverId": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    },
+    "projectId": {
+      "$oid": "6a30c5bcf7cfd43d78e67bf8"
+    },
+    "title": "Task updated for you",
+    "message": "SQL & Database Design ",
+    "notificationStatus": true,
+    "createdAt": {
+      "$date": "2026-08-16T15:31:48.248Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-17T03:08:40.581Z"
+    }
+  }
+]

@@ -39,7 +39,8 @@ const DashboardHeader = ({
     onHideControls,
     onOpenSchedule,
     hasProjectSelected,
-    isArenaScheduled
+    isArenaScheduled,
+    isDataLoaded
 }) => {
 
     const tabs = [
@@ -190,12 +191,12 @@ const DashboardHeader = ({
                     ))}
                 </div>
 
-                {/* Actions (Schedule Arena, Refine View / Hide Controls and Create Task) */}
+                {/* Actions (Schedule Arena, Hide Controls, Refine View, Create Task) */}
                 <div className="flex items-center gap-2 self-end sm:self-auto">
                     {onOpenSchedule && hasProjectSelected && !isArenaScheduled && (
                         <button
                             onClick={onOpenSchedule}
-                            className="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-4 py-1.5 rounded-xl text-[10px] uppercase tracking-wider flex items-center gap-1.5 shadow-md hover:shadow-lg transition-all active:scale-95 shrink-0 cursor-pointer"
+                            className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-600 text-white font-bold px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow-sm hover:shadow transition-all active:scale-95 shrink-0 cursor-pointer"
                             title="Generate and apply custom timeline schedule for this Arena"
                         >
                             <IoCalendarOutline size={14} className="text-white" />
@@ -203,36 +204,37 @@ const DashboardHeader = ({
                         </button>
                     )}
 
-                    {onHideControls && !isFiltersOpen && (
+                    {onHideControls && (
                         <button
                             onClick={onHideControls}
-                            className="bg-vermilion-500 hover:bg-vermilion-600 text-white px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-sm transition-all active:scale-95"
+                            className="bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200/80 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer shadow-2xs"
+                            title="Hide controls header"
                         >
                             <IoChevronUpOutline size={13} />
-                            <span className='text-[12px]'>Hide Controls</span>
+                            <span>Hide Controls</span>
                         </button>
                     )}
 
                     <button
                         onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-                        className={`px-3.5 py-1.5 rounded-xl border text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-all duration-300 ${isFiltersOpen
-                                ? 'bg-vermilion-500 text-white border-vermilion-500 shadow-md shadow-vermilion-500/20'
-                                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50 shadow-sm'
+                        className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 cursor-pointer ${isFiltersOpen
+                                ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                                : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-300 shadow-2xs'
                             }`}
                     >
                         <IoFilterOutline size={13} className={isFiltersOpen ? "rotate-180 transition-transform duration-300" : ""} />
-                        <span>{isFiltersOpen ? 'Hide Controls' : 'Refine View'}</span>
+                        <span>{isFiltersOpen ? 'Close Refine' : 'Refine View'}</span>
                         {isAnyFilterActive && !isFiltersOpen && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-vermilion-500 animate-pulse"></span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
                         )}
                     </button>
 
                     {canCreate && (
                         <button
                             onClick={onCreateTask}
-                            className="bg-slate-900 hover:bg-slate-950 text-white px-4 py-1.5 rounded-xl font-black shadow-sm hover:shadow transition-all active:scale-95 flex items-center gap-1.5 text-[10px] uppercase tracking-wider shrink-0"
+                            className="bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-sm hover:shadow transition-all active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer"
                         >
-                            <IoAdd size={14} className="text-white" />
+                            <IoAdd size={15} className="text-white" />
                             <span>Create Task</span>
                         </button>
                     )}

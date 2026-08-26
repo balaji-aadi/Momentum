@@ -12,11 +12,13 @@ import {
   LuCheckCircle2,
   LuChevronDown,
   LuChevronUp,
-  LuChevronLeft
+  LuChevronLeft,
+  LuMaximize2,
+  LuMinimize2
 } from 'react-icons/lu';
 import { renderMarkdown } from '../../utils/markdownRenderer';
 
-export function ProblemDescriptionPanel({ task, onToggleCollapse }) {
+export function ProblemDescriptionPanel({ task, onToggleCollapse, onToggleExpandFull, isExpandedFull }) {
   const { problem, submissions = [], taskLinkedNotes = [] } = useCodingArena();
   const [activeTab, setActiveTab] = useState('description'); // 'description' | 'editorial' | 'submissions'
   const [copiedId, setCopiedId] = useState(null);
@@ -137,16 +139,29 @@ export function ProblemDescriptionPanel({ task, onToggleCollapse }) {
           <span>Submissions</span>
         </button>
 
-        {onToggleCollapse && (
-          <button
-            type="button"
-            onClick={onToggleCollapse}
-            className="ml-auto p-1 text-slate-400 hover:text-white hover:bg-[#262626] rounded-lg transition-colors cursor-pointer"
-            title="Collapse Description Panel"
-          >
-            <LuChevronLeft size={16} />
-          </button>
-        )}
+        <div className="ml-auto flex items-center gap-1">
+          {onToggleExpandFull && (
+            <button
+              type="button"
+              onClick={onToggleExpandFull}
+              className="p-1.5 text-slate-400 hover:text-white hover:bg-[#262626] rounded-lg transition-colors cursor-pointer"
+              title={isExpandedFull ? "Restore Split Layout" : "Full Collapse Code Editor (100% Description)"}
+            >
+              {isExpandedFull ? <LuMinimize2 size={15} /> : <LuMaximize2 size={15} />}
+            </button>
+          )}
+
+          {onToggleCollapse && (
+            <button
+              type="button"
+              onClick={onToggleCollapse}
+              className="p-1.5 text-slate-400 hover:text-white hover:bg-[#262626] rounded-lg transition-colors cursor-pointer"
+              title="Full Collapse Description"
+            >
+              <LuChevronLeft size={16} />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Tab Content Body */}
@@ -174,7 +189,7 @@ export function ProblemDescriptionPanel({ task, onToggleCollapse }) {
             {/* Problem Title & Header */}
             <div className="space-y-3">
               <div className="flex items-center justify-between gap-2">
-                <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                <h1 className="text-[26px] sm:text-3xl font-black text-white tracking-tight flex items-center gap-2 leading-snug">
                   {problem.problemCode || '1'}. {problem.title}
                 </h1>
                 {problem.isSolved && (
@@ -262,7 +277,13 @@ export function ProblemDescriptionPanel({ task, onToggleCollapse }) {
             {/* Description Statement */}
             <div
               className="dark prose prose-invert max-w-none text-[#eff1f6] space-y-4 leading-relaxed text-base font-sans"
-              dangerouslySetInnerHTML={{ __html: renderMarkdown(problem.descriptionMarkdown) || problem.descriptionHtml || task?.taskDescription || "<p>Problem description statement.</p>" }}
+              dangerouslySetInnerHTML={{ 
+                __html: renderMarkdown(
+                  problem.descriptionMarkdown 
+                    ? problem.descriptionMarkdown.replace(/###\s*Example[\s\S]*?(?=(###\s*Constraints|###\s*Hints|$))/gi, '').trim()
+                    : ''
+                ) || problem.descriptionHtml || task?.taskDescription || "<p>Problem description statement.</p>" 
+              }}
             />
 
             {/* Structured Examples */}
@@ -305,16 +326,17 @@ export function ProblemDescriptionPanel({ task, onToggleCollapse }) {
               </div>
             )}
 
-            {/* Constraints (Matching Image 4) */}
+            {/* Constraints */}
             {problem.constraints && problem.constraints.length > 0 && (
-              <div className="space-y-2.5 pt-3 border-t border-[#2d2d2d]">
+              <div className="space-y-3 pt-4 border-t border-[#2d2d2d]">
                 <h3 className="text-sm font-bold text-white">Constraints:</h3>
-                <ul className="space-y-2 list-disc list-inside text-xs text-slate-300">
+                <ul className="space-y-2.5">
                   {problem.constraints.map((c, i) => (
-                    <li key={i} className="leading-relaxed">
-                      <code className="bg-[#262626] text-slate-200 border border-[#383838] px-2 py-0.5 rounded-md font-mono text-sm inline-block">
+                    <li key={i} className="flex items-start gap-2.5 text-xs text-slate-300">
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-2 shrink-0" />
+                      <span className="bg-[#262626] text-slate-200 border border-[#383838] px-2.5 py-1 rounded-lg font-mono text-xs leading-relaxed max-w-full font-medium inline-block break-words whitespace-pre-wrap">
                         {c}
-                      </code>
+                      </span>
                     </li>
                   ))}
                 </ul>

@@ -235,7 +235,7 @@ def __sarthi_run_driver__():
     # Resolve solution callable (class Solution instance or top-level function)
     fn = None
     if 'Solution' in globals() and isinstance(globals()['Solution'], type):
-        sol = Solution()
+        sol = globals()['Solution']()
         fn = getattr(sol, "${functionName}", None)
         if fn is None:
             # Fallback to any method in Solution

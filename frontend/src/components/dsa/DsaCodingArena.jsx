@@ -5,11 +5,12 @@ import { ProblemDescriptionPanel } from './ProblemDescriptionPanel';
 import { CodeEditorPanel } from './CodeEditorPanel';
 import { OutputConsolePanel } from './OutputConsolePanel';
 import { ProblemApi } from '../../services/api/Problem.api';
-import { LuFileText, LuBookOpen, LuHistory, LuChevronRight } from 'react-icons/lu';
+import { LuFileText, LuBookOpen, LuHistory, LuChevronRight, LuChevronLeft, LuCode2 } from 'react-icons/lu';
 
 function CodingArenaWorkspace({ onClose, containerRef, isResizing, isDraggingHorizontal, isDraggingVertical, leftWidthPercent, setLeftWidthPercent, editorHeightPercent, setEditorHeightPercent, isFullscreenEditor, setIsFullscreenEditor }) {
   const { isConsoleCollapsed } = useCodingArena();
   const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
+  const [isRightCollapsed, setIsRightCollapsed] = useState(false);
 
   return (
     <div 
@@ -30,21 +31,21 @@ function CodingArenaWorkspace({ onClose, containerRef, isResizing, isDraggingHor
         {isLeftCollapsed ? (
           <div className="w-[44px] h-full bg-[#141414] border-r border-[#2d2d2d] flex flex-col items-center py-3 gap-4 shrink-0 z-20 font-sans">
             <button
-              onClick={() => setIsLeftCollapsed(false)}
+              onClick={() => { setIsLeftCollapsed(false); setIsRightCollapsed(false); }}
               className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-[#252526] rounded-xl transition-all cursor-pointer relative group"
               title="Expand Description"
             >
               <LuFileText size={18} />
             </button>
             <button
-              onClick={() => setIsLeftCollapsed(false)}
+              onClick={() => { setIsLeftCollapsed(false); setIsRightCollapsed(false); }}
               className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-[#252526] rounded-xl transition-all cursor-pointer relative group"
               title="Expand Editorial"
             >
               <LuBookOpen size={18} />
             </button>
             <button
-              onClick={() => setIsLeftCollapsed(false)}
+              onClick={() => { setIsLeftCollapsed(false); setIsRightCollapsed(false); }}
               className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-[#252526] rounded-xl transition-all cursor-pointer relative group"
               title="Expand Submissions"
             >
@@ -53,7 +54,7 @@ function CodingArenaWorkspace({ onClose, containerRef, isResizing, isDraggingHor
 
             <div className="mt-auto border-t border-[#2d2d2d] pt-3 w-full flex justify-center">
               <button
-                onClick={() => setIsLeftCollapsed(false)}
+                onClick={() => { setIsLeftCollapsed(false); setIsRightCollapsed(false); }}
                 className="p-2 text-slate-400 hover:text-white hover:bg-[#252526] rounded-xl transition-all cursor-pointer"
                 title="Expand Description Panel"
               >
@@ -63,15 +64,19 @@ function CodingArenaWorkspace({ onClose, containerRef, isResizing, isDraggingHor
           </div>
         ) : (
           <div 
-            style={{ width: `${leftWidthPercent}%` }}
-            className="h-full overflow-hidden shrink-0"
+            style={{ width: isRightCollapsed ? 'calc(100% - 44px)' : `${leftWidthPercent}%` }}
+            className={`h-full overflow-hidden shrink-0 transition-all duration-150 ${isRightCollapsed ? 'flex-1' : ''}`}
           >
-            <ProblemDescriptionPanel onToggleCollapse={() => setIsLeftCollapsed(true)} />
+            <ProblemDescriptionPanel 
+              onToggleCollapse={() => { setIsLeftCollapsed(true); setIsRightCollapsed(false); }}
+              onToggleExpandFull={() => { setIsRightCollapsed(prev => !prev); setIsLeftCollapsed(false); }}
+              isExpandedFull={isRightCollapsed}
+            />
           </div>
         )}
 
         {/* Horizontal Splitter */}
-        {!isLeftCollapsed && (
+        {!isLeftCollapsed && !isRightCollapsed && (
           <div 
             onMouseDown={(e) => {
               e.preventDefault();
@@ -85,50 +90,80 @@ function CodingArenaWorkspace({ onClose, containerRef, isResizing, isDraggingHor
           </div>
         )}
 
-        {/* Right Panel: Code Editor + Console (Expands to 100% when Left Panel is collapsed) */}
-        <div 
-          id="right-panel-container"
-          className="flex-1 h-full flex flex-col overflow-hidden min-w-[200px]"
-        >
-          {/* Upper Right: Code Editor Panel */}
-          <div 
-            style={{ 
-              height: isFullscreenEditor 
-                ? '100%' 
-                : isConsoleCollapsed 
-                  ? 'calc(100% - 40px)' 
-                  : `${editorHeightPercent}%` 
-            }}
-            className="w-full overflow-hidden shrink-0 transition-all duration-150"
-          >
-            <CodeEditorPanel 
-              isFullscreen={isFullscreenEditor}
-              onToggleFullscreen={() => setIsFullscreenEditor(prev => !prev)}
-            />
-          </div>
-
-          {/* Vertical Splitter (Visible only when console is expanded) */}
-          {!isFullscreenEditor && !isConsoleCollapsed && (
-            <div 
-              onMouseDown={(e) => {
-                e.preventDefault();
-                isDraggingVertical.current = true;
-                document.body.style.cursor = 'row-resize';
-                document.body.style.userSelect = 'none';
-              }}
-              className="h-1.5 w-full bg-[#1e1e1e] hover:bg-primary/80 transition-colors cursor-row-resize shrink-0 z-10 flex items-center justify-center group"
+        {/* Right Panel: Collapsed Vertical Sidebar vs Full Code Editor + Console */}
+        {isRightCollapsed ? (
+          <div className="w-[44px] h-full bg-[#141414] border-l border-[#2d2d2d] flex flex-col items-center py-3 gap-4 shrink-0 z-20 font-sans">
+            <button
+              onClick={() => { setIsRightCollapsed(false); setIsLeftCollapsed(false); }}
+              className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-[#252526] rounded-xl transition-all cursor-pointer relative group"
+              title="Expand Code Editor"
             >
-              <div className="h-[2px] w-6 bg-slate-600 group-hover:bg-white rounded-full"></div>
-            </div>
-          )}
+              <LuCode2 size={18} />
+            </button>
 
-          {/* Lower Right: Console Panel (Exactly 40px at bottom when collapsed, flex-1 when expanded) */}
-          {!isFullscreenEditor && (
-            <div className={`w-full overflow-hidden transition-all duration-150 ${isConsoleCollapsed ? 'h-10 shrink-0' : 'flex-1 min-h-[140px]'}`}>
-              <OutputConsolePanel />
+            <div className="mt-auto border-t border-[#2d2d2d] pt-3 w-full flex justify-center">
+              <button
+                onClick={() => { setIsRightCollapsed(false); setIsLeftCollapsed(false); }}
+                className="p-2 text-slate-400 hover:text-white hover:bg-[#252526] rounded-xl transition-all cursor-pointer"
+                title="Expand Code Editor Panel"
+              >
+                <LuChevronLeft size={18} />
+              </button>
             </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div 
+            id="right-panel-container"
+            className="flex-1 h-full flex flex-col overflow-hidden min-w-[200px]"
+          >
+            {/* Upper Right: Code Editor Panel */}
+            <div 
+              style={{ 
+                height: isFullscreenEditor 
+                  ? '100%' 
+                  : isConsoleCollapsed 
+                    ? 'calc(100% - 40px)' 
+                    : `${editorHeightPercent}%` 
+              }}
+              className="w-full overflow-hidden shrink-0 transition-all duration-150"
+            >
+              <CodeEditorPanel 
+                isFullscreen={isFullscreenEditor || isLeftCollapsed}
+                onToggleFullscreen={() => {
+                  if (isLeftCollapsed) {
+                    setIsLeftCollapsed(false);
+                    setIsRightCollapsed(false);
+                  } else {
+                    setIsLeftCollapsed(true);
+                    setIsRightCollapsed(false);
+                  }
+                }}
+              />
+            </div>
+
+            {/* Vertical Splitter (Visible only when console is expanded) */}
+            {!isFullscreenEditor && !isConsoleCollapsed && (
+              <div 
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  isDraggingVertical.current = true;
+                  document.body.style.cursor = 'row-resize';
+                  document.body.style.userSelect = 'none';
+                }}
+                className="h-1.5 w-full bg-[#1e1e1e] hover:bg-primary/80 transition-colors cursor-row-resize shrink-0 z-10 flex items-center justify-center group"
+              >
+                <div className="h-[2px] w-6 bg-slate-600 group-hover:bg-white rounded-full"></div>
+              </div>
+            )}
+
+            {/* Lower Right: Console Panel (Exactly 40px at bottom when collapsed, flex-1 when expanded) */}
+            {!isFullscreenEditor && (
+              <div className={`w-full overflow-hidden transition-all duration-150 ${isConsoleCollapsed ? 'h-10 shrink-0' : 'flex-1 min-h-[140px]'}`}>
+                <OutputConsolePanel />
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

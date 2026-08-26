@@ -1,4 +1,5 @@
 import { ProblemConfigurationError } from '../outputSerializers/SerializerErrors.js';
+import { SemanticValidatorRegistry } from '../validators/SemanticValidatorRegistry.js';
 
 /**
  * C++ Driver Harness Generator (Phase 6)
@@ -10,16 +11,126 @@ export function generateCppDriverHarness(studentCode, functionDefinition, execut
   const returnType = functionDefinition?.returnType || 'number[]';
   const inPlaceMutation = executionProfile?.inPlaceMutation === true || returnType === 'void';
   const mutatedParameter = executionProfile?.mutatedParameter;
+  const semanticValidator = executionProfile?.semanticValidator;
+
+  if (semanticValidator) {
+    SemanticValidatorRegistry.assertValid(semanticValidator);
+  }
 
   if (inPlaceMutation) {
-    if (!mutatedParameter) {
+    const cleanMutated = (mutatedParameter || '').trim();
+    if (!cleanMutated) {
       throw new ProblemConfigurationError("Missing required 'executionProfile.mutatedParameter' for in-place mutation problem.");
     }
-    const paramExists = parameters.some(p => p.name === mutatedParameter);
+    const paramExists = parameters.some(p => {
+      const pName = typeof p === 'string' ? p : (p.name || (p.toObject ? p.toObject().name : '') || '');
+      return pName.trim() === cleanMutated;
+    });
     if (!paramExists) {
-      throw new ProblemConfigurationError(`Mutated parameter '${mutatedParameter}' not found in functionDefinition parameters.`);
+      throw new ProblemConfigurationError(`Mutated parameter '${cleanMutated}' not found in functionDefinition parameters.`);
     }
   }
+
+  const validationHelpersCode = SemanticValidatorRegistry.getInjectedValidationCode('cpp', semanticValidator);
+
+// Helper to format C++ literal values from JSON input
+function formatCppLiteral(val, type) {
+  const normType = (type || 'number').toLowerCase();
+  if (val === null || val === undefined) {
+    if (normType.includes('node')) return 'nullptr';
+    return '0';
+  }
+  if (normType === 'number' || normType === 'int') return String(val);
+  if (normType === 'float' || normType === 'double') return String(val);
+  if (normType === 'boolean' || normType === 'bool') return val ? 'true' : 'false';
+  if (normType === 'string' || normType === 'str') return escapeCppStringLiteral(val);
+  if (normType === 'number[]' || normType === 'int[]') return `{${(Array.isArray(val) ? val : []).join(',')}}`;
+  if (normType === 'string[]' || normType === 'str[]') return `{${(Array.isArray(val) ? val : []).map(s => escapeCppStringLiteral(s)).join(',')}}`;
+  if (normType === 'boolean[]' || normType === 'bool[]') return `{${(Array.isArray(val) ? val : []).map(b => b ? 'true' : 'false').join(',')}}`;
+  if (normType === 'number[][]' || normType === 'int[][]') return `{${(Array.isArray(val) ? val : []).map(r => `{${(Array.isArray(r) ? r : []).join(',')}}`).join(',')}}`;
+  if (normType === 'string[][]' || normType === 'str[][]') return `{${(Array.isArray(val) ? val : []).map(r => `{${(Array.isArray(r) ? r : []).map(s => escapeCppStringLiteral(s)).join(',')}}`).join(',')}}`;
+  return String(val);
+}
+
+function escapeCppStringLiteral(str) {
+  if (typeof str !== 'string') return `"${str}"`;
+  return '"' + str.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t') + '"';
+}
+
+function getCppSerializerCall(varName, type) {
+  const normType = (type || 'number').toLowerCase();
+  if (normType === 'number' || normType === 'int') return `serialize_int(${varName})`;
+  if (normType === 'float' || normType === 'double') return `serialize_double(${varName})`;
+  if (normType === 'boolean' || normType === 'bool') return `serialize_bool(${varName})`;
+  if (normType === 'string' || normType === 'str') return `serialize_str(${varName})`;
+  if (normType.endsWith('[][]')) return `serialize_2d_array(${varName})`;
+  if (normType.endsWith('[]')) return `serialize_1d_array(${varName})`;
+  if (normType.includes('listnode') && !normType.includes('random')) return `serialize_list_node(${varName})`;
+  if (normType.includes('randomlistnode')) return `serialize_random_list_node(${varName})`;
+  if (normType.includes('treenode') || normType.includes('binarytree')) return `serialize_tree_node(${varName})`;
+  if (normType.includes('graph')) return `serialize_graph_node(${varName})`;
+  return `serialize_str(to_string(${varName}))`;
+}
+
+const TYPE_MAP_CPP = {
+  'number': 'int',
+  'float': 'double',
+  'string': 'string',
+  'boolean': 'bool',
+  'number[]': 'vector<int>',
+  'int[]': 'vector<int>',
+  'string[]': 'vector<string>',
+  'boolean[]': 'vector<bool>',
+  'number[][]': 'vector<vector<int>>',
+  'string[][]': 'vector<vector<string>>',
+  'boolean[][]': 'vector<vector<bool>>'
+};
+
+  const testCaseBlocks = testCases.map((tc, idx) => {
+    const rawInput = tc.input !== undefined ? tc.input : tc;
+    
+    const paramInits = parameters.map((p, i) => {
+      const pName = p.name || `param_${i}`;
+      const val = (typeof rawInput === 'object' && rawInput !== null && rawInput[pName] !== undefined) ? rawInput[pName] : (Array.isArray(rawInput) ? rawInput[i] : rawInput);
+      const rawType = (p.type || 'number').toLowerCase();
+      let cppType = 'int';
+      if (rawType === 'number' || rawType === 'int') cppType = 'int';
+      else if (rawType === 'float' || rawType === 'double') cppType = 'double';
+      else if (rawType === 'boolean' || rawType === 'bool') cppType = 'bool';
+      else if (rawType === 'string' || rawType === 'str') cppType = 'string';
+      else if (rawType === 'number[]' || rawType === 'int[]') cppType = 'vector<int>';
+      else if (rawType === 'string[]' || rawType === 'str[]') cppType = 'vector<string>';
+      else if (rawType === 'boolean[]' || rawType === 'bool[]') cppType = 'vector<bool>';
+      else if (rawType === 'number[][]' || rawType === 'int[][]') cppType = 'vector<vector<int>>';
+      else if (rawType === 'string[][]' || rawType === 'str[][]') cppType = 'vector<vector<string>>';
+      else if (rawType.includes('listnode')) cppType = 'ListNode*';
+      else if (rawType.includes('treenode')) cppType = 'TreeNode*';
+      else if (rawType.includes('graph')) cppType = 'Node*';
+
+      return `${cppType} tc_${idx}_${pName} = ${formatCppLiteral(val, p.type)};`;
+    }).join('\n        ');
+
+    const argList = parameters.map(p => `tc_${idx}_${p.name || ''}`).join(', ');
+
+    let execAndSerialize = '';
+    if (inPlaceMutation) {
+      const targetParam = parameters.find(p => p.name === mutatedParameter) || parameters[0];
+      const targetType = targetParam ? targetParam.type : 'number[]';
+      const serializer = getCppSerializerCall(`tc_${idx}_${mutatedParameter}`, targetType);
+      execAndSerialize = `solution.${functionName}(${argList});\n        string out_str = ${serializer};`;
+    } else {
+      const serializer = getCppSerializerCall('res', returnType);
+      execAndSerialize = `auto res = solution.${functionName}(${argList});\n        string out_str = ${serializer};`;
+    }
+
+    return `// Test Case ${idx}
+        {
+            ${paramInits}
+            ${execAndSerialize}
+            if (${idx} > 0) cout << ",";
+            cout << "{\\"testCaseIndex\\":${idx},\\"output\\":" << out_str << "}";
+        }`;
+  }).join('\n\n        ');
 
   return `#include <iostream>
 #include <vector>
@@ -74,7 +185,7 @@ string escape_json_string(const string& s) {
     ostringstream oss;
     oss << '"';
     for (char c : s) {
-        if (c == '"') oss << "\\\\\\"";
+        if (c == '"') oss << "\\\\\\\"";
         else if (c == '\\\\') oss << "\\\\\\\\";
         else if (c == '\\b') oss << "\\\\b";
         else if (c == '\\f') oss << "\\\\f";
@@ -246,6 +357,8 @@ string serialize_graph_node(Node* node) {
     return oss.str();
 }
 
+${validationHelpersCode}
+
 // ==========================================
 // 3. INJECTED STUDENT SOLUTION
 // ==========================================
@@ -257,8 +370,9 @@ ${studentCode}
 int main() {
     try {
         Solution solution;
-        // Output transport envelope
-        cout << "{\\"status\\":\\"SUCCESS\\",\\"results\\":[]}" << endl;
+        cout << "{\\"status\\":\\"SUCCESS\\",\\"results\\":[" ;
+        ${testCaseBlocks}
+        cout << "]}" << endl;
     } catch (const exception& e) {
         cout << "{\\"status\\":\\"RUNTIME_ERROR\\",\\"testCaseIndex\\":0,\\"errorType\\":\\"std::exception\\",\\"message\\":" << escape_json_string(e.what()) << "}" << endl;
     }

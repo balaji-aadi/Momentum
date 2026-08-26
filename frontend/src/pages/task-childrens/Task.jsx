@@ -226,6 +226,21 @@ const hasAdditionalNotes = (notes) => {
   return decoded.length > 0;
 };
 
+const isLeetCodeEligible = (task) => {
+  if (!task) return false;
+  const projectKey = (typeof task.projectName === 'object' ? task.projectName?.key : '') || '';
+  const projectNameStr = (typeof task.projectName === 'object' ? task.projectName?.name : String(task.projectName || '')) || '';
+  const taskIdStr = task.taskId || '';
+  const enableSetting = typeof task.projectName === 'object' ? task.projectName?.settings?.enableLeetCodeSearch : false;
+
+  return (
+    enableSetting === true ||
+    projectKey.toUpperCase().includes('DSA') ||
+    projectNameStr.toUpperCase().includes('DSA') ||
+    taskIdStr.toUpperCase().startsWith('DSA')
+  );
+};
+
 const Task = ({ key, task, index, handleClick, onReleaseHold }) => {
   const { currentUser } = useSelector((state) => state.store);
   const [showCodingModal, setShowCodingModal] = useState(false);
@@ -388,7 +403,7 @@ const Task = ({ key, task, index, handleClick, onReleaseHold }) => {
                       </button>
                     )}
                     {/* LeetCode Search Icon - Child tasks only */}
-                    {task.parentTask && task.projectName?.settings?.enableLeetCodeSearch && (
+                    {task.parentTask && isLeetCodeEligible(task) && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();

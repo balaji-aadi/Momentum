@@ -378,7 +378,8 @@ const PROBLEMS_DATA = [
     executionProfile: {
       runtimeType: "FUNCTION",
       outputSerializer: "RandomListSerializer",
-      comparator: "ExactMatch"
+      comparator: "ExactMatch",
+      semanticValidator: "DeepCopyValidator"
     },
     visibleTestCases: [
       { input: { head: [[7, null], [13, 0], [11, 4], [10, 2], [1, 0]] }, expectedOutput: [[7, null], [13, 0], [11, 4], [10, 2], [1, 0]], order: 1 }
@@ -419,7 +420,8 @@ const PROBLEMS_DATA = [
     executionProfile: {
       runtimeType: "FUNCTION",
       outputSerializer: "GraphNodeSerializer",
-      comparator: "GraphMatch"
+      comparator: "GraphMatch",
+      semanticValidator: "DeepCopyValidator"
     },
     visibleTestCases: [
       { input: { node: [[2, 4], [1, 3], [2, 4], [1, 3]] }, expectedOutput: [[2, 4], [1, 3], [2, 4], [1, 3]], order: 1 }
@@ -470,6 +472,249 @@ const PROBLEMS_DATA = [
     hiddenTestCases: [
       { input: { s: "cbaebabacd", words: ["abc", "cba"], k: 3 }, expectedOutput: [0, 6], executionOrder: 1 },
       { input: { s: "abab", words: ["ab", "ba"], k: 2 }, expectedOutput: [0, 1, 2], executionOrder: 2 }
+    ]
+  },
+  {
+    problemCode: "DSA-011",
+    title: "Factorial",
+    slug: "factorial",
+    difficulty: "Easy",
+    status: "Published",
+    topics: ["Recursion"],
+    companies: ["Google", "Amazon"],
+    pattern: "Recursion",
+    descriptionMarkdown: `Given a non-negative integer \`n\`, compute and return its **factorial** (\`n!\`) using **recursion**.
+
+The factorial of a non-negative integer \`n\` is defined as:
+- \`0! = 1\`
+- \`n! = n * (n - 1)!\` for \`n > 0\`.`,
+    examples: [
+      { input: "n = 5", output: "120", explanation: "5! = 5 * 4 * 3 * 2 * 1 = 120", order: 1 },
+      { input: "n = 0", output: "1", explanation: "0! = 1", order: 2 }
+    ],
+    constraints: [
+      "0 <= n <= 12"
+    ],
+    hints: [
+      "Base case: If n === 0 or n === 1, return 1.",
+      "Recursive step: Return n * factorial(n - 1)."
+    ],
+    functionDefinition: {
+      functionName: "factorial",
+      parameters: [
+        { name: "n", type: "number", required: true }
+      ],
+      returnType: "number"
+    },
+    executionProfile: {
+      runtimeType: "FUNCTION",
+      outputSerializer: "PrimitiveSerializer",
+      comparator: "ExactMatch"
+    },
+    visibleTestCases: [
+      { input: { n: 5 }, expectedOutput: 120, order: 1 },
+      { input: { n: 0 }, expectedOutput: 1, order: 2 }
+    ],
+    hiddenTestCases: [
+      { input: { n: 1 }, expectedOutput: 1, executionOrder: 1 },
+      { input: { n: 3 }, expectedOutput: 6, executionOrder: 2 },
+      { input: { n: 7 }, expectedOutput: 5040, executionOrder: 3 },
+      { input: { n: 10 }, expectedOutput: 3628800, executionOrder: 4 },
+      { input: { n: 12 }, expectedOutput: 479001600, executionOrder: 5 }
+    ]
+  },
+  {
+    problemCode: "DSA-012",
+    title: "Fibonacci",
+    slug: "fibonacci",
+    difficulty: "Easy",
+    status: "Published",
+    topics: ["Recursion"],
+    companies: ["Google", "Amazon", "Meta"],
+    pattern: "Recursion",
+    descriptionMarkdown: `The **Fibonacci numbers**, commonly denoted \`f(n)\`, form a sequence called the **Fibonacci sequence**, such that each number is the sum of the two preceding ones, starting from \`0\` and \`1\`. That is:
+
+- \`f(0) = 0\`
+- \`f(1) = 1\`
+- \`f(n) = f(n - 1) + f(n - 2)\`, for \`n > 1\`.
+
+Given \`n\`, calculate \`f(n)\` using **recursion**.`,
+    examples: [
+      { input: "n = 2", output: "1", explanation: "f(2) = f(1) + f(0) = 1 + 0 = 1", order: 1 },
+      { input: "n = 4", output: "3", explanation: "f(4) = f(3) + f(2) = 2 + 1 = 3", order: 2 }
+    ],
+    constraints: [
+      "0 <= n <= 30"
+    ],
+    hints: [
+      "Base cases: n = 0 returns 0, n = 1 returns 1.",
+      "Recursive relation: fib(n - 1) + fib(n - 2)."
+    ],
+    functionDefinition: {
+      functionName: "fib",
+      parameters: [
+        { name: "n", type: "number", required: true }
+      ],
+      returnType: "number"
+    },
+    executionProfile: {
+      runtimeType: "FUNCTION",
+      outputSerializer: "PrimitiveSerializer",
+      comparator: "ExactMatch"
+    },
+    visibleTestCases: [
+      { input: { n: 2 }, expectedOutput: 1, order: 1 },
+      { input: { n: 3 }, expectedOutput: 2, order: 2 }
+    ],
+    hiddenTestCases: [
+      { input: { n: 0 }, expectedOutput: 0, executionOrder: 1 },
+      { input: { n: 1 }, expectedOutput: 1, executionOrder: 2 },
+      { input: { n: 6 }, expectedOutput: 8, executionOrder: 3 },
+      { input: { n: 10 }, expectedOutput: 55, executionOrder: 4 },
+      { input: { n: 20 }, expectedOutput: 6765, executionOrder: 5 },
+      { input: { n: 30 }, expectedOutput: 832040, executionOrder: 6 }
+    ]
+  },
+  {
+    problemCode: "DSA-013",
+    title: "Power Function",
+    slug: "power-function",
+    difficulty: "Medium",
+    status: "Published",
+    topics: ["Recursion"],
+    companies: ["Google", "Meta", "Microsoft"],
+    pattern: "Divide and Conquer",
+    descriptionMarkdown: `Implement \`x^n\`, which calculates \`x\` raised to the power \`n\` (\`x^n\`) using divide-and-conquer **recursion** (**binary exponentiation**).`,
+    examples: [
+      { input: "x = 2.00000, n = 10", output: "1024.00000", explanation: "2^10 = 1024", order: 1 },
+      { input: "x = 2.10000, n = 3", output: "9.26100", explanation: "2.1^3 = 9.261", order: 2 }
+    ],
+    constraints: [
+      "-100.0 < x < 100.0",
+      "-2^31 <= n <= 2^31 - 1",
+      "Either x is not zero or n > 0."
+    ],
+    hints: [
+      "Use divide & conquer recursion: x^n = (x^(n/2))^2 for even n.",
+      "For odd n: x^n = x * x^(n - 1).",
+      "For negative n: x^(-n) = 1 / (x^n)."
+    ],
+    functionDefinition: {
+      functionName: "myPow",
+      parameters: [
+        { name: "x", type: "number", required: true },
+        { name: "n", type: "number", required: true }
+      ],
+      returnType: "number"
+    },
+    executionProfile: {
+      runtimeType: "FUNCTION",
+      outputSerializer: "PrimitiveSerializer",
+      comparator: "FloatToleranceMatch"
+    },
+    visibleTestCases: [
+      { input: { x: 2.0, n: 10 }, expectedOutput: 1024.0, order: 1 },
+      { input: { x: 2.1, n: 3 }, expectedOutput: 9.261, order: 2 }
+    ],
+    hiddenTestCases: [
+      { input: { x: 2.0, n: -2 }, expectedOutput: 0.25, executionOrder: 1 },
+      { input: { x: 1.0, n: 2147483647 }, expectedOutput: 1.0, executionOrder: 2 },
+      { input: { x: -2.0, n: 2 }, expectedOutput: 4.0, executionOrder: 3 },
+      { input: { x: -2.0, n: 3 }, expectedOutput: -8.0, executionOrder: 4 },
+      { input: { x: 0.5, n: 0 }, expectedOutput: 1.0, executionOrder: 5 }
+    ]
+  },
+  {
+    problemCode: "DSA-014",
+    title: "Sum of Array",
+    slug: "sum-of-array",
+    difficulty: "Easy",
+    status: "Published",
+    topics: ["Recursion", "Array"],
+    companies: ["Amazon", "Microsoft"],
+    pattern: "Recursion",
+    descriptionMarkdown: `Given an array of integers \`nums\`, calculate the sum of all elements using **recursion**.`,
+    examples: [
+      { input: "nums = [1, 2, 3, 4, 5]", output: "15", explanation: "1 + 2 + 3 + 4 + 5 = 15", order: 1 },
+      { input: "nums = [10, -2, 5]", output: "13", explanation: "10 + (-2) + 5 = 13", order: 2 }
+    ],
+    constraints: [
+      "0 <= nums.length <= 1000",
+      "-10^4 <= nums[i] <= 10^4"
+    ],
+    hints: [
+      "Base case: If nums is empty or index exceeds bounds, return 0.",
+      "Recursive relation: Return nums[idx] + sumHelper(nums, idx + 1)."
+    ],
+    functionDefinition: {
+      functionName: "arraySum",
+      parameters: [
+        { name: "nums", type: "number[]", required: true }
+      ],
+      returnType: "number"
+    },
+    executionProfile: {
+      runtimeType: "FUNCTION",
+      outputSerializer: "PrimitiveSerializer",
+      comparator: "ExactMatch"
+    },
+    visibleTestCases: [
+      { input: { nums: [1, 2, 3, 4, 5] }, expectedOutput: 15, order: 1 },
+      { input: { nums: [10, -2, 5] }, expectedOutput: 13, order: 2 }
+    ],
+    hiddenTestCases: [
+      { input: { nums: [] }, expectedOutput: 0, executionOrder: 1 },
+      { input: { nums: [7] }, expectedOutput: 7, executionOrder: 2 },
+      { input: { nums: [-5, -10, -15] }, expectedOutput: -30, executionOrder: 3 },
+      { input: { nums: [100, 200, 300, 400] }, expectedOutput: 1000, executionOrder: 4 },
+      { input: { nums: [0, 0, 0, 0] }, expectedOutput: 0, executionOrder: 5 }
+    ]
+  },
+  {
+    problemCode: "DSA-015",
+    title: "Reverse String",
+    slug: "reverse-string",
+    difficulty: "Easy",
+    status: "Published",
+    topics: ["Recursion", "String"],
+    companies: ["Amazon", "Google"],
+    pattern: "Recursion",
+    descriptionMarkdown: `Write a function that reverses an array of characters \`s\` in-place using **recursion** with O(1) extra memory.`,
+    examples: [
+      { input: 's = ["h","e","l","l","o"]', output: '["o","l","l","e","h"]', explanation: "Reverse of s in-place", order: 1 },
+      { input: 's = ["H","a","n","n","a","h"]', output: '["h","a","n","n","a","H"]', explanation: "Reverse of s in-place", order: 2 }
+    ],
+    constraints: [
+      "1 <= s.length <= 10^5",
+      "s[i] is a printable ascii character."
+    ],
+    hints: [
+      "Use two pointers (left and right) or recursion to swap elements in-place.",
+      "Base case: left >= right, return."
+    ],
+    functionDefinition: {
+      functionName: "reverseString",
+      parameters: [
+        { name: "s", type: "string[]", required: true }
+      ],
+      returnType: "void"
+    },
+    executionProfile: {
+      runtimeType: "FUNCTION",
+      outputSerializer: "ArraySerializer",
+      comparator: "ExactMatch",
+      inPlaceMutation: true,
+      mutatedParameter: "s"
+    },
+    visibleTestCases: [
+      { input: { s: ["h", "e", "l", "l", "o"] }, expectedOutput: ["o", "l", "l", "e", "h"], order: 1 },
+      { input: { s: ["H", "a", "n", "n", "a", "h"] }, expectedOutput: ["h", "a", "n", "n", "a", "H"], order: 2 }
+    ],
+    hiddenTestCases: [
+      { input: { s: ["a"] }, expectedOutput: ["a"], executionOrder: 1 },
+      { input: { s: ["r", "a", "c", "e", "c", "a", "r"] }, expectedOutput: ["r", "a", "c", "e", "c", "a", "r"], executionOrder: 2 },
+      { input: { s: ["R", "e", "c", "u", "r", "s", "i", "o", "n"] }, expectedOutput: ["n", "o", "i", "s", "r", "u", "c", "e", "R"], executionOrder: 3 },
+      { input: { s: ["1", "2", "3", "4", "5"] }, expectedOutput: ["5", "4", "3", "2", "1"], executionOrder: 4 }
     ]
   }
 ];

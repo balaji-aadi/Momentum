@@ -1,0 +1,24 @@
+[
+  {
+    "_id": {
+      "$oid": "6a0826199bc3fbe111c94392"
+    },
+    "subscriptionType": "free",
+    "createdAt": {
+      "$date": "2026-05-16T08:08:57.656Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-17T08:55:01.872Z"
+    },
+    "__v": 0,
+    "subscriptionEndDate": {
+      "$date": "2027-05-16T08:32:17.857Z"
+    },
+    "subscriptionStartDate": {
+      "$date": "2026-05-16T08:32:17.857Z"
+    },
+    "updatedBy": {
+      "$oid": "6993047f16e85ff3e4efd9a3"
+    }
+  }
+]

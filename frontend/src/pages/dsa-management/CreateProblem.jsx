@@ -111,12 +111,13 @@ export default function CreateProblem() {
           const prob = res.data.data;
           setFormData({
             ...prob,
-            companies: (prob.companies || []).map(c => typeof c === 'object' ? c._id : c),
-            topics: (prob.topics || []).map(t => typeof t === 'object' ? t._id : t),
-            pattern: typeof prob.pattern === 'object' ? prob.pattern._id : prob.pattern || ''
+            companies: (prob.companies || []).map(c => (c && typeof c === 'object') ? c._id : c).filter(Boolean),
+            topics: (prob.topics || []).map(t => (t && typeof t === 'object') ? t._id : t).filter(Boolean),
+            pattern: (prob.pattern && typeof prob.pattern === 'object') ? prob.pattern._id : (prob.pattern || '')
           });
         }
       } catch (err) {
+        console.error("Error loading problem data:", err);
         toast.error("Failed to load existing problem data");
       } finally {
         setLoading(false);

@@ -3,6 +3,7 @@ import { generateJavaScriptDriverHarness } from './JavaScriptDriverGenerator.js'
 import { generateCppDriverHarness } from './CppDriverGenerator.js';
 import { generateJavaDriverHarness } from './JavaDriverGenerator.js';
 import { UnsupportedLanguageError } from './DriverErrors.js';
+import { SemanticValidatorRegistry } from '../validators/SemanticValidatorRegistry.js';
 
 export {
   generatePythonDriverHarness,
@@ -19,11 +20,14 @@ export class DriverGeneratorService {
    * @param {string} language Target language ('python', 'javascript', 'cpp', 'java')
    * @param {string} studentCode Student solution source code
    * @param {Object} functionDefinition Function signature metadata (name, parameters, returnType)
-   * @param {Object} executionProfile Execution options (inPlaceMutation, mutatedParameter)
+   * @param {Object} executionProfile Execution options (inPlaceMutation, mutatedParameter, semanticValidator)
    * @param {Array} testCases Array of testcases with input IRs
    * @returns {string} Complete, self-contained driver source code
    */
   static generateDriverHarness(language, studentCode, functionDefinition, executionProfile = {}, testCases = []) {
+    if (executionProfile?.semanticValidator) {
+      SemanticValidatorRegistry.assertValid(executionProfile.semanticValidator);
+    }
     const cleanLang = (language || '').toLowerCase().trim();
 
     switch (cleanLang) {
