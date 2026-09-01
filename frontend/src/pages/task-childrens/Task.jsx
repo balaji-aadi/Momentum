@@ -488,7 +488,7 @@ const Task = ({ key, task, index, handleClick, onReleaseHold }) => {
                   </span>
                   <span className={`flex items-center gap-1 ${task.status === 'hold' ? 'text-slate-300 dark:text-slate-600 line-through' : ''}`} title={task.status === 'hold' ? "Inactive - Task on Hold" : "Due Date"}>
                     <FaCalendar size={12} className={task.status === 'hold' ? 'text-slate-300 dark:text-slate-600' : 'text-slate-400'} />
-                    {task?.taskDueDate ? moment(task.taskDueDate).format("MMM DD") : "Not scheduled"}
+                    {task?.taskDueDate ? moment(task.taskDueDate).format("MMM DD") : (task?.sprint?.endDate ? moment(task.sprint.endDate).format("MMM DD") : "Not scheduled")}
                   </span>
                 </div>
 

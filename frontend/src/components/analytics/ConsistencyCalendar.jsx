@@ -85,23 +85,45 @@ const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false, pr
                     const revisions = item.metrics?.revisionsCount || 0;
 
                     const hasWork = tasks > 0 || hours > 0 || accLogs > 0 || revisions > 0;
-                    const isRevisionOnly = tasks === 0 && revisions > 0;
-                    
-                    // Intensity scale for Github-style heatmap:
+                    const isRevisionOnly = hasWork && tasks === 0 && accLogs === 0 && revisions > 0;
+                    const isMixed = hasWork && (tasks > 0 || accLogs > 0) && revisions > 0;
+                    const isActiveOnly = hasWork && revisions === 0 && (tasks > 0 || hours > 0 || accLogs > 0);
+
+                    let cellStyle = {};
                     let bgClass = 'bg-white/5 text-slate-500'; // Idle
-                    if (item.isFuture) bgClass = 'bg-transparent text-slate-800 opacity-20'; // Future
-                    else if (hasWork) {
+
+                    if (item.isFuture) {
+                        bgClass = 'bg-transparent text-slate-800 opacity-20';
+                    } else if (hasWork) {
                         if (isRevisionOnly) {
-                            // Orange / Amber theme for Revision-Only Days!
-                            bgClass = 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/30 border border-amber-400/50';
-                        } else if (tasks >= 10 || hours >= 8 || accLogs >= 5) {
-                            bgClass = 'bg-emerald-400 text-white shadow-lg shadow-emerald-400/30';
-                        } else if (tasks >= 5 || hours >= 4 || accLogs >= 3) {
-                            bgClass = 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20';
-                        } else if (tasks >= 2 || hours >= 2 || accLogs >= 2) {
-                            bgClass = 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20';
+                            // 100% Revision Only - Signature #E34234
+                            cellStyle = {
+                                backgroundColor: '#E34234',
+                                boxShadow: '0 4px 12px 0 rgba(227, 66, 52, 0.35)',
+                                border: '1px solid rgba(227, 66, 52, 0.6)'
+                            };
+                            bgClass = 'text-white font-black';
+                        } else if (isMixed) {
+                            // Dynamic proportional split according to ratio of revisions vs tasks
+                            const totalCount = revisions + tasks;
+                            const revPercent = Math.max(15, Math.min(85, Math.round((revisions / totalCount) * 100)));
+                            cellStyle = {
+                                background: `linear-gradient(135deg, #E34234 0%, #E34234 ${revPercent}%, #10b981 ${revPercent}%, #10b981 100%)`,
+                                boxShadow: '0 4px 12px 0 rgba(227, 66, 52, 0.25), 0 4px 12px 0 rgba(16, 185, 129, 0.25)',
+                                border: '1px solid rgba(255, 255, 255, 0.25)'
+                            };
+                            bgClass = 'text-white font-black drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]';
                         } else {
-                            bgClass = 'bg-emerald-800 text-slate-200';
+                            // 100% Active Work (Green shades based on intensity)
+                            if (tasks >= 10 || hours >= 8 || accLogs >= 5) {
+                                bgClass = 'bg-emerald-400 text-white shadow-lg shadow-emerald-400/30 border border-emerald-300/40';
+                            } else if (tasks >= 5 || hours >= 4 || accLogs >= 3) {
+                                bgClass = 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 border border-emerald-400/30';
+                            } else if (tasks >= 2 || hours >= 2 || accLogs >= 2) {
+                                bgClass = 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 border border-emerald-500/20';
+                            } else {
+                                bgClass = 'bg-emerald-700 text-slate-100 border border-emerald-600/20';
+                            }
                         }
                     }
 
@@ -113,6 +135,7 @@ const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false, pr
                                     setSelectedDateModal(item.date);
                                 }
                             }}
+                            style={cellStyle}
                             className={`aspect-square flex items-center justify-center rounded-lg relative text-[10px] font-bold group/day transition-all
                                 ${item.padding ? 'opacity-0 pointer-events-none' : item.isFuture ? 'cursor-default' : 'hover:scale-105 cursor-pointer active:scale-95'}
                                 ${item.isToday ? 'ring-2 ring-indigo-500 ring-offset-1 ring-offset-[#1a1a1a]' : ''}
@@ -125,12 +148,23 @@ const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false, pr
                                     {item.day}
                                     {/* Hover Details */}
                                     {hasWork && (
-                                        <div className={`absolute opacity-0 group-hover/day:opacity-100 bottom-full mb-2 w-32 bg-black/95 p-2 rounded-xl text-[8px] font-black z-[100] pointer-events-none shadow-2xl border border-white/10 transition-all duration-200
+                                        <div className={`absolute opacity-0 group-hover/day:opacity-100 bottom-full mb-2 w-36 bg-black/95 p-2.5 rounded-xl text-[8px] font-black z-[100] pointer-events-none shadow-2xl border border-white/10 transition-all duration-200
                                             ${idx % 7 === 6 ? 'right-0' : idx % 7 === 0 ? 'left-0' : 'left-1/2 -translate-x-1/2'}
                                         `}>
                                             {isRevisionOnly && (
-                                                <div className="text-center py-0.5 text-amber-400 font-extrabold uppercase tracking-wider text-[7px] border-b border-white/10 mb-1">
+                                                <div className="text-center py-0.5 text-[#E34234] font-extrabold uppercase tracking-wider text-[7px] border-b border-white/10 mb-1">
                                                     Revision Only
+                                                </div>
+                                            )}
+                                            {isMixed && (
+                                                <div className="text-center py-0.5 text-amber-300 font-extrabold uppercase tracking-wider text-[7px] border-b border-white/10 mb-1 flex items-center justify-center gap-1">
+                                                    <span>Dual Activity</span>
+                                                    <span className="text-slate-400 font-normal">({revisions}R / {tasks}T)</span>
+                                                </div>
+                                            )}
+                                            {isActiveOnly && (
+                                                <div className="text-center py-0.5 text-emerald-400 font-extrabold uppercase tracking-wider text-[7px] border-b border-white/10 mb-1">
+                                                    Active Work
                                                 </div>
                                             )}
                                             <div className="flex justify-between items-center mb-0.5">
@@ -144,7 +178,7 @@ const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false, pr
                                             {revisions > 0 && (
                                                 <div className="flex justify-between items-center">
                                                     <span className="text-slate-400 tracking-tighter uppercase font-bold">Revisions</span>
-                                                    <span className="text-amber-400 font-black">{revisions}</span>
+                                                    <span className="text-[#E34234] font-black">{revisions}</span>
                                                 </div>
                                             )}
                                             <div className={`absolute top-full -mt-1 border-4 border-transparent border-t-black
@@ -160,14 +194,18 @@ const ConsistencyCalendar = ({ stats, period = 'monthly', isEmbedded = false, pr
             </div>
 
             {/* Compact Legend */}
-            <div className="mt-3 pt-2.5 border-t border-white/5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] font-bold text-slate-400 whitespace-nowrap">
+            <div className="mt-3 pt-2.5 border-t border-white/5 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-[9px] font-bold text-slate-400 whitespace-nowrap">
                 <div className="flex items-center gap-1.5 shrink-0">
                     <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></div>
                     <span>Active Work</span>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
-                    <div className="w-2 h-2 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50"></div>
-                    <span>Revision Only</span>
+                    <div className="w-2 h-2 rounded-full bg-[#E34234] shadow-sm shadow-[#E34234]/50"></div>
+                    <span>Revision</span>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="w-2.5 h-2.5 rounded-md bg-gradient-to-br from-[#E34234] to-emerald-500 border border-white/20 shadow-sm"></div>
+                    <span>Dual Split</span>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
                     <div className="w-2 h-2 rounded-full bg-white/20"></div>

@@ -50,7 +50,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(false);
     const { currentUser, activeBranch, globalSettings, dailyRevision, isSidebarCollapsed } = useSelector((state) => state.store);
-    const isRevisionLocked = dailyRevision && dailyRevision.isEligible === true && dailyRevision.questions?.length > 0 && dailyRevision.isStarted && !dailyRevision.isCompleted;
+    const isRevisionLocked = dailyRevision && dailyRevision.isEligible === true && dailyRevision.questions?.length > 0 && !dailyRevision.isCompleted;
     const noBranchLocked = !activeBranch;
 
     const { slug } = useParams();
@@ -213,7 +213,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                         <div className="space-y-0.5">
                             {topMenuItems.map((item, idx) => {
                                 const isModulesTab = item.label === 'Modules';
-                                const itemLocked = (!isModulesTab && noBranchLocked) || (isModulesTab ? false : isRevisionLocked);
+                                const itemLocked = noBranchLocked || isRevisionLocked;
 
                                 return (
                                     <NavLink
@@ -226,7 +226,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                                 toast.error("Please select a Module to enter the workspace!");
                                                 return;
                                             }
-                                            if (isRevisionLocked && !isModulesTab) {
+                                            if (isRevisionLocked) {
                                                 e.preventDefault();
                                                 toast.error("Complete your Daily Revision to unlock other tabs!");
                                                 return;
@@ -464,9 +464,9 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                 </p>
                                 {!hiddenRoles.includes(currentUser?.userRole?.name?.toLowerCase()) && (
                                     <button
-                                        className={`w-5 h-5 rounded-md text-slate-400 hover:text-primary hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer ${noBranchLocked ? 'opacity-40 pointer-events-none' : ''}`}
+                                        className={`w-5 h-5 rounded-md text-slate-400 hover:text-primary hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer ${noBranchLocked || isRevisionLocked ? 'opacity-40 pointer-events-none' : ''}`}
                                         onClick={() => {
-                                            if (noBranchLocked) return;
+                                            if (noBranchLocked || isRevisionLocked) return;
                                             navigate('/arenas/create-project');
                                             if (setIsOpen) setIsOpen(false);
                                         }}

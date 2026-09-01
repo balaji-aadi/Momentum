@@ -59,8 +59,8 @@ const projectUserTaskProgress = async (tasks, userId, user = null) => {
     if (userProgress) {
       taskObj.status = userProgress.status || "todo";
       taskObj.progress = userProgress.progress ?? (userProgress.status === "done" ? 100 : 0);
-      taskObj.taskStartDate = userProgress.taskStartDate || null;
-      taskObj.taskDueDate = userProgress.taskDueDate || null;
+      taskObj.taskStartDate = userProgress.taskStartDate || taskObj.taskStartDate || null;
+      taskObj.taskDueDate = userProgress.taskDueDate || taskObj.taskDueDate || null;
       taskObj.holdDate = userProgress.holdDate || null;
       taskObj.completedAt = userProgress.completedAt || null;
       taskObj.activityLogs = userProgress.activityLogs || [];
@@ -76,11 +76,11 @@ const projectUserTaskProgress = async (tasks, userId, user = null) => {
       taskObj.activityLogs = taskObj.activityLogs || [];
       taskObj.revisionLogs = taskObj.revisionLogs || [];
     } else {
-      // For Non-Admin: fresh, clean execution state
+      // For Non-Admin: fresh, clean execution state for status/progress, BUT keep canonical dates from master Task
       taskObj.status = "todo";
       taskObj.progress = 0;
-      taskObj.taskStartDate = null;
-      taskObj.taskDueDate = null;
+      taskObj.taskStartDate = taskObj.taskStartDate || null;
+      taskObj.taskDueDate = taskObj.taskDueDate || null;
       taskObj.holdDate = null;
       taskObj.completedAt = null;
       taskObj.activityLogs = [];
@@ -96,8 +96,8 @@ const projectUserTaskProgress = async (tasks, userId, user = null) => {
           taskObj.parentTask = {
             ...taskObj.parentTask,
             status: parentProgress.status || "todo",
-            taskStartDate: parentProgress.taskStartDate || null,
-            taskDueDate: parentProgress.taskDueDate || null,
+            taskStartDate: parentProgress.taskStartDate || taskObj.parentTask.taskStartDate || null,
+            taskDueDate: parentProgress.taskDueDate || taskObj.parentTask.taskDueDate || null,
             holdDate: parentProgress.holdDate || null
           };
         } else if (isAdmin) {
@@ -112,8 +112,8 @@ const projectUserTaskProgress = async (tasks, userId, user = null) => {
           taskObj.parentTask = {
             ...taskObj.parentTask,
             status: "todo",
-            taskStartDate: null,
-            taskDueDate: null,
+            taskStartDate: taskObj.parentTask.taskStartDate || null,
+            taskDueDate: taskObj.parentTask.taskDueDate || null,
             holdDate: null
           };
         }
@@ -409,6 +409,8 @@ tc.updateTask = asyncHandler(async (req, res) => {
         branchId: existingTask.branchId || (req.branchId ? new mongoose.Types.ObjectId(req.branchId) : undefined),
         status: "todo",
         progress: 0,
+        taskStartDate: existingTask.taskStartDate || null,
+        taskDueDate: existingTask.taskDueDate || null,
         activityLogs: []
       });
     }
@@ -490,8 +492,8 @@ tc.updateTask = asyncHandler(async (req, res) => {
       ...freshMasterTask.toObject(),
       status: userProgress.status,
       progress: userProgress.progress,
-      taskStartDate: userProgress.taskStartDate,
-      taskDueDate: userProgress.taskDueDate,
+      taskStartDate: userProgress.taskStartDate || freshMasterTask.taskStartDate || null,
+      taskDueDate: userProgress.taskDueDate || freshMasterTask.taskDueDate || null,
       holdDate: userProgress.holdDate,
       completedAt: userProgress.completedAt,
       activityLogs: userProgress.activityLogs || [],
@@ -547,8 +549,8 @@ tc.getTaskById = asyncHandler(async (req, res) => {
     if (userProgress) {
       taskObj.status = userProgress.status || "todo";
       taskObj.progress = userProgress.progress ?? (userProgress.status === "done" ? 100 : 0);
-      taskObj.taskStartDate = userProgress.taskStartDate || null;
-      taskObj.taskDueDate = userProgress.taskDueDate || null;
+      taskObj.taskStartDate = userProgress.taskStartDate || taskObj.taskStartDate || null;
+      taskObj.taskDueDate = userProgress.taskDueDate || taskObj.taskDueDate || null;
       taskObj.holdDate = userProgress.holdDate || null;
       taskObj.completedAt = userProgress.completedAt || null;
       taskObj.activityLogs = userProgress.activityLogs || [];
@@ -565,8 +567,8 @@ tc.getTaskById = asyncHandler(async (req, res) => {
     } else {
       taskObj.status = "todo";
       taskObj.progress = 0;
-      taskObj.taskStartDate = null;
-      taskObj.taskDueDate = null;
+      taskObj.taskStartDate = taskObj.taskStartDate || null;
+      taskObj.taskDueDate = taskObj.taskDueDate || null;
       taskObj.holdDate = null;
       taskObj.completedAt = null;
       taskObj.activityLogs = [];
@@ -582,8 +584,8 @@ tc.getTaskById = asyncHandler(async (req, res) => {
           taskObj.parentTask = {
             ...taskObj.parentTask,
             status: parentProgress.status || "todo",
-            taskStartDate: parentProgress.taskStartDate || null,
-            taskDueDate: parentProgress.taskDueDate || null,
+            taskStartDate: parentProgress.taskStartDate || taskObj.parentTask.taskStartDate || null,
+            taskDueDate: parentProgress.taskDueDate || taskObj.parentTask.taskDueDate || null,
             holdDate: parentProgress.holdDate || null
           };
         } else if (isAdmin) {
@@ -598,8 +600,8 @@ tc.getTaskById = asyncHandler(async (req, res) => {
           taskObj.parentTask = {
             ...taskObj.parentTask,
             status: "todo",
-            taskStartDate: null,
-            taskDueDate: null,
+            taskStartDate: taskObj.parentTask.taskStartDate || null,
+            taskDueDate: taskObj.parentTask.taskDueDate || null,
             holdDate: null
           };
         }
@@ -960,6 +962,8 @@ tc.updatetaskLog = asyncHandler(async (req, res) => {
         branchId: task.branchId || (req.branchId ? new mongoose.Types.ObjectId(req.branchId) : undefined),
         status: "todo",
         progress: 0,
+        taskStartDate: task.taskStartDate || null,
+        taskDueDate: task.taskDueDate || null,
         activityLogs: []
       });
     }
@@ -1003,8 +1007,8 @@ tc.updatetaskLog = asyncHandler(async (req, res) => {
       ...task.toObject(),
       status: userProgress.status,
       progress: userProgress.progress,
-      taskStartDate: userProgress.taskStartDate,
-      taskDueDate: userProgress.taskDueDate,
+      taskStartDate: userProgress.taskStartDate || task.taskStartDate || null,
+      taskDueDate: userProgress.taskDueDate || task.taskDueDate || null,
       holdDate: userProgress.holdDate,
       completedAt: userProgress.completedAt,
       activityLogs: userProgress.activityLogs || [],
@@ -1153,7 +1157,7 @@ tc.getallTasksfree = asyncHandler(async (req, res) => {
 // Add Revision
 tc.addRevision = asyncHandler(async (req, res) => {
   const { taskId } = req.params;
-  const { notes, revisionDate, timezoneOffset } = req.body;
+  const { notes, revisionDate, timezoneOffset, backlogStatus, reviseTomorrow } = req.body;
 
   if (!taskId) {
     return res.status(400).json(new ApiError(400, "Task ID is required"));
@@ -1171,20 +1175,96 @@ tc.addRevision = asyncHandler(async (req, res) => {
     revisedBy: userId
   };
 
+  const isBacklogRetry = backlogStatus === "backlog";
+
   // Record revision log in user execution progress
   if (userId) {
-    await UserTaskProgress.findOneAndUpdate(
-      { userId: userId, taskId: task._id },
-      {
-        $push: { revisionLogs: revisionLog },
-        $setOnInsert: {
-          status: "done",
-          projectName: task.projectName,
-          branchId: task.branchId
-        }
-      },
-      { upsert: true, new: true }
-    );
+    let userProgress = await UserTaskProgress.findOne({ userId: userId, taskId: task._id });
+    if (!userProgress) {
+      const targetStatus = isBacklogRetry ? "backlog" : "done";
+      const targetProgress = isBacklogRetry ? 0 : 100;
+      userProgress = new UserTaskProgress({
+        userId: userId,
+        taskId: task._id,
+        projectName: task.projectName,
+        branchId: task.branchId,
+        status: targetStatus,
+        progress: targetProgress,
+        completedAt: isBacklogRetry ? null : new Date(),
+        revisionLogs: [revisionLog],
+        activityLogs: [{
+          oldStatus: "todo",
+          currentStatus: targetStatus,
+          date: new Date(),
+          message: isBacklogRetry ? "Backlog reviewed & kept for tomorrow" : "Task completed via Daily Revision Protocol"
+        }]
+      });
+      await userProgress.save();
+    } else {
+      userProgress.revisionLogs.push(revisionLog);
+      if (!isBacklogRetry && userProgress.status !== "done") {
+        const oldStatus = userProgress.status;
+        userProgress.status = "done";
+        userProgress.progress = 100;
+        userProgress.completedAt = new Date();
+        userProgress.activityLogs.unshift({
+          oldStatus: oldStatus,
+          currentStatus: "done",
+          date: new Date(),
+          message: `Task completed via Daily Revision Protocol (${oldStatus} >>> done)`
+        });
+      } else if (isBacklogRetry && userProgress.status !== "backlog") {
+        const oldStatus = userProgress.status;
+        userProgress.status = "backlog";
+        userProgress.activityLogs.unshift({
+          oldStatus: oldStatus,
+          currentStatus: "backlog",
+          date: new Date(),
+          message: `Task kept in backlog via Daily Revision Protocol (${oldStatus} >>> backlog)`
+        });
+      }
+      await userProgress.save();
+    }
+
+    // If admin and master task update
+    const isAdmin = checkIsAdmin(req.user);
+    if (isAdmin) {
+      if (!isBacklogRetry && task.status !== "done") {
+        const oldStatus = task.status;
+        task.status = "done";
+        task.progress = 100;
+        task.completedAt = new Date();
+        task.activityLogs.unshift({
+          oldStatus: oldStatus,
+          currentStatus: "done",
+          date: new Date(),
+          message: `Task completed via Daily Revision Protocol (${oldStatus} >>> done)`
+        });
+        await task.save();
+      } else if (isBacklogRetry && task.status !== "backlog") {
+        const oldStatus = task.status;
+        task.status = "backlog";
+        task.activityLogs.unshift({
+          oldStatus: oldStatus,
+          currentStatus: "backlog",
+          date: new Date(),
+          message: `Task kept in backlog via Daily Revision Protocol (${oldStatus} >>> backlog)`
+        });
+        await task.save();
+      }
+    }
+
+    // Cascade progress updates if completed
+    if (!isBacklogRetry) {
+      try {
+        if (task.parentTask) await ProgressService.updateParentTaskProgress(task.parentTask);
+        if (task.milestone) await ProgressService.updateMilestoneProgress(task.milestone);
+        if (task.projectName) await ProgressService.updateProjectProgress(task.projectName);
+        if (task.sprint) await ProgressService.updateSprintProgress(task.sprint);
+      } catch (e) {
+        console.error("Error cascading progress on revision complete:", e);
+      }
+    }
   }
 
   // Check if this task is part of today's DailyRevision and mark it completed
@@ -1227,7 +1307,7 @@ tc.addRevision = asyncHandler(async (req, res) => {
           return res.status(400).json(new ApiError(400, `You must revise this question for at least 15 minutes! Please wait another ${remMins}m ${remSecs}s.`));
         }
 
-        // 4. Log progress and completion
+        // 4. Log progress and completion in DailyRevision
         dailyRev.completedQuestions.push(task._id);
 
         if (!dailyRev.questionLogs) dailyRev.questionLogs = [];
@@ -1235,12 +1315,24 @@ tc.addRevision = asyncHandler(async (req, res) => {
           taskId: task._id,
           completedAtTimeLeft: dailyRev.timeLeft,
           timeSpent: timeSpent,
-          notes: notes || ""
+          notes: notes || "",
+          backlogStatus: isBacklogRetry ? "backlog" : "done"
         });
+
+        // If user chose "See Tomorrow" (retry backlog), automatically pin it for tomorrow's session
+        if (isBacklogRetry || reviseTomorrow) {
+          if (!dailyRev.reviseTomorrowQuestions) dailyRev.reviseTomorrowQuestions = [];
+          const exists = dailyRev.reviseTomorrowQuestions.some(id => id.toString() === task._id.toString());
+          if (!exists) {
+            dailyRev.reviseTomorrowQuestions.push(task._id);
+          }
+        } else if (reviseTomorrow === false && dailyRev.reviseTomorrowQuestions) {
+          dailyRev.reviseTomorrowQuestions = dailyRev.reviseTomorrowQuestions.filter(id => id.toString() !== task._id.toString());
+        }
 
         dailyRev.currentQuestionStartTimeLeft = dailyRev.timeLeft;
 
-        // Create a persistent FocusSession for the completed revision
+        // Create a persistent FocusSession for the revision/backlog attempt
         const sessionDurationMins = Math.max(1, Math.round(timeSpent / 60));
         const focusSession = new FocusSession({
           user: req.user._id,
@@ -1252,7 +1344,7 @@ tc.addRevision = asyncHandler(async (req, res) => {
           task: task._id,
           taskName: task.taskName,
           taskIdString: task.taskId,
-          statusAtCompletion: "done",
+          statusAtCompletion: isBacklogRetry ? "backlog" : "done",
           completionState: "completed",
           branchId: dailyRev.branchId || task.branchId || null
         });
@@ -1670,6 +1762,102 @@ JSON Schema:
   }
 });
 
+const populateDailyRevQuery = (query) => {
+  return query
+    .populate({
+      path: "questions",
+      populate: [
+        { path: "projectName", select: "name key settings" },
+        { path: "parentTask", select: "taskName taskId" }
+      ]
+    })
+    .populate({
+      path: "completedQuestions",
+      populate: [
+        { path: "projectName", select: "name key settings" },
+        { path: "parentTask", select: "taskName taskId" }
+      ]
+    })
+    .populate({
+      path: "reviseTomorrowQuestions",
+      populate: [
+        { path: "projectName", select: "name key settings" },
+        { path: "parentTask", select: "taskName taskId" }
+      ]
+    });
+};
+
+const formatDailyRevisionResponse = async (dailyRev, user, eligibleBacklogTasks = null, completedCount = null, threshold = 50) => {
+  if (!dailyRev) return null;
+
+  let backlogTaskIds;
+  let backlogAvailable = false;
+  let totalBacklogCount = 0;
+  let totalRevisionCount = 0;
+
+  if (eligibleBacklogTasks) {
+    backlogTaskIds = new Set(eligibleBacklogTasks.map(t => t._id.toString()));
+    backlogAvailable = eligibleBacklogTasks.length > 0;
+    totalBacklogCount = eligibleBacklogTasks.length;
+  } else {
+    const projects = await Project.find({ key: { $in: ["DSA", "DSAP2"] } }).select("_id");
+    const projectIds = projects.map(p => p._id);
+    const childTasks = await Task.find({
+      projectName: { $in: projectIds },
+      parentTask: { $ne: null }
+    }).select("_id status taskDueDate").lean();
+    
+    const userProgress = await UserTaskProgress.find({
+      userId: user._id || user.id,
+      taskId: { $in: childTasks.map(t => t._id) }
+    }).select("taskId status taskDueDate").lean();
+    const progressMap = new Map(userProgress.map(p => [p.taskId.toString(), p]));
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    backlogTaskIds = new Set();
+    childTasks.forEach(t => {
+      const p = progressMap.get(t._id.toString());
+      const isDone = (p && p.status === "done") || (!p && checkIsAdmin(user) && t.status === "done");
+      if (isDone) {
+        totalRevisionCount++;
+      } else {
+        const status = p ? p.status : t.status;
+        const dueDate = (p && p.taskDueDate) ? p.taskDueDate : t.taskDueDate;
+        const isBacklog = status === "backlog" || (dueDate && new Date(dueDate) < startOfToday);
+        if (isBacklog) {
+          backlogTaskIds.add(t._id.toString());
+        }
+      }
+    });
+    backlogAvailable = backlogTaskIds.size > 0;
+    totalBacklogCount = backlogTaskIds.size;
+  }
+
+  const targetBacklogCount = backlogAvailable ? 1 : 0;
+  const targetRevisionCount = 4 - targetBacklogCount;
+
+  const revObj = dailyRev.toObject ? dailyRev.toObject() : { ...dailyRev };
+  revObj.isEligible = true;
+  if (completedCount !== null) revObj.completedCount = completedCount;
+  revObj.threshold = threshold;
+  revObj.hasBacklog = backlogAvailable;
+  revObj.backlogCount = totalBacklogCount;
+  revObj.targetRevisionCount = targetRevisionCount;
+  revObj.targetBacklogCount = targetBacklogCount;
+
+  if (revObj.questions && Array.isArray(revObj.questions)) {
+    revObj.questions = revObj.questions.map(q => {
+      const qObj = q.toObject ? q.toObject() : { ...q };
+      const qIdStr = (qObj._id || qObj.id || q).toString();
+      qObj.isBacklogQuestion = backlogTaskIds.has(qIdStr);
+      return qObj;
+    });
+  }
+
+  return revObj;
+};
+
 // Get Daily Revision
 tc.getDailyRevision = asyncHandler(async (req, res) => {
   try {
@@ -1685,35 +1873,57 @@ tc.getDailyRevision = asyncHandler(async (req, res) => {
     const qualifyingChildTasks = await Task.find({
       projectName: { $in: projectIds },
       parentTask: { $ne: null }
-    }).select("_id taskName projectName parentTask taskId").lean();
+    }).select("_id taskName projectName parentTask taskId status taskDueDate revisionLogs").lean();
     const qualifyingChildTaskIds = qualifyingChildTasks.map(t => t._id);
 
-    // 3. Count authenticated user's completed child tasks
-    const completedUserProgress = await UserTaskProgress.find({
+    // 3. User task progress for qualifying child tasks
+    const allUserProgress = await UserTaskProgress.find({
       userId: userId,
-      taskId: { $in: qualifyingChildTaskIds },
-      status: "done"
-    }).select("taskId").lean();
+      taskId: { $in: qualifyingChildTaskIds }
+    }).lean();
 
+    const progressMap = new Map(allUserProgress.map(p => [p.taskId.toString(), p]));
     const isAdmin = checkIsAdmin(req.user);
     let completedCount = 0;
     let eligibleChildTasks = [];
+    let eligibleBacklogTasks = [];
+
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
 
     if (isAdmin) {
-      const doneTasks = await Task.find({
-        _id: { $in: qualifyingChildTaskIds },
-        status: "done"
-      }).select("_id").lean();
-      const doneTaskIds = new Set([
-        ...doneTasks.map(t => t._id.toString()),
-        ...completedUserProgress.map(p => p.taskId.toString())
-      ]);
+      const doneTaskIds = new Set();
+      qualifyingChildTasks.forEach(t => {
+        const p = progressMap.get(t._id.toString());
+        const isDone = (p && p.status === "done") || (!p && t.status === "done");
+        if (isDone) {
+          doneTaskIds.add(t._id.toString());
+          eligibleChildTasks.push(t);
+        } else {
+          const status = p ? p.status : t.status;
+          const dueDate = (p && p.taskDueDate) ? p.taskDueDate : t.taskDueDate;
+          const isBacklog = status === "backlog" || (dueDate && new Date(dueDate) < startOfToday);
+          if (isBacklog) {
+            eligibleBacklogTasks.push(t);
+          }
+        }
+      });
       completedCount = doneTaskIds.size;
-      eligibleChildTasks = qualifyingChildTasks.filter(t => doneTaskIds.has(t._id.toString()));
     } else {
-      completedCount = completedUserProgress.length;
-      const userDoneTaskIds = new Set(completedUserProgress.map(p => p.taskId.toString()));
-      eligibleChildTasks = qualifyingChildTasks.filter(t => userDoneTaskIds.has(t._id.toString()));
+      qualifyingChildTasks.forEach(t => {
+        const p = progressMap.get(t._id.toString());
+        if (p && p.status === "done") {
+          eligibleChildTasks.push(t);
+        } else {
+          const status = p ? p.status : t.status;
+          const dueDate = (p && p.taskDueDate) ? p.taskDueDate : t.taskDueDate;
+          const isBacklog = status === "backlog" || (dueDate && new Date(dueDate) < startOfToday);
+          if (isBacklog) {
+            eligibleBacklogTasks.push(t);
+          }
+        }
+      });
+      completedCount = eligibleChildTasks.length;
     }
 
     const THRESHOLD = 50;
@@ -1734,48 +1944,11 @@ tc.getDailyRevision = asyncHandler(async (req, res) => {
       );
     }
 
-    // 5. User is eligible (>= 50 completed tasks)
-    // Check for existing DailyRevision record for this user
-    let dailyRev = await DailyRevision.findOne({
-      userId: userId,
-      isCompleted: false
-    }).populate("questions").populate("completedQuestions").populate("reviseTomorrowQuestions");
+    const backlogAvailable = eligibleBacklogTasks.length > 0;
+    const targetBacklogCount = backlogAvailable ? 1 : 0;
+    const targetRevisionCount = 4 - targetBacklogCount; // 3 if backlog exists, 4 if not
 
-    if (!dailyRev) {
-      dailyRev = await DailyRevision.findOne({
-        userId: userId,
-        dateStr: localDateStr
-      }).populate("questions").populate("completedQuestions").populate("reviseTomorrowQuestions");
-    }
-
-    // Dynamic database fix: Truncate any active revision with > 4 questions to exactly 4
-    if (dailyRev && dailyRev.questions && dailyRev.questions.length > 4) {
-      const completedSet = new Set((dailyRev.completedQuestions || []).map(q => (q._id || q).toString()));
-
-      // Keep completed questions
-      const finalQuestions = dailyRev.questions.filter(q => completedSet.has((q._id || q).toString()));
-
-      // Keep pending questions in original order
-      const pendingQuestions = dailyRev.questions.filter(q => !completedSet.has((q._id || q).toString()));
-
-      // Fill up remaining slots to make exactly 4 questions
-      const neededCount = Math.max(0, 4 - finalQuestions.length);
-      finalQuestions.push(...pendingQuestions.slice(0, neededCount));
-
-      dailyRev.questions = finalQuestions.map(q => q._id || q);
-      await dailyRev.save();
-
-      // Refetch to ensure populated state is updated
-      dailyRev = await DailyRevision.findById(dailyRev._id)
-        .populate("questions")
-        .populate("completedQuestions")
-        .populate("reviseTomorrowQuestions");
-    }
-
-    if (!dailyRev) {
-      const allEligibleTasks = eligibleChildTasks;
-
-      // Fetch past 5 days of selections for this user to prevent duplicates
+    const generateQuestionsForSession = async () => {
       const pastRevisions = await DailyRevision.find({ userId: userId })
         .sort({ dateStr: -1 })
         .limit(5)
@@ -1788,52 +1961,50 @@ tc.getDailyRevision = asyncHandler(async (req, res) => {
         }
       });
 
-      // Check for revise tomorrow questions from user's last revision session
       const lastRev = await DailyRevision.findOne({ userId: userId })
         .sort({ dateStr: -1 })
         .lean();
       const reviseTomorrowIds = lastRev ? (lastRev.reviseTomorrowQuestions || []) : [];
       const reviseTomorrowStrSet = new Set(reviseTomorrowIds.map(id => id.toString()));
 
-      // Filter out recently selected tasks AND any already pinned reviseTomorrow tasks
-      let availableTasks = allEligibleTasks.filter(t =>
+      // Check if any pinned reviseTomorrow task is an eligible backlog task
+      const pinnedBacklog = eligibleBacklogTasks.find(t => reviseTomorrowStrSet.has(t._id.toString()));
+      const pinnedRevisionIds = reviseTomorrowIds.filter(id => !eligibleBacklogTasks.some(b => b._id.toString() === id.toString()));
+
+      // 1. Revision pool
+      let availableRevTasks = eligibleChildTasks.filter(t =>
         !recentlySelectedIds.has(t._id.toString()) &&
         !reviseTomorrowStrSet.has(t._id.toString())
       );
 
-      // Fallbacks if not enough tasks are available after filtering
-      if (availableTasks.length < 4) {
+      if (availableRevTasks.length < targetRevisionCount) {
         const yesterdayRev = pastRevisions[0];
         const yesterdayIds = new Set(yesterdayRev ? yesterdayRev.questions.map(q => q.toString()) : []);
-        availableTasks = allEligibleTasks.filter(t =>
+        availableRevTasks = eligibleChildTasks.filter(t =>
           !yesterdayIds.has(t._id.toString()) &&
           !reviseTomorrowStrSet.has(t._id.toString())
         );
       }
 
-      if (availableTasks.length < 4) {
-        availableTasks = allEligibleTasks.filter(t => !reviseTomorrowStrSet.has(t._id.toString()));
+      if (availableRevTasks.length < targetRevisionCount) {
+        availableRevTasks = eligibleChildTasks.filter(t => !reviseTomorrowStrSet.has(t._id.toString()));
       }
 
-      if (availableTasks.length < 4) {
-        availableTasks = allEligibleTasks;
+      if (availableRevTasks.length < targetRevisionCount) {
+        availableRevTasks = eligibleChildTasks;
       }
 
-      // Pin limit: maximum of 4
-      const activePins = reviseTomorrowIds.slice(0, 4);
-      const randomCountNeeded = Math.max(0, 4 - activePins.length);
+      const activePins = pinnedRevisionIds.slice(0, targetRevisionCount);
+      const randomCountNeeded = Math.max(0, targetRevisionCount - activePins.length);
 
-      // Pick remaining tasks from availableTasks (Balancing 50% Revised & 50% Unrevised)
-      const selectedTasks = [];
+      const selectedRevisionTasks = [];
       if (randomCountNeeded > 0) {
-        const unrevisedPool = availableTasks.filter(t => !t.revisionLogs || t.revisionLogs.length === 0);
-        const revisedPool = availableTasks.filter(t => t.revisionLogs && t.revisionLogs.length > 0);
+        const unrevisedPool = availableRevTasks.filter(t => !t.revisionLogs || t.revisionLogs.length === 0);
+        const revisedPool = availableRevTasks.filter(t => t.revisionLogs && t.revisionLogs.length > 0);
 
-        // Target half unrevised, half revised
         let targetUnrevised = Math.ceil(randomCountNeeded / 2);
         let targetRevised = Math.floor(randomCountNeeded / 2);
 
-        // Adjust targets if one pool doesn't have enough items
         if (unrevisedPool.length < targetUnrevised) {
           targetRevised += (targetUnrevised - unrevisedPool.length);
           targetUnrevised = unrevisedPool.length;
@@ -1844,11 +2015,9 @@ tc.getDailyRevision = asyncHandler(async (req, res) => {
           targetRevised = revisedPool.length;
         }
 
-        // Pick from unrevised (shuffled randomly)
         const shuffledUnrevised = [...unrevisedPool].sort(() => 0.5 - Math.random());
         const chosenUnrevised = shuffledUnrevised.slice(0, targetUnrevised);
 
-        // Pick from revised (prioritize lower revision count / spaced repetition, with random shuffle for ties)
         const sortedRevised = [...revisedPool].sort((a, b) => {
           const countA = a.revisionLogs ? a.revisionLogs.length : 0;
           const countB = b.revisionLogs ? b.revisionLogs.length : 0;
@@ -1857,21 +2026,88 @@ tc.getDailyRevision = asyncHandler(async (req, res) => {
         });
         const chosenRevised = sortedRevised.slice(0, targetRevised);
 
-        selectedTasks.push(...chosenUnrevised, ...chosenRevised);
+        selectedRevisionTasks.push(...chosenUnrevised, ...chosenRevised);
 
-        // Ultimate fallback if still short of randomCountNeeded
-        if (selectedTasks.length < randomCountNeeded) {
-          const chosenIds = new Set(selectedTasks.map(t => t._id.toString()));
-          const remainingFallback = availableTasks.filter(t => !chosenIds.has(t._id.toString()));
+        if (selectedRevisionTasks.length < randomCountNeeded) {
+          const chosenIds = new Set(selectedRevisionTasks.map(t => t._id.toString()));
+          const remainingFallback = availableRevTasks.filter(t => !chosenIds.has(t._id.toString()));
           const shuffledFallback = [...remainingFallback].sort(() => 0.5 - Math.random());
-          selectedTasks.push(...shuffledFallback.slice(0, randomCountNeeded - selectedTasks.length));
+          selectedRevisionTasks.push(...shuffledFallback.slice(0, randomCountNeeded - selectedRevisionTasks.length));
         }
       }
 
-      // Combine pinned and new random questions to make exactly 4 total
-      const finalQuestions = [...activePins, ...selectedTasks.map(t => t._id)];
+      const revisionQuestionIds = [...activePins, ...selectedRevisionTasks.map(t => t._id)];
 
-      // Create new record
+      // 2. Backlog pool (if targetBacklogCount > 0)
+      const backlogQuestionIds = [];
+      if (targetBacklogCount > 0 && eligibleBacklogTasks.length > 0) {
+        if (pinnedBacklog) {
+          backlogQuestionIds.push(pinnedBacklog._id);
+        } else {
+          let availableBacklogTasks = eligibleBacklogTasks.filter(t => !recentlySelectedIds.has(t._id.toString()));
+          if (availableBacklogTasks.length === 0) {
+            availableBacklogTasks = eligibleBacklogTasks;
+          }
+          const shuffledBacklog = [...availableBacklogTasks].sort(() => 0.5 - Math.random());
+          backlogQuestionIds.push(shuffledBacklog[0]._id);
+        }
+      }
+
+      return [...revisionQuestionIds, ...backlogQuestionIds];
+    };
+
+    // 5. User is eligible (>= 50 completed tasks)
+    // Check for existing DailyRevision record for this user for TODAY first
+    let dailyRev = await populateDailyRevQuery(DailyRevision.findOne({
+      userId: userId,
+      dateStr: localDateStr
+    }));
+
+    // If not found for today, check if there is an uncompleted DailyRevision from a previous day and roll it over to today
+    if (!dailyRev) {
+      dailyRev = await populateDailyRevQuery(DailyRevision.findOne({
+        userId: userId,
+        isCompleted: false
+      }));
+
+      if (dailyRev) {
+        dailyRev.dateStr = localDateStr;
+        await dailyRev.save();
+      }
+    }
+
+    const backlogIdSet = new Set(eligibleBacklogTasks.map(t => t._id.toString()));
+
+    if (dailyRev) {
+      // If session is unstarted and uncompleted, ensure question allocation matches 3 revision + 1 backlog
+      const isUnstarted = !dailyRev.isStarted && !dailyRev.isCompleted && (dailyRev.completedQuestions || []).length === 0;
+      if (isUnstarted) {
+        const currentBacklogCount = (dailyRev.questions || []).filter(q => backlogIdSet.has((q._id || q).toString())).length;
+        if (currentBacklogCount !== targetBacklogCount || (dailyRev.questions || []).length !== 4) {
+          const freshQuestions = await generateQuestionsForSession();
+          dailyRev.questions = freshQuestions;
+          await dailyRev.save();
+
+          dailyRev = await populateDailyRevQuery(DailyRevision.findById(dailyRev._id));
+        }
+      } else if (dailyRev.questions && dailyRev.questions.length > 4) {
+        // Truncate any active revision with > 4 questions to exactly 4
+        const completedSet = new Set((dailyRev.completedQuestions || []).map(q => (q._id || q).toString()));
+        const finalQuestions = dailyRev.questions.filter(q => completedSet.has((q._id || q).toString()));
+        const pendingQuestions = dailyRev.questions.filter(q => !completedSet.has((q._id || q).toString()));
+        const neededCount = Math.max(0, 4 - finalQuestions.length);
+        finalQuestions.push(...pendingQuestions.slice(0, neededCount));
+
+        dailyRev.questions = finalQuestions.map(q => q._id || q);
+        await dailyRev.save();
+
+        dailyRev = await populateDailyRevQuery(DailyRevision.findById(dailyRev._id));
+      }
+    }
+
+    if (!dailyRev) {
+      const finalQuestions = await generateQuestionsForSession();
+
       dailyRev = await DailyRevision.create({
         userId: userId,
         dateStr: localDateStr,
@@ -1886,10 +2122,7 @@ tc.getDailyRevision = asyncHandler(async (req, res) => {
         branchId: req.branchId ? new mongoose.Types.ObjectId(req.branchId) : null
       });
 
-      dailyRev = await DailyRevision.findById(dailyRev._id)
-        .populate("questions")
-        .populate("completedQuestions")
-        .populate("reviseTomorrowQuestions");
+      dailyRev = await populateDailyRevQuery(DailyRevision.findById(dailyRev._id));
     } else {
       // Recalculate remaining time if timer is active
       if (dailyRev.timerIsActive && dailyRev.timerLastUpdated && !dailyRev.isCompleted) {
@@ -1904,10 +2137,7 @@ tc.getDailyRevision = asyncHandler(async (req, res) => {
       }
     }
 
-    const revObj = dailyRev.toObject ? dailyRev.toObject() : dailyRev;
-    revObj.isEligible = true;
-    revObj.completedCount = completedCount;
-    revObj.threshold = THRESHOLD;
+    const revObj = await formatDailyRevisionResponse(dailyRev, req.user, eligibleBacklogTasks, completedCount, THRESHOLD);
 
     return res.status(200).json(
       new ApiResponse(200, revObj, "Daily revision status retrieved successfully")
@@ -1927,14 +2157,18 @@ tc.startDailyRevision = asyncHandler(async (req, res) => {
 
     let dailyRev = await DailyRevision.findOne({
       userId: userId,
-      isCompleted: false
+      dateStr: localDateStr
     });
 
     if (!dailyRev) {
       dailyRev = await DailyRevision.findOne({
         userId: userId,
-        dateStr: localDateStr
+        isCompleted: false
       });
+      if (dailyRev) {
+        dailyRev.dateStr = localDateStr;
+        await dailyRev.save();
+      }
     }
 
     if (!dailyRev || !dailyRev.questions || dailyRev.questions.length === 0) {
@@ -1947,13 +2181,9 @@ tc.startDailyRevision = asyncHandler(async (req, res) => {
     dailyRev.currentQuestionStartTimeLeft = 10800;
     await dailyRev.save();
 
-    dailyRev = await DailyRevision.findById(dailyRev._id)
-      .populate("questions")
-      .populate("completedQuestions")
-      .populate("reviseTomorrowQuestions");
+    dailyRev = await populateDailyRevQuery(DailyRevision.findById(dailyRev._id));
 
-    const revObj = dailyRev.toObject ? dailyRev.toObject() : dailyRev;
-    revObj.isEligible = true;
+    const revObj = await formatDailyRevisionResponse(dailyRev, req.user);
 
     return res.status(200).json(
       new ApiResponse(200, revObj, "Daily revision timer started successfully")
@@ -1973,14 +2203,18 @@ tc.toggleDailyRevisionTimer = asyncHandler(async (req, res) => {
 
     let dailyRev = await DailyRevision.findOne({
       userId: userId,
-      isCompleted: false
+      dateStr: localDateStr
     });
 
     if (!dailyRev) {
       dailyRev = await DailyRevision.findOne({
         userId: userId,
-        dateStr: localDateStr
+        isCompleted: false
       });
+      if (dailyRev) {
+        dailyRev.dateStr = localDateStr;
+        await dailyRev.save();
+      }
     }
 
     if (!dailyRev) {
@@ -1992,8 +2226,7 @@ tc.toggleDailyRevisionTimer = asyncHandler(async (req, res) => {
     }
 
     if (dailyRev.isCompleted) {
-      const revObj = dailyRev.toObject ? dailyRev.toObject() : dailyRev;
-      revObj.isEligible = true;
+      const revObj = await formatDailyRevisionResponse(dailyRev, req.user);
       return res.status(200).json(
         new ApiResponse(200, revObj, "Daily revision is already completed")
       );
@@ -2016,13 +2249,9 @@ tc.toggleDailyRevisionTimer = asyncHandler(async (req, res) => {
 
     await dailyRev.save();
 
-    dailyRev = await DailyRevision.findById(dailyRev._id)
-      .populate("questions")
-      .populate("completedQuestions")
-      .populate("reviseTomorrowQuestions");
+    dailyRev = await populateDailyRevQuery(DailyRevision.findById(dailyRev._id));
 
-    const revObj = dailyRev.toObject ? dailyRev.toObject() : dailyRev;
-    revObj.isEligible = true;
+    const revObj = await formatDailyRevisionResponse(dailyRev, req.user);
 
     return res.status(200).json(
       new ApiResponse(200, revObj, "Daily revision timer state toggled successfully")
@@ -2043,14 +2272,18 @@ tc.syncDailyRevisionTimer = asyncHandler(async (req, res) => {
 
     let dailyRev = await DailyRevision.findOne({
       userId: userId,
-      isCompleted: false
+      dateStr: localDateStr
     });
 
     if (!dailyRev) {
       dailyRev = await DailyRevision.findOne({
         userId: userId,
-        dateStr: localDateStr
+        isCompleted: false
       });
+      if (dailyRev) {
+        dailyRev.dateStr = localDateStr;
+        await dailyRev.save();
+      }
     }
 
     if (!dailyRev) {
@@ -2068,8 +2301,7 @@ tc.syncDailyRevisionTimer = asyncHandler(async (req, res) => {
 
     await dailyRev.save();
 
-    const revObj = dailyRev.toObject ? dailyRev.toObject() : dailyRev;
-    revObj.isEligible = true;
+    const revObj = await formatDailyRevisionResponse(dailyRev, req.user);
 
     return res.status(200).json(
       new ApiResponse(200, revObj, "Daily revision timer synced successfully")
@@ -2090,14 +2322,18 @@ tc.toggleReviseTomorrow = asyncHandler(async (req, res) => {
 
     let dailyRev = await DailyRevision.findOne({
       userId: userId,
-      isCompleted: false
+      dateStr: localDateStr
     });
 
     if (!dailyRev) {
       dailyRev = await DailyRevision.findOne({
         userId: userId,
-        dateStr: localDateStr
+        isCompleted: false
       });
+      if (dailyRev) {
+        dailyRev.dateStr = localDateStr;
+        await dailyRev.save();
+      }
     }
 
     if (!dailyRev) {
@@ -2122,13 +2358,9 @@ tc.toggleReviseTomorrow = asyncHandler(async (req, res) => {
 
     await dailyRev.save();
 
-    dailyRev = await DailyRevision.findById(dailyRev._id)
-      .populate("questions")
-      .populate("completedQuestions")
-      .populate("reviseTomorrowQuestions");
+    dailyRev = await populateDailyRevQuery(DailyRevision.findById(dailyRev._id));
 
-    const revObj = dailyRev.toObject ? dailyRev.toObject() : dailyRev;
-    revObj.isEligible = true;
+    const revObj = await formatDailyRevisionResponse(dailyRev, req.user);
 
     return res.status(200).json(
       new ApiResponse(200, revObj, "Revise tomorrow preference updated successfully")

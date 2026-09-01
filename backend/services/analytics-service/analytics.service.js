@@ -1,8 +1,10 @@
 import { PerformanceStat } from "../../models/performanceStat.model.js";
 import { Task } from "../../models/task.model.js";
+import { Project } from "../../models/project.model.js";
 import { UserTaskProgress } from "../../models/userTaskProgress.model.js";
 import { FocusSession } from "../../models/focusSession.model.js";
 import { DailyAccountability } from "../../models/dailyAccountability.model.js";
+import { DailyRevision } from "../../models/dailyRevision.model.js";
 import mongoose from "mongoose";
 import moment from "moment";
 
@@ -413,8 +415,22 @@ class AnalyticsService {
       const uId = new mongoose.Types.ObjectId(userId);
       const dateMap = {};
 
+      const initDate = (dStr) => {
+        if (!dateMap[dStr]) {
+          dateMap[dStr] = {
+            hoursLogged: 0,
+            activeHours: 0,
+            revisionHours: 0,
+            tasksCompleted: 0,
+            storyPointsDone: 0,
+            revisionsCount: 0,
+            accountabilityLogs: 0
+          };
+        }
+      };
+
       // 1. Resolve canonical tasks for the project to ensure relational integrity
-      const projectTasks = await Task.find({ projectName: pId }).select("_id storyPoints").lean();
+      const projectTasks = await Task.find({ projectName: pId }).select("_id storyPoints revisionLogs").lean();
       const taskIds = projectTasks.map(t => t._id);
       const taskStoryPointsMap = projectTasks.reduce((acc, t) => {
         acc[t._id.toString()] = t.storyPoints || 0;
@@ -441,9 +457,7 @@ class AnalyticsService {
         if (!doneDate) doneDate = new Date();
 
         const dStr = moment.utc(doneDate).format("YYYY-MM-DD");
-        if (!dateMap[dStr]) {
-          dateMap[dStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
-        }
+        initDate(dStr);
         dateMap[dStr].tasksCompleted += 1;
         const sp = taskStoryPointsMap[p.taskId.toString()] || 0;
         dateMap[dStr].storyPointsDone += sp;
@@ -460,15 +474,24 @@ class AnalyticsService {
         (p.revisionLogs || []).forEach(rl => {
           if (rl.revisionDate) {
             const rStr = moment.utc(rl.revisionDate).format("YYYY-MM-DD");
-            if (!dateMap[rStr]) {
-              dateMap[rStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
-            }
+            initDate(rStr);
             dateMap[rStr].revisionsCount += 1;
           }
         });
       });
 
-      // 4. Focus Sessions strictly for this user on tasks belonging to this project
+      // 4. Revision logs from Task model
+      projectTasks.forEach(t => {
+        (t.revisionLogs || []).forEach(rl => {
+          if (rl.revisionDate) {
+            const rStr = moment.utc(rl.revisionDate).format("YYYY-MM-DD");
+            initDate(rStr);
+            dateMap[rStr].revisionsCount = Math.max(dateMap[rStr].revisionsCount, 1);
+          }
+        });
+      });
+
+      // 5. Focus Sessions strictly for this user on tasks belonging to this project
       const sessions = await FocusSession.find({
         user: uId,
         task: { $in: taskIds }
@@ -477,10 +500,15 @@ class AnalyticsService {
       sessions.forEach(s => {
         if (s.duration) {
           const dStr = moment.utc(s.date || s.startTime).format("YYYY-MM-DD");
-          if (!dateMap[dStr]) {
-            dateMap[dStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
+          initDate(dStr);
+          const durHours = Number((s.duration / 60).toFixed(2));
+          dateMap[dStr].hoursLogged += durHours;
+          if (s.type === "Revision") {
+            dateMap[dStr].revisionHours += durHours;
+            if (dateMap[dStr].revisionsCount === 0) dateMap[dStr].revisionsCount = 1;
+          } else {
+            dateMap[dStr].activeHours += durHours;
           }
-          dateMap[dStr].hoursLogged += Number((s.duration / 60).toFixed(2));
         }
       });
 
@@ -489,7 +517,12 @@ class AnalyticsService {
         entityId: pId,
         period: "daily",
         date: new Date(dateStr + "T00:00:00.000Z"),
-        metrics
+        metrics: {
+          ...metrics,
+          hoursLogged: Number(metrics.hoursLogged.toFixed(2)),
+          activeHours: Number(metrics.activeHours.toFixed(2)),
+          revisionHours: Number(metrics.revisionHours.toFixed(2))
+        }
       })).sort((a, b) => new Date(a.date) - new Date(b.date));
     } catch (err) {
       console.error("Error in getProjectConsistencyStats:", err);
@@ -505,6 +538,20 @@ class AnalyticsService {
     try {
       const uId = new mongoose.Types.ObjectId(userId);
       const dateMap = {};
+
+      const initDate = (dStr) => {
+        if (!dateMap[dStr]) {
+          dateMap[dStr] = {
+            hoursLogged: 0,
+            activeHours: 0,
+            revisionHours: 0,
+            tasksCompleted: 0,
+            storyPointsDone: 0,
+            revisionsCount: 0,
+            accountabilityLogs: 0
+          };
+        }
+      };
 
       // 1. Authenticated user's completed tasks across all projects
       const userProgress = await UserTaskProgress.find({
@@ -523,9 +570,7 @@ class AnalyticsService {
         if (!doneDate) doneDate = new Date();
 
         const dStr = moment.utc(doneDate).format("YYYY-MM-DD");
-        if (!dateMap[dStr]) {
-          dateMap[dStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
-        }
+        initDate(dStr);
         dateMap[dStr].tasksCompleted += 1;
         const sp = p.taskId?.storyPoints || 0;
         dateMap[dStr].storyPointsDone += sp;
@@ -541,36 +586,62 @@ class AnalyticsService {
         (p.revisionLogs || []).forEach(rl => {
           if (rl.revisionDate) {
             const rStr = moment.utc(rl.revisionDate).format("YYYY-MM-DD");
-            if (!dateMap[rStr]) {
-              dateMap[rStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
-            }
+            initDate(rStr);
             dateMap[rStr].revisionsCount += 1;
           }
         });
       });
 
-      // 3. Focus Sessions strictly for this user
+      // 3. Revision logs from Task model
+      const taskRevisions = await Task.find({ "revisionLogs.0": { $exists: true } }).lean();
+      taskRevisions.forEach(t => {
+        (t.revisionLogs || []).forEach(rl => {
+          if (rl.revisionDate) {
+            const rStr = moment.utc(rl.revisionDate).format("YYYY-MM-DD");
+            initDate(rStr);
+            dateMap[rStr].revisionsCount = Math.max(dateMap[rStr].revisionsCount, 1);
+          }
+        });
+      });
+
+      // 4. DailyRevision records
+      const dailyRevisions = await DailyRevision.find({ userId: uId }).lean();
+      dailyRevisions.forEach(dr => {
+        if (dr.dateStr) {
+          const rStr = dr.dateStr;
+          const count = dr.questionLogs?.length || dr.completedQuestions?.length || 0;
+          if (count > 0 || dr.isCompleted) {
+            initDate(rStr);
+            dateMap[rStr].revisionsCount = Math.max(dateMap[rStr].revisionsCount, count || 4);
+          }
+        }
+      });
+
+      // 5. Focus Sessions strictly for this user
       const sessions = await FocusSession.find({ user: uId }).lean();
       sessions.forEach(s => {
         if (s.duration) {
           const dStr = moment.utc(s.date || s.startTime).format("YYYY-MM-DD");
-          if (!dateMap[dStr]) {
-            dateMap[dStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
+          initDate(dStr);
+          const durHours = Number((s.duration / 60).toFixed(2));
+          dateMap[dStr].hoursLogged += durHours;
+          if (s.type === "Revision") {
+            dateMap[dStr].revisionHours += durHours;
+            if (dateMap[dStr].revisionsCount === 0) dateMap[dStr].revisionsCount = 1;
+          } else {
+            dateMap[dStr].activeHours += durHours;
           }
-          dateMap[dStr].hoursLogged += Number((s.duration / 60).toFixed(2));
         }
       });
 
-      // 4. Daily Accountability strictly for this user
+      // 6. Daily Accountability strictly for this user
       const board = await DailyAccountability.findOne({ userId: uId }).lean();
       if (board && board.sections) {
         board.sections.forEach(sec => {
           (sec.rows || []).forEach(row => {
             if (row.date) {
               const dStr = row.date;
-              if (!dateMap[dStr]) {
-                dateMap[dStr] = { hoursLogged: 0, tasksCompleted: 0, storyPointsDone: 0, revisionsCount: 0, accountabilityLogs: 0 };
-              }
+              initDate(dStr);
               dateMap[dStr].accountabilityLogs += 1;
             }
           });
@@ -582,7 +653,12 @@ class AnalyticsService {
         entityId: uId,
         period: "daily",
         date: new Date(dateStr + "T00:00:00.000Z"),
-        metrics
+        metrics: {
+          ...metrics,
+          hoursLogged: Number(metrics.hoursLogged.toFixed(2)),
+          activeHours: Number(metrics.activeHours.toFixed(2)),
+          revisionHours: Number(metrics.revisionHours.toFixed(2))
+        }
       })).sort((a, b) => new Date(a.date) - new Date(b.date));
     } catch (err) {
       console.error("Error in getUserConsistencyStats:", err);
@@ -648,7 +724,10 @@ class AnalyticsService {
       }
     });
 
-    // 3. Revised tasks for this user on this day from UserTaskProgress
+    // 3. Revised tasks for this user on this day from UserTaskProgress, Task, DailyRevision, and FocusSession
+    const revisedTasksMap = new Map();
+
+    // From UserTaskProgress
     const revisionFilter = {
       userId: uId,
       "revisionLogs.0": { $exists: true }
@@ -667,25 +746,111 @@ class AnalyticsService {
       })
       .lean();
 
-    const revisedTasks = [];
     allRevisionProgress.forEach(p => {
       (p.revisionLogs || []).forEach(rl => {
         if (rl.revisionDate) {
           const revStr = moment.utc(rl.revisionDate).format("YYYY-MM-DD");
           if (revStr === dateStr && p.taskId) {
-            revisedTasks.push({
-              _id: p.taskId._id,
-              taskId: p.taskId.taskId,
-              taskName: p.taskId.taskName,
-              taskType: p.taskId.taskType,
-              notes: rl.notes,
-              revisionDate: rl.revisionDate,
-              projectName: p.taskId.projectName
-            });
+            const key = `${p.taskId._id}_${revStr}`;
+            if (!revisedTasksMap.has(key)) {
+              revisedTasksMap.set(key, {
+                _id: p.taskId._id,
+                taskId: p.taskId.taskId,
+                taskName: p.taskId.taskName,
+                taskType: p.taskId.taskType,
+                notes: rl.notes,
+                revisionDate: rl.revisionDate,
+                projectName: p.taskId.projectName
+              });
+            }
           }
         }
       });
     });
+
+    // From Task.revisionLogs
+    const taskRevisionFilter = { "revisionLogs.0": { $exists: true } };
+    if (taskIds.length > 0) {
+      taskRevisionFilter._id = { $in: taskIds };
+    }
+    const allTaskRevisions = await Task.find(taskRevisionFilter)
+      .populate("projectName", "name key")
+      .lean();
+
+    allTaskRevisions.forEach(t => {
+      (t.revisionLogs || []).forEach(rl => {
+        if (rl.revisionDate) {
+          const revStr = moment.utc(rl.revisionDate).format("YYYY-MM-DD");
+          if (revStr === dateStr) {
+            const key = `${t._id}_${revStr}`;
+            if (!revisedTasksMap.has(key)) {
+              revisedTasksMap.set(key, {
+                _id: t._id,
+                taskId: t.taskId,
+                taskName: t.taskName,
+                taskType: t.taskType,
+                notes: rl.notes,
+                revisionDate: rl.revisionDate,
+                projectName: t.projectName
+              });
+            }
+          }
+        }
+      });
+    });
+
+    // From DailyRevision
+    const dailyRev = await DailyRevision.findOne({ userId: uId, dateStr })
+      .populate({
+        path: "questions",
+        populate: { path: "projectName", select: "name key" }
+      })
+      .populate({
+        path: "questionLogs.taskId",
+        populate: { path: "projectName", select: "name key" }
+      })
+      .lean();
+
+    if (dailyRev) {
+      (dailyRev.questionLogs || []).forEach(ql => {
+        const t = ql.taskId;
+        if (t && (!taskIds.length || taskIds.some(id => id.toString() === (t._id || t).toString()))) {
+          const key = `${t._id || t}_${dateStr}`;
+          if (!revisedTasksMap.has(key)) {
+            revisedTasksMap.set(key, {
+              _id: t._id,
+              taskId: t.taskId,
+              taskName: t.taskName,
+              taskType: t.taskType || "Revision",
+              notes: ql.notes || "Completed in Daily Revision Protocol",
+              revisionDate: dailyRev.updatedAt || new Date(dateStr),
+              projectName: t.projectName
+            });
+          }
+        }
+      });
+
+      if (!dailyRev.questionLogs?.length && dailyRev.questions?.length) {
+        dailyRev.questions.forEach(t => {
+          if (t && (!taskIds.length || taskIds.some(id => id.toString() === (t._id || t).toString()))) {
+            const key = `${t._id}_${dateStr}`;
+            if (!revisedTasksMap.has(key)) {
+              revisedTasksMap.set(key, {
+                _id: t._id,
+                taskId: t.taskId,
+                taskName: t.taskName,
+                taskType: t.taskType || "Revision",
+                notes: "Daily Revision Question",
+                revisionDate: dailyRev.updatedAt || new Date(dateStr),
+                projectName: t.projectName
+              });
+            }
+          }
+        });
+      }
+    }
+
+    const revisedTasks = Array.from(revisedTasksMap.values());
 
     // 4. Focus Sessions strictly for this user on this day
     const sessionFilter = { user: uId };
@@ -710,6 +875,7 @@ class AnalyticsService {
       durationMinutes: s.duration || 0,
       durationHours: Number(((s.duration || 0) / 60).toFixed(2)),
       startTime: s.startTime || s.date,
+      type: s.type,
       task: s.task
     }));
 

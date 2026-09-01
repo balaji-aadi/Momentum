@@ -43,7 +43,7 @@ const Header = ({ toggleSidebar }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const { globalSearch, activeBranch, currentUser, dailyRevision } = useSelector((state) => state.store);
-  const isLocked = dailyRevision && dailyRevision.isEligible === true && dailyRevision.questions?.length > 0 && dailyRevision.isStarted && !dailyRevision.isCompleted;
+  const isLocked = dailyRevision && dailyRevision.isEligible === true && dailyRevision.questions?.length > 0 && !dailyRevision.isCompleted;
 
   const {
     isNotification,
@@ -534,10 +534,10 @@ const Header = ({ toggleSidebar }) => {
         </div>
 
         {/* User Total XP Badge in Main Navbar (Image 5) */}
-        <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-extrabold text-xs shrink-0 shadow-2xs" title="Total Accumulated DSA XP">
+        {/* <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-extrabold text-xs shrink-0 shadow-2xs" title="Total Accumulated DSA XP">
           <LuTrophy size={15} className="text-amber-500" />
           <span>{userXp} XP</span>
-        </div>
+        </div> */}
 
         <button
           onClick={() => { if (!isLocked) dispatch(setShowConsistencyModal(true)); }}

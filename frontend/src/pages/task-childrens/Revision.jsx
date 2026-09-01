@@ -112,7 +112,7 @@ const Revision = () => {
     const [dailyRevisionState, setDailyRevisionState] = useState(null);
     const [timerTimeLeft, setTimerTimeLeft] = useState(10800);
     const [timerIsActive, setTimerIsActive] = useState(false);
-    
+
     // Testing states
     const [showCompletionModal, setShowCompletionModal] = useState(false);
 
@@ -173,6 +173,7 @@ const Revision = () => {
     const [showRevisionModal, setShowRevisionModal] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
     const [revisionNote, setRevisionNote] = useState('');
+    const [backlogStatusChoice, setBacklogStatusChoice] = useState('done');
     const [showNotesModal, setShowNotesModal] = useState(false);
     const [notesModalTask, setNotesModalTask] = useState(null);
     const [showYtModal, setShowYtModal] = useState(false);
@@ -324,7 +325,7 @@ const Revision = () => {
                 setTimerTimeLeft(getRemainingSeconds(dailyRev));
                 setTimerIsActive(dailyRev.timerIsActive);
                 dispatch(setDailyRevision(dailyRev)); // Sync with global store
-                
+
                 if (dailyRev && dailyRev.isEligible === true && dailyRev.questions?.length > 0 && dailyRev.isCompleted) {
                     const hasSeenKey = `seen_revision_summary_${currentUser?._id || 'user'}_${dailyRev.dateStr}`;
                     if (!localStorage.getItem(hasSeenKey)) {
@@ -596,13 +597,26 @@ const Revision = () => {
             return;
         }
 
-
-
         handleLoading(true);
         try {
             const tzOffset = new Date().getTimezoneOffset();
-            await TaskApi.addRevision(selectedTask._id, { notes: revisionNote, timezoneOffset: tzOffset });
-            toast.success("Revision logged successfully");
+            const isBacklog = selectedTask?.isBacklogQuestion;
+            const payload = {
+                notes: revisionNote,
+                timezoneOffset: tzOffset,
+                backlogStatus: isBacklog ? backlogStatusChoice : 'done'
+            };
+            await TaskApi.addRevision(selectedTask._id, payload);
+
+            if (isBacklog) {
+                if (backlogStatusChoice === 'done') {
+                    toast.success("🎯 Backlog solved & marked as Done!");
+                } else {
+                    toast.success("⏳ Backlog kept & scheduled for retry tomorrow!");
+                }
+            } else {
+                toast.success("Revision logged successfully");
+            }
 
             // Refresh daily revision status
             const dailyRevisionRes = await TaskApi.getDailyRevision(tzOffset);
@@ -856,7 +870,11 @@ const Revision = () => {
                     <p className="text-[11px] font-bold text-primary uppercase tracking-widest mt-1">Consistency Gate Active</p>
 
                     <p className="text-sm text-slate-500 leading-relaxed mt-4">
-                        To access Sarthi today, you must launch and complete today's revision session. You will be given exactly <strong>4 randomized questions</strong> from your completed <strong>DSA & DSAP2</strong> arenas.
+                        To access Sarthi today, you must launch and complete today's revision session. You will be given exactly {dailyRevisionState.hasBacklog || dailyRevisionState.questions?.some(q => q.isBacklogQuestion) ? (
+                            <span><strong>4 questions</strong> (<strong>3 revision</strong> + <strong>1 backlog clearance</strong>)</span>
+                        ) : (
+                            <span><strong>4 randomized revision questions</strong></span>
+                        )} from your <strong>DSA & DSAP2</strong> arenas.
                     </p>
 
                     <div className="bg-slate-50 rounded-2xl border border-slate-100 p-5 text-left my-6 space-y-3.5">
@@ -966,18 +984,21 @@ const Revision = () => {
                     {dailyRevisionState.questions?.map((q, idx) => {
                         const isDone = idx < completedQuestionsCount;
                         const isActive = idx === completedQuestionsCount;
+                        const isBacklog = q.isBacklogQuestion;
                         return (
                             <React.Fragment key={q._id}>
                                 <div className="flex items-center gap-2">
                                     <div className={`w-8 h-8 rounded-2xl flex items-center justify-center font-black text-xs border ${isDone ? 'bg-green-500 border-green-500 text-white shadow-sm' :
-                                            isActive ? 'bg-primary border-primary text-white shadow-md animate-pulse' :
-                                                'bg-slate-50 border-slate-200 text-slate-400'
-                                        }`} title={q.taskName}>
+                                        isActive ? 'bg-primary border-primary text-white shadow-md animate-pulse' :
+                                            'bg-slate-50 border-slate-200 text-slate-400'
+                                        }`} title={`${q.taskName} ${isBacklog ? '(Backlog Clearance)' : '(Revision)'}`}>
                                         {isDone ? '✓' : idx + 1}
                                     </div>
-                                    <span className={`text-[10px] font-black uppercase tracking-wider hidden sm:inline ${isActive ? 'text-primary' : isDone ? 'text-green-600' : 'text-slate-400'
+                                    <span className={`text-[10px] font-black uppercase tracking-wider hidden sm:inline ${isActive ? 'text-primary' :
+                                        isDone ? 'text-green-600' :
+                                            'text-slate-400'
                                         }`}>
-                                        Q{idx + 1}
+                                        Q{idx + 1}{isBacklog ? ' (Backlog)' : ''}
                                     </span>
                                 </div>
                                 {idx < totalQuestionsCount - 1 && (
@@ -1011,9 +1032,18 @@ const Revision = () => {
                                     <span className="text-[10px] font-extrabold text-slate-400 bg-slate-50 px-3 py-1 rounded-full border border-slate-200/50 uppercase tracking-widest">
                                         {task.parentTask?.taskName || 'Topic'}
                                     </span>
+                                    {task.isBacklogQuestion ? (
+                                        <span className="text-[10px] font-black text-primary bg-primary/5 px-3 py-1 rounded-full border border-primary/10 uppercase tracking-widest flex items-center gap-1.5 shadow-sm">
+                                            <span>🎯</span> BACKLOG CLEARANCE
+                                        </span>
+                                    ) : (
+                                        <span className="text-[10px] font-black text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 uppercase tracking-widest flex items-center gap-1.5 shadow-sm">
+                                            <span>🔄</span> REVISION
+                                        </span>
+                                    )}
                                 </div>
 
-                                <h2 
+                                <h2
                                     onClick={() => handleOpenDrawer(task)}
                                     className="text-2xl font-black text-slate-800 tracking-tight leading-snug hover:text-primary transition-colors cursor-pointer flex items-center gap-2"
                                 >
@@ -1024,8 +1054,8 @@ const Revision = () => {
 
                                 {/* Time restriction warning banner */}
                                 <div className={`mt-6 p-4.5 rounded-2xl border flex items-start gap-3 transition-all duration-300 ${isTimeRequirementMet
-                                        ? 'bg-green-50 border-green-200/60 text-green-800'
-                                        : 'bg-amber-50 border-amber-200/60 text-amber-800'
+                                    ? 'bg-green-50 border-green-200/60 text-green-800'
+                                    : 'bg-amber-50 border-amber-200/60 text-amber-800'
                                     }`}>
                                     <span className="text-lg shrink-0 mt-0.5">{isTimeRequirementMet ? '🔓' : '⏳'}</span>
                                     <div>
@@ -1048,21 +1078,21 @@ const Revision = () => {
                                         📖 VIEW DETAILS & NOTES
                                     </button>
                                     {isLeetCodeEligible(task) && (
-                                         <button
-                                             onClick={() => {
-                                                 const slug = task.taskName
-                                                     .toLowerCase()
-                                                     .trim()
-                                                     .replace(/[^\w\s-]/g, '')
-                                                     .replace(/[\s_-]+/g, '-')
-                                                     .replace(/^-+|-+$/g, '');
-                                                 window.open(`https://leetcode.com/problems/${slug}/description/`, '_blank');
-                                             }}
-                                             className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-600 rounded-xl border border-slate-100 transition-all shrink-0 animate-fade-in"
-                                         >
-                                             <img src="/leetcode.png" alt="LeetCode" className="w-4 h-4 object-contain" />
-                                             LEETCODE DESCRIPTION
-                                         </button>
+                                        <button
+                                            onClick={() => {
+                                                const slug = task.taskName
+                                                    .toLowerCase()
+                                                    .trim()
+                                                    .replace(/[^\w\s-]/g, '')
+                                                    .replace(/[\s_-]+/g, '-')
+                                                    .replace(/^-+|-+$/g, '');
+                                                window.open(`https://leetcode.com/problems/${slug}/description/`, '_blank');
+                                            }}
+                                            className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-600 rounded-xl border border-slate-100 transition-all shrink-0 animate-fade-in"
+                                        >
+                                            <img src="/leetcode.png" alt="LeetCode" className="w-4 h-4 object-contain" />
+                                            LEETCODE DESCRIPTION
+                                        </button>
                                     )}
                                     {task.youtubeUrl && (
                                         <button
@@ -1099,15 +1129,25 @@ const Revision = () => {
                                             return;
                                         }
                                         setSelectedTask(task);
+                                        setBacklogStatusChoice('done');
                                         setShowRevisionModal(true);
                                     }}
                                     className={`px-6 py-3.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all shadow-md flex items-center gap-2 ${isTimeRequirementMet
-                                            ? 'bg-gradient-to-r from-primary to-vermilion-500 hover:from-primary-dark hover:to-vermilion-600 text-white active:scale-95'
-                                            : 'bg-slate-100 border border-slate-200 text-slate-400 cursor-not-allowed opacity-75'
+                                        ? 'bg-gradient-to-r from-primary to-vermilion-500 hover:from-primary-dark hover:to-vermilion-600 text-white active:scale-95 shadow-primary/20'
+                                        : 'bg-slate-100 border border-slate-200 text-slate-400 cursor-not-allowed opacity-75'
                                         }`}
                                 >
-                                    <IoSyncOutline size={14} className={isTimeRequirementMet ? 'animate-spin-slow' : ''} />
-                                    {isTimeRequirementMet ? 'LOG REVISION' : `REVISE (${formatMinsSecs(remainingSecondsToLog)})`}
+                                    {task.isBacklogQuestion ? (
+                                        <>
+                                            <IoCheckmarkCircleOutline size={16} />
+                                            <span>{isTimeRequirementMet ? 'LOG BACKLOG STATUS' : `FOCUS ON BACKLOG (${formatMinsSecs(remainingSecondsToLog)})`}</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <IoSyncOutline size={14} className={isTimeRequirementMet ? 'animate-spin-slow' : ''} />
+                                            <span>{isTimeRequirementMet ? 'LOG REVISION' : `REVISE (${formatMinsSecs(remainingSecondsToLog)})`}</span>
+                                        </>
+                                    )}
                                 </button>
                             </div>
                         </div>
@@ -1123,7 +1163,7 @@ const Revision = () => {
                                 const isPinned = dailyRevisionState.reviseTomorrowQuestions?.some(pq => pq._id === q._id || pq === q._id);
                                 return (
                                     <div key={q._id} className="flex items-center justify-between bg-slate-50 border border-slate-100 rounded-2xl p-3 hover:bg-slate-100/50 transition-colors">
-                                        <div 
+                                        <div
                                             onClick={() => handleOpenDrawer(q)}
                                             className="truncate pr-4 flex items-center gap-2 cursor-pointer hover:text-primary transition-colors"
                                         >
@@ -1151,11 +1191,10 @@ const Revision = () => {
                                                     toast.error("Failed to update preference");
                                                 }
                                             }}
-                                            className={`px-3 py-1.5 rounded-xl text-[9px] font-black tracking-wider uppercase transition-all shrink-0 active:scale-95 border ${
-                                                isPinned 
-                                                ? 'bg-primary border-primary text-white shadow-sm' 
+                                            className={`px-3 py-1.5 rounded-xl text-[9px] font-black tracking-wider uppercase transition-all shrink-0 active:scale-95 border ${isPinned
+                                                ? 'bg-primary border-primary text-white shadow-sm'
                                                 : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
-                                            }`}
+                                                }`}
                                         >
                                             {isPinned ? '📌 PINNED' : '🔄 REVISE TOMORROW'}
                                         </button>
@@ -1170,15 +1209,19 @@ const Revision = () => {
                 {showRevisionModal && (
                     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
                         <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-500" onClick={() => setShowRevisionModal(false)}></div>
-                        <div className="relative bg-white rounded-[2.5rem] shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-300 border border-white/20">
-                            <div className="bg-slate-900 px-8 py-10 flex items-center justify-between text-white relative overflow-hidden">
+                        <div className="relative bg-white rounded-[2.5rem] shadow-2xl w-full max-w-xl overflow-hidden animate-in zoom-in-95 duration-300 border border-white/20">
+                            <div className="bg-[#2D3436] px-8 py-10 flex items-center justify-between text-white relative overflow-hidden">
                                 <div className="relative z-10 flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-xl border border-white/10">
-                                        <IoSyncOutline size={24} className="text-primary" />
+                                    <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-xl border border-white/10 text-vermilion-500">
+                                        {selectedTask?.isBacklogQuestion ? <IoCheckmarkCircleOutline size={24} /> : <IoSyncOutline size={24} />}
                                     </div>
                                     <div>
-                                        <h3 className="font-black text-xl tracking-tight leading-none">Log Review</h3>
-                                        <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1.5">Cycle Submission</p>
+                                        <h3 className="font-black text-xl tracking-tight leading-none">
+                                            {selectedTask?.isBacklogQuestion ? 'Backlog Resolution' : 'Log Review'}
+                                        </h3>
+                                        <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1.5">
+                                            {selectedTask?.isBacklogQuestion ? 'Clearance Protocol' : 'Cycle Submission'}
+                                        </p>
                                     </div>
                                 </div>
                                 <button onClick={() => setShowRevisionModal(false)} className="relative z-10 w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full transition-all border border-white/5">
@@ -1187,28 +1230,81 @@ const Revision = () => {
                             </div>
 
                             <div className="p-8 bg-white">
-                                <div className="mb-8">
+                                <div className="mb-6">
                                     <span className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mb-3 block">Task</span>
                                     <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-primary font-black shadow-sm border border-slate-100">
-                                            {selectedTask?.taskName?.[0] || 'T'}
+                                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-vermilion-500 font-black shadow-sm border border-slate-100">
+                                            {selectedTask?.isBacklogQuestion ? '🎯' : (selectedTask?.taskName?.[0] || 'T')}
                                         </div>
                                         <div>
                                             <p className="text-sm font-black text-slate-800 tracking-tight">{selectedTask?.taskName}</p>
-                                            <p className="text-[9px] font-black text-primary uppercase tracking-widest mt-0.5">{selectedTask?.projectName?.key || 'MOM'}</p>
+                                            <p className="text-[9px] font-black text-vermilion-500 uppercase tracking-widest mt-0.5">{selectedTask?.projectName?.key || 'DSA'}</p>
                                         </div>
                                     </div>
                                 </div>
+
+                                {selectedTask?.isBacklogQuestion && (
+                                    <div className="mb-6">
+                                        <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 block">
+                                            Resolution Status
+                                        </label>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            <button
+                                                type="button"
+                                                onClick={() => setBacklogStatusChoice('done')}
+                                                className={`p-3.5 rounded-2xl border text-left transition-all relative flex flex-col justify-between ${backlogStatusChoice === 'done'
+                                                    ? 'bg-vermilion-50 border-vermilion-500 text-slate-800 shadow-sm ring-2 ring-vermilion-500/20'
+                                                    : 'bg-slate-50 border-slate-200 hover:bg-slate-100/70 text-slate-600'
+                                                    }`}
+                                            >
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <span className={`text-xs font-black flex items-center gap-1.5 ${backlogStatusChoice === 'done' ? 'text-vermilion-600' : 'text-slate-700'
+                                                        }`}>
+                                                        <span>✅</span> Solved (Done)
+                                                    </span>
+                                                    {backlogStatusChoice === 'done' && (
+                                                        <span className="w-2 h-2 rounded-full bg-vermilion-500"></span>
+                                                    )}
+                                                </div>
+                                                <p className="text-[10px] font-semibold text-slate-500 leading-snug">
+                                                    Mark <strong>Done</strong> & clear from backlog.
+                                                </p>
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => setBacklogStatusChoice('backlog')}
+                                                className={`p-3.5 rounded-2xl border text-left transition-all relative flex flex-col justify-between ${backlogStatusChoice === 'backlog'
+                                                    ? 'bg-vermilion-50 border-vermilion-500 text-slate-800 shadow-sm ring-2 ring-vermilion-500/20'
+                                                    : 'bg-slate-50 border-slate-200 hover:bg-slate-100/70 text-slate-600'
+                                                    }`}
+                                            >
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <span className={`text-xs font-black flex items-center gap-1.5 ${backlogStatusChoice === 'backlog' ? 'text-vermilion-600' : 'text-slate-700'
+                                                        }`}>
+                                                        <span>⏳</span> See Tomorrow
+                                                    </span>
+                                                    {backlogStatusChoice === 'backlog' && (
+                                                        <span className="w-2 h-2 rounded-full bg-vermilion-500"></span>
+                                                    )}
+                                                </div>
+                                                <p className="text-[10px] font-semibold text-slate-500 leading-snug">
+                                                    Keep in <strong>Backlog</strong> & show tomorrow.
+                                                </p>
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
 
                                 <div className="space-y-5">
                                     <div>
                                         <label className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mb-3 block">Insights</label>
                                         <textarea
                                             rows="4"
-                                            placeholder="Record key findings..."
+                                            placeholder={selectedTask?.isBacklogQuestion ? "Record your solution notes, learnings, or why retry is needed..." : "Record key findings..."}
                                             value={revisionNote}
                                             onChange={(e) => setRevisionNote(e.target.value)}
-                                            className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-5 text-[13px] font-bold text-slate-700 placeholder:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary focus:bg-white transition-all resize-none shadow-inner"
+                                            className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-5 text-[13px] font-bold text-slate-700 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-vermilion-500/20 focus:border-vermilion-500 focus:bg-white transition-all resize-none shadow-inner"
                                         ></textarea>
                                     </div>
 
@@ -1221,10 +1317,26 @@ const Revision = () => {
                                         </button>
                                         <button
                                             onClick={handleAddRevision}
-                                            className="flex-1 px-6 py-4 rounded-xl text-[10px] font-black text-white bg-primary hover:bg-primary-dark transition-all active:scale-95 shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
+                                            className="flex-1 px-6 py-4 rounded-xl text-[10px] font-black text-white bg-gradient-to-r from-primary to-vermilion-500 hover:from-primary-dark hover:to-vermilion-600 shadow-lg shadow-vermilion-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
                                         >
-                                            <IoSyncOutline size={16} />
-                                            SUBMIT LOG
+                                            {selectedTask?.isBacklogQuestion ? (
+                                                backlogStatusChoice === 'done' ? (
+                                                    <>
+                                                        <IoCheckmarkCircleOutline size={16} />
+                                                        <span>COMPLETE & CLEAR BACKLOG</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <IoSyncOutline size={16} />
+                                                        <span>KEEP BACKLOG & SEE TOMORROW</span>
+                                                    </>
+                                                )
+                                            ) : (
+                                                <>
+                                                    <IoSyncOutline size={16} />
+                                                    <span>SUBMIT LOG</span>
+                                                </>
+                                            )}
                                         </button>
                                     </div>
                                 </div>
@@ -1457,7 +1569,7 @@ const Revision = () => {
                             <span>{Math.round(((dailyRevisionState.completedCount || 0) / (dailyRevisionState.threshold || 50)) * 100)}%</span>
                         </div>
                         <div className="w-full h-2.5 bg-slate-200/60 rounded-full overflow-hidden border border-slate-200/50">
-                            <div 
+                            <div
                                 className="h-full bg-gradient-to-r from-amber-500 to-primary rounded-full transition-all duration-500"
                                 style={{ width: `${Math.min(100, Math.round(((dailyRevisionState.completedCount || 0) / (dailyRevisionState.threshold || 50)) * 100))}%` }}
                             ></div>
@@ -1938,14 +2050,18 @@ const Revision = () => {
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-500" onClick={() => setShowRevisionModal(false)}></div>
                     <div className="relative bg-white rounded-[2.5rem] shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-300 border border-white/20">
-                        <div className="bg-slate-900 px-8 py-10 flex items-center justify-between text-white relative overflow-hidden">
+                        <div className="bg-[#2D3436] px-8 py-10 flex items-center justify-between text-white relative overflow-hidden">
                             <div className="relative z-10 flex items-center gap-4">
-                                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-xl border border-white/10">
-                                    <IoSyncOutline size={24} className="text-primary" />
+                                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-xl border border-white/10 text-vermilion-500">
+                                    {selectedTask?.isBacklogQuestion ? <IoCheckmarkCircleOutline size={24} /> : <IoSyncOutline size={24} />}
                                 </div>
                                 <div>
-                                    <h3 className="font-black text-xl tracking-tight leading-none">Log Review</h3>
-                                    <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1.5">Cycle Submission</p>
+                                    <h3 className="font-black text-xl tracking-tight leading-none">
+                                        {selectedTask?.isBacklogQuestion ? 'Backlog Resolution' : 'Log Review'}
+                                    </h3>
+                                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1.5">
+                                        {selectedTask?.isBacklogQuestion ? 'Clearance Protocol' : 'Cycle Submission'}
+                                    </p>
                                 </div>
                             </div>
                             <button onClick={() => setShowRevisionModal(false)} className="relative z-10 w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full transition-all border border-white/5">
@@ -1954,28 +2070,81 @@ const Revision = () => {
                         </div>
 
                         <div className="p-8 bg-white">
-                            <div className="mb-8">
+                            <div className="mb-6">
                                 <span className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mb-3 block">Task</span>
                                 <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-primary font-black shadow-sm border border-slate-100">
-                                        {selectedTask?.taskName?.[0] || 'T'}
+                                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-vermilion-500 font-black shadow-sm border border-slate-100">
+                                        {selectedTask?.isBacklogQuestion ? '🎯' : (selectedTask?.taskName?.[0] || 'T')}
                                     </div>
                                     <div>
                                         <p className="text-sm font-black text-slate-800 tracking-tight">{selectedTask?.taskName}</p>
-                                        <p className="text-[9px] font-black text-primary uppercase tracking-widest mt-0.5">{selectedTask?.projectName?.key || 'MOM'}</p>
+                                        <p className="text-[9px] font-black text-vermilion-500 uppercase tracking-widest mt-0.5">{selectedTask?.projectName?.key || 'DSA'}</p>
                                     </div>
                                 </div>
                             </div>
+
+                            {selectedTask?.isBacklogQuestion && (
+                                <div className="mb-6">
+                                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 block">
+                                        Resolution Status
+                                    </label>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => setBacklogStatusChoice('done')}
+                                            className={`p-3.5 rounded-2xl border text-left transition-all relative flex flex-col justify-between ${backlogStatusChoice === 'done'
+                                                ? 'bg-vermilion-50 border-vermilion-500 text-slate-800 shadow-sm ring-2 ring-vermilion-500/20'
+                                                : 'bg-slate-50 border-slate-200 hover:bg-slate-100/70 text-slate-600'
+                                                }`}
+                                        >
+                                            <div className="flex items-center justify-between mb-1">
+                                                <span className={`text-xs font-black flex items-center gap-1.5 ${backlogStatusChoice === 'done' ? 'text-vermilion-600' : 'text-slate-700'
+                                                    }`}>
+                                                    <span>✅</span> Solved (Done)
+                                                </span>
+                                                {backlogStatusChoice === 'done' && (
+                                                    <span className="w-2 h-2 rounded-full bg-vermilion-500"></span>
+                                                )}
+                                            </div>
+                                            <p className="text-[10px] font-semibold text-slate-500 leading-snug">
+                                                Mark <strong>Done</strong> & clear from backlog.
+                                            </p>
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            onClick={() => setBacklogStatusChoice('backlog')}
+                                            className={`p-3.5 rounded-2xl border text-left transition-all relative flex flex-col justify-between ${backlogStatusChoice === 'backlog'
+                                                ? 'bg-vermilion-50 border-vermilion-500 text-slate-800 shadow-sm ring-2 ring-vermilion-500/20'
+                                                : 'bg-slate-50 border-slate-200 hover:bg-slate-100/70 text-slate-600'
+                                                }`}
+                                        >
+                                            <div className="flex items-center justify-between mb-1">
+                                                <span className={`text-xs font-black flex items-center gap-1.5 ${backlogStatusChoice === 'backlog' ? 'text-vermilion-600' : 'text-slate-700'
+                                                    }`}>
+                                                    <span>⏳</span> See Tomorrow
+                                                </span>
+                                                {backlogStatusChoice === 'backlog' && (
+                                                    <span className="w-2 h-2 rounded-full bg-vermilion-500"></span>
+                                                )}
+                                            </div>
+                                            <p className="text-[10px] font-semibold text-slate-500 leading-snug">
+                                                Keep in <strong>Backlog</strong> & show tomorrow.
+                                            </p>
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
 
                             <div className="space-y-5">
                                 <div>
                                     <label className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mb-3 block">Insights</label>
                                     <textarea
                                         rows="4"
-                                        placeholder="Record key findings..."
+                                        placeholder={selectedTask?.isBacklogQuestion ? "Record your solution notes, learnings, or why retry is needed..." : "Record key findings..."}
                                         value={revisionNote}
                                         onChange={(e) => setRevisionNote(e.target.value)}
-                                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-5 text-[13px] font-bold text-slate-700 placeholder:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary focus:bg-white transition-all resize-none shadow-inner"
+                                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-5 text-[13px] font-bold text-slate-700 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-vermilion-500/20 focus:border-vermilion-500 focus:bg-white transition-all resize-none shadow-inner"
                                     ></textarea>
                                 </div>
 
@@ -1988,10 +2157,26 @@ const Revision = () => {
                                     </button>
                                     <button
                                         onClick={handleAddRevision}
-                                        className="flex-1 px-6 py-4 rounded-xl text-[10px] font-black text-white bg-primary hover:bg-primary-dark transition-all active:scale-95 shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
+                                        className="flex-1 px-6 py-4 rounded-xl text-[10px] font-black text-white bg-gradient-to-r from-primary to-vermilion-500 hover:from-primary-dark hover:to-vermilion-600 shadow-lg shadow-vermilion-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
                                     >
-                                        <IoSyncOutline size={16} />
-                                        SUBMIT LOG
+                                        {selectedTask?.isBacklogQuestion ? (
+                                            backlogStatusChoice === 'done' ? (
+                                                <>
+                                                    <IoCheckmarkCircleOutline size={16} />
+                                                    <span>COMPLETE & CLEAR BACKLOG</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <IoSyncOutline size={16} />
+                                                    <span>KEEP BACKLOG & SEE TOMORROW</span>
+                                                </>
+                                            )
+                                        ) : (
+                                            <>
+                                                <IoSyncOutline size={16} />
+                                                <span>SUBMIT LOG</span>
+                                            </>
+                                        )}
                                     </button>
                                 </div>
                             </div>
@@ -2346,7 +2531,7 @@ const Revision = () => {
             {showCompletionModal && dailyRevisionState && dailyRevisionState.isEligible === true && dailyRevisionState.questions?.length > 0 && (
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
                     {/* Backdrop */}
-                    <div 
+                    <div
                         className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-500"
                         onClick={() => {
                             const dateStr = dailyRevisionState.dateStr;
@@ -2354,7 +2539,7 @@ const Revision = () => {
                             setShowCompletionModal(false);
                         }}
                     ></div>
-                    
+
                     {/* Modal Content */}
                     <div className="relative bg-white rounded-[2.5rem] shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-white/20">
                         {/* Header / Celebration Banner */}
@@ -2450,11 +2635,10 @@ const Revision = () => {
                                                             toast.error("Failed to update preference");
                                                         }
                                                     }}
-                                                    className={`px-4 py-2 rounded-xl text-[10px] font-black tracking-wider uppercase transition-all shrink-0 active:scale-95 border ${
-                                                        isPinned 
-                                                        ? 'bg-gradient-to-r from-primary to-vermilion-500 hover:from-primary-dark hover:to-vermilion-600 text-white border-transparent shadow-sm' 
+                                                    className={`px-4 py-2 rounded-xl text-[10px] font-black tracking-wider uppercase transition-all shrink-0 active:scale-95 border ${isPinned
+                                                        ? 'bg-gradient-to-r from-primary to-vermilion-500 hover:from-primary-dark hover:to-vermilion-600 text-white border-transparent shadow-sm'
                                                         : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     {isPinned ? '📌 PINNED' : '🔄 REVISE TOMORROW'}
                                                 </button>

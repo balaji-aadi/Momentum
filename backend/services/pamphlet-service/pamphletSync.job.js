@@ -11,6 +11,8 @@ export const initPamphletSyncJob = () => {
         await PamphletSyncService.syncAllUsers();
     });
 
-    // Execute sync on server startup
-    PamphletSyncService.syncAllUsers();
+    // Execute sync after connection settles
+    setTimeout(() => {
+        PamphletSyncService.syncAllUsers().catch(e => console.error('[PamphletSync] Startup sync error:', e));
+    }, 5000);
 };

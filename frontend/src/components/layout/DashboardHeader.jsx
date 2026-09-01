@@ -191,18 +191,8 @@ const DashboardHeader = ({
                     ))}
                 </div>
 
-                {/* Actions (Schedule Arena, Hide Controls, Refine View, Create Task) */}
+                {/* Actions (Hide Controls, Refine View, Create Task) */}
                 <div className="flex items-center gap-2 self-end sm:self-auto">
-                    {onOpenSchedule && hasProjectSelected && !isArenaScheduled && (
-                        <button
-                            onClick={onOpenSchedule}
-                            className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-600 text-white font-bold px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow-sm hover:shadow transition-all active:scale-95 shrink-0 cursor-pointer"
-                            title="Generate and apply custom timeline schedule for this Arena"
-                        >
-                            <IoCalendarOutline size={14} className="text-white" />
-                            <span>Schedule Arena</span>
-                        </button>
-                    )}
 
                     {onHideControls && (
                         <button

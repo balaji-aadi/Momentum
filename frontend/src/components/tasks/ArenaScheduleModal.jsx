@@ -195,7 +195,7 @@ const ArenaScheduleModal = ({
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300"
         onClick={onClose}
       />
@@ -326,17 +326,16 @@ const ArenaScheduleModal = ({
 
           {/* Live Feasibility Indicator if Target is set */}
           {preview.feasibility && (
-            <div className={`p-3.5 rounded-2xl border flex items-start gap-2.5 text-xs transition-all ${
-              preview.feasibility.isPossible
+            <div className={`p-3.5 rounded-2xl border flex items-start gap-2.5 text-xs transition-all ${preview.feasibility.isPossible
                 ? 'bg-green-50 border-green-200/60 text-green-800'
                 : 'bg-rose-50 border-rose-200/60 text-rose-800'
-            }`}>
+              }`}>
               <span className="text-base shrink-0 mt-0.5">
                 {preview.feasibility.isPossible ? '✅' : '⚠️'}
               </span>
               <div>
                 <h5 className="font-black text-xs">
-                  {preview.feasibility.isPossible 
+                  {preview.feasibility.isPossible
                     ? `Feasible: Fits within ${preview.feasibility.months} month(s)`
                     : `Infeasible: Exceeds ${preview.feasibility.months}-month target`}
                 </h5>
@@ -395,14 +394,13 @@ const ArenaScheduleModal = ({
             type="button"
             onClick={handleApplySchedule}
             disabled={isSubmitting || (preview.feasibility && !preview.feasibility.isPossible)}
-            className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider text-white shadow-md transition-all active:scale-95 flex items-center gap-2 ${
-              preview.feasibility && !preview.feasibility.isPossible
+            className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider text-white shadow-md transition-all active:scale-95 flex items-center gap-2 ${preview.feasibility && !preview.feasibility.isPossible
                 ? 'bg-slate-300 cursor-not-allowed'
                 : 'bg-primary hover:bg-primary-dark shadow-primary/20'
-            }`}
+              }`}
           >
             <IoSparklesOutline size={14} />
-            <span>{isSubmitting ? 'Generating & Locking...' : 'Confirm & Lock Schedule (One-Time Setup)'}</span>
+            <span>{isSubmitting ? 'Generating & Locking...' : 'Confirm & Lock Schedule'}</span>
           </button>
         </div>
       </div>

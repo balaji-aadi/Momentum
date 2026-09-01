@@ -20,9 +20,8 @@ const MainLayout = () => {
         dailyRevision &&
         dailyRevision.isEligible === true &&
         dailyRevision.questions?.length > 0 &&
-        dailyRevision.isStarted &&
         !dailyRevision.isCompleted;
-    const allowedPaths = ['/revision', '/login', '/branch', '/pricing'];
+    const allowedPaths = ['/revision', '/login', '/pricing'];
     const isPathAllowed = allowedPaths.includes(location.pathname);
     const { handleLoading } = useLoading();
     const navigate = useNavigate();
@@ -56,9 +55,8 @@ const MainLayout = () => {
             dailyRevision &&
             dailyRevision.isEligible === true &&
             dailyRevision.questions?.length > 0 &&
-            dailyRevision.isStarted &&
             !dailyRevision.isCompleted;
-        const allowedPaths = ['/revision', '/login', '/branch', '/pricing'];
+        const allowedPaths = ['/revision', '/login', '/pricing'];
 
         if (isLocked && !allowedPaths.includes(location.pathname)) {
             toast.error("Complete your Daily Revision to unlock the application!");

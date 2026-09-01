@@ -270,9 +270,6 @@ export async function seedDsaPhase3() {
         await Task.deleteMany({ projectName: dsaPhase3Proj._id });
         console.log('[Seeder] Cleaned existing DSAP3 tasks for fresh seeding.');
 
-        // Sequential Date Tracker starting September 10, 2026
-        let currentDate = new Date('2026-09-10T00:00:00Z');
-        let dailyProblemsCount = 0;
         let totalProblemsInserted = 0;
         let taskIdCounter = 1;
 
@@ -280,19 +277,9 @@ export async function seedDsaPhase3() {
             const numChildren = patternItem.problems.length;
             const parentTaskIdStr = `DSAP3-${taskIdCounter++}`;
 
-            const patternStartDate = new Date(currentDate);
-            let patternEndDate = new Date(currentDate);
-
             const childDocsToInsert = [];
 
             for (const prob of patternItem.problems) {
-                if (dailyProblemsCount >= 4) {
-                    currentDate.setDate(currentDate.getDate() + 1);
-                    dailyProblemsCount = 0;
-                }
-
-                const taskDueDate = new Date(currentDate);
-                patternEndDate = new Date(currentDate);
                 const childTaskIdStr = `DSAP3-${taskIdCounter++}`;
 
                 childDocsToInsert.push({
@@ -303,8 +290,8 @@ export async function seedDsaPhase3() {
                     taskPriority: 'medium',
                     taskType: 'preparation',
                     estimatedHours: 1, // 1 hour per child problem task
-                    taskStartDate: taskDueDate,
-                    taskDueDate: taskDueDate,
+                    taskStartDate: null,
+                    taskDueDate: null,
                     status: 'todo',
                     branchId: new mongoose.Types.ObjectId(BRANCH_ID_STR),
                     assignee: new mongoose.Types.ObjectId(USER_ID_STR),
@@ -312,14 +299,11 @@ export async function seedDsaPhase3() {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 });
-
-                dailyProblemsCount++;
             }
 
             // Parent task doc:
-            // - taskStartDate: start date of first child problem
-            // - taskDueDate: end date of last child problem
-            // - estimatedHours: total sum of child hours (e.g. 6 hours for 6 problems)
+            // - Canonical task with null dates so user can dynamically schedule via Schedule Arena
+            // - estimatedHours: total sum of child hours
             const parentTaskDoc = {
                 taskName: patternItem.patternName,
                 description: `Parent Pattern Task for ${patternItem.patternName}`,
@@ -327,9 +311,9 @@ export async function seedDsaPhase3() {
                 taskId: parentTaskIdStr,
                 taskPriority: 'medium',
                 taskType: 'preparation',
-                estimatedHours: numChildren, // Total sum of child estimated hours
-                taskStartDate: patternStartDate,
-                taskDueDate: patternEndDate,
+                estimatedHours: numChildren,
+                taskStartDate: null,
+                taskDueDate: null,
                 parentTask: null,
                 status: 'todo',
                 subtaskStats: { total: numChildren, completed: 0 },
@@ -349,15 +333,10 @@ export async function seedDsaPhase3() {
                 await Task.insertOne(childDoc);
                 totalProblemsInserted++;
             }
-
-            // AFTER EVERY PATTERN COMPLETED -> INSERT 2-DAY REVISION BREAK!
-            currentDate.setDate(currentDate.getDate() + 2);
-            dailyProblemsCount = 0;
         }
 
-        console.log(`\n[Seeder] SUCCESS! Seeding complete for DSA Phase 3 (DSAP3).`);
+        console.log(`\n[Seeder] SUCCESS! Canonical seeding complete for DSA Phase 3 (DSAP3) in Schedule Arena stage.`);
         console.log(`[Seeder] Total Problems Inserted: ${totalProblemsInserted} across ${DSA_PHASE3_CURRICULUM.length} patterns.`);
-        console.log(`[Seeder] Final Scheduled Completion Date: ${currentDate.toISOString().split('T')[0]}`);
 
         process.exit(0);
     } catch (error) {

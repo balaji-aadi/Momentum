@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { IoTimeOutline, IoPlay, IoPause } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
 import moment from 'moment';
 import { getScopedItem } from '../../utils/userStorage';
 
 const GlobalTimerWidget = () => {
     const navigate = useNavigate();
+    const { dailyRevision } = useSelector((state) => state.store);
+    const isRevisionLocked = dailyRevision && dailyRevision.isEligible === true && dailyRevision.questions?.length > 0 && !dailyRevision.isCompleted;
     const [timerData, setTimerData] = useState(null);
     const [timeLeft, setTimeLeft] = useState(0);
 
@@ -50,7 +54,13 @@ const GlobalTimerWidget = () => {
 
     return (
         <div 
-            onClick={() => navigate('/focus-timer')}
+            onClick={() => {
+                if (isRevisionLocked) {
+                    toast.error("Complete your Daily Revision to unlock Focus Timer!");
+                    return;
+                }
+                navigate('/focus-timer');
+            }}
             className={`mx-4 mb-4 p-3 rounded-xl shadow-lg cursor-pointer transition-all group animate-in slide-in-from-left duration-300 ${isOvertime ? 'bg-rose-600 shadow-rose-200 hover:bg-rose-700' : 'bg-primary shadow-primary/25 hover:bg-primaryHover'}`}
         >
             <div className="flex items-center justify-between mb-2">

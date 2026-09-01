@@ -1,5 +1,6 @@
 import DsaPamphlet from '../../models/dsaPamphlet.model.js';
 import { Task } from '../../models/task.model.js';
+import { User } from '../../models/user.model.js';
 import mongoose from 'mongoose';
 
 const DEFAULT_FAANG_CURRICULUM = [
@@ -606,8 +607,7 @@ export class PamphletSyncService {
      */
     static async syncAllUsers() {
         try {
-            const UserCollection = mongoose.connection.collection('users');
-            const users = await UserCollection.find({}).toArray();
+            const users = await User.find({}).select('_id').lean();
             console.log(`[PamphletSync] Running 2-day Pamphlet Sync for ${users.length} users...`);
             for (const u of users) {
                 await this.syncUserPamphlet(u._id.toString());

@@ -15,6 +15,7 @@ import {
   IoBookOutline
 } from 'react-icons/io5';
 import moment from 'moment';
+import toast from 'react-hot-toast';
 import { getDailyShlok } from './gitaData';
 import { AnalyticsApi } from '../../services/api/Analytics.api';
 import { FocusApi } from '../../services/api/Focus.api';
@@ -22,7 +23,8 @@ import { TaskApi } from '../../services/api/Task.api';
 
 const SarathiBot = () => {
   const navigate = useNavigate();
-  const { currentUser } = useSelector((state) => state.store);
+  const { currentUser, dailyRevision } = useSelector((state) => state.store);
+  const isRevisionLocked = dailyRevision && dailyRevision.isEligible === true && dailyRevision.questions?.length > 0 && !dailyRevision.isCompleted;
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [yesterdayHours, setYesterdayHours] = useState(0);
@@ -300,8 +302,16 @@ const SarathiBot = () => {
             {/* Quick Actions Footer */}
             <div className="p-5 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/20 flex gap-2">
               <button
-                onClick={() => { setIsOpen(false); navigate('/focus-timer'); }}
-                className="flex-1 py-2.5 px-4 bg-primary text-white hover:bg-primaryHover text-[10px] font-black uppercase tracking-wider rounded-xl transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-1.5 active:scale-95"
+                onClick={() => {
+                  setIsOpen(false);
+                  if (isRevisionLocked) {
+                    toast.error("Complete your Daily Revision to unlock Focus Session!");
+                    navigate('/revision');
+                    return;
+                  }
+                  navigate('/focus-timer');
+                }}
+                className={`flex-1 py-2.5 px-4 bg-primary text-white hover:bg-primaryHover text-[10px] font-black uppercase tracking-wider rounded-xl transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-1.5 active:scale-95 ${isRevisionLocked ? 'opacity-50' : ''}`}
               >
                 Focus Session <IoArrowForward size={12} />
               </button>
