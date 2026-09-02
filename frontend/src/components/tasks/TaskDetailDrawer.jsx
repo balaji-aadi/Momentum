@@ -422,32 +422,26 @@ const TaskDetailDrawer = () => {
                     <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-1.5">
                             <label className="text-[10px] font-black text-textSub uppercase tracking-widest flex items-center gap-1">
-                                <IoPersonOutline /> Assignee
-                            </label>
-                            <div className="flex items-center gap-3 p-3 bg-slate-50/50 rounded-2xl border border-slate-100">
-                                <div className="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-sm font-black shadow-lg shadow-primary/20">
-                                    {task.assignee?.firstName?.[0] || 'U'}
-                                </div>
-                                <div className="min-w-0">
-                                    <p className="text-sm font-bold text-textMain truncate leading-none">{task.assignee?.firstName || 'Unassigned'}</p>
-                                    <p className="text-[10px] text-textSub mt-1">Primary Owner</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="space-y-1.5">
-                            <label className="text-[10px] font-black text-textSub uppercase tracking-widest flex items-center gap-1">
                                 <IoFlagOutline /> Priority
                             </label>
                             <div className={`flex items-center gap-2 p-3 bg-slate-50/50 rounded-2xl border ${task.taskPriority === 'high' ? 'border-red-100 text-red-600' :
                                     task.taskPriority === 'medium' ? 'border-amber-100 text-amber-600' :
                                         'border-blue-100 text-blue-600'
                                 }`}>
-                                <span className={`w-2 h-2 rounded-full ${task.taskPriority === 'high' ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' :
-                                        task.taskPriority === 'medium' ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]' :
-                                            'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]'
-                                    }`}></span>
-                                <span className="text-sm font-black truncate capitalize">{task.taskPriority}</span>
+                                <div className={`w-2 h-2 rounded-full ${task.taskPriority === 'high' ? 'bg-red-500' :
+                                        task.taskPriority === 'medium' ? 'bg-amber-500' :
+                                            'bg-blue-500'
+                                    }`}></div>
+                                <span className="text-sm font-bold capitalize">{task.taskPriority || 'Medium'}</span>
+                            </div>
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-textSub uppercase tracking-widest flex items-center gap-1">
+                                <IoCheckmarkCircleOutline /> Status
+                            </label>
+                            <div className="flex items-center gap-2 p-3 bg-slate-50/50 rounded-2xl border border-slate-100">
+                                <span className="text-sm font-bold capitalize text-textMain">{task.status || 'Todo'}</span>
                             </div>
                         </div>
 
@@ -703,87 +697,79 @@ const TaskDetailDrawer = () => {
                     })()}
 
                     {/* Subtasks Section */}
-                    <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                            <label className="text-sm font-semibold text-textMain flex items-center gap-2">
-                                <IoListOutline /> Subtasks
-                            </label>
-                            <button
-                                onClick={() => setShowAddSubtask(!showAddSubtask)}
-                                className="text-xs text-primary hover:underline font-medium"
-                            >
-                                + Add Subtask
-                            </button>
-                        </div>
-
-                        {/* Progress Bar */}
-                        {subtasks.length > 0 && (
-                            <div className="w-full bg-slate-100 rounded-full h-1.5 mb-2">
-                                <div
-                                    className="bg-green-500 h-1.5 rounded-full transition-all duration-500"
-                                    style={{ width: `${calculateSubtaskProgress()}%` }}
-                                ></div>
-                            </div>
-                        )}
-
+                    {/* Subtasks Section (Only for Parent Tasks) */}
+                    {!task.parentTask && (
                         <div className="space-y-2">
-                            {/* Add Subtask Input */}
-                            {showAddSubtask && (
-                                <div className="flex items-center gap-2 p-2 bg-slate-50 border border-borderLight rounded-lg">
-                                    <input
-                                        type="text"
-                                        value={newSubtaskName}
-                                        onChange={(e) => setNewSubtaskName(e.target.value)}
-                                        onKeyDown={(e) => e.key === 'Enter' && handleAddSubtask()}
-                                        placeholder="What needs to be done?"
-                                        className="flex-1 bg-transparent border-none text-sm focus:ring-0 p-0"
-                                        autoFocus
-                                    />
-                                    <button
-                                        onClick={handleAddSubtask}
-                                        disabled={creatingSubtask || !newSubtaskName.trim()}
-                                        className="text-primary text-xs font-bold disabled:opacity-50"
-                                    >
-                                        Add
-                                    </button>
+                            <div className="flex items-center justify-between">
+                                <label className="text-sm font-semibold text-textMain flex items-center gap-2">
+                                    <IoListOutline /> Subtasks
+                                </label>
+                                <button
+                                    onClick={() => setShowAddSubtask(!showAddSubtask)}
+                                    className="text-xs text-primary hover:underline font-medium"
+                                >
+                                    + Add Subtask
+                                </button>
+                            </div>
+
+                            {/* Progress Bar */}
+                            {subtasks.length > 0 && (
+                                <div className="w-full bg-slate-100 rounded-full h-1.5 mb-2">
+                                    <div
+                                        className="bg-green-500 h-1.5 rounded-full transition-all duration-500"
+                                        style={{ width: `${calculateSubtaskProgress()}%` }}
+                                    ></div>
                                 </div>
                             )}
 
-                            {/* Subtask List */}
-                            {subtasks.length > 0 ? (
-                                subtasks.map(subtask => (
-                                    <div key={subtask._id} className="group flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg border border-transparent hover:border-borderLight transition-colors">
+                            <div className="space-y-2">
+                                {/* Add Subtask Input */}
+                                {showAddSubtask && (
+                                    <div className="flex items-center gap-2 p-2 bg-slate-50 border border-borderLight rounded-lg">
+                                        <input
+                                            type="text"
+                                            value={newSubtaskName}
+                                            onChange={(e) => setNewSubtaskName(e.target.value)}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleAddSubtask()}
+                                            placeholder="What needs to be done?"
+                                            className="flex-1 bg-transparent border-none text-sm focus:ring-0 p-0"
+                                            autoFocus
+                                        />
                                         <button
-                                            onClick={() => toggleSubtaskStatus(subtask)}
-                                            className={`text-slate-400 hover:text-green-600 transition-colors ${subtask.status === 'done' ? 'text-green-500' : ''}`}
+                                            onClick={handleAddSubtask}
+                                            disabled={creatingSubtask || !newSubtaskName.trim()}
+                                            className="text-primary text-xs font-bold disabled:opacity-50"
                                         >
-                                            <IoCheckmarkCircleOutline size={20} />
+                                            Add
                                         </button>
-                                        <span className={`flex-1 text-sm ${subtask.status === 'done' ? 'text-textSub line-through' : 'text-textMain'}`}>
-                                            {subtask.taskName}
-                                        </span>
-                                        <div className="opacity-0 group-hover:opacity-100 flex items-center gap-2">
-                                            {/* Assignee Avatar (Small) */}
-                                            {subtask.assignee && (
-                                                <div
-                                                    className="w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[10px] font-bold"
-                                                    title={subtask.assignee.firstName}
-                                                >
-                                                    {subtask.assignee.firstName[0]}
-                                                </div>
-                                            )}
+                                    </div>
+                                )}
+
+                                {/* Subtask List */}
+                                {subtasks.length > 0 ? (
+                                    subtasks.map(subtask => (
+                                        <div key={subtask._id} className="group flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg border border-transparent hover:border-borderLight transition-colors">
+                                            <button
+                                                onClick={() => toggleSubtaskStatus(subtask)}
+                                                className={`text-slate-400 hover:text-green-600 transition-colors ${subtask.status === 'done' ? 'text-green-500' : ''}`}
+                                            >
+                                                <IoCheckmarkCircleOutline size={20} />
+                                            </button>
+                                            <span className={`flex-1 text-sm ${subtask.status === 'done' ? 'text-textSub line-through' : 'text-textMain'}`}>
+                                                {subtask.taskName}
+                                            </span>
                                         </div>
-                                    </div>
-                                ))
-                            ) : (
-                                !showAddSubtask && (
-                                    <div className="p-4 border border-dashed border-borderLight rounded-lg text-center cursor-pointer hover:bg-slate-50" onClick={() => setShowAddSubtask(true)}>
-                                        <p className="text-xs text-textSub">No subtasks yet. Click to add one.</p>
-                                    </div>
-                                )
-                            )}
+                                    ))
+                                ) : (
+                                    !showAddSubtask && (
+                                        <div className="p-4 border border-dashed border-borderLight rounded-lg text-center cursor-pointer hover:bg-slate-50" onClick={() => setShowAddSubtask(true)}>
+                                            <p className="text-xs text-textSub">No subtasks yet. Click to add one.</p>
+                                        </div>
+                                    )
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* Attachments Section */}
                     <div className="h-px bg-borderLight w-full my-4"></div>

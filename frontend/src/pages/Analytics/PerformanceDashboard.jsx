@@ -108,6 +108,20 @@ const PerformanceDashboard = () => {
         }
     };
 
+    const isDsaModule = useMemo(() => {
+        if (!activeBranch) return false;
+        const name = (activeBranch.name || '').toLowerCase();
+        const slug = (activeBranch.slug || '').toLowerCase();
+        const key = (activeBranch.key || '').toUpperCase();
+        return slug.includes('dsa') || name.includes('data structure') || name.includes('dsa') || key === 'DSA';
+    }, [activeBranch]);
+
+    useEffect(() => {
+        setStats([]);
+        setAllTasks([]);
+        setDailyStats([]);
+    }, [activeBranch?._id || activeBranch]);
+
     useEffect(() => {
         if (activeBranch) {
             fetchStats();
@@ -532,8 +546,8 @@ const PerformanceDashboard = () => {
                 </div>
             </div>
 
-            {/* FAANG DSA Interview Pamphlet & Multi-Arena Pattern Roadmap Widget */}
-            <DsaPamphletWidget />
+            {/* FAANG DSA Interview Pamphlet & Multi-Arena Pattern Roadmap Widget (DSA Module Only) */}
+            {isDsaModule && <DsaPamphletWidget />}
 
             {/* Quick Stats Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">

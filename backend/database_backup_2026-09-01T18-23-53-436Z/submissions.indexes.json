@@ -1,0 +1,49 @@
+[
+  {
+    "v": 2,
+    "key": {
+      "_id": 1
+    },
+    "name": "_id_"
+  },
+  {
+    "v": 2,
+    "key": {
+      "userId": 1
+    },
+    "name": "userId_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "problemId": 1
+    },
+    "name": "problemId_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "problemCode": 1
+    },
+    "name": "problemCode_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "verdict": 1
+    },
+    "name": "verdict_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "submittedAt": 1
+    },
+    "name": "submittedAt_1",
+    "background": true
+  }
+]

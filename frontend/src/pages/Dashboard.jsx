@@ -262,12 +262,12 @@ const Dashboard = () => {
               userToggledControlsRef.current = true;
               setIsControlsVisible(true);
             }}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900/90 hover:bg-slate-900 text-white backdrop-blur-md rounded-full shadow-lg border border-slate-700/50 text-xs font-bold transition-all cursor-pointer hover:shadow-xl hover:scale-105"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-primary hover:bg-primaryHover text-white rounded-full shadow-lg shadow-primary/20 border border-white/20 text-xs font-bold transition-all cursor-pointer hover:shadow-xl hover:scale-105 active:scale-95"
             title="Expand header controls"
           >
-            <IoFilterOutline size={13} className="text-indigo-400" />
+            <IoFilterOutline size={13} className="text-white" />
             <span>Controls</span>
-            <IoChevronDownOutline size={12} className="text-slate-400" />
+            <IoChevronDownOutline size={12} className="text-white/80" />
           </motion.button>
         </div>
       )}

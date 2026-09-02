@@ -257,10 +257,23 @@ const Board = ({
 
       if (scoreA !== scoreB) return scoreB - scoreA;
 
-      // Fallback: Date wise (Newest Created First)
-      const dateA = new Date(a.createdAt || 0);
-      const dateB = new Date(b.createdAt || 0);
-      return dateB - dateA;
+      // Natural Sequential Task Sorting (Ascending / First-in-First)
+      // 1. If taskId exists on both (e.g. LLDP1-P1 vs LLDP1-P3, or LLDP1-001 vs LLDP1-029)
+      if (a.taskId && b.taskId) {
+        return a.taskId.localeCompare(b.taskId, undefined, { numeric: true, sensitivity: 'base' });
+      }
+
+      // 2. Start Date wise (earlier start dates first)
+      if (a.taskStartDate && b.taskStartDate) {
+        const timeA = new Date(a.taskStartDate).getTime();
+        const timeB = new Date(b.taskStartDate).getTime();
+        if (timeA !== timeB) return timeA - timeB;
+      }
+
+      // 3. Fallback: Creation Order (First Created / Oldest First)
+      const dateA = new Date(a.createdAt || 0).getTime();
+      const dateB = new Date(b.createdAt || 0).getTime();
+      return dateA - dateB;
     });
   }, [boardTasks]);
 

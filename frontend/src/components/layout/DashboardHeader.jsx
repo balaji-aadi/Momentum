@@ -172,8 +172,8 @@ const DashboardHeader = ({
                             key={tab.id}
                             onClick={() => setViewMode(tab.id)}
                             className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all duration-300 relative shrink-0 ${viewMode === tab.id
-                                    ? 'text-slate-900 font-black'
-                                    : 'text-slate-500 hover:text-slate-700 font-bold'
+                                ? 'text-slate-900 font-black'
+                                : 'text-slate-500 hover:text-slate-700 font-bold'
                                 }`}
                         >
                             {viewMode === tab.id && (
@@ -191,7 +191,7 @@ const DashboardHeader = ({
                     ))}
                 </div>
 
-                {/* Actions (Hide Controls, Refine View, Create Task) */}
+                {/* Actions (Hide Controls,  Create Task) */}
                 <div className="flex items-center gap-2 self-end sm:self-auto">
 
                     {onHideControls && (
@@ -205,20 +205,6 @@ const DashboardHeader = ({
                         </button>
                     )}
 
-                    <button
-                        onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-                        className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 cursor-pointer ${isFiltersOpen
-                                ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
-                                : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-300 shadow-2xs'
-                            }`}
-                    >
-                        <IoFilterOutline size={13} className={isFiltersOpen ? "rotate-180 transition-transform duration-300" : ""} />
-                        <span>{isFiltersOpen ? 'Close Refine' : 'Refine View'}</span>
-                        {isAnyFilterActive && !isFiltersOpen && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-                        )}
-                    </button>
-
                     {canCreate && (
                         <button
                             onClick={onCreateTask}
@@ -230,135 +216,6 @@ const DashboardHeader = ({
                     )}
                 </div>
             </div>
-
-            {/* Expandable Refine View Controls Bar */}
-            <AnimatePresence>
-                {isFiltersOpen && (
-                    <motion.div
-                        initial={{ height: 0, opacity: 0, marginTop: 0 }}
-                        animate={{ height: 'auto', opacity: 1, marginTop: 2 }}
-                        exit={{ height: 0, opacity: 0, marginTop: 0 }}
-                        transition={{ duration: 0.2, ease: "easeInOut" }}
-                        className="overflow-hidden w-full"
-                    >
-                        <div className="bg-slate-50/60 rounded-xl border border-slate-100 p-3 flex flex-col gap-3">
-                            <div className="flex items-center justify-between">
-                                <span className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400">Refine & Filter View</span>
-                                {isAnyFilterActive && (
-                                    <button
-                                        onClick={onResetFilters}
-                                        className="text-[9px] font-black text-rose-500 hover:text-rose-600 flex items-center gap-1 transition-all"
-                                    >
-                                        <MdFilterAltOff size={12} />
-                                        <span>Reset All</span>
-                                    </button>
-                                )}
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:flex lg:flex-wrap items-center gap-2.5 w-full">
-                                {/* Search Bar */}
-                                <div className="relative flex-grow min-w-[180px] max-w-full lg:max-w-xs">
-                                    <IoSearchOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={14} />
-                                    <input
-                                        type="text"
-                                        placeholder="Find a task..."
-                                        value={search}
-                                        onChange={(e) => onSearchChange(e.target.value)}
-                                        className="pl-8 pr-8 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 w-full h-[34px] transition-all"
-                                    />
-                                    {search && (
-                                        <button
-                                            onClick={() => onSearchChange('')}
-                                            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
-                                        >
-                                            <IoCloseOutline size={14} />
-                                        </button>
-                                    )}
-                                </div>
-
-                                {/* Date Sort Selector */}
-                                <div className="min-w-[140px] flex-grow lg:flex-grow-0 z-[60]">
-                                    <Select
-                                        value={sortBy ? { value: sortBy, label: sortBy === 'newest' ? 'Newest First' : sortBy === 'oldest' ? 'Oldest First' : sortBy === 'deadlineSoon' ? 'Deadline Soon' : 'Deadline Late' } : null}
-                                        onChange={(option) => onSortChange(option ? option.value : "")}
-                                        options={[
-                                            { value: "newest", label: "Newest First" },
-                                            { value: "oldest", label: "Oldest First" },
-                                            { value: "deadlineSoon", label: "Deadline Soon" },
-                                            { value: "deadlineLate", label: "Deadline Late" }
-                                        ]}
-                                        placeholder="Sort By"
-                                        isSearchable={true}
-                                        styles={customStyles}
-                                        components={{
-                                            MenuList: CustomMenuList,
-                                            DropdownIndicator: CustomDropdownIndicator
-                                        }}
-                                        isClearable={true}
-                                        menuPortalTarget={document.body}
-                                    />
-                                </div>
-
-                                {/* Parent Task Selector */}
-                                <div className="min-w-[150px] flex-grow lg:flex-grow-0 z-[50]">
-                                    <Select
-                                        value={parentId ? { value: parentId, label: parentTasks.find(t => t._id === parentId)?.taskName || "Unknown" } : null}
-                                        onChange={(option) => onParentChange(option ? option.value : "")}
-                                        options={parentTasks.map(t => ({ value: t._id, label: t.taskName }))}
-                                        placeholder="All Parents"
-                                        isSearchable={true}
-                                        styles={customStyles}
-                                        components={{
-                                            MenuList: CustomMenuList,
-                                            DropdownIndicator: CustomDropdownIndicator
-                                        }}
-                                        isClearable={true}
-                                        menuPortalTarget={document.body}
-                                    />
-                                </div>
-
-                                {/* Project Selector (Arena) */}
-                                <div className="min-w-[150px] flex-grow lg:flex-grow-0 z-[40]">
-                                    <Select
-                                        value={selectedProject ? { value: selectedProject, label: projects.find(p => p.value === selectedProject)?.label || "Unknown" } : null}
-                                        onChange={(option) => onProjectChange(option ? option.value : "")}
-                                        options={projects}
-                                        placeholder="All Arenas"
-                                        isSearchable={true}
-                                        styles={customStyles}
-                                        components={{
-                                            MenuList: CustomMenuList,
-                                            DropdownIndicator: CustomDropdownIndicator
-                                        }}
-                                        isClearable={true}
-                                        menuPortalTarget={document.body}
-                                    />
-                                </div>
-
-                                {/* Member Selector (Only for Managers/Admins) */}
-                                {(isManager || isAdmin) && (
-                                    <div className="min-w-[150px] flex-grow lg:flex-grow-0 z-[30]">
-                                        <Select
-                                            value={selectedMember ? { value: selectedMember, label: members.find(m => m.value === selectedMember)?.label || "Unknown" } : null}
-                                            onChange={(option) => onMemberChange(option ? option.value : "")}
-                                            options={members}
-                                            placeholder="All Members"
-                                            isSearchable={true}
-                                            styles={customStyles}
-                                            components={{
-                                                MenuList: CustomMenuList,
-                                                DropdownIndicator: CustomDropdownIndicator
-                                            }}
-                                            isClearable={true}
-                                            menuPortalTarget={document.body}
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
         </div>
     );
 };

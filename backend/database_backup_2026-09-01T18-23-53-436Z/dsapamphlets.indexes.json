@@ -1,0 +1,43 @@
+[
+  {
+    "v": 2,
+    "key": {
+      "_id": 1
+    },
+    "name": "_id_"
+  },
+  {
+    "v": 2,
+    "key": {
+      "topic": 1
+    },
+    "name": "topic_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "patternKey": 1
+    },
+    "name": "patternKey_1",
+    "background": true,
+    "unique": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "userProgress.userId": 1
+    },
+    "name": "userProgress.userId_1",
+    "background": true
+  },
+  {
+    "v": 2,
+    "key": {
+      "topic": 1,
+      "order": 1
+    },
+    "name": "topic_1_order_1",
+    "background": true
+  }
+]

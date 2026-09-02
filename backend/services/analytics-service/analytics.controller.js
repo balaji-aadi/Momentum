@@ -14,7 +14,7 @@ const analyticsController = {};
 analyticsController.getPersonalStats = asyncHandler(async (req, res) => {
     const { startDate, endDate } = req.query;
     const userId = req.user._id;
-    let stats = await AnalyticsService.getUserConsistencyStats(userId);
+    let stats = await AnalyticsService.getUserConsistencyStats(userId, req.branchId);
 
     if (startDate && endDate) {
         const start = moment.utc(startDate).startOf('day');

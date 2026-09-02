@@ -428,10 +428,7 @@ const Task = ({ key, task, index, handleClick, onReleaseHold }) => {
                 </div>
 
                 {/* Task Title & Meta */}
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="shrink-0 mt-0.5">
-                    {renderAssigneeImage()}
-                  </div>
+                <div className="mb-3">
                   <div className="min-w-0 flex-1">
                     <h4 className={`text-sm sm:text-[15px] font-bold leading-snug mb-0.5 line-clamp-2 ${task.status === 'done' ? 'text-slate-400 line-through opacity-70' : task.parentTask ? 'text-blue-700 dark:text-blue-300' : 'text-slate-800 dark:text-slate-100'}`}>
                       <span>{task.taskName}</span>

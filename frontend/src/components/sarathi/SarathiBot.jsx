@@ -23,7 +23,7 @@ import { TaskApi } from '../../services/api/Task.api';
 
 const SarathiBot = () => {
   const navigate = useNavigate();
-  const { currentUser, dailyRevision } = useSelector((state) => state.store);
+  const { currentUser, dailyRevision, activeBranch } = useSelector((state) => state.store);
   const isRevisionLocked = dailyRevision && dailyRevision.isEligible === true && dailyRevision.questions?.length > 0 && !dailyRevision.isCompleted;
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -86,12 +86,12 @@ const SarathiBot = () => {
     }
   };
 
-  // Re-fetch stats whenever modal opens
+  // Re-fetch stats whenever modal opens or activeBranch changes
   useEffect(() => {
-    if (isOpen && currentUser) {
+    if (currentUser) {
       fetchStats();
     }
-  }, [isOpen, currentUser]);
+  }, [isOpen, currentUser, activeBranch]);
 
   // Periodic Reminder logic: check every 5 minutes (300000ms)
   // If todayRevisions < 2, flash a notification bubble on the bot icon

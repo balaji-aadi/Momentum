@@ -1865,8 +1865,14 @@ tc.getDailyRevision = asyncHandler(async (req, res) => {
     const timezoneOffset = req.query.timezoneOffset ? parseInt(req.query.timezoneOffset) : 0;
     const localDateStr = getLocalDateString(new Date(), timezoneOffset);
 
-    // 1. Find qualifying projects (DSA and DSAP2)
-    const projects = await Project.find({ key: { $in: ["DSA", "DSAP2"] } }).select("_id");
+    // 1. Find qualifying projects (scoped to active branch)
+    let projectFilter = {};
+    if (req.branchId) {
+      projectFilter.branchId = req.branchId;
+    } else {
+      projectFilter.key = { $in: ["DSA", "DSAP2"] };
+    }
+    const projects = await Project.find(projectFilter).select("_id");
     const projectIds = projects.map(p => p._id);
 
     // 2. Find all child tasks in DSA / DSAP2
@@ -2058,17 +2064,25 @@ tc.getDailyRevision = asyncHandler(async (req, res) => {
 
     // 5. User is eligible (>= 50 completed tasks)
     // Check for existing DailyRevision record for this user for TODAY first
-    let dailyRev = await populateDailyRevQuery(DailyRevision.findOne({
+    const dailyRevQuery = {
       userId: userId,
       dateStr: localDateStr
-    }));
+    };
+    if (req.branchId) {
+      dailyRevQuery.branchId = new mongoose.Types.ObjectId(req.branchId);
+    }
+    let dailyRev = await populateDailyRevQuery(DailyRevision.findOne(dailyRevQuery));
 
     // If not found for today, check if there is an uncompleted DailyRevision from a previous day and roll it over to today
     if (!dailyRev) {
-      dailyRev = await populateDailyRevQuery(DailyRevision.findOne({
+      const prevRevQuery = {
         userId: userId,
         isCompleted: false
-      }));
+      };
+      if (req.branchId) {
+        prevRevQuery.branchId = new mongoose.Types.ObjectId(req.branchId);
+      }
+      dailyRev = await populateDailyRevQuery(DailyRevision.findOne(prevRevQuery));
 
       if (dailyRev) {
         dailyRev.dateStr = localDateStr;

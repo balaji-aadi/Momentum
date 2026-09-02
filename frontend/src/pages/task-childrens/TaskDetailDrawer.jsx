@@ -398,6 +398,7 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
             if (taskData) {
                 const parentId = taskData.parentTask ? (typeof taskData.parentTask === 'object' ? taskData.parentTask?._id : taskData.parentTask) : null;
                 fetchNotes(taskData._id, parentId);
+                setActiveTab(parentId ? 'attachments' : 'subtasks');
             }
         } catch (error) {
             console.error("Failed to fetch task details", error);
@@ -687,34 +688,29 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                 })()}
                             </section>
 
-                            {/* Subtasks / Tabs Section */}
+                            {/* Subtasks / Attachments Section */}
                             <section>
-                                <div className="border-b border-borderLight mb-4 flex gap-6">
-                                    <button
-                                        onClick={() => setActiveTab('subtasks')}
-                                        className={`pb-3 px-1 text-xs font-black uppercase tracking-widest transition-all relative ${activeTab === 'subtasks' ? 'text-primary' : 'text-textSub hover:text-textMain'}`}
-                                    >
-                                        Subtasks
-                                        {activeTab === 'subtasks' && <div className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-full shadow-[0_-2px_10px_rgba(59,130,246,0.3)]" />}
-                                    </button>
-                                    <button
-                                        onClick={() => setActiveTab('activity')}
-                                        className={`pb-3 px-1 text-xs font-black uppercase tracking-widest transition-all relative ${activeTab === 'activity' ? 'text-primary' : 'text-textSub hover:text-textMain'}`}
-                                    >
-                                        Activity
-                                        {activeTab === 'activity' && <div className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-full shadow-[0_-2px_10px_rgba(59,130,246,0.3)]" />}
-                                    </button>
-                                    <button
-                                        onClick={() => setActiveTab('attachments')}
-                                        className={`pb-3 px-1 text-xs font-black uppercase tracking-widest transition-all relative ${activeTab === 'attachments' ? 'text-primary' : 'text-textSub hover:text-textMain'}`}
-                                    >
-                                        Attachments
-                                        {activeTab === 'attachments' && <div className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-full shadow-[0_-2px_10px_rgba(59,130,246,0.3)]" />}
-                                    </button>
-                                </div>
+                                {!task?.parentTask && (
+                                    <div className="border-b border-borderLight mb-4 flex gap-6">
+                                        <button
+                                            onClick={() => setActiveTab('subtasks')}
+                                            className={`pb-3 px-1 text-xs font-black uppercase tracking-widest transition-all relative ${activeTab === 'subtasks' ? 'text-primary' : 'text-textSub hover:text-textMain'}`}
+                                        >
+                                            Subtasks
+                                            {activeTab === 'subtasks' && <div className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-full shadow-[0_-2px_10px_rgba(59,130,246,0.3)]" />}
+                                        </button>
+                                        <button
+                                            onClick={() => setActiveTab('attachments')}
+                                            className={`pb-3 px-1 text-xs font-black uppercase tracking-widest transition-all relative ${activeTab === 'attachments' ? 'text-primary' : 'text-textSub hover:text-textMain'}`}
+                                        >
+                                            Attachments
+                                            {activeTab === 'attachments' && <div className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-full shadow-[0_-2px_10px_rgba(59,130,246,0.3)]" />}
+                                        </button>
+                                    </div>
+                                )}
 
-                                <div className="min-h-[200px]">
-                                    {activeTab === 'subtasks' && (
+                                <div className="min-h-[100px]">
+                                    {!task?.parentTask && activeTab === 'subtasks' && (
                                         <div className="space-y-4">
                                             {task?.subtaskStats?.total > 0 ? (
                                                 <div className="mb-6 bg-primary/5 p-4 rounded-xl border border-primary/10">
@@ -745,10 +741,6 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div className="text-right shrink-0">
-                                                                <p className="text-[10px] font-bold text-textSub uppercase">Assignee</p>
-                                                                <p className="text-xs font-semibold text-textMain">{sub.assignee?.firstName || 'Unassigned'}</p>
-                                                            </div>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -764,56 +756,45 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                         </div>
                                     )}
 
-                                    {activeTab === 'activity' && (
-                                        <div className="space-y-4">
-                                            {task?.activityLogs?.map((log, i) => (
-                                                <div key={i} className="flex gap-4 group">
-                                                    <div className="flex flex-col items-center">
-                                                        <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center border border-white ring-2 ring-slate-50 group-last:ring-0">
-                                                            <IoCheckmarkCircleOutline className="text-primary" />
-                                                        </div>
-                                                        <div className="w-0.5 h-full bg-slate-100 group-last:hidden" />
-                                                    </div>
-                                                    <div className="pb-4 pt-1">
-                                                        <p className="text-sm font-semibold text-textMain capitalize">{log.currentStatus}</p>
-                                                        <p className="text-xs text-textSub mt-0.5">{log.message}</p>
-                                                        <p className="text-[10px] text-textSub mt-1">{moment(log.date).fromNow()}</p>
-                                                    </div>
+                                    {/* Attachments Section */}
+                                    {(task?.parentTask || activeTab === 'attachments') && (
+                                        <div className="space-y-3">
+                                            {task?.parentTask && (
+                                                <div className="flex items-center gap-2 mb-3">
+                                                    <IoAttachOutline className="text-primary text-sm" />
+                                                    <span className="text-xs font-black text-textSub uppercase tracking-wider">Attachments</span>
                                                 </div>
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    {activeTab === 'attachments' && (
-                                        <div className="grid grid-cols-2 gap-4">
-                                            {task?.attachments?.filter(f => f && f.trim() !== "").map((filename, i) => {
-                                                const fileUrl = filename.startsWith('http') ? filename : `${server}file/get-file/${filename}`;
-                                                const displayName = filename.split('/').pop().includes('-') ? filename.split('/').pop().split('-').slice(1).join('-') : filename.split('/').pop();
-                                                return (
-                                                    <div key={i} className="p-3 bg-white border border-borderLight rounded-lg shadow-sm hover:border-primary/30 transition-all flex items-center gap-3">
-                                                        <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-slate-50 border border-slate-100 rounded">
-                                                            {/\.(jpg|jpeg|png|gif|webp|svg)$/i.test(filename) ? (
-                                                                <img src={fileUrl} className="w-full h-full object-cover rounded shadow-sm" alt={displayName} />
-                                                            ) : (
-                                                                <IoAttachOutline size={20} className="text-primary" />
-                                                            )}
+                                            )}
+                                            <div className="grid grid-cols-2 gap-4">
+                                                {task?.attachments?.filter(f => f && f.trim() !== "").map((filename, i) => {
+                                                    const fileUrl = filename.startsWith('http') ? filename : `${server}file/get-file/${filename}`;
+                                                    const displayName = filename.split('/').pop().includes('-') ? filename.split('/').pop().split('-').slice(1).join('-') : filename.split('/').pop();
+                                                    return (
+                                                        <div key={i} className="p-3 bg-white border border-borderLight rounded-lg shadow-sm hover:border-primary/30 transition-all flex items-center gap-3">
+                                                            <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-slate-50 border border-slate-100 rounded">
+                                                                {/\.(jpg|jpeg|png|gif|webp|svg)$/i.test(filename) ? (
+                                                                    <img src={fileUrl} className="w-full h-full object-cover rounded shadow-sm" alt={displayName} />
+                                                                ) : (
+                                                                    <IoAttachOutline size={20} className="text-primary" />
+                                                                )}
+                                                            </div>
+                                                            <div className="min-w-0 flex-1">
+                                                                <p className="text-xs font-bold text-textMain truncate" title={filename}>{filename.split('-').slice(1).join('-') || filename}</p>
+                                                                <a
+                                                                    href={fileUrl}
+                                                                    target="_blank"
+                                                                    rel="noreferrer"
+                                                                    className="text-[10px] text-primary hover:underline font-extrabold uppercase tracking-tight flex items-center gap-1 mt-1"
+                                                                >
+                                                                    Download / View
+                                                                </a>
+                                                            </div>
                                                         </div>
-                                                        <div className="min-w-0 flex-1">
-                                                            <p className="text-xs font-bold text-textMain truncate" title={filename}>{filename.split('-').slice(1).join('-') || filename}</p>
-                                                            <a
-                                                                href={fileUrl}
-                                                                target="_blank"
-                                                                rel="noreferrer"
-                                                                className="text-[10px] text-primary hover:underline font-extrabold uppercase tracking-tight flex items-center gap-1 mt-1"
-                                                            >
-                                                                Download / View
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            }) || (
-                                                    <p className="text-sm text-textSub col-span-2 text-center py-10">No attachments found.</p>
+                                                    );
+                                                }) || (
+                                                    <p className="text-sm text-textSub col-span-2 text-center py-6">No attachments found.</p>
                                                 )}
+                                            </div>
                                         </div>
                                     )}
                                 </div>
@@ -867,31 +848,6 @@ const TaskDetailDrawer = ({ isOpen, onClose, task: initialTask, onTaskUpdate, ca
                                     <div>
                                         <label className="text-[9px] font-black text-textSub uppercase block tracking-widest">Estimation</label>
                                         <span className="text-xs font-bold text-textMain">{task?.estimatedHours ? `${Math.floor(task.estimatedHours)}h ${Math.round((task.estimatedHours % 1) * 60)}m` : "0h 0m"}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Assignee */}
-                            <div>
-                                <label className="text-[10px] font-black text-textSub uppercase mb-3 block tracking-[0.1em]">Assignee</label>
-                                <div className="flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300">
-                                    <div className="relative">
-                                        {task?.assignee?.profileImage ? (
-                                            <img src={task.assignee.profileImage} alt="User" className="w-12 h-12 rounded-2xl border-2 border-white dark:border-slate-700 shadow-md object-cover" />
-                                        ) : (
-                                            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center border-2 border-white dark:border-slate-700 shadow-md">
-                                                <IoPersonOutline className="text-primary text-2xl" />
-                                            </div>
-                                        )}
-                                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-slate-900 rounded-full shadow-sm" />
-                                    </div>
-                                    <div className="min-w-0">
-                                        <p className="text-sm font-black text-textMain truncate tracking-tight">
-                                            {task?.assignee?.firstName} {task?.assignee?.lastName}
-                                        </p>
-                                        <p className="text-[10px] font-bold text-textSub truncate opacity-70">
-                                            {task?.assignee?.email}
-                                        </p>
                                     </div>
                                 </div>
                             </div>

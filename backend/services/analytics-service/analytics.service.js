@@ -533,10 +533,11 @@ class AnalyticsService {
   /**
    * Dynamic fetching for user global consistency stats strictly scoped to UserTaskProgress & FocusSession
    */
-  async getUserConsistencyStats(userId) {
+  async getUserConsistencyStats(userId, branchId = null) {
     if (!userId) return [];
     try {
       const uId = new mongoose.Types.ObjectId(userId);
+      const bId = branchId && mongoose.Types.ObjectId.isValid(branchId) ? new mongoose.Types.ObjectId(branchId) : null;
       const dateMap = {};
 
       const initDate = (dStr) => {
@@ -553,11 +554,16 @@ class AnalyticsService {
         }
       };
 
-      // 1. Authenticated user's completed tasks across all projects
-      const userProgress = await UserTaskProgress.find({
+      // 1. Authenticated user's completed tasks in active branch
+      const progressFilter = {
         userId: uId,
         status: "done"
-      }).populate("taskId", "storyPoints").lean();
+      };
+      if (bId) {
+        progressFilter.branchId = bId;
+      }
+
+      const userProgress = await UserTaskProgress.find(progressFilter).populate("taskId", "storyPoints").lean();
 
       userProgress.forEach(p => {
         let doneDate = p.completedAt || p.updatedAt;
@@ -576,11 +582,15 @@ class AnalyticsService {
         dateMap[dStr].storyPointsDone += sp;
       });
 
-      // 2. Revision logs from UserTaskProgress
-      const userRevisions = await UserTaskProgress.find({
+      // 2. Revision logs from UserTaskProgress in active branch
+      const userRevisionFilter = {
         userId: uId,
         "revisionLogs.0": { $exists: true }
-      }).lean();
+      };
+      if (bId) {
+        userRevisionFilter.branchId = bId;
+      }
+      const userRevisions = await UserTaskProgress.find(userRevisionFilter).lean();
 
       userRevisions.forEach(p => {
         (p.revisionLogs || []).forEach(rl => {
@@ -592,8 +602,12 @@ class AnalyticsService {
         });
       });
 
-      // 3. Revision logs from Task model
-      const taskRevisions = await Task.find({ "revisionLogs.0": { $exists: true } }).lean();
+      // 3. Revision logs from Task model in active branch
+      const taskRevisionFilter = { "revisionLogs.0": { $exists: true } };
+      if (bId) {
+        taskRevisionFilter.branchId = bId;
+      }
+      const taskRevisions = await Task.find(taskRevisionFilter).lean();
       taskRevisions.forEach(t => {
         (t.revisionLogs || []).forEach(rl => {
           if (rl.revisionDate) {
@@ -604,8 +618,12 @@ class AnalyticsService {
         });
       });
 
-      // 4. DailyRevision records
-      const dailyRevisions = await DailyRevision.find({ userId: uId }).lean();
+      // 4. DailyRevision records in active branch
+      const dailyRevFilter = { userId: uId };
+      if (bId) {
+        dailyRevFilter.branchId = bId;
+      }
+      const dailyRevisions = await DailyRevision.find(dailyRevFilter).lean();
       dailyRevisions.forEach(dr => {
         if (dr.dateStr) {
           const rStr = dr.dateStr;
@@ -617,8 +635,12 @@ class AnalyticsService {
         }
       });
 
-      // 5. Focus Sessions strictly for this user
-      const sessions = await FocusSession.find({ user: uId }).lean();
+      // 5. Focus Sessions strictly for this user in active branch
+      const sessionFilter = { user: uId };
+      if (bId) {
+        sessionFilter.branchId = bId;
+      }
+      const sessions = await FocusSession.find(sessionFilter).lean();
       sessions.forEach(s => {
         if (s.duration) {
           const dStr = moment.utc(s.date || s.startTime).format("YYYY-MM-DD");

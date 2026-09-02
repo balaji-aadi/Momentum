@@ -59,6 +59,10 @@ const Column = ({ column, handleClick, isDoneColumn, expandedParents, setExpande
     if (isDoneColumn) return column.tasks; // Reorganized sort is handled in Board.jsx
     if (sortOrder === 'none') return column.tasks;
     return [...column.tasks].sort((a, b) => {
+      if (a.taskId && b.taskId) {
+        const comp = a.taskId.localeCompare(b.taskId, undefined, { numeric: true, sensitivity: 'base' });
+        return sortOrder === 'desc' ? -comp : comp;
+      }
       const dateA = new Date(a.createdAt || a.taskDueDate || 0).getTime();
       const dateB = new Date(b.createdAt || b.taskDueDate || 0).getTime();
       return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
